@@ -1,0 +1,139 @@
+[
+  {
+    "target_id": "r001",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "11:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 0},
+      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 15},
+      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 20},
+      {"start_time": "19:00", "end_time": "20:00", "queue_required": false, "wait_minutes": 5}
+    ]
+  },
+  {
+    "target_id": "r002",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "11:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 5},
+      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 30},
+      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 45},
+      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 20}
+    ]
+  },
+  {
+    "target_id": "r003",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "11:00", "end_time": "12:00", "queue_required": true, "wait_minutes": 20},
+      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 50},
+      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 60},
+      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 30}
+    ]
+  },
+  {
+    "target_id": "r004",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "17:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 10},
+      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 60},
+      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 90},
+      {"start_time": "20:00", "end_time": "21:00", "queue_required": true, "wait_minutes": 40}
+    ]
+  },
+  {
+    "target_id": "r005",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "18:00", "end_time": "19:00", "queue_required": false, "wait_minutes": 0},
+      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 20},
+      {"start_time": "20:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 45},
+      {"start_time": "22:00", "end_time": "24:00", "queue_required": true, "wait_minutes": 15}
+    ]
+  },
+  {
+    "target_id": "r006",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "11:30", "end_time": "13:00", "queue_required": false, "wait_minutes": 0},
+      {"start_time": "18:00", "end_time": "20:00", "queue_required": false, "wait_minutes": 0}
+    ]
+  },
+  {
+    "target_id": "r007",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "12:00", "end_time": "13:00", "queue_required": false, "wait_minutes": 10},
+      {"start_time": "18:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 15}
+    ]
+  },
+  {
+    "target_id": "r008",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "11:00", "end_time": "12:00", "queue_required": true, "wait_minutes": 45},
+      {"start_time": "12:00", "end_time": "14:00", "queue_required": true, "wait_minutes": 120},
+      {"start_time": "17:00", "end_time": "18:00", "queue_required": true, "wait_minutes": 60},
+      {"start_time": "18:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 150}
+    ]
+  },
+  {
+    "target_id": "a001",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "09:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 0},
+      {"start_time": "13:00", "end_time": "17:00", "queue_required": true, "wait_minutes": 20}
+    ]
+  },
+  {
+    "target_id": "a002",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "10:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 10},
+      {"start_time": "14:00", "end_time": "18:00", "queue_required": true, "wait_minutes": 40}
+    ]
+  },
+  {
+    "target_id": "a003",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "00:00", "end_time": "23:59", "queue_required": false, "wait_minutes": 0}
+    ]
+  },
+  {
+    "target_id": "a004",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "10:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 5},
+      {"start_time": "19:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 15}
+    ]
+  },
+  {
+    "target_id": "a005",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "09:00", "end_time": "17:30", "queue_required": false, "wait_minutes": 0}
+    ]
+  },
+  {
+    "target_id": "a006",
+    "mock_action": "reservation_failed",
+    "time_slots": [
+      {"start_time": "00:00", "end_time": "23:59", "queue_required": false, "wait_minutes": 0}
+    ]
+  },
+  {
+    "target_id": "a007",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "13:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 10},
+      {"start_time": "19:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 30}
+    ]
+  },
+  {
+    "target_id": "a008",
+    "mock_action": "reservation_confirmed",
+    "time_slots": [
+      {"start_time": "10:00", "end_time": "14:00", "queue_required": false, "wait_minutes": 10},
+      {"start_time": "15:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 45}
+    ]
+  }
+]

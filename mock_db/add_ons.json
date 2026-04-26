@@ -1,0 +1,46 @@
+[
+  {
+    "id": "o001",
+    "name": "儿童小蛋糕",
+    "type": "add_on",
+    "category": "食品",
+    "price": 58.0,
+    "tags": ["儿童", "甜点", "生日"],
+    "supported_target_types": ["restaurant"],
+    "lead_time_minutes": 120,
+    "description": "精美的低糖儿童生日小蛋糕，造型可爱，可直接配送至指定的餐厅，为孩子带来生日惊喜。"
+  },
+  {
+    "id": "o002",
+    "name": "生日鲜花",
+    "type": "add_on",
+    "category": "礼品",
+    "price": 128.0,
+    "tags": ["生日", "鲜花", "浪漫"],
+    "supported_target_types": ["restaurant"],
+    "lead_time_minutes": 60,
+    "description": "由当季新鲜花材搭配而成的浪漫花束，适合情侣纪念日或朋友生日，能有效提升约会或聚餐的仪式感。"
+  },
+  {
+    "id": "o003",
+    "name": "纪念伴手礼",
+    "type": "add_on",
+    "category": "礼品",
+    "price": 88.0,
+    "tags": ["纪念日", "伴手礼", "精美"],
+    "supported_target_types": ["restaurant", "activity"],
+    "lead_time_minutes": 30,
+    "description": "包装精美的本地特色纪念品盲盒，体积小巧便于携带。非常适合在旅程结束时作为小惊喜赠送给同行的朋友。"
+  },
+  {
+    "id": "o004",
+    "name": "气球布置",
+    "type": "add_on",
+    "category": "服务",
+    "price": 200.0,
+    "tags": ["布置", "派对", "氛围"],
+    "supported_target_types": ["restaurant", "activity"],
+    "lead_time_minutes": 180,
+    "description": "提供针对餐厅包间或活动场地的专属气球氛围布置服务。需要较长的前置准备时间，是举办大型派对和生日会的绝佳助攻。"
+  }
+]
