@@ -42,6 +42,7 @@ class ClosedLoopState(AgentState):
     """
     user_input: str
     constraints: NotRequired[Constraints]
+    candidates: NotRequired[dict]
     itinerary: NotRequired[dict]
     confirmation: NotRequired[dict]
     current_step: NotRequired[str]
