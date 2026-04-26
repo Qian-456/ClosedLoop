@@ -22,6 +22,14 @@ class LoggerManager:
             f"{config.logging.LOG_DIR}/app.log",
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
+            level=config.logging.LOG_LEVEL,
+        )
+
+        logger.add(
+            f"{config.logging.LOG_DIR}/error.log",
+            rotation=config.logging.LOG_ROTATION,
+            retention=config.logging.LOG_RETENTION,
+            level="ERROR",
         )
 
         cls._initialized = True
