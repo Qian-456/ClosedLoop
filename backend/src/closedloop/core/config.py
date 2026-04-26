@@ -7,13 +7,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from dotenv import load_dotenv
 
-# Determine the absolute path to the backend/src directory
+# 确定 backend/src 目录的绝对路径
 SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-# Point to backend/.env
+# 指向 backend/.env
 ENV_FILE_PATH = os.path.abspath(os.path.join(SRC_DIR, "..", ".env"))
 LOG_DIR_PATH = os.path.join(SRC_DIR, "logs")
 
-# Force load environment variables from .env file into os.environ
+# 强制将环境变量从 .env 文件加载到 os.environ 中
 load_dotenv(ENV_FILE_PATH)
 
 class LoggingSettings(BaseSettings):

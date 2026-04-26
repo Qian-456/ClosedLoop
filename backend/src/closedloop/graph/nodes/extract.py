@@ -7,7 +7,7 @@ from langchain.messages import SystemMessage, HumanMessage
 
 def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
     """
-    Node to extract constraints from user input.
+    从用户输入中提取约束条件的节点。
     """
     config = get_config()
     LoggerManager.setup(config)
@@ -27,9 +27,9 @@ def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
         if isinstance(response, dict) and "structured_response" in response:
             parsed_output = response["structured_response"]
             
-        if hasattr(parsed_output, "model_dump"): # pydantic v2
+        if hasattr(parsed_output, "model_dump"): # 兼容 pydantic v2
             state["constraints"] = parsed_output.model_dump()
-        elif hasattr(parsed_output, "dict"): # pydantic v1
+        elif hasattr(parsed_output, "dict"): # 兼容 pydantic v1
             state["constraints"] = parsed_output.dict()
         elif isinstance(parsed_output, dict):
             state["constraints"] = parsed_output

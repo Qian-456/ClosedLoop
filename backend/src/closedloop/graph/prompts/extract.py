@@ -1,5 +1,5 @@
 """
-System prompts for the extract constraints node.
+用于提取约束条件节点（extract constraints node）的系统提示词（System prompts）。
 """
 
 EXTRACT_CONSTRAINTS_SYSTEM_PROMPT = """
