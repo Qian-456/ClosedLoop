@@ -1,7 +1,13 @@
 import unittest
 from unittest.mock import patch
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.retrieve import retrieve_candidates, hard_filter, rule_filter, score_item
+from closedloop.graph.nodes.retrieve import (
+    retrieve_candidates_node,
+    filter_rank_node,
+    hard_filter,
+    rule_filter,
+    score_item,
+)
 
 class TestRetrieveCandidates(unittest.TestCase):
     
@@ -50,10 +56,15 @@ class TestRetrieveCandidates(unittest.TestCase):
         
         self.addon_item = {
             "id": "o1",
-            "type": "add_on",
+            "type": "gift_shop",
             "price": 80,
             "tags": ["儿童", "蛋糕"],
             "supported_target_types": ["restaurant"],
+            "distance_km": 2.0,
+            "open_time": "10:00",
+            "close_time": "21:00",
+            "duration_minutes": 20,
+            "suitable_groups": ["家庭亲子"],
             "description": "生日蛋糕"
         }
 
@@ -126,34 +137,127 @@ class TestRetrieveCandidates(unittest.TestCase):
         # duration match: None (duration check not added to total score initially?) 
         self.assertEqual(score, 45 + 14 + 15)
 
+    def test_score_item_matches_chinese_suitable_groups(self):
+        family_restaurant = self.restaurant_item.copy()
+        family_restaurant["suitable_groups"] = ["家庭亲子"]
+        self.assertGreaterEqual(score_item(family_restaurant, self.base_constraints), 45 + 14 + 15)
+
+        friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
+        friends_restaurant = self.restaurant_item.copy()
+        friends_restaurant["suitable_groups"] = ["朋友聚会"]
+        self.assertGreaterEqual(score_item(friends_restaurant, friends_constraints), 45 + 14 + 15)
+
     @patch('closedloop.graph.nodes.retrieve.load_mock_data')
-    def test_retrieve_candidates_node(self, mock_load):
-        # Mock data
+    def test_retrieve_candidates_node_loads_mock_db_applies_15km_cap_and_sets_steps(self, mock_load):
+        scored_restaurant = self.restaurant_item.copy()
+        scored_restaurant["score"] = 999
+
+        scored_activity = self.activity_item.copy()
+        scored_activity["score"] = 999
+
+        far_restaurant = self.restaurant_item.copy()
+        far_restaurant["id"] = "r_far"
+        far_restaurant["distance_km"] = 16.0
+
+        far_activity = self.activity_item.copy()
+        far_activity["id"] = "a_far"
+        far_activity["distance_km"] = 20.0
+
         mock_load.side_effect = lambda f: {
-            "restaurants.json": [self.restaurant_item],
-            "activities.json": [self.activity_item],
-            "add_ons.json": [self.addon_item]
+            "restaurants.json": [scored_restaurant, far_restaurant],
+            "activities.json": [scored_activity, far_activity],
+            "add_ons.json": [self.addon_item],
         }[f]
-        
+
         state = ClosedLoopState(
             user_input="Test input",
             constraints=self.base_constraints
         )
-        
-        new_state = retrieve_candidates(state)
-        
+
+        new_state = retrieve_candidates_node(state)
+
+        self.assertNotIn("processed_steps", new_state)
         self.assertIn("candidates", new_state)
         candidates = new_state["candidates"]
-        
+        self.assertIn("processed_steps", candidates)
+        self.assertEqual(candidates["processed_steps"], ["retrieve_candidates_node"])
+
         self.assertIn("nearby_restaurants", candidates)
-        self.assertEqual(len(candidates["nearby_restaurants"]), 1)
-        self.assertEqual(candidates["nearby_restaurants"][0]["id"], "r1")
-        
+        self.assertEqual([x["id"] for x in candidates["nearby_restaurants"]], ["r1"])
+        self.assertTrue(all("score" not in x for x in candidates["nearby_restaurants"]))
+
         self.assertIn("nearby_activities", candidates)
-        self.assertEqual(len(candidates["nearby_activities"]), 1)
-        
+        self.assertEqual([x["id"] for x in candidates["nearby_activities"]], ["a1"])
+        self.assertTrue(all("score" not in x for x in candidates["nearby_activities"]))
+
         self.assertIn("nearby_gifts", candidates)
-        self.assertEqual(len(candidates["nearby_gifts"]), 1)
+        self.assertEqual([x["id"] for x in candidates["nearby_gifts"]], ["o1"])
+
+    @patch("closedloop.graph.nodes.retrieve.load_mock_data")
+    def test_filter_rank_node_requires_retrieve_step_and_does_not_load_db(self, mock_load):
+        mock_load.side_effect = AssertionError("filter_rank_node 不应加载 MockDB 数据")
+
+        high_rating = self.restaurant_item.copy()
+        high_rating["id"] = "r_high"
+        high_rating["rating"] = 4.9
+
+        low_rating = self.restaurant_item.copy()
+        low_rating["id"] = "r_low"
+        low_rating["rating"] = 4.0
+
+        state = ClosedLoopState(
+            user_input="Test input",
+            constraints=self.base_constraints,
+            candidates={
+                "nearby_restaurants": [low_rating, high_rating],
+                "nearby_activities": [],
+                "nearby_gifts": [],
+                "processed_steps": ["retrieve_candidates_node"],
+            },
+        )
+
+        new_state = filter_rank_node(state)
+
+        self.assertNotIn("processed_steps", new_state)
+        self.assertEqual(
+            new_state["candidates"]["processed_steps"],
+            ["retrieve_candidates_node", "filter_rank_node"],
+        )
+
+        restaurants = new_state["candidates"]["nearby_restaurants"]
+        self.assertEqual([x["id"] for x in restaurants], ["r_high", "r_low"])
+        self.assertTrue(all("score" in x for x in restaurants))
+        self.assertGreater(restaurants[0]["score"], restaurants[1]["score"])
+
+    def test_filter_rank_node_returns_empty_when_processed_steps_not_exactly_retrieve(self):
+        state = ClosedLoopState(
+            user_input="Test input",
+            constraints=self.base_constraints,
+            candidates={
+                "nearby_restaurants": [self.restaurant_item],
+                "nearby_activities": [],
+                "nearby_gifts": [],
+                "processed_steps": [],
+            },
+        )
+        new_state = filter_rank_node(state)
+        self.assertEqual(new_state["candidates"]["nearby_restaurants"], [])
+        self.assertEqual(new_state["candidates"]["nearby_activities"], [])
+        self.assertEqual(new_state["candidates"]["nearby_gifts"], [])
+
+        state_missing_steps = ClosedLoopState(
+            user_input="Test input",
+            constraints=self.base_constraints,
+            candidates={
+                "nearby_restaurants": [self.restaurant_item],
+                "nearby_activities": [],
+                "nearby_gifts": [],
+            },
+        )
+        new_state_missing_steps = filter_rank_node(state_missing_steps)
+        self.assertEqual(new_state_missing_steps["candidates"]["nearby_restaurants"], [])
+        self.assertEqual(new_state_missing_steps["candidates"]["nearby_activities"], [])
+        self.assertEqual(new_state_missing_steps["candidates"]["nearby_gifts"], [])
 
 if __name__ == '__main__':
     unittest.main()
