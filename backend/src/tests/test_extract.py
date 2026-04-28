@@ -104,5 +104,72 @@ class TestExtractConstraints(unittest.TestCase):
         self.assertEqual(constraints["activity_preferences"], ["dining"])
 
 
+    @patch("closedloop.graph.nodes.extract.build_agent")
+    def test_extract_constraints_no_budget_default(self, mock_build_agent):
+        """
+        Test extracting constraints when budget is not mentioned.
+        """
+        mock_agent = MagicMock()
+        mock_agent.invoke.return_value = {
+            "group_type": "friends",
+            "people_count": 2,
+            "budget": 200.0,
+            "dietary_restrictions": [],
+            "preferred_distance": "2km-5km",
+            "time_period": "18:00-21:00",
+            "duration_hours": 3.0,
+            "activity_preferences": ["dining"],
+            "child_age": None
+        }
+        mock_build_agent.return_value = mock_agent
+
+        state: AgentState = {
+            "user_input": "朋友两人晚上聚餐",
+            "constraints": {},
+            "itinerary": {},
+            "confirmation": {},
+            "current_step_id": None
+        }
+
+        new_state = extract_constraints(state)
+
+        # Assertions
+        constraints = new_state["constraints"]
+        self.assertEqual(constraints["budget"], 200.0)
+
+    @patch("closedloop.graph.nodes.extract.build_agent")
+    def test_extract_constraints_nearby_and_walk(self, mock_build_agent):
+        """
+        Test extracting constraints when nearby and walking are mentioned.
+        """
+        mock_agent = MagicMock()
+        mock_agent.invoke.return_value = {
+            "group_type": "friends",
+            "people_count": 2,
+            "budget": 200.0,
+            "dietary_restrictions": [],
+            "preferred_distance": "<2km",
+            "time_period": "18:00-21:00",
+            "duration_hours": 3.0,
+            "activity_preferences": ["dining"],
+            "child_age": None
+        }
+        mock_build_agent.return_value = mock_agent
+
+        state: AgentState = {
+            "user_input": "朋友两人晚上聚餐，就近走走",
+            "constraints": {},
+            "itinerary": {},
+            "confirmation": {},
+            "current_step_id": None
+        }
+
+        new_state = extract_constraints(state)
+
+        # Assertions
+        constraints = new_state["constraints"]
+        self.assertEqual(constraints["preferred_distance"], "<2km")
+
+
 if __name__ == "__main__":
     unittest.main()
