@@ -70,6 +70,7 @@ class RetrievedGift(TypedDict, total=False):
     suitable_groups: NotRequired[list[str]]
     supported_target_types: NotRequired[list[Literal["restaurant", "activity"]]]
     lead_time_minutes: NotRequired[int]
+    handoff_minutes: NotRequired[int]
     location: NotRequired[str]
     description: NotRequired[str]
 
@@ -139,12 +140,12 @@ class FilteredGift(TypedDict, total=False):
     rating: NotRequired[float]
     open_time: NotRequired[str]
     close_time: NotRequired[str]
-    duration_minutes: NotRequired[int]
     price: NotRequired[float]
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
     supported_target_types: NotRequired[list[Literal["restaurant", "activity"]]]
     lead_time_minutes: NotRequired[int]
+    handoff_minutes: NotRequired[int]
     location: NotRequired[str]
     description: NotRequired[str]
 

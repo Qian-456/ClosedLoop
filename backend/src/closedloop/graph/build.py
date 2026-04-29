@@ -3,11 +3,12 @@ from langgraph.graph import StateGraph, START, END
 from closedloop.contracts.state import ClosedLoopState
 from closedloop.graph.nodes.extract import extract_constraints
 from closedloop.graph.nodes.retrieve import retrieve_candidates_node, filter_rank_node
+from closedloop.graph.nodes.plan import plan_itinerary_node
 
 def build_graph():
     """
     构建 LangGraph 工作流。
-    当前包含节点：extract_constraints -> retrieve_candidates_node -> filter_rank_node
+    当前包含节点：extract_constraints -> retrieve_candidates_node -> filter_rank_node -> plan_itinerary_node
     """
     # 1. 使用我们的 TypedDict 初始化 StateGraph
     workflow = StateGraph(ClosedLoopState)
@@ -16,12 +17,14 @@ def build_graph():
     workflow.add_node("extract_constraints", extract_constraints)
     workflow.add_node("retrieve_candidates_node", retrieve_candidates_node)
     workflow.add_node("filter_rank_node", filter_rank_node)
+    workflow.add_node("plan_itinerary_node", plan_itinerary_node)
 
     # 3. 定义边
     workflow.add_edge(START, "extract_constraints")
     workflow.add_edge("extract_constraints", "retrieve_candidates_node")
     workflow.add_edge("retrieve_candidates_node", "filter_rank_node")
-    workflow.add_edge("filter_rank_node", END)
+    workflow.add_edge("filter_rank_node", "plan_itinerary_node")
+    workflow.add_edge("plan_itinerary_node", END)
 
     # 4. 编译图
     app = workflow.compile()

@@ -1,3 +1,7 @@
+import json
+import time
+from typing import Any
+
 from langchain.agents import create_agent
 from langchain.agents.middleware import ModelFallbackMiddleware, ModelRetryMiddleware
 from langchain_deepseek import ChatDeepSeek
@@ -5,6 +9,97 @@ from langchain_community.chat_models import ChatTongyi
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
+
+
+def _extract_json_object(text: str) -> str:
+    """
+    Extract a JSON object from model output text.
+
+    This is used to avoid tool-calling based structured output flows that may
+    fail when tool_call messages are not fully echoed back to the provider.
+    """
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        lines = cleaned.splitlines()
+        if len(lines) >= 3 and lines[0].startswith("```") and lines[-1].startswith("```"):
+            cleaned = "\n".join(lines[1:-1]).strip()
+            if cleaned.lower().startswith("json"):
+                cleaned = cleaned[4:].strip()
+
+    left = cleaned.find("{")
+    right = cleaned.rfind("}")
+    if left == -1 or right == -1 or right <= left:
+        raise ValueError("Model output does not contain a JSON object.")
+    return cleaned[left : right + 1]
+
+
+def _coerce_structured_response(schema: Any, data: Any) -> Any:
+    """
+    Coerce raw dict into a structured response instance when schema is a Pydantic model class.
+    """
+    if schema is None:
+        return data
+    if hasattr(schema, "model_validate"):
+        return schema.model_validate(data)
+    if hasattr(schema, "parse_obj"):
+        return schema.parse_obj(data)
+    return data
+
+
+class _StructuredOutputAgent:
+    def __init__(
+        self,
+        *,
+        primary_model: Any,
+        fallback_model: Any,
+        response_format: Any,
+        max_retries: int = 3,
+        backoff_factor: float = 2.0,
+        initial_delay: float = 1.0,
+    ):
+        """A minimal agent adapter that provides structured output without tool calling."""
+        self._primary_model = primary_model
+        self._fallback_model = fallback_model
+        self._response_format = response_format
+        self._max_retries = max_retries
+        self._backoff_factor = backoff_factor
+        self._initial_delay = initial_delay
+
+    def _invoke_with_retries(self, model: Any, messages: Any, *, provider: str) -> Any:
+        last_error: Exception | None = None
+        delay = self._initial_delay
+        for attempt in range(1, self._max_retries + 1):
+            try:
+                return model.invoke(messages)
+            except Exception as exc:
+                last_error = exc
+                logger.error(
+                    f"phase=llm_invoke | provider={provider} | attempt={attempt} | error={exc}"
+                )
+                if attempt < self._max_retries:
+                    time.sleep(delay)
+                    delay *= self._backoff_factor
+        raise last_error or RuntimeError("LLM invocation failed")
+
+    def invoke(self, payload: dict[str, Any]) -> dict[str, Any]:
+        messages = payload.get("messages", [])
+
+        try:
+            raw = self._invoke_with_retries(self._primary_model, messages, provider="deepseek")
+        except Exception as exc:
+            logger.error(f"phase=llm_invoke | provider=deepseek | fallback=qwen | error={exc}")
+            raw = self._invoke_with_retries(self._fallback_model, messages, provider="qwen")
+
+        content = raw
+        if hasattr(raw, "content"):
+            content = raw.content
+        if not isinstance(content, str):
+            raise ValueError("Model output content must be a string for structured parsing.")
+
+        json_text = _extract_json_object(content)
+        data = json.loads(json_text)
+        structured = _coerce_structured_response(self._response_format, data)
+        return {"structured_response": structured}
 
 
 def build_agent(*, tools: list | None = None, temperature: float = 0.7, response_format=None):
@@ -43,6 +138,16 @@ def build_agent(*, tools: list | None = None, temperature: float = 0.7, response
 
     logger.info("LLM initialized | primary=DeepSeek | fallback=Qwen")
 
+    if response_format is not None:
+        return _StructuredOutputAgent(
+            primary_model=deepseek,
+            fallback_model=qwen,
+            response_format=response_format,
+            max_retries=3,
+            backoff_factor=2.0,
+            initial_delay=1.0,
+        )
+
     # 4. create agent
     agent_kwargs = {
         "model": deepseek,
@@ -57,9 +162,6 @@ def build_agent(*, tools: list | None = None, temperature: float = 0.7, response
             ),
         ],
     }
-
-    if response_format is not None:
-        agent_kwargs["response_format"] = response_format
 
     agent = create_agent(**agent_kwargs)
 
