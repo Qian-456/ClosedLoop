@@ -14,27 +14,27 @@ class TestExtractConstraints(unittest.TestCase):
     """
 
     @patch("closedloop.graph.nodes.extract.build_agent")
-    def test_extract_constraints_family(self, mock_build_agent):
+    def test_extract_constraints_family_legacy_fields_removed(self, mock_build_agent):
         """
-        Test extracting constraints for a family with a child.
+        Test constraints extraction uses only supported fields.
         """
-        # Mock the agent's invoke response directly matching the schema format returned by structured output
         mock_agent = MagicMock()
         mock_agent.invoke.return_value = {
             "group_type": "family",
-            "people_count": 3,
+            "adult_count": 2,
+            "child_count": 1,
+            "child_ages": [5],
             "budget": 500.0,
             "dietary_restrictions": ["no spicy"],
             "preferred_distance": "2km-5km",
             "time_period": "13:00-18:00",
             "duration_hours": 5.0,
-            "activity_preferences": ["play"],
-            "child_age": 5
+            "activity_preferences": ["play"]
         }
         mock_build_agent.return_value = mock_agent
 
         state: AgentState = {
-            "user_input": "一家三口下午出去玩，预算500，孩子5岁，不吃辣",
+            "user_input": "2大1小下午出去玩，预算500，孩子5岁，不吃辣",
             "constraints": {},
             "itinerary": {},
             "confirmation": {},
@@ -46,12 +46,26 @@ class TestExtractConstraints(unittest.TestCase):
         # Assertions
         self.assertIn("constraints", new_state)
         constraints = new_state["constraints"]
+        expected_keys = {
+            "group_type",
+            "adult_count",
+            "child_count",
+            "child_ages",
+            "budget",
+            "dietary_restrictions",
+            "preferred_distance",
+            "time_period",
+            "duration_hours",
+            "activity_preferences",
+        }
+        self.assertEqual(set(constraints.keys()), expected_keys)
         self.assertEqual(constraints["group_type"], "family")
         self.assertEqual(constraints["budget"], 500.0)
-        self.assertEqual(constraints["child_age"], 5)
+        self.assertEqual(constraints["adult_count"], 2)
+        self.assertEqual(constraints["child_count"], 1)
+        self.assertEqual(constraints["child_ages"], [5])
         self.assertEqual(constraints["preferred_distance"], "2km-5km")
         self.assertEqual(constraints["time_period"], "13:00-18:00")
-        self.assertEqual(constraints["people_count"], 3)
         self.assertEqual(constraints["duration_hours"], 5.0)
         self.assertEqual(constraints["activity_preferences"], ["play"])
         self.assertEqual(constraints["dietary_restrictions"], ["no spicy"])
@@ -59,7 +73,54 @@ class TestExtractConstraints(unittest.TestCase):
         # Ensure the agent was called with the user input
         mock_agent.invoke.assert_called_once()
         args, kwargs = mock_agent.invoke.call_args
-        self.assertIn("一家三口下午出去玩", str(args[0] if args else kwargs.get('input', '')))
+        self.assertIn("2大1小下午出去玩", str(args[0] if args else kwargs.get('input', '')))
+
+    @patch("closedloop.graph.nodes.extract.build_agent")
+    def test_extract_constraints_family_multi_children(self, mock_build_agent):
+        """
+        Test extracting constraints for a family with multiple children ages.
+        """
+        mock_agent = MagicMock()
+        mock_agent.invoke.return_value = {
+            "group_type": "family",
+            "adult_count": 3,
+            "child_count": 2,
+            "child_ages": [5, 8],
+            "budget": 500.0,
+            "dietary_restrictions": ["no spicy"],
+            "preferred_distance": "2km-5km",
+            "time_period": "13:00-18:00",
+            "duration_hours": 5.0,
+            "activity_preferences": ["play"]
+        }
+        mock_build_agent.return_value = mock_agent
+
+        state: AgentState = {
+            "user_input": "3大2小（5岁、8岁）下午出去玩，预算500，不吃辣",
+            "constraints": {},
+            "itinerary": {},
+            "confirmation": {},
+            "current_step_id": None,
+        }
+
+        new_state = extract_constraints(state)
+        constraints = new_state["constraints"]
+        expected_keys = {
+            "group_type",
+            "adult_count",
+            "child_count",
+            "child_ages",
+            "budget",
+            "dietary_restrictions",
+            "preferred_distance",
+            "time_period",
+            "duration_hours",
+            "activity_preferences",
+        }
+        self.assertEqual(set(constraints.keys()), expected_keys)
+        self.assertEqual(constraints["adult_count"], 3)
+        self.assertEqual(constraints["child_count"], 2)
+        self.assertEqual(constraints["child_ages"], [5, 8])
 
 
     @patch("closedloop.graph.nodes.extract.build_agent")
@@ -71,14 +132,15 @@ class TestExtractConstraints(unittest.TestCase):
         mock_agent = MagicMock()
         mock_agent.invoke.return_value = {
             "group_type": "friends",
-            "people_count": 2,
+            "adult_count": 2,
+            "child_count": 0,
+            "child_ages": [],
             "budget": 800.0,
             "dietary_restrictions": [],
             "preferred_distance": "2km-5km",
             "time_period": "18:00-21:00",
             "duration_hours": 3.0,
-            "activity_preferences": ["dining"],
-            "child_age": None
+            "activity_preferences": ["dining"]
         }
         mock_build_agent.return_value = mock_agent
 
@@ -94,12 +156,26 @@ class TestExtractConstraints(unittest.TestCase):
 
         # Assertions
         constraints = new_state["constraints"]
+        expected_keys = {
+            "group_type",
+            "adult_count",
+            "child_count",
+            "child_ages",
+            "budget",
+            "dietary_restrictions",
+            "preferred_distance",
+            "time_period",
+            "duration_hours",
+            "activity_preferences",
+        }
+        self.assertEqual(set(constraints.keys()), expected_keys)
         self.assertEqual(constraints["group_type"], "friends")
         self.assertEqual(constraints["budget"], 800.0)
-        self.assertIsNone(constraints["child_age"])
+        self.assertEqual(constraints["adult_count"], 2)
+        self.assertEqual(constraints["child_count"], 0)
+        self.assertEqual(constraints["child_ages"], [])
         self.assertEqual(constraints["preferred_distance"], "2km-5km")
         self.assertEqual(constraints["time_period"], "18:00-21:00")
-        self.assertEqual(constraints["people_count"], 2)
         self.assertEqual(constraints["duration_hours"], 3.0)
         self.assertEqual(constraints["activity_preferences"], ["dining"])
 
@@ -112,14 +188,15 @@ class TestExtractConstraints(unittest.TestCase):
         mock_agent = MagicMock()
         mock_agent.invoke.return_value = {
             "group_type": "friends",
-            "people_count": 2,
+            "adult_count": 2,
+            "child_count": 0,
+            "child_ages": [],
             "budget": 200.0,
             "dietary_restrictions": [],
             "preferred_distance": "2km-5km",
             "time_period": "18:00-21:00",
             "duration_hours": 3.0,
-            "activity_preferences": ["dining"],
-            "child_age": None
+            "activity_preferences": ["dining"]
         }
         mock_build_agent.return_value = mock_agent
 
@@ -145,14 +222,15 @@ class TestExtractConstraints(unittest.TestCase):
         mock_agent = MagicMock()
         mock_agent.invoke.return_value = {
             "group_type": "friends",
-            "people_count": 2,
+            "adult_count": 2,
+            "child_count": 0,
+            "child_ages": [],
             "budget": 200.0,
             "dietary_restrictions": [],
             "preferred_distance": "<2km",
             "time_period": "18:00-21:00",
             "duration_hours": 3.0,
-            "activity_preferences": ["dining"],
-            "child_age": None
+            "activity_preferences": ["dining"]
         }
         mock_build_agent.return_value = mock_agent
 

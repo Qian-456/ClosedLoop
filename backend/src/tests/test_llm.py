@@ -39,14 +39,15 @@ class TestBuildAgentStructuredOutput(unittest.TestCase):
             content="""```json
 {
   "group_type": "friends",
-  "people_count": 2,
+  "adult_count": 2,
+  "child_count": 0,
+  "child_ages": [],
   "budget": 500,
   "dietary_restrictions": [],
   "preferred_distance": "2km-5km",
   "time_period": "13:00-18:00",
   "duration_hours": 5,
-  "activity_preferences": [],
-  "child_age": null
+  "activity_preferences": []
 }
 ```"""
         )
@@ -69,7 +70,7 @@ class TestBuildAgentStructuredOutput(unittest.TestCase):
     def test_build_agent_structured_output_fallback_to_qwen(self):
         deepseek = _DummyChatModel(error=RuntimeError("boom"))
         qwen = _DummyChatModel(
-            content='{"group_type":"friends","people_count":2,"budget":300,"dietary_restrictions":[],"preferred_distance":"2km-5km","time_period":"13:00-18:00","duration_hours":5,"activity_preferences":[],"child_age":null}'
+            content='{"group_type":"friends","adult_count":2,"child_count":0,"child_ages":[],"budget":300,"dietary_restrictions":[],"preferred_distance":"2km-5km","time_period":"13:00-18:00","duration_hours":5,"activity_preferences":[]}'
         )
 
         with patch("closedloop.core.llm.get_config", return_value=_DummyConfig()), patch(

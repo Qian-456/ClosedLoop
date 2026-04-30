@@ -28,14 +28,15 @@ class TestPlanItineraryNode(unittest.TestCase):
             "user_input": "随便安排一下",
             "constraints": {
                 "group_type": "friends",
-                "people_count": 2,
+                "adult_count": 2,
+                "child_count": 0,
+                "child_ages": [],
                 "budget": 500,
                 "dietary_restrictions": [],
                 "preferred_distance": "2km-5km",
                 "time_period": "13:00-18:00",
                 "duration_hours": 5,
                 "activity_preferences": [],
-                "child_age": None,
             },
             "candidates": {
                 "nearby_restaurants": [
@@ -95,14 +96,15 @@ class TestPlanItineraryNode(unittest.TestCase):
             "user_input": "随便安排一下",
             "constraints": {
                 "group_type": "friends",
-                "people_count": 2,
+                "adult_count": 2,
+                "child_count": 0,
+                "child_ages": [],
                 "budget": 500,
                 "dietary_restrictions": [],
                 "preferred_distance": "2km-5km",
                 "time_period": "13:00-18:00",
                 "duration_hours": 5,
                 "activity_preferences": [],
-                "child_age": None,
             },
             "candidates": {
                 "nearby_restaurants": [
@@ -207,14 +209,15 @@ class TestPlanItineraryNode(unittest.TestCase):
             "user_input": "随便安排一下",
             "constraints": {
                 "group_type": "friends",
-                "people_count": 2,
+                "adult_count": 2,
+                "child_count": 0,
+                "child_ages": [],
                 "budget": 500,
                 "dietary_restrictions": [],
                 "preferred_distance": "2km-5km",
                 "time_period": "13:00-18:00",
                 "duration_hours": 5,
                 "activity_preferences": [],
-                "child_age": None,
             },
             "candidates": {
                 "nearby_restaurants": [
@@ -309,14 +312,15 @@ class TestPlanItineraryNode(unittest.TestCase):
             "user_input": "随便安排一下",
             "constraints": {
                 "group_type": "friends",
-                "people_count": 2,
+                "adult_count": 2,
+                "child_count": 0,
+                "child_ages": [],
                 "budget": 500,
                 "dietary_restrictions": [],
                 "preferred_distance": "2km-5km",
                 "time_period": "13:00-18:00",
                 "duration_hours": 5,
                 "activity_preferences": [],
-                "child_age": None,
             },
             "candidates": {
                 "nearby_restaurants": [

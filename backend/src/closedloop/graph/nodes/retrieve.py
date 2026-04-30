@@ -153,19 +153,51 @@ def retrieve_candidates_node(state: ClosedLoopState) -> ClosedLoopState:
     return state
 
 
+def equivalent_adult(age: int | float) -> float:
+    """将儿童年龄映射为等效成人数权重。"""
+    try:
+        value = float(age)
+    except Exception:
+        return 1.0
+
+    if value <= 3:
+        return 0.2
+    if value <= 6:
+        return 0.4
+    if value <= 10:
+        return 0.6
+    if value <= 14:
+        return 0.8
+    return 1.0
+
+
+def effective_people(constraints: Constraints) -> float:
+    """根据成人数与儿童年龄计算预算口径的等效人数。"""
+    adult_count = constraints.adult_count
+    child_count = constraints.child_count
+    child_ages = list(constraints.child_ages or [])
+
+    unknown_children = max(int(child_count) - len(child_ages), 0)
+    total = float(adult_count) + sum(equivalent_adult(age) for age in child_ages)
+    total += float(unknown_children) * equivalent_adult(9)
+    return float(total)
+
+
 def hard_filter(item: dict, constraints: Constraints) -> bool:
     """第一层：硬过滤（预算/距离偏好/营业时间/儿童年龄）。"""
-    people_count = constraints.people_count or 1
     budget = constraints.budget
+    people = effective_people(constraints)
+    if people <= 0:
+        people = 1.0
 
     item_type = item.get("type")
     if item_type == "restaurant":
         price = item.get("avg_price_per_person", 0)
-        if price * people_count > budget * 0.7:
+        if price * people > budget * 0.7:
             return False
     elif item_type == "activity":
         price = item.get("price_per_person", 0)
-        if price * people_count > budget * 0.7:
+        if price * people > budget * 0.7:
             return False
     elif item_type == "gift_shop":
         price = item.get("price", 0)
@@ -200,12 +232,12 @@ def hard_filter(item: dict, constraints: Constraints) -> bool:
                 return False
 
     if item_type == "activity" and constraints.group_type == "family":
-        child_age = constraints.child_age
-        if child_age is not None:
+        if constraints.child_ages:
             min_age = item.get("min_child_age", 0)
             max_age = item.get("max_child_age", 99)
-            if child_age < min_age or child_age > max_age:
-                return False
+            for age in constraints.child_ages:
+                if age < min_age or age > max_age:
+                    return False
 
     return True
 

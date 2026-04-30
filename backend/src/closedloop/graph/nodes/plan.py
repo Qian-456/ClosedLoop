@@ -8,7 +8,7 @@ from closedloop.contracts.state import ClosedLoopState
 from closedloop.core.config import get_config
 from closedloop.core.llm import build_agent
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.prompts.plan import PLAN_ITINERARY_SYSTEM_PROMPT
+from closedloop.graph.prompts.plan import build_plan_itinerary_system_prompt
 
 
 def _safe_list(value: Any) -> list[dict]:
@@ -281,10 +281,11 @@ def plan_itinerary_node(state: ClosedLoopState) -> ClosedLoopState:
     agent = build_agent(response_format=ItineraryPlan)
 
     try:
+        system_prompt = build_plan_itinerary_system_prompt(constraints_payload)
         response = agent.invoke(
             {
                 "messages": [
-                    SystemMessage(content=PLAN_ITINERARY_SYSTEM_PROMPT),
+                    SystemMessage(content=system_prompt),
                     HumanMessage(content=json.dumps(payload, ensure_ascii=False)),
                 ]
             }

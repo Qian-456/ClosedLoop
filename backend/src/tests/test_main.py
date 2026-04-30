@@ -35,11 +35,15 @@ class TestMainAPI(unittest.TestCase):
             "user_input": "一家三口出去玩",
             "constraints": {
                 "group_type": "family",
+                "adult_count": 2,
+                "child_count": 1,
+                "child_ages": [5],
                 "budget": 500.0,
-                "time_period": "afternoon",
-                "preferred_distance": "2km-5km",
                 "dietary_restrictions": [],
-                "child_age": 5
+                "preferred_distance": "2km-5km",
+                "time_period": "13:00-18:00",
+                "duration_hours": 5.0,
+                "activity_preferences": ["play"]
             }
         }
 

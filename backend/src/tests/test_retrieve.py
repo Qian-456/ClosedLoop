@@ -5,6 +5,8 @@ from closedloop.graph.nodes.retrieve import (
     retrieve_candidates_node,
     filter_rank_node,
     hard_filter,
+    effective_people,
+    equivalent_adult,
     rule_filter,
     score_item,
 )
@@ -14,14 +16,15 @@ class TestRetrieveCandidates(unittest.TestCase):
     def setUp(self):
         self.base_constraints = Constraints(
             group_type="family",
-            people_count=3,
             budget=300.0,
             dietary_restrictions=["辣", "海鲜"],
             preferred_distance="2km-5km",
             time_period="12:00-18:00",
             duration_hours=2.0,
             activity_preferences=["游乐", "室内"],
-            child_age=5
+            adult_count=2,
+            child_count=1,
+            child_ages=[5],
         )
         
         self.restaurant_item = {
@@ -69,7 +72,7 @@ class TestRetrieveCandidates(unittest.TestCase):
         }
 
     def test_hard_filter_pass(self):
-        # 正常通过: 餐厅 60 * 3 = 180 <= 300 * 0.7 (210)
+        # 正常通过: 餐厅 60 * 2.4 = 144 <= 300 * 0.7 (210)
         cheap_restaurant = self.restaurant_item.copy()
         cheap_restaurant["avg_price_per_person"] = 60
         self.assertTrue(hard_filter(cheap_restaurant, self.base_constraints))
@@ -80,15 +83,42 @@ class TestRetrieveCandidates(unittest.TestCase):
         self.assertTrue(hard_filter(cheap_addon, self.base_constraints))
 
     def test_hard_filter_budget_fail(self):
-        # 超出预算: 餐厅 80 * 3 = 240 > 210 (300 * 0.7)
+        # 超出预算: 餐厅 90 * 2.4 = 216 > 210 (300 * 0.7)
         expensive_restaurant = self.restaurant_item.copy()
-        expensive_restaurant["avg_price_per_person"] = 80
+        expensive_restaurant["avg_price_per_person"] = 90
         self.assertFalse(hard_filter(expensive_restaurant, self.base_constraints))
         
         # add-on 总价超出预算: 100 > 90 (300 * 0.3)
         expensive_addon = self.addon_item.copy()
         expensive_addon["price"] = 100
         self.assertFalse(hard_filter(expensive_addon, self.base_constraints))
+
+    def test_equivalent_adult_mapping(self):
+        self.assertEqual(equivalent_adult(3), 0.2)
+        self.assertEqual(equivalent_adult(6), 0.4)
+        self.assertEqual(equivalent_adult(10), 0.6)
+        self.assertEqual(equivalent_adult(14), 0.8)
+        self.assertEqual(equivalent_adult(15), 1.0)
+
+    def test_effective_people_multi_children(self):
+        constraints = self.base_constraints.model_copy(
+            update={"adult_count": 2, "child_count": 2, "child_ages": [5, 8]}
+        )
+        self.assertAlmostEqual(effective_people(constraints), 3.0, places=6)
+
+    def test_effective_people_unknown_children_default_age_9(self):
+        constraints = self.base_constraints.model_copy(
+            update={"adult_count": 2, "child_count": 2, "child_ages": []}
+        )
+        self.assertAlmostEqual(effective_people(constraints), 3.2, places=6)
+
+    def test_hard_filter_budget_uses_effective_people(self):
+        constraints = self.base_constraints.model_copy(
+            update={"adult_count": 2, "child_count": 1, "child_ages": [3]}
+        )
+        item = self.restaurant_item.copy()
+        item["avg_price_per_person"] = 80
+        self.assertTrue(hard_filter(item, constraints))
 
     def test_hard_filter_distance_fail(self):
         # preferred_distance: "2km-5km" -> max is 6.0
@@ -107,11 +137,11 @@ class TestRetrieveCandidates(unittest.TestCase):
         closed_restaurant["close_time"] = "23:00"
         self.assertFalse(hard_filter(closed_restaurant, self.base_constraints))
 
-    def test_hard_filter_child_age_fail(self):
+    def test_hard_filter_child_ages_fail(self):
         # 孩子年龄不符
         toddler_activity = self.activity_item.copy()
         toddler_activity["min_child_age"] = 8
-        self.assertFalse(hard_filter(toddler_activity, self.base_constraints)) # child_age is 5
+        self.assertFalse(hard_filter(toddler_activity, self.base_constraints)) # child_ages contains 5
 
     def test_rule_filter_pass(self):
         self.assertTrue(rule_filter(self.restaurant_item, self.base_constraints))

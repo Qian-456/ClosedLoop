@@ -13,10 +13,10 @@ from closedloop.core.logger import LoggerManager, logger
 
 def _extract_json_object(text: str) -> str:
     """
-    Extract a JSON object from model output text.
+    从模型输出文本中提取 JSON 对象。
 
-    This is used to avoid tool-calling based structured output flows that may
-    fail when tool_call messages are not fully echoed back to the provider.
+    该函数用于避免依赖 tool calling 的结构化输出流程：当 tool_call 消息未被完整回显到
+    provider 时，这类流程可能失败。这里改为从纯文本中截取并解析 JSON。
     """
     cleaned = text.strip()
     if cleaned.startswith("```"):
@@ -35,7 +35,7 @@ def _extract_json_object(text: str) -> str:
 
 def _coerce_structured_response(schema: Any, data: Any) -> Any:
     """
-    Coerce raw dict into a structured response instance when schema is a Pydantic model class.
+    当 schema 为 Pydantic 模型类时，将原始数据强制转换为结构化响应实例。
     """
     if schema is None:
         return data
@@ -57,7 +57,7 @@ class _StructuredOutputAgent:
         backoff_factor: float = 2.0,
         initial_delay: float = 1.0,
     ):
-        """A minimal agent adapter that provides structured output without tool calling."""
+        """一个最小的 Agent 适配器：在不使用 tool calling 的情况下提供结构化输出。"""
         self._primary_model = primary_model
         self._fallback_model = fallback_model
         self._response_format = response_format
