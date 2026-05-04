@@ -1,422 +1,1284 @@
 [
   {
-    "id": "r001",
-    "name": "轻食花园餐厅",
-    "type": "restaurant",
-    "category": "健康轻食",
-    "distance_km": 1.2,
-    "avg_price_per_person": 68,
-    "rating": 4.6,
-    "open_time": "10:00",
-    "close_time": "21:00",
-    "avg_wait_minutes": 5,
-    "duration_minutes": 45,
-    "tags": ["轻食", "健康", "环境安静"],
-    "avoid_tags": ["油腻", "重口味"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会", "家庭亲子"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": false,
-    "location": "科技园区A栋",
-    "description": "主打低脂低卡的健康简餐，店内布置了大量绿植，环境静谧。非常适合正在减脂期的朋友或想要安静聊天的闺蜜局。"
-  },
-  {
-    "id": "r002",
-    "name": "江南家常菜",
-    "type": "restaurant",
-    "category": "中式家常菜",
-    "distance_km": 2.5,
-    "avg_price_per_person": 85,
+    "restaurant_id": "r_1001",
+    "name": "蜀大侠火锅",
+    "location": {
+      "latitude": 0.929,
+      "longitude": 4.654,
+      "address": "市郊某偏远大道28号",
+      "distance_to_center_km": 4.75,
+      "zone_name": "独立区域"
+    },
     "rating": 4.8,
-    "open_time": "11:00",
-    "close_time": "22:00",
-    "avg_wait_minutes": 15,
-    "duration_minutes": 60,
-    "tags": ["家常菜", "聚餐", "江浙菜"],
-    "avoid_tags": ["辛辣", "刺激"],
-    "suitable_groups": ["家庭亲子", "朋友聚会", "商务宴请"],
-    "has_child_seat": true,
-    "supports_reservation": true,
-    "supports_queue": true,
-    "location": "市中心步行街",
-    "description": "口味温和的经典江南菜，老少皆宜，环境宽敞舒适，是家庭聚餐和长辈偏爱的稳妥选择。"
+    "combos": [
+      {
+        "combo_id": "c_1001_1",
+        "name": "单人工作餐冒菜",
+        "price": 38.0,
+        "description": "牛油底料冒菜+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1001_2",
+        "name": "双人浪漫约会餐",
+        "price": 168.0,
+        "description": "鸳鸯锅+肥牛+虾滑",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1001_3",
+        "name": "温馨三口之家套餐",
+        "price": 218.0,
+        "description": "番茄锅+虾滑+小吃",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1001_4",
+        "name": "青年四人欢聚套餐",
+        "price": 288.0,
+        "description": "红锅+毛肚+酥肉+大窑",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1001_5",
+        "name": "八人豪华包厢宴",
+        "price": 888.0,
+        "description": "全牛宴拼盘+海鲜",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "火锅",
+      "聚餐",
+      "热闹"
+    ]
   },
   {
-    "id": "r003",
-    "name": "商场儿童餐厅",
-    "type": "restaurant",
-    "category": "儿童主题",
-    "distance_km": 3.0,
-    "avg_price_per_person": 120,
-    "rating": 4.5,
-    "open_time": "10:00",
-    "close_time": "21:30",
-    "avg_wait_minutes": 20,
-    "duration_minutes": 90,
-    "tags": ["亲子", "游乐区", "儿童餐"],
-    "avoid_tags": ["安静", "商务"],
-    "suitable_groups": ["家庭亲子"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "万达广场3楼",
-    "description": "专为儿童设计的沉浸式主题餐厅，内置小型游乐区。虽然成人餐品中规中矩，但能让孩子吃得开心、玩得尽兴。"
+    "restaurant_id": "r_1002",
+    "name": "眉州东坡 (高新科技园店)",
+    "location": {
+      "latitude": -4.737,
+      "longitude": 4.959,
+      "address": "高新科技园附近某街道559号",
+      "distance_to_center_km": 6.86,
+      "zone_name": "高新科技园"
+    },
+    "rating": 4.6,
+    "combos": [
+      {
+        "combo_id": "c_1002_1",
+        "name": "单人东坡肉盖饭",
+        "price": 45.0,
+        "description": "东坡肉+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1002_2",
+        "name": "亲子三人套餐",
+        "price": 188.0,
+        "description": "糖醋里脊+鸡汤+包点",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1002_3",
+        "name": "双人经典套餐",
+        "price": 158.0,
+        "description": "宫保鸡丁+麻婆豆腐",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1002_4",
+        "name": "经典四人同享餐",
+        "price": 258.0,
+        "description": "东坡肘子+烤鸭半套",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "川菜",
+      "家庭",
+      "老字号"
+    ]
   },
   {
-    "id": "r004",
-    "name": "川味火锅",
-    "type": "restaurant",
-    "category": "川味火锅",
-    "distance_km": 1.5,
-    "avg_price_per_person": 150,
-    "rating": 4.9,
-    "open_time": "11:00",
-    "close_time": "02:00",
-    "avg_wait_minutes": 45,
-    "duration_minutes": 120,
-    "tags": ["火锅", "重口味", "夜宵", "热辣"],
-    "avoid_tags": ["清淡", "赶时间", "幼儿"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "商务宴请"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "美食街8号",
-    "description": "地道正宗的重口味牛油火锅，香辣过瘾，营业至深夜。非常适合无辣不欢的朋友聚餐，但不适合带小孩或减肥人群。"
-  },
-  {
-    "id": "r005",
-    "name": "烧烤精酿小馆",
-    "type": "restaurant",
-    "category": "烧烤夜宵",
-    "distance_km": 0.8,
-    "avg_price_per_person": 110,
+    "restaurant_id": "r_1003",
+    "name": "凑凑火锅·茶憩 (滨江风景区店)",
+    "location": {
+      "latitude": 3.757,
+      "longitude": -0.759,
+      "address": "滨江风景区附近某街道829号",
+      "distance_to_center_km": 3.83,
+      "zone_name": "滨江风景区"
+    },
     "rating": 4.7,
-    "open_time": "17:00",
-    "close_time": "03:00",
-    "avg_wait_minutes": 10,
-    "duration_minutes": 120,
-    "tags": ["烧烤", "精酿啤酒", "夜宵", "氛围好"],
-    "avoid_tags": ["早起", "安静", "低热量"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "单人出行"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "创意园B区",
-    "description": "氛围感极佳的深夜烧烤店，提供多种自酿啤酒和特色烤串。音乐较多，适合年轻人周末放松、微醺闲聊。"
+    "combos": [
+      {
+        "combo_id": "c_1003_1",
+        "name": "单人解馋小火锅",
+        "price": 88.0,
+        "description": "吧台小锅+奶茶",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1003_2",
+        "name": "凑凑下午茶套餐",
+        "price": 58.0,
+        "description": "大红袍奶茶2杯+甜点",
+        "duration_mins": 45,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1003_3",
+        "name": "家庭欢乐火锅",
+        "price": 268.0,
+        "description": "花胶鸡锅+海鲜拼盘",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1003_4",
+        "name": "闺蜜四人局",
+        "price": 328.0,
+        "description": "台式麻辣锅+奶茶4杯",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "火锅",
+      "奶茶",
+      "打卡"
+    ]
   },
   {
-    "id": "r006",
-    "name": "日料小馆",
-    "type": "restaurant",
-    "category": "高端日料",
-    "distance_km": 4.2,
-    "avg_price_per_person": 280,
+    "restaurant_id": "r_1004",
+    "name": "蓝蛙 Wagas (CBD核心商圈店)",
+    "location": {
+      "latitude": -1.92,
+      "longitude": -3.246,
+      "address": "CBD核心商圈附近某街道433号",
+      "distance_to_center_km": 3.77,
+      "zone_name": "CBD核心商圈"
+    },
+    "rating": 4.5,
+    "combos": [
+      {
+        "combo_id": "c_1004_1",
+        "name": "单人减脂轻食碗",
+        "price": 68.0,
+        "description": "三文鱼沙拉+黑咖啡",
+        "duration_mins": 40,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1004_2",
+        "name": "双人美式下午茶",
+        "price": 128.0,
+        "description": "迷你汉堡*2+饮品",
+        "duration_mins": 60,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1004_3",
+        "name": "家庭健康轻食餐",
+        "price": 238.0,
+        "description": "沙拉+烤鸡肉卷+意面",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1004_4",
+        "name": "四人美式汉堡餐",
+        "price": 318.0,
+        "description": "招牌牛肉堡*4+小吃",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "西餐",
+      "轻食",
+      "汉堡"
+    ]
+  },
+  {
+    "restaurant_id": "r_1005",
+    "name": "王品牛排 (大学城商圈店)",
+    "location": {
+      "latitude": -0.836,
+      "longitude": -6.65,
+      "address": "大学城商圈附近某街道782号",
+      "distance_to_center_km": 6.7,
+      "zone_name": "大学城商圈"
+    },
     "rating": 4.8,
-    "open_time": "11:30",
-    "close_time": "22:00",
-    "avg_wait_minutes": 0,
-    "duration_minutes": 90,
-    "tags": ["日料", "刺身", "高端", "安静"],
-    "avoid_tags": ["热闹", "穷游", "大份量"],
-    "suitable_groups": ["情侣约会", "商务宴请", "单人出行"],
-    "has_child_seat": false,
-    "supports_reservation": true,
-    "supports_queue": false,
-    "location": "金融中心50楼",
-    "description": "隐藏在闹市中的高端日式料理，主打新鲜刺身和精致手握。环境私密安静，适合高质量的朋友对谈或情侣约会。"
+    "combos": [
+      {
+        "combo_id": "c_1005_1",
+        "name": "单人尊享位上套餐",
+        "price": 298.0,
+        "description": "台塑牛排+沙拉+汤",
+        "duration_mins": 90,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1005_2",
+        "name": "情侣浪漫双人餐",
+        "price": 588.0,
+        "description": "海陆双拼+玫瑰红酒",
+        "duration_mins": 120,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1005_3",
+        "name": "三口之家庆生宴",
+        "price": 358.0,
+        "description": "海陆双拼牛排+儿童牛排",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1005_4",
+        "name": "四人臻选牛排套餐",
+        "price": 458.0,
+        "description": "经典台塑牛排+法式红酒",
+        "duration_mins": 150,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "牛排",
+      "庆生",
+      "服务好"
+    ]
   },
   {
-    "id": "r007",
-    "name": "小吃街集合店",
-    "type": "restaurant",
-    "category": "特色小吃",
-    "distance_km": 2.0,
-    "avg_price_per_person": 35,
-    "rating": 4.3,
-    "open_time": "09:00",
-    "close_time": "23:00",
-    "avg_wait_minutes": 5,
-    "duration_minutes": 30,
-    "tags": ["小吃", "快捷", "性价比"],
-    "avoid_tags": ["高端", "安静聚餐", "正式"],
-    "suitable_groups": ["单人出行", "朋友聚会", "家庭亲子"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": false,
-    "location": "大学城夜市",
-    "description": "汇集了各地特色小吃的热闹集市，价格亲民且种类丰富。非常适合 Citywalk 途中的朋友们走走停停、边逛边吃。"
+    "restaurant_id": "r_1006",
+    "name": "胡大饭馆",
+    "location": {
+      "latitude": -0.914,
+      "longitude": 1.51,
+      "address": "市郊某偏远大道100号",
+      "distance_to_center_km": 1.76,
+      "zone_name": "独立区域"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1006_1",
+        "name": "双人深夜食堂",
+        "price": 198.0,
+        "description": "小龙虾1.5斤+烤馒头片",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1006_2",
+        "name": "三人微辣夜宵",
+        "price": 268.0,
+        "description": "蒜蓉小龙虾2斤+炒饭",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1006_3",
+        "name": "四人麻辣小龙虾局",
+        "price": 388.0,
+        "description": "麻辣小龙虾3斤+大扎啤",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "小龙虾",
+      "宵夜",
+      "青年"
+    ]
   },
   {
-    "id": "r008",
-    "name": "网红排队餐厅",
-    "type": "restaurant",
-    "category": "创意融合菜",
-    "distance_km": 3.5,
-    "avg_price_per_person": 130,
-    "rating": 4.4,
-    "open_time": "11:00",
-    "close_time": "21:30",
-    "avg_wait_minutes": 90,
-    "duration_minutes": 75,
-    "tags": ["网红打卡", "出片", "创意菜"],
-    "avoid_tags": ["赶时间", "讨厌排队", "老人"],
-    "suitable_groups": ["情侣约会", "朋友聚会", "单人出行"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "太古里",
-    "description": "近期社交媒体上爆火的创意融合菜馆，装修极具出片感。菜品颜值高但等位时间极长，适合愿意为打卡花时间的年轻群体。"
-  },
-  {
-    "id": "r009",
-    "name": "粤式点心茶楼",
-    "type": "restaurant",
-    "category": "粤式早茶",
-    "distance_km": 2.1,
-    "avg_price_per_person": 78,
-    "rating": 4.6,
-    "open_time": "08:00",
-    "close_time": "21:00",
-    "avg_wait_minutes": 20,
-    "duration_minutes": 70,
-    "tags": ["早茶", "点心", "家常菜", "聚餐"],
-    "avoid_tags": ["重口味", "赶时间"],
-    "suitable_groups": ["家庭亲子", "朋友聚会", "商务宴请", "情侣约会"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "中心大道18号",
-    "description": "出品稳定的粤式点心与热茶，适合周末家庭聚餐或朋友慢聊。午晚高峰可能需要排队。"
-  },
-  {
-    "id": "r010",
-    "name": "牛肉面·老字号",
-    "type": "restaurant",
-    "category": "面馆快餐",
-    "distance_km": 1.9,
-    "avg_price_per_person": 45,
-    "rating": 4.4,
-    "open_time": "07:00",
-    "close_time": "21:30",
-    "avg_wait_minutes": 8,
-    "duration_minutes": 35,
-    "tags": ["面食", "快捷", "性价比", "家常"],
-    "avoid_tags": ["高端", "慢聊"],
-    "suitable_groups": ["单人出行", "朋友聚会", "家庭亲子"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "学府路口",
-    "description": "出餐快、分量足的日常面馆，适合赶时间但又想吃得踏实的一餐。"
-  },
-  {
-    "id": "r011",
-    "name": "泰式小馆",
-    "type": "restaurant",
-    "category": "东南亚风味",
-    "distance_km": 3.2,
-    "avg_price_per_person": 98,
-    "rating": 4.5,
-    "open_time": "11:00",
-    "close_time": "22:00",
-    "avg_wait_minutes": 15,
-    "duration_minutes": 70,
-    "tags": ["泰餐", "酸甜", "聚餐", "约会"],
-    "avoid_tags": ["清淡", "幼儿"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "单人出行"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "太古里北区",
-    "description": "主打冬阴功与咖喱等经典泰式风味，口味偏酸辣开胃，适合朋友聚餐或约会换口味。"
-  },
-  {
-    "id": "r012",
-    "name": "低盐家常小馆",
-    "type": "restaurant",
-    "category": "清淡家常",
-    "distance_km": 4.4,
-    "avg_price_per_person": 72,
-    "rating": 4.6,
-    "open_time": "10:30",
-    "close_time": "20:30",
-    "avg_wait_minutes": 0,
-    "duration_minutes": 60,
-    "tags": ["家常菜", "清淡", "长辈友好"],
-    "avoid_tags": ["重口味", "热辣"],
-    "suitable_groups": ["家庭亲子", "朋友聚会", "商务宴请"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": false,
-    "location": "湖滨路66号",
-    "description": "偏清淡少油的家常口味，适合带长辈或想吃得舒服的一餐，整体更稳妥。"
-  },
-  {
-    "id": "r013",
-    "name": "素食自助餐厅",
-    "type": "restaurant",
-    "category": "素食轻食",
-    "distance_km": 2.8,
-    "avg_price_per_person": 68,
-    "rating": 4.3,
-    "open_time": "11:00",
-    "close_time": "21:00",
-    "avg_wait_minutes": 12,
-    "duration_minutes": 65,
-    "tags": ["素食", "轻食", "健康", "环境安静"],
-    "avoid_tags": ["重油", "重口味"],
-    "suitable_groups": ["单人出行", "朋友聚会", "情侣约会"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "文化路12号",
-    "description": "品类丰富的素食自助，偏健康清爽，适合想吃轻一点的朋友局或一个人简单解决。"
-  },
-  {
-    "id": "r014",
-    "name": "海鲜大排档",
-    "type": "restaurant",
-    "category": "海鲜夜宵",
-    "distance_km": 6.4,
-    "avg_price_per_person": 160,
-    "rating": 4.4,
-    "open_time": "17:00",
-    "close_time": "02:00",
-    "avg_wait_minutes": 25,
-    "duration_minutes": 90,
-    "tags": ["海鲜", "夜宵", "热闹", "聚餐"],
-    "avoid_tags": ["海鲜忌口", "安静", "赶时间"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "商务宴请"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "滨江路夜市段",
-    "description": "偏热闹的海鲜排档，适合晚间朋友聚会型聚餐。距离略远但氛围更像宵夜局。"
-  },
-  {
-    "id": "r015",
-    "name": "烧鸟居酒屋",
-    "type": "restaurant",
-    "category": "日式烧鸟",
-    "distance_km": 4.9,
-    "avg_price_per_person": 150,
-    "rating": 4.5,
-    "open_time": "17:30",
-    "close_time": "01:30",
-    "avg_wait_minutes": 18,
-    "duration_minutes": 90,
-    "tags": ["日式", "烧鸟", "小酒馆", "氛围好"],
-    "avoid_tags": ["幼儿", "清淡"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "单人出行"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "新街口后巷",
-    "description": "串烧与小食为主，氛围偏放松聊天。更适合成人朋友局或情侣晚餐，不太适合带幼儿。"
-  },
-  {
-    "id": "r016",
-    "name": "咖啡早午餐",
-    "type": "restaurant",
-    "category": "早午餐咖啡",
-    "distance_km": 0.6,
-    "avg_price_per_person": 88,
-    "rating": 4.6,
-    "open_time": "08:30",
-    "close_time": "20:00",
-    "avg_wait_minutes": 12,
-    "duration_minutes": 60,
-    "tags": ["早午餐", "咖啡", "出片", "环境安静"],
-    "avoid_tags": ["重口味", "商务宴请"],
-    "suitable_groups": ["情侣约会", "朋友聚会", "单人出行"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "公园路9号",
-    "description": "更适合白天慢节奏的早午餐与咖啡，出片感强。周末上午容易等位。"
-  },
-  {
-    "id": "r017",
-    "name": "西北烧烤铺",
-    "type": "restaurant",
-    "category": "烧烤夜宵",
-    "distance_km": 5.6,
-    "avg_price_per_person": 105,
-    "rating": 4.3,
-    "open_time": "16:30",
-    "close_time": "03:00",
-    "avg_wait_minutes": 15,
-    "duration_minutes": 90,
-    "tags": ["烧烤", "夜宵", "热闹", "重口味"],
-    "avoid_tags": ["安静", "低热量", "早起"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "单人出行"],
-    "has_child_seat": false,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "北城美食街",
-    "description": "更接地气的夜宵烧烤选择，味道偏重口。适合晚间朋友聚会，但不适合追求清淡的人群。"
-  },
-  {
-    "id": "r018",
-    "name": "川湘小炒馆",
-    "type": "restaurant",
-    "category": "川湘家常",
-    "distance_km": 3.9,
-    "avg_price_per_person": 85,
-    "rating": 4.5,
-    "open_time": "11:00",
-    "close_time": "22:30",
-    "avg_wait_minutes": 20,
-    "duration_minutes": 70,
-    "tags": ["家常菜", "热辣", "重口味", "聚餐"],
-    "avoid_tags": ["不吃辣", "清淡"],
-    "suitable_groups": ["朋友聚会", "商务宴请", "情侣约会"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": true,
-    "location": "青年路南段",
-    "description": "小炒出品速度快，口味偏川湘。适合能吃辣的朋友聚餐型局。"
-  },
-  {
-    "id": "r019",
-    "name": "甜品烘焙工坊",
-    "type": "restaurant",
-    "category": "烘焙甜品",
-    "distance_km": 2.3,
-    "avg_price_per_person": 55,
+    "restaurant_id": "r_1007",
+    "name": "点都德 (大学城商圈店)",
+    "location": {
+      "latitude": 0.519,
+      "longitude": -9.349,
+      "address": "大学城商圈附近某街道827号",
+      "distance_to_center_km": 9.36,
+      "zone_name": "大学城商圈"
+    },
     "rating": 4.7,
-    "open_time": "10:00",
-    "close_time": "22:00",
-    "avg_wait_minutes": 0,
-    "duration_minutes": 40,
-    "tags": ["甜品", "烘焙", "下午茶", "出片", "室内"],
-    "avoid_tags": ["控糖", "赶时间"],
-    "suitable_groups": ["情侣约会", "朋友聚会", "单人出行", "家庭亲子"],
-    "has_child_seat": true,
-    "supports_reservation": false,
-    "supports_queue": false,
-    "location": "欢乐购物中心1层",
-    "description": "甜品与烘焙为主，适合作为正餐后的加项或下午茶落点，拍照也很友好。"
+    "combos": [
+      {
+        "combo_id": "c_1007_1",
+        "name": "单人早茶尝鲜",
+        "price": 58.0,
+        "description": "虾饺皇+皮蛋瘦肉粥",
+        "duration_mins": 45,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "breakfast",
+          "lunch"
+        ]
+      },
+      {
+        "combo_id": "c_1007_2",
+        "name": "双人经典叹茶",
+        "price": 138.0,
+        "description": "红米肠+凤爪+一壶普洱",
+        "duration_mins": 90,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "breakfast",
+          "lunch",
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1007_3",
+        "name": "家庭广式晚餐",
+        "price": 218.0,
+        "description": "烧鹅双拼+干炒牛河",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1007_4",
+        "name": "四人饮茶闲聊",
+        "price": 268.0,
+        "description": "金牌虾饺皇+红米肠等",
+        "duration_mins": 120,
+        "duration_std_dev": 45.0,
+        "suitable_time_slots": [
+          "lunch",
+          "afternoon_tea"
+        ]
+      }
+    ],
+    "tags": [
+      "粤菜",
+      "点心",
+      "全天候"
+    ]
   },
   {
-    "id": "r020",
-    "name": "山顶景观餐厅",
-    "type": "restaurant",
-    "category": "景观西餐",
-    "distance_km": 7.8,
-    "avg_price_per_person": 220,
+    "restaurant_id": "r_1008",
+    "name": "外婆家 (CBD核心商圈店)",
+    "location": {
+      "latitude": -2.205,
+      "longitude": -4.207,
+      "address": "CBD核心商圈附近某街道997号",
+      "distance_to_center_km": 4.75,
+      "zone_name": "CBD核心商圈"
+    },
+    "rating": 4.4,
+    "combos": [
+      {
+        "combo_id": "c_1008_1",
+        "name": "单人外婆便当",
+        "price": 28.0,
+        "description": "红烧肉+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1008_2",
+        "name": "双人回忆套餐",
+        "price": 98.0,
+        "description": "红烧肉+蒜蓉粉丝虾",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1008_3",
+        "name": "三口之家日常餐",
+        "price": 138.0,
+        "description": "麻婆豆腐+糖醋排骨",
+        "duration_mins": 60,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1008_4",
+        "name": "四人大满足",
+        "price": 208.0,
+        "description": "红烧肉+茶香鸡+宋嫂鱼羹",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "家常菜",
+      "温馨"
+    ]
+  },
+  {
+    "restaurant_id": "r_1009",
+    "name": "比格披萨自助 (滨江风景区店)",
+    "location": {
+      "latitude": 4.487,
+      "longitude": -2.132,
+      "address": "滨江风景区附近某街道644号",
+      "distance_to_center_km": 4.97,
+      "zone_name": "滨江风景区"
+    },
+    "rating": 4.2,
+    "combos": [
+      {
+        "combo_id": "c_1009_1",
+        "name": "单人工作日自助",
+        "price": 69.0,
+        "description": "单人畅吃",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1009_2",
+        "name": "2大1小家庭自助",
+        "price": 188.0,
+        "description": "两位成人+一位儿童畅吃",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1009_3",
+        "name": "四人畅吃派对",
+        "price": 276.0,
+        "description": "四位成人自助",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "披萨",
+      "自助",
+      "平价"
+    ]
+  },
+  {
+    "restaurant_id": "r_1010",
+    "name": "霸王茶姬 / 喜茶 (高新科技园店)",
+    "location": {
+      "latitude": -4.355,
+      "longitude": 1.96,
+      "address": "高新科技园附近某街道197号",
+      "distance_to_center_km": 4.78,
+      "zone_name": "高新科技园"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1010_1",
+        "name": "伯牙绝弦单杯打包",
+        "price": 20.0,
+        "description": "招牌原叶鲜奶茶",
+        "duration_mins": 15,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "afternoon_tea",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1010_2",
+        "name": "双人下午茶小憩",
+        "price": 45.0,
+        "description": "奶茶2杯+小甜点",
+        "duration_mins": 45,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1010_3",
+        "name": "四人开黑奶茶套餐",
+        "price": 80.0,
+        "description": "大杯招牌奶茶4杯",
+        "duration_mins": 20,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "afternoon_tea",
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "奶茶",
+      "小憩"
+    ]
+  },
+  {
+    "restaurant_id": "r_1011",
+    "name": "蜀大侠火锅",
+    "location": {
+      "latitude": -0.345,
+      "longitude": -1.176,
+      "address": "市郊某偏远大道234号",
+      "distance_to_center_km": 1.23,
+      "zone_name": "独立区域"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1011_1",
+        "name": "单人工作餐冒菜",
+        "price": 38.0,
+        "description": "牛油底料冒菜+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1011_2",
+        "name": "双人浪漫约会餐",
+        "price": 168.0,
+        "description": "鸳鸯锅+肥牛+虾滑",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1011_3",
+        "name": "温馨三口之家套餐",
+        "price": 218.0,
+        "description": "番茄锅+虾滑+小吃",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1011_4",
+        "name": "青年四人欢聚套餐",
+        "price": 288.0,
+        "description": "红锅+毛肚+酥肉+大窑",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1011_5",
+        "name": "八人豪华包厢宴",
+        "price": 888.0,
+        "description": "全牛宴拼盘+海鲜",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "火锅",
+      "聚餐",
+      "热闹"
+    ]
+  },
+  {
+    "restaurant_id": "r_1012",
+    "name": "眉州东坡 (大学城商圈店)",
+    "location": {
+      "latitude": 2.282,
+      "longitude": -7.952,
+      "address": "大学城商圈附近某街道888号",
+      "distance_to_center_km": 8.27,
+      "zone_name": "大学城商圈"
+    },
     "rating": 4.6,
-    "open_time": "11:30",
-    "close_time": "22:00",
-    "avg_wait_minutes": 0,
-    "duration_minutes": 100,
-    "tags": ["景观", "约会", "西餐", "安静", "高端"],
-    "avoid_tags": ["穷游", "赶时间", "带幼儿"],
-    "suitable_groups": ["情侣约会", "商务宴请"],
-    "has_child_seat": false,
-    "supports_reservation": true,
-    "supports_queue": false,
-    "location": "南山观景平台",
-    "description": "景观位为卖点，整体更适合约会或纪念日。距离偏远、时长更长，适合作为行程主菜而非随便一餐。"
+    "combos": [
+      {
+        "combo_id": "c_1012_1",
+        "name": "单人东坡肉盖饭",
+        "price": 45.0,
+        "description": "东坡肉+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1012_2",
+        "name": "亲子三人套餐",
+        "price": 188.0,
+        "description": "糖醋里脊+鸡汤+包点",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1012_3",
+        "name": "双人经典套餐",
+        "price": 158.0,
+        "description": "宫保鸡丁+麻婆豆腐",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1012_4",
+        "name": "经典四人同享餐",
+        "price": 258.0,
+        "description": "东坡肘子+烤鸭半套",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "川菜",
+      "家庭",
+      "老字号"
+    ]
+  },
+  {
+    "restaurant_id": "r_1013",
+    "name": "凑凑火锅·茶憩 (CBD核心商圈店)",
+    "location": {
+      "latitude": -3.171,
+      "longitude": -1.235,
+      "address": "CBD核心商圈附近某街道855号",
+      "distance_to_center_km": 3.4,
+      "zone_name": "CBD核心商圈"
+    },
+    "rating": 4.7,
+    "combos": [
+      {
+        "combo_id": "c_1013_1",
+        "name": "单人解馋小火锅",
+        "price": 88.0,
+        "description": "吧台小锅+奶茶",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1013_2",
+        "name": "凑凑下午茶套餐",
+        "price": 58.0,
+        "description": "大红袍奶茶2杯+甜点",
+        "duration_mins": 45,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1013_3",
+        "name": "家庭欢乐火锅",
+        "price": 268.0,
+        "description": "花胶鸡锅+海鲜拼盘",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1013_4",
+        "name": "闺蜜四人局",
+        "price": 328.0,
+        "description": "台式麻辣锅+奶茶4杯",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "火锅",
+      "奶茶",
+      "打卡"
+    ]
+  },
+  {
+    "restaurant_id": "r_1014",
+    "name": "蓝蛙 Wagas (大学城商圈店)",
+    "location": {
+      "latitude": 0.079,
+      "longitude": -6.48,
+      "address": "大学城商圈附近某街道687号",
+      "distance_to_center_km": 6.48,
+      "zone_name": "大学城商圈"
+    },
+    "rating": 4.5,
+    "combos": [
+      {
+        "combo_id": "c_1014_1",
+        "name": "单人减脂轻食碗",
+        "price": 68.0,
+        "description": "三文鱼沙拉+黑咖啡",
+        "duration_mins": 40,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1014_2",
+        "name": "双人美式下午茶",
+        "price": 128.0,
+        "description": "迷你汉堡*2+饮品",
+        "duration_mins": 60,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1014_3",
+        "name": "家庭健康轻食餐",
+        "price": 238.0,
+        "description": "沙拉+烤鸡肉卷+意面",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1014_4",
+        "name": "四人美式汉堡餐",
+        "price": 318.0,
+        "description": "招牌牛肉堡*4+小吃",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "西餐",
+      "轻食",
+      "汉堡"
+    ]
+  },
+  {
+    "restaurant_id": "r_1015",
+    "name": "王品牛排 (大学城商圈店)",
+    "location": {
+      "latitude": -1.333,
+      "longitude": -9.851,
+      "address": "大学城商圈附近某街道74号",
+      "distance_to_center_km": 9.94,
+      "zone_name": "大学城商圈"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1015_1",
+        "name": "单人尊享位上套餐",
+        "price": 298.0,
+        "description": "台塑牛排+沙拉+汤",
+        "duration_mins": 90,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1015_2",
+        "name": "情侣浪漫双人餐",
+        "price": 588.0,
+        "description": "海陆双拼+玫瑰红酒",
+        "duration_mins": 120,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1015_3",
+        "name": "三口之家庆生宴",
+        "price": 358.0,
+        "description": "海陆双拼牛排+儿童牛排",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1015_4",
+        "name": "四人臻选牛排套餐",
+        "price": 458.0,
+        "description": "经典台塑牛排+法式红酒",
+        "duration_mins": 150,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "牛排",
+      "庆生",
+      "服务好"
+    ]
+  },
+  {
+    "restaurant_id": "r_1016",
+    "name": "胡大饭馆",
+    "location": {
+      "latitude": -1.897,
+      "longitude": -1.552,
+      "address": "市郊某偏远大道747号",
+      "distance_to_center_km": 2.45,
+      "zone_name": "独立区域"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1016_1",
+        "name": "双人深夜食堂",
+        "price": 198.0,
+        "description": "小龙虾1.5斤+烤馒头片",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1016_2",
+        "name": "三人微辣夜宵",
+        "price": 268.0,
+        "description": "蒜蓉小龙虾2斤+炒饭",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      },
+      {
+        "combo_id": "c_1016_3",
+        "name": "四人麻辣小龙虾局",
+        "price": 388.0,
+        "description": "麻辣小龙虾3斤+大扎啤",
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "小龙虾",
+      "宵夜",
+      "青年"
+    ]
+  },
+  {
+    "restaurant_id": "r_1017",
+    "name": "点都德 (老城文化街区店)",
+    "location": {
+      "latitude": 0.34,
+      "longitude": 3.89,
+      "address": "老城文化街区附近某街道948号",
+      "distance_to_center_km": 3.9,
+      "zone_name": "老城文化街区"
+    },
+    "rating": 4.7,
+    "combos": [
+      {
+        "combo_id": "c_1017_1",
+        "name": "单人早茶尝鲜",
+        "price": 58.0,
+        "description": "虾饺皇+皮蛋瘦肉粥",
+        "duration_mins": 45,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "breakfast",
+          "lunch"
+        ]
+      },
+      {
+        "combo_id": "c_1017_2",
+        "name": "双人经典叹茶",
+        "price": 138.0,
+        "description": "红米肠+凤爪+一壶普洱",
+        "duration_mins": 90,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "breakfast",
+          "lunch",
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1017_3",
+        "name": "家庭广式晚餐",
+        "price": 218.0,
+        "description": "烧鹅双拼+干炒牛河",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1017_4",
+        "name": "四人饮茶闲聊",
+        "price": 268.0,
+        "description": "金牌虾饺皇+红米肠等",
+        "duration_mins": 120,
+        "duration_std_dev": 45.0,
+        "suitable_time_slots": [
+          "lunch",
+          "afternoon_tea"
+        ]
+      }
+    ],
+    "tags": [
+      "粤菜",
+      "点心",
+      "全天候"
+    ]
+  },
+  {
+    "restaurant_id": "r_1018",
+    "name": "外婆家 (高新科技园店)",
+    "location": {
+      "latitude": -5.172,
+      "longitude": 4.201,
+      "address": "高新科技园附近某街道787号",
+      "distance_to_center_km": 6.66,
+      "zone_name": "高新科技园"
+    },
+    "rating": 4.4,
+    "combos": [
+      {
+        "combo_id": "c_1018_1",
+        "name": "单人外婆便当",
+        "price": 28.0,
+        "description": "红烧肉+米饭",
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1018_2",
+        "name": "双人回忆套餐",
+        "price": 98.0,
+        "description": "红烧肉+蒜蓉粉丝虾",
+        "duration_mins": 60,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1018_3",
+        "name": "三口之家日常餐",
+        "price": 138.0,
+        "description": "麻婆豆腐+糖醋排骨",
+        "duration_mins": 60,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1018_4",
+        "name": "四人大满足",
+        "price": 208.0,
+        "description": "红烧肉+茶香鸡+宋嫂鱼羹",
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "家常菜",
+      "温馨"
+    ]
+  },
+  {
+    "restaurant_id": "r_1019",
+    "name": "比格披萨自助 (CBD核心商圈店)",
+    "location": {
+      "latitude": -1.918,
+      "longitude": -1.982,
+      "address": "CBD核心商圈附近某街道324号",
+      "distance_to_center_km": 2.76,
+      "zone_name": "CBD核心商圈"
+    },
+    "rating": 4.2,
+    "combos": [
+      {
+        "combo_id": "c_1019_1",
+        "name": "单人工作日自助",
+        "price": 69.0,
+        "description": "单人畅吃",
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1019_2",
+        "name": "2大1小家庭自助",
+        "price": 188.0,
+        "description": "两位成人+一位儿童畅吃",
+        "duration_mins": 120,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1019_3",
+        "name": "四人畅吃派对",
+        "price": 276.0,
+        "description": "四位成人自助",
+        "duration_mins": 120,
+        "duration_std_dev": 30.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ]
+      }
+    ],
+    "tags": [
+      "披萨",
+      "自助",
+      "平价"
+    ]
+  },
+  {
+    "restaurant_id": "r_1020",
+    "name": "霸王茶姬 / 喜茶 (滨江风景区店)",
+    "location": {
+      "latitude": 3.273,
+      "longitude": -1.699,
+      "address": "滨江风景区附近某街道966号",
+      "distance_to_center_km": 3.69,
+      "zone_name": "滨江风景区"
+    },
+    "rating": 4.8,
+    "combos": [
+      {
+        "combo_id": "c_1020_1",
+        "name": "伯牙绝弦单杯打包",
+        "price": 20.0,
+        "description": "招牌原叶鲜奶茶",
+        "duration_mins": 15,
+        "duration_std_dev": 5.0,
+        "suitable_time_slots": [
+          "lunch",
+          "afternoon_tea",
+          "dinner"
+        ]
+      },
+      {
+        "combo_id": "c_1020_2",
+        "name": "双人下午茶小憩",
+        "price": 45.0,
+        "description": "奶茶2杯+小甜点",
+        "duration_mins": 45,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ]
+      },
+      {
+        "combo_id": "c_1020_3",
+        "name": "四人开黑奶茶套餐",
+        "price": 80.0,
+        "description": "大杯招牌奶茶4杯",
+        "duration_mins": 20,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "afternoon_tea",
+          "dinner",
+          "late_night"
+        ]
+      }
+    ],
+    "tags": [
+      "奶茶",
+      "小憩"
+    ]
   }
 ]

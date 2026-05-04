@@ -1,402 +1,798 @@
 [
   {
-    "id": "a001",
-    "name": "亲子科学探索馆",
-    "type": "activity",
-    "category": "科教研学",
-    "distance_km": 5.2,
-    "price_per_person": 80,
-    "rating": 4.8,
-    "open_time": "09:00",
-    "close_time": "18:00",
-    "duration_minutes": 120,
-    "tags": ["科学", "家庭亲子", "教育", "室内"],
-    "avoid_tags": ["嘈杂"],
-    "suitable_groups": ["家庭亲子"],
-    "min_child_age": 3,
-    "max_child_age": 12,
-    "supports_reservation": true,
-    "location": "科技路8号",
-    "description": "寓教于乐的室内科学探索馆，提供丰富的互动实验装置，让孩子在玩乐中学习科学知识，是家庭周末出行的绝佳选择。"
-  },
-  {
-    "id": "a002",
-    "name": "室内儿童乐园",
-    "type": "activity",
-    "category": "室内游乐",
-    "distance_km": 3.5,
-    "price_per_person": 120,
-    "rating": 4.6,
-    "open_time": "10:00",
-    "close_time": "21:00",
-    "duration_minutes": 180,
-    "tags": ["游乐", "家庭亲子", "运动", "室内"],
-    "avoid_tags": ["安静"],
-    "suitable_groups": ["家庭亲子"],
-    "min_child_age": 2,
-    "max_child_age": 10,
-    "supports_reservation": false,
-    "location": "欢乐购物中心3层",
-    "description": "大型综合室内游乐场，包含海洋球、滑梯和攀爬架。能有效消耗孩子旺盛的精力，家长也可在休息区放松。"
-  },
-  {
-    "id": "a003",
-    "name": "河畔公园轻步道",
-    "type": "activity",
-    "category": "户外休闲",
-    "distance_km": 1.2,
-    "price_per_person": 0,
-    "rating": 4.7,
-    "open_time": "00:00",
-    "close_time": "23:59",
-    "duration_minutes": 60,
-    "tags": ["自然", "散步", "休闲", "室外"],
-    "avoid_tags": ["恶劣天气"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会", "家庭亲子"],
-    "min_child_age": 0,
-    "max_child_age": 99,
-    "supports_reservation": false,
-    "location": "滨河路",
-    "description": "沿河而建的优美步道，空气清新且免费开放。适合全家人饭后消食，或朋友间低成本的近距离休闲漫步。"
-  },
-  {
-    "id": "a004",
-    "name": "商场电影院",
-    "type": "activity",
-    "category": "影视娱乐",
-    "distance_km": 2.0,
-    "price_per_person": 60,
-    "rating": 4.5,
-    "open_time": "10:00",
-    "close_time": "02:00",
-    "duration_minutes": 150,
-    "tags": ["电影", "放松", "约会", "室内"],
-    "avoid_tags": ["剧烈运动"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会", "家庭亲子"],
-    "min_child_age": 0,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "万达广场4层",
-    "description": "设备先进的现代化影城，排片丰富。无论是情侣约会还是家庭亲子观影，都是一个不会出错的通用室内娱乐备选项。"
-  },
-  {
-    "id": "a005",
-    "name": "城市摄影展",
-    "type": "activity",
-    "category": "文化艺术",
-    "distance_km": 4.0,
-    "price_per_person": 30,
-    "rating": 4.9,
-    "open_time": "09:00",
-    "close_time": "17:30",
-    "duration_minutes": 90,
-    "tags": ["艺术", "安静", "文化", "室内"],
-    "avoid_tags": ["嘈杂", "剧烈运动"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会"],
-    "min_child_age": 10,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "市美术馆",
-    "description": "定期更新主题的现代艺术摄影展，展馆内安静且极具文艺气息。非常适合追求精神享受和喜欢安静的朋友局首选。"
-  },
-  {
-    "id": "a006",
-    "name": "Citywalk 老街区",
-    "type": "activity",
-    "category": "城市漫步",
-    "distance_km": 6.5,
-    "price_per_person": 0,
-    "rating": 4.8,
-    "open_time": "00:00",
-    "close_time": "23:59",
-    "duration_minutes": 120,
-    "tags": ["文化", "散步", "摄影", "室外"],
-    "avoid_tags": ["恶劣天气", "消耗体力"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会"],
-    "min_child_age": 6,
-    "max_child_age": 99,
-    "supports_reservation": false,
-    "location": "老城历史文化街区",
-    "description": "保留了大量历史建筑的老城区，沿途有许多特色文创小店和咖啡馆。适合朋友们在好天气里慢慢探索、拍照打卡。"
-  },
-  {
-    "id": "a007",
-    "name": "密室逃脱",
-    "type": "activity",
-    "category": "密室解谜",
-    "distance_km": 3.8,
-    "price_per_person": 150,
-    "rating": 4.7,
-    "open_time": "13:00",
-    "close_time": "23:00",
-    "duration_minutes": 120,
-    "tags": ["解谜", "刺激", "团队合作", "室内"],
-    "avoid_tags": ["放松", "单人"],
-    "suitable_groups": ["朋友聚会", "情侣约会"],
-    "min_child_age": 12,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "青年路88号",
-    "description": "逻辑严密、场景逼真的沉浸式密室逃脱。需要团队协作解开谜题，氛围较为紧张刺激，非常适合朋友聚会，但不建议低龄儿童参与。"
-  },
-  {
-    "id": "a008",
-    "name": "剧烈蹦床馆",
-    "type": "activity",
-    "category": "体育运动",
-    "distance_km": 8.0,
-    "price_per_person": 90,
-    "rating": 4.6,
-    "open_time": "10:00",
-    "close_time": "22:00",
-    "duration_minutes": 120,
-    "tags": ["运动", "活跃", "暴汗", "室内"],
-    "avoid_tags": ["安静", "低强度"],
-    "suitable_groups": ["朋友聚会", "家庭亲子"],
-    "min_child_age": 5,
-    "max_child_age": 50,
-    "supports_reservation": true,
-    "location": "体育公园东侧",
-    "description": "占地面积巨大的室内蹦床主题公园，包含躲避球、扣篮等多种激烈玩法。适合需要释放压力和暴汗的年轻人，体力消耗极大。"
-  },
-  {
-    "id": "a009",
-    "name": "社区图书馆自习区",
-    "type": "activity",
-    "category": "阅读自习",
-    "distance_km": 0.9,
-    "price_per_person": 0,
-    "rating": 4.6,
-    "open_time": "09:00",
-    "close_time": "21:00",
-    "duration_minutes": 90,
-    "tags": ["图书馆", "安静", "阅读", "室内", "自习"],
-    "avoid_tags": ["嘈杂", "剧烈运动"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会"],
-    "min_child_age": 8,
-    "max_child_age": 99,
-    "supports_reservation": false,
-    "location": "社区文化中心2层",
-    "description": "社区配套的公共图书馆，自习区座位充足，环境安静。适合临时找个地方读书、写作业或安静聊天。"
-  },
-  {
-    "id": "a010",
-    "name": "桌游社·轻食桌游吧",
-    "type": "activity",
-    "category": "桌游社交",
-    "distance_km": 2.7,
-    "price_per_person": 60,
-    "rating": 4.5,
-    "open_time": "14:00",
-    "close_time": "01:00",
-    "duration_minutes": 180,
-    "tags": ["桌游", "社交", "轻食", "室内", "放松"],
-    "avoid_tags": ["赶时间", "安静"],
-    "suitable_groups": ["朋友聚会", "情侣约会"],
-    "min_child_age": 10,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "青年路68号",
-    "description": "提供多款桌游与带教，新手也能快速上手。适合朋友小聚或情侣低成本消磨时间，氛围轻松。"
-  },
-  {
-    "id": "a011",
-    "name": "咖啡烘焙体验工坊",
-    "type": "activity",
-    "category": "手作体验",
-    "distance_km": 3.1,
-    "price_per_person": 128,
-    "rating": 4.7,
-    "open_time": "10:00",
-    "close_time": "19:00",
-    "duration_minutes": 120,
-    "tags": ["手作", "咖啡", "烘焙", "出片", "室内"],
-    "avoid_tags": ["嘈杂", "赶时间"],
-    "suitable_groups": ["情侣约会", "朋友聚会", "单人出行"],
-    "min_child_age": 8,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "创意园C区",
-    "description": "包含基础拉花或小点心烘焙体验，流程友好，拍照也很出片。适合想要“做点东西”的轻度体验型行程。"
-  },
-  {
-    "id": "a012",
-    "name": "城市博物馆·常设展",
-    "type": "activity",
-    "category": "文化展馆",
-    "distance_km": 4.6,
-    "price_per_person": 40,
-    "rating": 4.7,
-    "open_time": "09:00",
-    "close_time": "17:00",
-    "duration_minutes": 120,
-    "tags": ["博物馆", "文化", "安静", "室内", "研学"],
-    "avoid_tags": ["嘈杂", "剧烈运动"],
-    "suitable_groups": ["单人出行", "情侣约会", "朋友聚会", "家庭亲子"],
-    "min_child_age": 6,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "人民广场西侧",
-    "description": "常设展内容稳定、路线清晰，适合慢逛。对亲子也友好，是雨天或炎热天气的稳妥室内备选。"
-  },
-  {
-    "id": "a013",
-    "name": "室内攀岩馆",
-    "type": "activity",
-    "category": "体育运动",
-    "distance_km": 2.2,
-    "price_per_person": 110,
-    "rating": 4.6,
-    "open_time": "10:00",
-    "close_time": "22:00",
-    "duration_minutes": 120,
-    "tags": ["攀岩", "运动", "挑战", "室内", "暴汗"],
-    "avoid_tags": ["安静", "低强度"],
-    "suitable_groups": ["朋友聚会", "情侣约会"],
-    "min_child_age": 10,
-    "max_child_age": 50,
-    "supports_reservation": true,
-    "location": "体育中心南门",
-    "description": "线路丰富，既有入门墙也有进阶区。适合想运动出汗但不想受天气影响的人群。"
-  },
-  {
-    "id": "a014",
-    "name": "社区游泳健身中心",
-    "type": "activity",
-    "category": "游泳健身",
-    "distance_km": 1.6,
-    "price_per_person": 45,
-    "rating": 4.3,
-    "open_time": "06:00",
-    "close_time": "22:00",
-    "duration_minutes": 90,
-    "tags": ["游泳", "健身", "运动", "室内"],
-    "avoid_tags": ["怕冷", "赶时间"],
-    "suitable_groups": ["单人出行", "朋友聚会"],
-    "min_child_age": 8,
-    "max_child_age": 60,
-    "supports_reservation": false,
-    "location": "东湖社区体育中心",
-    "description": "社区配套泳池，价格亲民，适合日常运动型行程。建议避开晚高峰时段。"
-  },
-  {
-    "id": "a015",
-    "name": "羽毛球馆（可拼场）",
-    "type": "activity",
-    "category": "球类运动",
-    "distance_km": 5.8,
-    "price_per_person": 60,
-    "rating": 4.4,
-    "open_time": "09:00",
-    "close_time": "23:00",
-    "duration_minutes": 120,
-    "tags": ["羽毛球", "运动", "朋友聚会", "室内"],
-    "avoid_tags": ["安静", "低强度"],
-    "suitable_groups": ["朋友聚会", "单人出行"],
-    "min_child_age": 12,
-    "max_child_age": 55,
-    "supports_reservation": true,
-    "location": "北环路体育馆",
-    "description": "场地规范、灯光充足，支持拼场或包场。更适合有一定运动基础的朋友局。"
-  },
-  {
-    "id": "a016",
-    "name": "陶艺手作工作室",
-    "type": "activity",
-    "category": "手作陶艺",
-    "distance_km": 1.9,
-    "price_per_person": 168,
-    "rating": 4.8,
-    "open_time": "11:00",
-    "close_time": "20:00",
-    "duration_minutes": 150,
-    "tags": ["陶艺", "手作", "治愈", "出片", "室内"],
-    "avoid_tags": ["赶时间", "嘈杂"],
-    "suitable_groups": ["情侣约会", "朋友聚会", "单人出行"],
-    "min_child_age": 8,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "文创街12号",
-    "description": "提供拉坯与手捏两种体验，老师会全程指导。节奏慢且更偏沉浸体验，适合想安静做点东西的约会或闺蜜局。"
-  },
-  {
-    "id": "a017",
-    "name": "KTV·欢唱时光",
-    "type": "activity",
-    "category": "KTV娱乐",
-    "distance_km": 3.9,
-    "price_per_person": 90,
-    "rating": 4.2,
-    "open_time": "12:00",
-    "close_time": "03:00",
-    "duration_minutes": 180,
-    "tags": ["KTV", "唱歌", "热闹", "室内", "聚会"],
-    "avoid_tags": ["安静", "早起"],
-    "suitable_groups": ["朋友聚会", "情侣约会"],
-    "min_child_age": 12,
-    "max_child_age": 99,
-    "supports_reservation": true,
-    "location": "万达广场B座",
-    "description": "房型选择多，适合朋友聚会型行程。晚间更有氛围，但不适合追求安静的人群。"
-  },
-  {
-    "id": "a018",
-    "name": "保龄球&台球中心",
-    "type": "activity",
+    "venue_id": "v_1001",
+    "name": "大玩家室内机动游戏厅",
     "category": "休闲娱乐",
-    "distance_km": 4.1,
-    "price_per_person": 70,
-    "rating": 4.4,
-    "open_time": "10:00",
-    "close_time": "24:00",
-    "duration_minutes": 120,
-    "tags": ["保龄球", "台球", "轻运动", "室内", "聚会"],
-    "avoid_tags": ["赶时间", "安静"],
-    "suitable_groups": ["朋友聚会", "情侣约会"],
-    "min_child_age": 10,
-    "max_child_age": 60,
-    "supports_reservation": false,
-    "location": "欢乐购物中心5层",
-    "description": "强度不高但互动性强，适合边玩边聊。对新手友好，作为饭后活动很稳。"
-  },
-  {
-    "id": "a019",
-    "name": "城市植物园温室馆",
-    "type": "activity",
-    "category": "自然观光",
-    "distance_km": 7.2,
-    "price_per_person": 30,
+    "location": {
+      "latitude": -5.805,
+      "longitude": -2.607,
+      "address": "市郊某偏远大道218号",
+      "distance_to_center_km": 6.36,
+      "zone_name": "独立区域"
+    },
+    "is_free": false,
     "rating": 4.7,
-    "open_time": "08:30",
-    "close_time": "17:30",
-    "duration_minutes": 120,
-    "tags": ["自然", "拍照", "温室", "室内", "室外"],
-    "avoid_tags": ["恶劣天气", "赶时间"],
-    "suitable_groups": ["家庭亲子", "情侣约会", "朋友聚会", "单人出行"],
-    "min_child_age": 0,
-    "max_child_age": 99,
-    "supports_reservation": false,
-    "location": "南山植物园",
-    "description": "温室区适合拍照且四季可逛，室外区更依赖天气。距离略远，但作为半日行程的核心点很合适。"
+    "reviews_count": 13064,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "电玩",
+      "抓娃娃",
+      "短时"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1001_1",
+        "name": "单人50枚游戏币(抓娃娃)",
+        "price": 39.9,
+        "description": "适合碎片时间",
+        "requires_booking": true,
+        "available_stock": 472,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1001_2",
+        "name": "情侣150枚游戏币特惠",
+        "price": 99.0,
+        "description": "畅玩跳舞机、赛车",
+        "requires_booking": true,
+        "available_stock": 488,
+        "duration_mins": 90,
+        "duration_std_dev": 30.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1001_3",
+        "name": "四人300币狂欢大礼包",
+        "price": 188.0,
+        "description": "推币机、大乱斗",
+        "requires_booking": true,
+        "available_stock": 349,
+        "duration_mins": 120,
+        "duration_std_dev": 45.0,
+        "start_time": null
+      }
+    ]
   },
   {
-    "id": "a020",
-    "name": "周末创意市集（广场）",
-    "type": "activity",
-    "category": "市集漫逛",
-    "distance_km": 2.4,
-    "price_per_person": 0,
-    "rating": 4.5,
-    "open_time": "10:00",
-    "close_time": "18:00",
-    "duration_minutes": 120,
-    "tags": ["市集", "逛街", "出片", "小摊", "室外"],
-    "avoid_tags": ["恶劣天气", "赶时间"],
-    "suitable_groups": ["朋友聚会", "情侣约会", "家庭亲子"],
-    "min_child_age": 0,
-    "max_child_age": 99,
-    "supports_reservation": false,
-    "location": "市民广场",
-    "description": "以手作、小吃、文创摊位为主，适合慢逛和拍照。更偏周末氛围型活动，可作为饭后散步的主线。"
+    "venue_id": "v_1002",
+    "name": "咔嚓咔嚓自拍馆 (滨江风景区)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": 3.901,
+      "longitude": -2.082,
+      "address": "滨江风景区附近某街道763号",
+      "distance_to_center_km": 4.42,
+      "zone_name": "滨江风景区"
+    },
+    "is_free": false,
+    "rating": 4.6,
+    "reviews_count": 8709,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "拍照",
+      "大头贴",
+      "短时"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1002_1",
+        "name": "单人/双人韩式大头贴",
+        "price": 35.0,
+        "description": "含2张实体相纸，立等可取",
+        "requires_booking": true,
+        "available_stock": 402,
+        "duration_mins": 20,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1002_2",
+        "name": "四人闺蜜换装自拍(半小时)",
+        "price": 128.0,
+        "description": "提供JK/JK制服",
+        "requires_booking": true,
+        "available_stock": 319,
+        "duration_mins": 45,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1003",
+    "name": "星际VR体验舱 (滨江风景区)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": 4.601,
+      "longitude": -3.632,
+      "address": "滨江风景区附近某街道225号",
+      "distance_to_center_km": 5.86,
+      "zone_name": "滨江风景区"
+    },
+    "is_free": false,
+    "rating": 5.0,
+    "reviews_count": 4632,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "VR",
+      "短时",
+      "刺激"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1003_1",
+        "name": "单人《过山车》VR体验",
+        "price": 45.0,
+        "description": "极限失重体验",
+        "requires_booking": true,
+        "available_stock": 280,
+        "duration_mins": 15,
+        "duration_std_dev": 2.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1003_2",
+        "name": "双人《丧尸危机》VR射击",
+        "price": 88.0,
+        "description": "双人联机防守",
+        "requires_booking": true,
+        "available_stock": 272,
+        "duration_mins": 20,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1003_3",
+        "name": "家庭/四人包舱半小时",
+        "price": 198.0,
+        "description": "任意游戏轮换玩",
+        "requires_booking": true,
+        "available_stock": 66,
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1004",
+    "name": "融创乐园 (CBD核心商圈)",
+    "category": "游乐园",
+    "location": {
+      "latitude": -1.413,
+      "longitude": -3.024,
+      "address": "CBD核心商圈附近某街道164号",
+      "distance_to_center_km": 3.34,
+      "zone_name": "CBD核心商圈"
+    },
+    "is_free": false,
+    "rating": 4.8,
+    "reviews_count": 13933,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "刺激",
+      "亲子",
+      "大型"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1004_1",
+        "name": "成人单人欢乐套票",
+        "price": 218.0,
+        "description": "含过山车等30项",
+        "requires_booking": true,
+        "available_stock": 325,
+        "duration_mins": 480,
+        "duration_std_dev": 60.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1004_2",
+        "name": "2大1小家庭通票",
+        "price": 458.0,
+        "description": "含儿童区",
+        "requires_booking": true,
+        "available_stock": 52,
+        "duration_mins": 480,
+        "duration_std_dev": 90.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1004_3",
+        "name": "青年四人成团特惠",
+        "price": 788.0,
+        "description": "四大过山车",
+        "requires_booking": true,
+        "available_stock": 217,
+        "duration_mins": 480,
+        "duration_std_dev": 60.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1005",
+    "name": "X-cape 沉浸式机械密室",
+    "category": "密室逃脱",
+    "location": {
+      "latitude": -10.47,
+      "longitude": -1.937,
+      "address": "市郊某偏远大道882号",
+      "distance_to_center_km": 10.65,
+      "zone_name": "独立区域"
+    },
+    "is_free": false,
+    "rating": 4.9,
+    "reviews_count": 3853,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "机械",
+      "烧脑",
+      "无NPC"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1005_1",
+        "name": "《达芬奇的密码》双人",
+        "price": 236.0,
+        "description": "纯机械解密",
+        "requires_booking": true,
+        "available_stock": 369,
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "start_time": "14:00"
+      },
+      {
+        "package_id": "pkg_1005_2",
+        "name": "《盗墓迷影》四人组局",
+        "price": 472.0,
+        "description": "中国风机关",
+        "requires_booking": true,
+        "available_stock": 473,
+        "duration_mins": 100,
+        "duration_std_dev": 20.0,
+        "start_time": "16:30"
+      },
+      {
+        "package_id": "pkg_1005_3",
+        "name": "《生化危机》四人微恐",
+        "price": 512.0,
+        "description": "微恐解密",
+        "requires_booking": true,
+        "available_stock": 294,
+        "duration_mins": 100,
+        "duration_std_dev": 15.0,
+        "start_time": "19:00"
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1006",
+    "name": "剧好玩·全息投影剧本杀 (大学城商圈)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": -0.495,
+      "longitude": -9.037,
+      "address": "大学城商圈附近某街道301号",
+      "distance_to_center_km": 9.05,
+      "zone_name": "大学城商圈"
+    },
+    "is_free": false,
+    "rating": 4.4,
+    "reviews_count": 14967,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "剧本杀",
+      "换装",
+      "飙戏"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1006_1",
+        "name": "《九霄寒夜》古风四人车",
+        "price": 552.0,
+        "description": "含汉服妆造",
+        "requires_booking": true,
+        "available_stock": 21,
+        "duration_mins": 300,
+        "duration_std_dev": 45.0,
+        "start_time": "18:00"
+      },
+      {
+        "package_id": "pkg_1006_2",
+        "name": "硬核推理本(包场)",
+        "price": 888.0,
+        "description": "硬核推理不限时",
+        "requires_booking": true,
+        "available_stock": 389,
+        "duration_mins": 360,
+        "duration_std_dev": 60.0,
+        "start_time": "20:00"
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1007",
+    "name": "万达影城(万达广场店) (大学城商圈)",
+    "category": "电影院",
+    "location": {
+      "latitude": 1.848,
+      "longitude": -8.126,
+      "address": "大学城商圈附近某街道520号",
+      "distance_to_center_km": 8.33,
+      "zone_name": "大学城商圈"
+    },
+    "is_free": false,
+    "rating": 4.9,
+    "reviews_count": 9879,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "IMAX",
+      "商场内",
+      "停车方便"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1007_1",
+        "name": "《沙丘2》IMAX 2D 10:00场",
+        "price": 45.0,
+        "description": "早场",
+        "requires_booking": true,
+        "available_stock": 450,
+        "duration_mins": 166,
+        "duration_std_dev": 2.0,
+        "start_time": "10:00"
+      },
+      {
+        "package_id": "pkg_1007_2",
+        "name": "《飞驰人生3》双人套票",
+        "price": 118.0,
+        "description": "含爆米花",
+        "requires_booking": true,
+        "available_stock": 347,
+        "duration_mins": 130,
+        "duration_std_dev": 2.0,
+        "start_time": "19:30"
+      },
+      {
+        "package_id": "pkg_1007_3",
+        "name": "《功夫熊猫6》2大1小家庭票",
+        "price": 128.0,
+        "description": "动画主题厅",
+        "requires_booking": true,
+        "available_stock": 279,
+        "duration_mins": 100,
+        "duration_std_dev": 5.0,
+        "start_time": "15:00"
+      },
+      {
+        "package_id": "pkg_1007_4",
+        "name": "《流浪地球3》四人套餐",
+        "price": 228.0,
+        "description": "4张票",
+        "requires_booking": true,
+        "available_stock": 331,
+        "duration_mins": 150,
+        "duration_std_dev": 2.0,
+        "start_time": "20:00"
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1008",
+    "name": "极速卡丁车俱乐部 (老城文化街区)",
+    "category": "体育运动",
+    "location": {
+      "latitude": 1.04,
+      "longitude": 4.721,
+      "address": "老城文化街区附近某街道553号",
+      "distance_to_center_km": 4.83,
+      "zone_name": "老城文化街区"
+    },
+    "is_free": false,
+    "rating": 5.0,
+    "reviews_count": 17478,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "竞速",
+      "团建",
+      "短时"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1008_1",
+        "name": "单人单节体验(8分钟)",
+        "price": 128.0,
+        "description": "跑8-10圈",
+        "requires_booking": true,
+        "available_stock": 490,
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1008_2",
+        "name": "2大1小亲子套票",
+        "price": 288.0,
+        "description": "双人车+儿童车",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 45,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1008_3",
+        "name": "四人迷你大奖赛",
+        "price": 588.0,
+        "description": "练习+正赛",
+        "requires_booking": true,
+        "available_stock": 326,
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1009",
+    "name": "省博物院",
+    "category": "博物馆",
+    "location": {
+      "latitude": -0.356,
+      "longitude": 0.709,
+      "address": "市郊某偏远大道952号",
+      "distance_to_center_km": 0.79,
+      "zone_name": "独立区域"
+    },
+    "is_free": true,
+    "rating": 4.4,
+    "reviews_count": 10176,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "历史",
+      "免费",
+      "室内"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1009_1",
+        "name": "基本陈列免费参观",
+        "price": 0.0,
+        "description": "需预约",
+        "requires_booking": false,
+        "available_stock": 142,
+        "duration_mins": 180,
+        "duration_std_dev": 45.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1009_2",
+        "name": "人工讲解服务(适合家庭)",
+        "price": 150.0,
+        "description": "讲解员带看",
+        "requires_booking": false,
+        "available_stock": 49,
+        "duration_mins": 120,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1010",
+    "name": "大玩家室内机动游戏厅 (老城文化街区)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": 2.2,
+      "longitude": 0.115,
+      "address": "老城文化街区附近某街道88号",
+      "distance_to_center_km": 2.2,
+      "zone_name": "老城文化街区"
+    },
+    "is_free": false,
+    "rating": 4.7,
+    "reviews_count": 2367,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "电玩",
+      "抓娃娃",
+      "短时"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1010_1",
+        "name": "单人50枚游戏币(抓娃娃)",
+        "price": 39.9,
+        "description": "适合碎片时间",
+        "requires_booking": true,
+        "available_stock": 409,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1010_2",
+        "name": "情侣150枚游戏币特惠",
+        "price": 99.0,
+        "description": "畅玩跳舞机、赛车",
+        "requires_booking": true,
+        "available_stock": 292,
+        "duration_mins": 90,
+        "duration_std_dev": 30.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1010_3",
+        "name": "四人300币狂欢大礼包",
+        "price": 188.0,
+        "description": "推币机、大乱斗",
+        "requires_booking": true,
+        "available_stock": 412,
+        "duration_mins": 120,
+        "duration_std_dev": 45.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1011",
+    "name": "咔嚓咔嚓自拍馆 (老城文化街区)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": 0.761,
+      "longitude": 3.867,
+      "address": "老城文化街区附近某街道563号",
+      "distance_to_center_km": 3.94,
+      "zone_name": "老城文化街区"
+    },
+    "is_free": false,
+    "rating": 4.2,
+    "reviews_count": 17390,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "拍照",
+      "大头贴",
+      "短时"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1011_1",
+        "name": "单人/双人韩式大头贴",
+        "price": 35.0,
+        "description": "含2张实体相纸，立等可取",
+        "requires_booking": true,
+        "available_stock": 466,
+        "duration_mins": 20,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1011_2",
+        "name": "四人闺蜜换装自拍(半小时)",
+        "price": 128.0,
+        "description": "提供JK/JK制服",
+        "requires_booking": true,
+        "available_stock": 330,
+        "duration_mins": 45,
+        "duration_std_dev": 10.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1012",
+    "name": "星际VR体验舱 (滨江风景区)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": 6.751,
+      "longitude": -3.491,
+      "address": "滨江风景区附近某街道774号",
+      "distance_to_center_km": 7.6,
+      "zone_name": "滨江风景区"
+    },
+    "is_free": false,
+    "rating": 4.7,
+    "reviews_count": 6691,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "VR",
+      "短时",
+      "刺激"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1012_1",
+        "name": "单人《过山车》VR体验",
+        "price": 45.0,
+        "description": "极限失重体验",
+        "requires_booking": true,
+        "available_stock": 385,
+        "duration_mins": 15,
+        "duration_std_dev": 2.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1012_2",
+        "name": "双人《丧尸危机》VR射击",
+        "price": 88.0,
+        "description": "双人联机防守",
+        "requires_booking": true,
+        "available_stock": 179,
+        "duration_mins": 20,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1012_3",
+        "name": "家庭/四人包舱半小时",
+        "price": 198.0,
+        "description": "任意游戏轮换玩",
+        "requires_booking": true,
+        "available_stock": 224,
+        "duration_mins": 30,
+        "duration_std_dev": 5.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1013",
+    "name": "融创乐园",
+    "category": "游乐园",
+    "location": {
+      "latitude": 5.792,
+      "longitude": -0.177,
+      "address": "市郊某偏远大道449号",
+      "distance_to_center_km": 5.8,
+      "zone_name": "独立区域"
+    },
+    "is_free": false,
+    "rating": 4.9,
+    "reviews_count": 14894,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "刺激",
+      "亲子",
+      "大型"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1013_1",
+        "name": "成人单人欢乐套票",
+        "price": 218.0,
+        "description": "含过山车等30项",
+        "requires_booking": true,
+        "available_stock": 81,
+        "duration_mins": 480,
+        "duration_std_dev": 60.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1013_2",
+        "name": "2大1小家庭通票",
+        "price": 458.0,
+        "description": "含儿童区",
+        "requires_booking": true,
+        "available_stock": 146,
+        "duration_mins": 480,
+        "duration_std_dev": 90.0,
+        "start_time": null
+      },
+      {
+        "package_id": "pkg_1013_3",
+        "name": "青年四人成团特惠",
+        "price": 788.0,
+        "description": "四大过山车",
+        "requires_booking": true,
+        "available_stock": 135,
+        "duration_mins": 480,
+        "duration_std_dev": 60.0,
+        "start_time": null
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1014",
+    "name": "X-cape 沉浸式机械密室 (CBD核心商圈)",
+    "category": "密室逃脱",
+    "location": {
+      "latitude": -3.019,
+      "longitude": -0.662,
+      "address": "CBD核心商圈附近某街道236号",
+      "distance_to_center_km": 3.09,
+      "zone_name": "CBD核心商圈"
+    },
+    "is_free": false,
+    "rating": 4.6,
+    "reviews_count": 335,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "机械",
+      "烧脑",
+      "无NPC"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1014_1",
+        "name": "《达芬奇的密码》双人",
+        "price": 236.0,
+        "description": "纯机械解密",
+        "requires_booking": true,
+        "available_stock": 56,
+        "duration_mins": 90,
+        "duration_std_dev": 15.0,
+        "start_time": "14:00"
+      },
+      {
+        "package_id": "pkg_1014_2",
+        "name": "《盗墓迷影》四人组局",
+        "price": 472.0,
+        "description": "中国风机关",
+        "requires_booking": true,
+        "available_stock": 382,
+        "duration_mins": 100,
+        "duration_std_dev": 20.0,
+        "start_time": "16:30"
+      },
+      {
+        "package_id": "pkg_1014_3",
+        "name": "《生化危机》四人微恐",
+        "price": 512.0,
+        "description": "微恐解密",
+        "requires_booking": true,
+        "available_stock": 343,
+        "duration_mins": 100,
+        "duration_std_dev": 15.0,
+        "start_time": "19:00"
+      }
+    ]
+  },
+  {
+    "venue_id": "v_1015",
+    "name": "剧好玩·全息投影剧本杀 (CBD核心商圈)",
+    "category": "休闲娱乐",
+    "location": {
+      "latitude": -1.539,
+      "longitude": 0.867,
+      "address": "CBD核心商圈附近某街道881号",
+      "distance_to_center_km": 1.77,
+      "zone_name": "CBD核心商圈"
+    },
+    "is_free": false,
+    "rating": 4.3,
+    "reviews_count": 16947,
+    "operating_hours": "09:00-22:00",
+    "tags": [
+      "剧本杀",
+      "换装",
+      "飙戏"
+    ],
+    "packages": [
+      {
+        "package_id": "pkg_1015_1",
+        "name": "《九霄寒夜》古风四人车",
+        "price": 552.0,
+        "description": "含汉服妆造",
+        "requires_booking": true,
+        "available_stock": 141,
+        "duration_mins": 300,
+        "duration_std_dev": 45.0,
+        "start_time": "18:00"
+      },
+      {
+        "package_id": "pkg_1015_2",
+        "name": "硬核推理本(包场)",
+        "price": 888.0,
+        "description": "硬核推理不限时",
+        "requires_booking": true,
+        "available_stock": 162,
+        "duration_mins": 360,
+        "duration_std_dev": 60.0,
+        "start_time": "20:00"
+      }
+    ]
   }
 ]
