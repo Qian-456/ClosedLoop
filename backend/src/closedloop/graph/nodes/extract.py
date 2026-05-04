@@ -5,7 +5,6 @@ from closedloop.contracts.state import ClosedLoopState, Constraints
 from closedloop.graph.prompts.extract import EXTRACT_CONSTRAINTS_SYSTEM_PROMPT
 from langchain.messages import SystemMessage, HumanMessage
 
-
 def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
     """
     从用户输入中提取约束条件的节点。
