@@ -30,6 +30,7 @@ class ComboMeal(BaseModel):
     name: str
     price: float
     description: str
+    features: Optional[str] = Field(None, description="宣传文案，包含适合人群与体验特色")
     duration_mins: int = Field(..., description="预计就餐时长(分钟)")
     duration_std_dev: float = Field(..., description="时长的标准差，表示浮动范围")
     suitable_time_slots: List[str] = Field(..., description="适合的时间段，如 ['lunch', 'dinner', 'late_night', 'afternoon_tea']")
@@ -48,6 +49,7 @@ class ServicePackage(BaseModel):
     name: str
     price: float
     description: Optional[str] = None
+    features: Optional[str] = Field(None, description="宣传文案，包含适合人群与体验特色")
     requires_booking: bool
     available_stock: int
     start_time: Optional[str] = Field(None, description="针对有明确场次时间的套餐（如电影、演出），格式如 '14:30'")
@@ -70,6 +72,8 @@ class Gift(BaseModel):
     gift_id: str
     name: str
     price: float
+    description: Optional[str] = None
+    features: Optional[str] = Field(None, description="宣传文案，包含适合人群与体验特色")
     stock: int
 
 class GiftShop(BaseModel):

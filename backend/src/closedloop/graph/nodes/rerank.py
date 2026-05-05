@@ -156,6 +156,12 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
         constraints = Constraints(**constraints)
 
     ranked_combos: list[RankedCombo] = []
+    ranked_breakfast_combos: list[RankedCombo] = []
+    ranked_lunch_combos: list[RankedCombo] = []
+    ranked_afternoon_tea_combos: list[RankedCombo] = []
+    ranked_dinner_combos: list[RankedCombo] = []
+    ranked_late_night_combos: list[RankedCombo] = []
+    
     ranked_packages: list[RankedPackage] = []
     ranked_gifts: list[RankedGift] = []
 
@@ -173,14 +179,26 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "score": score_item(rest, combo, constraints),
                 "restaurant_id": rest.get("id", ""),
                 "restaurant_name": rest.get("name", ""),
-                "category": rest.get("category", ""),
                 "distance_km": rest.get("distance_km", 0.0),
                 "rating": rest.get("rating", 0.0),
                 "tags": rest.get("tags", []),
                 "suitable_groups": rest.get("suitable_groups", []),
                 "location": rest.get("location", {})
             }
-            ranked_combos.append(rc)
+            
+            # 分类逻辑：根据套餐自带的时间段标签进行分流
+            suitable_slots = combo.get("suitable_time_slots", [])
+            
+            if "breakfast" in suitable_slots:
+                ranked_breakfast_combos.append(rc)
+            if "lunch" in suitable_slots:
+                ranked_lunch_combos.append(rc)
+            if "afternoon_tea" in suitable_slots:
+                ranked_afternoon_tea_combos.append(rc)
+            if "dinner" in suitable_slots:
+                ranked_dinner_combos.append(rc)
+            if "late_night" in suitable_slots:
+                ranked_late_night_combos.append(rc)
             
     # 处理活动
     for act in candidates.get("nearby_activities", []):
@@ -226,11 +244,22 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
             ranked_gifts.append(rg)
 
     # 降序排序
-    ranked_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+
+    ranked_breakfast_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+    ranked_lunch_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+    ranked_afternoon_tea_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+    ranked_dinner_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+    ranked_late_night_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
+    
     ranked_packages.sort(key=lambda x: x.get("score", 0), reverse=True)
     ranked_gifts.sort(key=lambda x: x.get("score", 0), reverse=True)
 
-    candidates["ranked_combos"] = ranked_combos
+    candidates["ranked_breakfast_combos"] = ranked_breakfast_combos
+    candidates["ranked_lunch_combos"] = ranked_lunch_combos
+    candidates["ranked_afternoon_tea_combos"] = ranked_afternoon_tea_combos
+    candidates["ranked_dinner_combos"] = ranked_dinner_combos
+    candidates["ranked_late_night_combos"] = ranked_late_night_combos
+    
     candidates["ranked_packages"] = ranked_packages
     candidates["ranked_gifts"] = ranked_gifts
     candidates["processed_steps"].append("rerank_node")

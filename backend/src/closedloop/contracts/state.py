@@ -79,7 +79,6 @@ class RankedCombo(TypedDict, total=False):
     
     restaurant_id: Required[str]
     restaurant_name: Required[str]
-    category: NotRequired[str]
     distance_km: NotRequired[float]
     rating: NotRequired[float]
     tags: NotRequired[list[str]]
@@ -133,7 +132,12 @@ class Candidates(TypedDict):
     nearby_activities: NotRequired[list[RetrievedActivity]]
     nearby_gifts: NotRequired[list[RetrievedGift]]
     
-    ranked_combos: NotRequired[list[RankedCombo]]
+    ranked_breakfast_combos: NotRequired[list[RankedCombo]]
+    ranked_lunch_combos: NotRequired[list[RankedCombo]]
+    ranked_afternoon_tea_combos: NotRequired[list[RankedCombo]]
+    ranked_dinner_combos: NotRequired[list[RankedCombo]]
+    ranked_late_night_combos: NotRequired[list[RankedCombo]]
+    
     ranked_packages: NotRequired[list[RankedPackage]]
     ranked_gifts: NotRequired[list[RankedGift]]
     

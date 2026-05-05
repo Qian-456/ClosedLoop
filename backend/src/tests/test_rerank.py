@@ -95,19 +95,25 @@ class TestRerankNode(unittest.TestCase):
         high_rating["id"] = "r_high"
         high_rating["name"] = "High Rest"
         high_rating["rating"] = 4.9
-        high_rating["combos"] = [{"combo_id": "c1", "name": "Combo 1", "price": 100}]
+        high_rating["combos"] = [{"combo_id": "c1", "name": "Combo 1", "price": 100, "suitable_time_slots": ["dinner", "late_night"]}]
 
         low_rating = self.restaurant_item.copy()
         low_rating["id"] = "r_low"
         low_rating["name"] = "Low Rest"
         low_rating["rating"] = 4.0
-        low_rating["combos"] = [{"combo_id": "c2", "name": "Combo 2", "price": 50}]
+        low_rating["combos"] = [{"combo_id": "c2", "name": "Combo 2", "price": 50, "suitable_time_slots": ["lunch", "dinner"]}]
+
+        tea_rating = self.restaurant_item.copy()
+        tea_rating["id"] = "r_tea"
+        tea_rating["name"] = "Tea Rest"
+        tea_rating["rating"] = 4.7
+        tea_rating["combos"] = [{"combo_id": "c3", "name": "Combo Tea", "price": 80, "suitable_time_slots": ["afternoon_tea", "lunch"]}]
 
         state = ClosedLoopState(
             user_input="Test input",
             constraints=self.base_constraints,
             candidates={
-                "nearby_restaurants": [low_rating, high_rating], # Input is unordered
+                "nearby_restaurants": [low_rating, high_rating, tea_rating], # Input is unordered
                 "nearby_activities": [],
                 "nearby_gifts": [],
                 "processed_steps": ["retrieve_candidates_node", "filter_node"],
@@ -121,16 +127,32 @@ class TestRerankNode(unittest.TestCase):
             ["retrieve_candidates_node", "filter_node", "rerank_node"],
         )
 
-        ranked_combos = new_state["candidates"]["ranked_combos"]
-        # The rerank node should output flattened combos sorted by score descending
-        self.assertEqual(len(ranked_combos), 2)
-        self.assertEqual([x["combo_id"] for x in ranked_combos], ["c1", "c2"])
+        ranked_lunch = new_state["candidates"]["ranked_lunch_combos"]
+        ranked_dinner = new_state["candidates"]["ranked_dinner_combos"]
+        ranked_tea = new_state["candidates"]["ranked_afternoon_tea_combos"]
+        ranked_late_night = new_state["candidates"]["ranked_late_night_combos"]
+        ranked_breakfast = new_state["candidates"]["ranked_breakfast_combos"]
         
-        # Check if parent context was properly mapped
-        self.assertEqual(ranked_combos[0]["restaurant_id"], "r_high")
-        self.assertEqual(ranked_combos[0]["restaurant_name"], "High Rest")
-        self.assertTrue(all("score" in x for x in ranked_combos))
-        self.assertGreater(ranked_combos[0]["score"], ranked_combos[1]["score"])
+        # Check separated lists
+        self.assertEqual(len(ranked_lunch), 2)
+        self.assertEqual([x["combo_id"] for x in ranked_lunch], ["c3", "c2"])
+        
+        # Check if parent context was properly mapped in one of the lists
+        self.assertEqual(ranked_dinner[0]["restaurant_id"], "r_high")
+        self.assertEqual(ranked_dinner[0]["restaurant_name"], "High Rest")
+        self.assertTrue(all("score" in x for x in ranked_dinner))
+        self.assertGreater(ranked_dinner[0]["score"], ranked_dinner[1]["score"])
+
+        self.assertEqual(len(ranked_dinner), 2)
+        self.assertEqual([x["combo_id"] for x in ranked_dinner], ["c1", "c2"])
+
+        self.assertEqual(len(ranked_tea), 1)
+        self.assertEqual([x["combo_id"] for x in ranked_tea], ["c3"])
+
+        self.assertEqual(len(ranked_late_night), 1)
+        self.assertEqual([x["combo_id"] for x in ranked_late_night], ["c1"])
+
+        self.assertEqual(len(ranked_breakfast), 0)
 
 if __name__ == '__main__':
     unittest.main()
