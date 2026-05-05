@@ -3,10 +3,9 @@ from unittest.mock import patch
 from closedloop.contracts.state import Constraints, ClosedLoopState
 from closedloop.graph.nodes.retrieve import (
     retrieve_candidates_node,
-    filter_rank_node,
+    filter_node,
     hard_filter,
     rule_filter,
-    score_item,
 )
 
 class TestRetrieveCandidates(unittest.TestCase):
@@ -148,23 +147,7 @@ class TestRetrieveCandidates(unittest.TestCase):
         sweet_restaurant["tags"] = ["甜点", "奶茶"]
         self.assertFalse(rule_filter(sweet_restaurant, sweet_constraints))
 
-    def test_score_item(self):
-        score = score_item(self.restaurant_item, self.base_constraints)
-        # rating: 4.5 * 10 = 45
-        # distance: max(0, 10 - 3) * 2 = 14
-        # suitable_groups: family in suitable -> +15
-        # duration match: None (duration check not added to total score initially?) 
-        self.assertEqual(score, 45 + 14 + 15)
 
-    def test_score_item_matches_chinese_suitable_groups(self):
-        family_restaurant = self.restaurant_item.copy()
-        family_restaurant["suitable_groups"] = ["家庭亲子"]
-        self.assertGreaterEqual(score_item(family_restaurant, self.base_constraints), 45 + 14 + 15)
-
-        friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
-        friends_restaurant = self.restaurant_item.copy()
-        friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        self.assertGreaterEqual(score_item(friends_restaurant, friends_constraints), 45 + 14 + 15)
 
     @patch('closedloop.graph.nodes.retrieve.load_mock_data')
     def test_retrieve_candidates_node_loads_mock_db_applies_15km_cap_and_sets_steps(self, mock_load):
@@ -213,8 +196,8 @@ class TestRetrieveCandidates(unittest.TestCase):
         self.assertEqual([x["id"] for x in candidates["nearby_gifts"]], ["o1"])
 
     @patch("closedloop.graph.nodes.retrieve.load_mock_data")
-    def test_filter_rank_node_requires_retrieve_step_and_does_not_load_db(self, mock_load):
-        mock_load.side_effect = AssertionError("filter_rank_node 不应加载 MockDB 数据")
+    def test_filter_node_requires_retrieve_step_and_does_not_load_db(self, mock_load):
+        mock_load.side_effect = AssertionError("filter_node 不应加载 MockDB 数据")
 
         high_rating = self.restaurant_item.copy()
         high_rating["id"] = "r_high"
@@ -235,20 +218,20 @@ class TestRetrieveCandidates(unittest.TestCase):
             },
         )
 
-        new_state = filter_rank_node(state)
+        new_state = filter_node(state)
 
         self.assertNotIn("processed_steps", new_state)
         self.assertEqual(
             new_state["candidates"]["processed_steps"],
-            ["retrieve_candidates_node", "filter_rank_node"],
+            ["retrieve_candidates_node", "filter_node"],
         )
 
         restaurants = new_state["candidates"]["nearby_restaurants"]
-        self.assertEqual([x["id"] for x in restaurants], ["r_high", "r_low"])
-        self.assertTrue(all("score" in x for x in restaurants))
-        self.assertGreater(restaurants[0]["score"], restaurants[1]["score"])
+        # The filter node should preserve the order and not add scores
+        self.assertEqual([x["id"] for x in restaurants], ["r_low", "r_high"])
+        self.assertFalse(any("score" in x for x in restaurants))
 
-    def test_filter_rank_node_returns_empty_when_processed_steps_not_exactly_retrieve(self):
+    def test_filter_node_returns_empty_when_processed_steps_not_exactly_retrieve(self):
         state = ClosedLoopState(
             user_input="Test input",
             constraints=self.base_constraints,
@@ -259,7 +242,7 @@ class TestRetrieveCandidates(unittest.TestCase):
                 "processed_steps": [],
             },
         )
-        new_state = filter_rank_node(state)
+        new_state = filter_node(state)
         self.assertEqual(new_state["candidates"]["nearby_restaurants"], [])
         self.assertEqual(new_state["candidates"]["nearby_activities"], [])
         self.assertEqual(new_state["candidates"]["nearby_gifts"], [])
@@ -273,7 +256,7 @@ class TestRetrieveCandidates(unittest.TestCase):
                 "nearby_gifts": [],
             },
         )
-        new_state_missing_steps = filter_rank_node(state_missing_steps)
+        new_state_missing_steps = filter_node(state_missing_steps)
         self.assertEqual(new_state_missing_steps["candidates"]["nearby_restaurants"], [])
         self.assertEqual(new_state_missing_steps["candidates"]["nearby_activities"], [])
         self.assertEqual(new_state_missing_steps["candidates"]["nearby_gifts"], [])

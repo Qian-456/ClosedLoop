@@ -266,46 +266,12 @@ def rule_filter(item: dict, constraints: Constraints) -> bool:
     return True
 
 
-def score_item(item: dict, constraints: Constraints) -> int:
-    """第三层：计算排序分数。"""
-    score = 0
-    score += item.get("rating", 0) * 10
-
-    if "distance_km" in item:
-        score += max(0, 10 - item["distance_km"]) * 2
-
-    suitable_groups = item.get("suitable_groups", []) or []
-    if isinstance(suitable_groups, list):
-        if constraints.group_type == "family":
-            family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
-            if any(
-                isinstance(g, str) and any(k in g for k in family_keywords)
-                for g in suitable_groups
-            ):
-                score += 15
-        elif constraints.group_type == "friends":
-            friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事")
-            if any(
-                isinstance(g, str) and any(k in g for k in friends_keywords)
-                for g in suitable_groups
-            ):
-                score += 15
-
-    if constraints.activity_preferences:
-        tags = set(item.get("tags", []))
-        for pref in constraints.activity_preferences:
-            if pref in tags:
-                score += 10
-
-    return int(score)
-
-
-def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
-    """对候选做确定性过滤与排序；要求先完成 retrieve_candidates_node。"""
+def filter_node(state: ClosedLoopState) -> ClosedLoopState:
+    """对候选做确定性过滤；要求先完成 retrieve_candidates_node。"""
     config = get_config()
     LoggerManager.setup(config)
 
-    logger.info("phase=filter_rank_node | input=start")
+    logger.info("phase=filter_node | input=start")
 
     constraints = state.get("constraints")
     candidates = _ensure_candidates_dict(state)
@@ -313,7 +279,7 @@ def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
 
     if processed_steps != ["retrieve_candidates_node"]:
         logger.error(
-            f"phase=filter_rank_node | error=processed_steps_not_ready | processed_steps={processed_steps}"
+            f"phase=filter_node | error=processed_steps_not_ready | processed_steps={processed_steps}"
         )
         state["candidates"] = _empty_candidates(
             processed_steps=processed_steps if isinstance(processed_steps, list) else []
@@ -321,7 +287,7 @@ def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
         return state
 
     if not constraints:
-        logger.error("phase=filter_rank_node | error=no constraints found")
+        logger.error("phase=filter_node | error=no constraints found")
         state["candidates"] = _empty_candidates(processed_steps=["retrieve_candidates_node"])
         return state
 
@@ -333,11 +299,11 @@ def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
         or "nearby_activities" not in candidates
         or "nearby_gifts" not in candidates
     ):
-        logger.error("phase=filter_rank_node | error=missing candidate lists")
+        logger.error("phase=filter_node | error=missing candidate lists")
         state["candidates"] = _empty_candidates(processed_steps=["retrieve_candidates_node"])
         return state
 
-    ranked: dict = {"nearby_restaurants": [], "nearby_activities": [], "nearby_gifts": []}
+    filtered: dict = {"nearby_restaurants": [], "nearby_activities": [], "nearby_gifts": []}
     for category in ["nearby_restaurants", "nearby_activities", "nearby_gifts"]:
         items = candidates.get(category, []) or []
         filtered_items: list[dict] = []
@@ -346,27 +312,24 @@ def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
                 continue
             if not rule_filter(item, constraints):
                 continue
-            item_copy = item.copy()
-            item_copy["score"] = score_item(item, constraints)
-            filtered_items.append(item_copy)
+            filtered_items.append(item)
 
-        filtered_items.sort(key=lambda x: x.get("score", 0), reverse=True)
-        ranked[category] = filtered_items
+        filtered[category] = filtered_items
 
-    candidates["nearby_restaurants"] = ranked["nearby_restaurants"]
-    candidates["nearby_activities"] = ranked["nearby_activities"]
-    candidates["nearby_gifts"] = ranked["nearby_gifts"]
-    candidates["processed_steps"] = ["retrieve_candidates_node", "filter_rank_node"]
+    candidates["nearby_restaurants"] = filtered["nearby_restaurants"]
+    candidates["nearby_activities"] = filtered["nearby_activities"]
+    candidates["nearby_gifts"] = filtered["nearby_gifts"]
+    candidates["processed_steps"] = ["retrieve_candidates_node", "filter_node"]
 
-    rest_count = len(ranked['nearby_restaurants'])
-    act_count = len(ranked['nearby_activities'])
-    gift_count = len(ranked['nearby_gifts'])
+    rest_count = len(filtered['nearby_restaurants'])
+    act_count = len(filtered['nearby_activities'])
+    gift_count = len(filtered['nearby_gifts'])
     
-    rest_combo_count = sum(len(x.get("combos", [])) for x in ranked["nearby_restaurants"])
-    act_pkg_count = sum(len(x.get("packages", [])) for x in ranked["nearby_activities"])
-    gift_item_count = sum(len(x.get("gifts", [])) for x in ranked["nearby_gifts"])
+    rest_combo_count = sum(len(x.get("combos", [])) for x in filtered["nearby_restaurants"])
+    act_pkg_count = sum(len(x.get("packages", [])) for x in filtered["nearby_activities"])
+    gift_item_count = sum(len(x.get("gifts", [])) for x in filtered["nearby_gifts"])
 
     logger.info(
-        f"phase=filter_rank_node | output=ranked {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items)"
+        f"phase=filter_node | output=filtered {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items)"
     )
     return state

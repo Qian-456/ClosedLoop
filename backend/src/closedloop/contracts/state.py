@@ -4,165 +4,139 @@ from pydantic import BaseModel, Field
 from langchain.agents import AgentState
 
 class RetrievedRestaurant(TypedDict, total=False):
-    """召回阶段：餐厅条目（来自 mock_db 原始数据）。"""
-
-    id: Required[str]
+    """召回阶段：餐厅条目（来自 mock_db/restaurants.json 原始数据）。"""
+    id: Required[str]  # 对应 JSON 中的 restaurant_id
     name: Required[str]
     type: Required[Literal["restaurant"]]
 
     category: NotRequired[str]
-    distance_km: NotRequired[float]
-    avg_price_per_person: NotRequired[float]
     rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    avg_wait_minutes: NotRequired[int]
-    duration_minutes: NotRequired[int]
+    reviews_count: NotRequired[int]
+    operating_hours: NotRequired[str]
     tags: NotRequired[list[str]]
-    avoid_tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
-    has_child_seat: NotRequired[bool]
-    supports_reservation: NotRequired[bool]
-    supports_queue: NotRequired[bool]
-    location: NotRequired[str]
-    description: NotRequired[str]
+    
+    # 扁平化附加字段 (由 retrieve 节点计算附加)
+    distance_km: NotRequired[float]
+    location: NotRequired[dict]
+    
+    # 嵌套内容
+    combos: NotRequired[list[dict]]
 
 
 class RetrievedActivity(TypedDict, total=False):
-    """召回阶段：活动条目（来自 mock_db 原始数据）。"""
-
-    id: Required[str]
+    """召回阶段：活动条目（来自 mock_db/activities.json 原始数据）。"""
+    id: Required[str]  # 对应 JSON 中的 venue_id
     name: Required[str]
     type: Required[Literal["activity"]]
 
     category: NotRequired[str]
-    distance_km: NotRequired[float]
-    price_per_person: NotRequired[float]
+    is_free: NotRequired[bool]
     rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    duration_minutes: NotRequired[int]
+    reviews_count: NotRequired[int]
+    operating_hours: NotRequired[str]
     tags: NotRequired[list[str]]
-    avoid_tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
-    min_child_age: NotRequired[int]
-    max_child_age: NotRequired[int]
-    supports_reservation: NotRequired[bool]
-    location: NotRequired[str]
-    description: NotRequired[str]
+    
+    # 扁平化附加字段 (由 retrieve 节点计算附加)
+    distance_km: NotRequired[float]
+    location: NotRequired[dict]
+    
+    # 嵌套内容
+    packages: NotRequired[list[dict]]
 
 
 class RetrievedGift(TypedDict, total=False):
-    """召回阶段：礼物店条目（对应 mock_db 的 gift_shop）。"""
-
-    id: Required[str]
+    """召回阶段：礼物店条目（来自 mock_db/add_ons.json 原始数据）。"""
+    id: Required[str]  # 对应 JSON 中的 shop_id
     name: Required[str]
     type: Required[Literal["gift_shop"]]
 
     category: NotRequired[str]
-    distance_km: NotRequired[float]
     rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    duration_minutes: NotRequired[int]
-    price: NotRequired[float]
+    reviews_count: NotRequired[int]
+    operating_hours: NotRequired[str]
     tags: NotRequired[list[str]]
-    suitable_groups: NotRequired[list[str]]
-    supported_target_types: NotRequired[list[Literal["restaurant", "activity"]]]
-    lead_time_minutes: NotRequired[int]
-    handoff_minutes: NotRequired[int]
-    location: NotRequired[str]
-    description: NotRequired[str]
+    
+    # 扁平化附加字段 (由 retrieve 节点计算附加)
+    distance_km: NotRequired[float]
+    location: NotRequired[dict]
+    
+    # 嵌套内容
+    gifts: NotRequired[list[dict]]
 
 
-class FilteredRestaurant(TypedDict, total=False):
-    """过滤阶段：餐厅条目（当前与召回阶段一致，但包含 score）。"""
-
-    id: Required[str]
+class RankedCombo(TypedDict, total=False):
+    """重排序阶段：扁平化的餐厅套餐条目，包含餐厅上下文。"""
+    combo_id: Required[str]
     name: Required[str]
-    type: Required[Literal["restaurant"]]
-
-    category: NotRequired[str]
-    distance_km: NotRequired[float]
-    avg_price_per_person: NotRequired[float]
-    rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    avg_wait_minutes: NotRequired[int]
-    duration_minutes: NotRequired[int]
-    tags: NotRequired[list[str]]
-    avoid_tags: NotRequired[list[str]]
-    suitable_groups: NotRequired[list[str]]
-    has_child_seat: NotRequired[bool]
-    supports_reservation: NotRequired[bool]
-    supports_queue: NotRequired[bool]
-    location: NotRequired[str]
+    price: Required[float]
     description: NotRequired[str]
-
+    duration_mins: Required[int]
+    duration_std_dev: NotRequired[float]
+    suitable_time_slots: NotRequired[list[str]]
     score: Required[int]
-
-
-class FilteredActivity(TypedDict, total=False):
-    """过滤阶段：活动条目（当前与召回阶段一致，但包含 score）。"""
-
-    id: Required[str]
-    name: Required[str]
-    type: Required[Literal["activity"]]
-
-    category: NotRequired[str]
-    distance_km: NotRequired[float]
-    price_per_person: NotRequired[float]
-    rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    duration_minutes: NotRequired[int]
-    tags: NotRequired[list[str]]
-    avoid_tags: NotRequired[list[str]]
-    suitable_groups: NotRequired[list[str]]
-    min_child_age: NotRequired[int]
-    max_child_age: NotRequired[int]
-    supports_reservation: NotRequired[bool]
-    location: NotRequired[str]
-    description: NotRequired[str]
-
-    score: Required[int]
-
-
-class FilteredGift(TypedDict, total=False):
-    """过滤阶段：礼物/附加服务条目（当前与召回阶段一致，但包含 score）。"""
-
-    id: Required[str]
-    name: Required[str]
-    type: Required[Literal["gift_shop"]]
-
+    
+    restaurant_id: Required[str]
+    restaurant_name: Required[str]
     category: NotRequired[str]
     distance_km: NotRequired[float]
     rating: NotRequired[float]
-    open_time: NotRequired[str]
-    close_time: NotRequired[str]
-    price: NotRequired[float]
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
-    supported_target_types: NotRequired[list[Literal["restaurant", "activity"]]]
-    lead_time_minutes: NotRequired[int]
-    handoff_minutes: NotRequired[int]
-    location: NotRequired[str]
-    description: NotRequired[str]
+    location: NotRequired[dict]
 
+
+class RankedPackage(TypedDict, total=False):
+    """重排序阶段：扁平化的活动套餐条目，包含活动场地上下文。"""
+    package_id: Required[str]
+    name: Required[str]
+    price: Required[float]
+    description: NotRequired[str]
+    duration_mins: Required[int]
+    duration_std_dev: NotRequired[float]
+    start_time: NotRequired[str]
     score: Required[int]
 
+    venue_id: Required[str]
+    venue_name: Required[str]
+    category: NotRequired[str]
+    distance_km: NotRequired[float]
+    rating: NotRequired[float]
+    tags: NotRequired[list[str]]
+    suitable_groups: NotRequired[list[str]]
+    location: NotRequired[dict]
 
-RestaurantCandidate: TypeAlias = RetrievedRestaurant | FilteredRestaurant
-ActivityCandidate: TypeAlias = RetrievedActivity | FilteredActivity
-GiftCandidate: TypeAlias = RetrievedGift | FilteredGift
+
+class RankedGift(TypedDict, total=False):
+    """重排序阶段：扁平化的礼品条目，包含礼品店上下文。"""
+    gift_id: Required[str]
+    name: Required[str]
+    price: Required[float]
+    description: NotRequired[str]
+    score: Required[int]
+
+    shop_id: Required[str]
+    shop_name: Required[str]
+    category: NotRequired[str]
+    distance_km: NotRequired[float]
+    rating: NotRequired[float]
+    tags: NotRequired[list[str]]
+    suitable_groups: NotRequired[list[str]]
+    location: NotRequired[dict]
 
 
 class Candidates(TypedDict):
     """召回/过滤阶段产出的候选与候选级元数据。"""
 
-    nearby_restaurants: NotRequired[list[RestaurantCandidate]]
-    nearby_activities: NotRequired[list[ActivityCandidate]]
-    nearby_gifts: NotRequired[list[GiftCandidate]]
+    nearby_restaurants: NotRequired[list[RetrievedRestaurant]]
+    nearby_activities: NotRequired[list[RetrievedActivity]]
+    nearby_gifts: NotRequired[list[RetrievedGift]]
+    
+    ranked_combos: NotRequired[list[RankedCombo]]
+    ranked_packages: NotRequired[list[RankedPackage]]
+    ranked_gifts: NotRequired[list[RankedGift]]
+    
     processed_steps: NotRequired[list[str]]
 
 class Constraints(BaseModel):
