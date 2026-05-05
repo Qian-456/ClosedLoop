@@ -1,3 +1,6 @@
+import re
+from typing import Any
+
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.state import ClosedLoopState, Constraints, RankedCombo, RankedPackage, RankedGift
@@ -25,14 +28,34 @@ def _get_effective_people(constraints: Constraints) -> float:
 
 
 def _get_capacity_from_name(name: str) -> float:
-    """从套餐/活动名称中提取适用人数容量"""
+    """从套餐/活动名称中提取适用人数容量（结合成人数与等效儿童数）。"""
     if not name:
-        return 0.0
+        return 1.0
+        
+    name = name.lower()
+    
+    # 1. 优先匹配明确的“X大Y小”结构 (例如：2大1小 -> 2.4 人)
+    match = re.search(r'(\d+)\s*[大小]\s*(\d+)\s*[大小]', name)
+    if match:
+        adults = int(match.group(1))
+        kids = int(match.group(2))
+        # 默认儿童等效权重为 0.4
+        return adults + kids * 0.4
+        
+    # 3. 匹配通用家庭/亲子套餐（通常指三口之家或四口之家）
+    if "三口之家" in name or "2大1小" in name:
+        return 2.6
+    if "四口之家" in name or "2大2小" in name:
+        return 3.2
+    if "家庭" in name or "亲子" in name:
+        return 2.6 # 默认小家庭
+
+    # 4. 匹配具体数字
     if "单人" in name or "一人" in name or "工作餐" in name:
         return 1.0
-    if "双人" in name or "情侣" in name or "两人" in name:
+    if "双人" in name or "两人" in name or "情侣" in name or "闺蜜" in name:
         return 2.0
-    if "三人" in name or "三口之家" in name:
+    if "三人" in name:
         return 3.0
     if "四人" in name:
         return 4.0
@@ -40,9 +63,14 @@ def _get_capacity_from_name(name: str) -> float:
         return 5.0
     if "六人" in name:
         return 6.0
+    if "七人" in name:
+        return 7.0
+    if "八人" in name:
+        return 8.0
     if "多人" in name:
         return 4.0 # 默认多人为4
-    return 0.0 # 无法匹配
+
+    return 1.0 # 无法匹配时默认返回 1.0，因为至少适合一个人使用
 
 
 def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
@@ -83,20 +111,23 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
             scene_fit_score += ratio * 20.0
 
     suitable_groups = item.get("suitable_groups", []) or []
+    item_features = inner_item.get("features", "") or ""
+    
     if isinstance(suitable_groups, list):
         if constraints.group_type == "family":
-            family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
+            family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
+            # 匹配 suitable_groups 或者 inner_item 的 features
             if any(
                 isinstance(g, str) and any(k in g for k in family_keywords)
                 for g in suitable_groups
-            ):
+            ) or any(k in item_features for k in family_keywords):
                 scene_fit_score += 15
         elif constraints.group_type == "friends":
-            friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事")
+            friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
             if any(
                 isinstance(g, str) and any(k in g for k in friends_keywords)
                 for g in suitable_groups
-            ):
+            ) or any(k in item_features for k in friends_keywords):
                 scene_fit_score += 15
 
     # 标签命中 (Tag Matching) - 暂时硬编码为 0 分
@@ -271,9 +302,15 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
     rest_combo_count = len(ranked_combos)
     act_pkg_count = len(ranked_packages)
     gift_item_count = len(ranked_gifts)
+    
+    b_c = len(ranked_breakfast_combos)
+    l_c = len(ranked_lunch_combos)
+    a_c = len(ranked_afternoon_tea_combos)
+    d_c = len(ranked_dinner_combos)
+    n_c = len(ranked_late_night_combos)
 
     logger.info(
-        f"phase=rerank_node | output=reranked {rest_combo_count} combos (from {rest_count} restaurants), "
+        f"phase=rerank_node | output=reranked {b_c} breakfast, {l_c} lunch, {a_c} tea, {d_c} dinner, {n_c} night combos (from {rest_count} restaurants), "
         f"{act_pkg_count} packages (from {act_count} activities), "
         f"{gift_item_count} gifts (from {gift_count} shops)"
     )

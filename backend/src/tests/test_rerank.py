@@ -1,6 +1,6 @@
 import unittest
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.rerank import score_item, rerank_node
+from closedloop.graph.nodes.rerank import score_item, rerank_node, _get_capacity_from_name
 
 class TestRerankNode(unittest.TestCase):
 
@@ -29,24 +29,76 @@ class TestRerankNode(unittest.TestCase):
     def test_score_item(self):
         score = score_item(self.restaurant_item, {}, self.base_constraints)
         # rating: 4.5 * 10 = 45
-        # distance: pref="2km-5km", min=2.0, max=5.0, actual=3.0 -> ratio = (5.0 - 3.0)/(5.0 - 2.0) = 2.0 / 3.0 = 0.666...
-        # score = 0.666... * 20 = 13.333... -> int(13.333...) = 13
+        # distance: pref="2km-5km", min=2.0, max=5.0, actual=3.0 -> ratio = 0.666... * 20 = 13
         # suitable_groups: family in suitable -> +15
-        # tags: "打卡点" in tags, but tag_matching_score is hardcoded to 0
-        # commercial_score: 0
-        # capacity: no name provided, capacity=0, diff=0, penalty=0
-        # total: 45 + 13 + 15 + 0 + 0 = 73
-        self.assertEqual(score, 73)
+        # capacity: empty name returns capacity 1.0. Base effective_people (2 adult, 1 child(age 5=0.4)) = 2.4.
+        # diff = |1.0 - 2.4| = 1.4 -> penalty = 14
+        # total: 45 + 13 + 15 - 14 = 59
+        self.assertEqual(score, 59)
 
     def test_score_item_matches_chinese_suitable_groups(self):
         family_restaurant = self.restaurant_item.copy()
         family_restaurant["suitable_groups"] = ["家庭亲子"]
-        self.assertEqual(score_item(family_restaurant, {}, self.base_constraints), 73)
+        self.assertEqual(score_item(family_restaurant, {}, self.base_constraints), 59)
 
         friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
         friends_restaurant = self.restaurant_item.copy()
         friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        self.assertEqual(score_item(friends_restaurant, {}, friends_constraints), 73)
+        # friends effective people (adult=2) -> diff = |1.0 - 2.0| = 1.0 -> penalty 10
+        # However, for friends_restaurant, "朋友聚会" doesn't match friends_keywords which are ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
+        # Oh, wait. "朋友聚会" contains "朋友". So it matches. Fit = 15.
+        # Rating 45 + Dist 13 + Fit 15 = 73. Penalty = 10.
+        # Wait, the effective people for friends is 2.4 ? No, friends group type uses adult_count + child equivalent. base_constraints child_count=1!
+        # Ah! friends_constraints = base_constraints.model_copy(update={"group_type": "friends"})
+        # The child_count is still 1. effective_people = 2.4.
+        # diff = |1.0 - 2.4| = 1.4 -> penalty 14.
+        # 73 - 14 = 59.
+        self.assertEqual(score_item(friends_restaurant, {}, friends_constraints), 59)
+
+    def test_get_capacity_from_name(self):
+        # 测试明确的 X大Y小
+        self.assertEqual(_get_capacity_from_name("2大1小温馨家庭餐(含儿童玩具)"), 2.4) # 正则先匹配了 2大1小，2 + 1*0.4 = 2.4
+        self.assertEqual(_get_capacity_from_name("1大1小亲子套票"), 1.4)
+        self.assertEqual(_get_capacity_from_name("3大2小家庭豪华餐"), 3.8)
+        
+        # 测试具体数字
+        self.assertEqual(_get_capacity_from_name("单人解馋小火锅"), 1.0)
+        self.assertEqual(_get_capacity_from_name("情侣浪漫双人餐"), 2.0)
+        self.assertEqual(_get_capacity_from_name("温馨三口之家套餐"), 2.6)
+        self.assertEqual(_get_capacity_from_name("青年四人欢聚套餐"), 4.0)
+        self.assertEqual(_get_capacity_from_name("八人豪华包厢宴"), 8.0)
+        
+        # 测试通用家庭
+        self.assertEqual(_get_capacity_from_name("家庭健康轻食餐"), 2.6)
+        self.assertEqual(_get_capacity_from_name("家庭广式晚餐"), 2.6)
+        
+        # 测试无法匹配的边缘情况（默认返回1.0）
+        self.assertEqual(_get_capacity_from_name(""), 1.0)
+        self.assertEqual(_get_capacity_from_name("神秘盲盒套餐"), 1.0)
+
+    def test_score_item_matches_features(self):
+        # 即使没有 suitable_groups，只要 features 包含关键词，依然可以加 15 分
+        item_no_groups = self.restaurant_item.copy()
+        item_no_groups["suitable_groups"] = []
+        
+        inner_item = {"name": "家庭欢乐餐", "features": "非常适合三口之家，老少皆宜的口味。"}
+        score = score_item(item_no_groups, inner_item, self.base_constraints)
+        
+        # rating 45 + dist 13 + fit 15 (features matched)
+        # capacity: "家庭欢乐餐" returns capacity 2.6 (matched "家庭"). effective_people is 2.4.
+        # diff = 0.2 -> penalty = 2
+        # 45 + 13 + 15 - 2 = 71
+        self.assertEqual(score, 71)
+
+        # Friends match
+        friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
+        inner_item_friends = {"name": "双人餐", "features": "专为情侣约会打造"}
+        score_friends = score_item(item_no_groups, inner_item_friends, friends_constraints)
+        # rating 45 + dist 13 + fit 15 (features matched) 
+        # capacity: "双人餐" returns capacity 2.0. effective_people for friends (adult_count=2, no children) is 2.4.
+        # diff = 0.4 -> penalty 4.
+        # 45 + 13 + 15 - 4 = 69
+        self.assertEqual(score_friends, 69)
 
     def test_score_item_capacity_penalty(self):
         # Base constraints: 2 adults + 1 child (age 5 -> 0.4) = 2.4 effective people
