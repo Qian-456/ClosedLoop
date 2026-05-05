@@ -189,17 +189,24 @@ GIFT_SHOP_TEMPLATES = [
         {"name": "Skullpanda 密林古堡盲盒端盒(12个)", "price": 828.0, "stock": 5},
         {"name": "Dimoo 随机盲盒(单盒)", "price": 69.0, "stock": 200}
     ]},
-    {"name": "黑天鹅法式蛋糕房", "tags": ["蛋糕", "庆生", "高端"], "delivery": {"mins": 90, "std": 20}, "gifts": [
-        {"name": "6英寸经典黑森林蛋糕", "price": 298.0, "stock": 15},
-        {"name": "8英寸草莓鲜奶水果蛋糕", "price": 368.0, "stock": 10}
+    {"name": "好利来蛋糕房", "tags": ["蛋糕", "庆生", "大众"], "delivery": {"mins": 45, "std": 10}, "gifts": [
+        {"name": "6英寸经典黑森林蛋糕", "price": 168.0, "stock": 15},
+        {"name": "8英寸鲜奶水果蛋糕", "price": 198.0, "stock": 10},
+        {"name": "半熟芝士(一盒5枚)", "price": 38.0, "stock": 50}
     ]},
-    {"name": "Godiva 歌帝梵巧克力", "tags": ["巧克力", "零食", "送女友"], "delivery": {"mins": 45, "std": 10}, "gifts": [
-        {"name": "经典金装巧克力礼盒(15颗)", "price": 328.0, "stock": 50},
-        {"name": "心形松露巧克力铁盒", "price": 418.0, "stock": 20}
+    {"name": "酷乐潮玩杂物社", "tags": ["礼品", "创意", "平价"], "delivery": {"mins": 30, "std": 10}, "gifts": [
+        {"name": "恶搞搞怪抱枕", "price": 49.0, "stock": 50},
+        {"name": "创意减压发泄玩具套装", "price": 29.9, "stock": 100},
+        {"name": "文艺复古手帐本礼盒", "price": 68.0, "stock": 30}
     ]},
-    {"name": "Lego 乐高授权专卖店", "tags": ["玩具", "儿童", "送礼"], "delivery": None, "gifts": [ # 线下自提
-        {"name": "乐高科技组：保时捷赛车", "price": 499.0, "stock": 8},
-        {"name": "乐高经典创意散件大颗粒", "price": 299.0, "stock": 20}
+    {"name": "良品铺子 / 百草味", "tags": ["零食", "休闲", "伴手礼"], "delivery": {"mins": 30, "std": 5}, "gifts": [
+        {"name": "巨型坚果大礼包", "price": 128.0, "stock": 50},
+        {"name": "猪肉脯+辣条休闲零食包", "price": 68.0, "stock": 80}
+    ]},
+    {"name": "名创优品 MINISO", "tags": ["生活", "玩偶", "平价"], "delivery": None, "gifts": [ # 线下自提
+        {"name": "三丽鸥联名公仔(中号)", "price": 59.9, "stock": 30},
+        {"name": "香薰精油无火藤条套装", "price": 39.9, "stock": 50},
+        {"name": "旅行分装瓶收纳包", "price": 19.9, "stock": 100}
     ]}
 ]
 

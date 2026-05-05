@@ -73,7 +73,7 @@
   },
   {
     "shop_id": "s_1003",
-    "name": "黑天鹅法式蛋糕房",
+    "name": "好利来蛋糕房",
     "location": {
       "latitude": -0.662,
       "longitude": -1.451,
@@ -85,28 +85,34 @@
     "tags": [
       "蛋糕",
       "庆生",
-      "高端"
+      "大众"
     ],
     "gifts": [
       {
         "gift_id": "g_1003_1",
         "name": "6英寸经典黑森林蛋糕",
-        "price": 298.0,
+        "price": 168.0,
         "stock": 15
       },
       {
         "gift_id": "g_1003_2",
-        "name": "8英寸草莓鲜奶水果蛋糕",
-        "price": 368.0,
+        "name": "8英寸鲜奶水果蛋糕",
+        "price": 198.0,
         "stock": 10
+      },
+      {
+        "gift_id": "g_1003_3",
+        "name": "半熟芝士(一盒5枚)",
+        "price": 38.0,
+        "stock": 50
       }
     ],
-    "delivery_time_mins": 90,
-    "delivery_time_std_dev": 20.0
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 10.0
   },
   {
     "shop_id": "s_1004",
-    "name": "Godiva 歌帝梵巧克力",
+    "name": "酷乐潮玩杂物社",
     "location": {
       "latitude": -3.969,
       "longitude": -6.19,
@@ -116,30 +122,36 @@
     },
     "rating": 4.5,
     "tags": [
-      "巧克力",
-      "零食",
-      "送女友"
+      "礼品",
+      "创意",
+      "平价"
     ],
     "gifts": [
       {
         "gift_id": "g_1004_1",
-        "name": "经典金装巧克力礼盒(15颗)",
-        "price": 328.0,
+        "name": "恶搞搞怪抱枕",
+        "price": 49.0,
         "stock": 50
       },
       {
         "gift_id": "g_1004_2",
-        "name": "心形松露巧克力铁盒",
-        "price": 418.0,
-        "stock": 20
+        "name": "创意减压发泄玩具套装",
+        "price": 29.9,
+        "stock": 100
+      },
+      {
+        "gift_id": "g_1004_3",
+        "name": "文艺复古手帐本礼盒",
+        "price": 68.0,
+        "stock": 30
       }
     ],
-    "delivery_time_mins": 45,
+    "delivery_time_mins": 30,
     "delivery_time_std_dev": 10.0
   },
   {
     "shop_id": "s_1005",
-    "name": "Lego 乐高授权专卖店",
+    "name": "良品铺子 / 百草味",
     "location": {
       "latitude": -0.429,
       "longitude": -8.364,
@@ -149,30 +161,30 @@
     },
     "rating": 4.6,
     "tags": [
-      "玩具",
-      "儿童",
-      "送礼"
+      "零食",
+      "休闲",
+      "伴手礼"
     ],
     "gifts": [
       {
         "gift_id": "g_1005_1",
-        "name": "乐高科技组：保时捷赛车",
-        "price": 499.0,
-        "stock": 8
+        "name": "巨型坚果大礼包",
+        "price": 128.0,
+        "stock": 50
       },
       {
         "gift_id": "g_1005_2",
-        "name": "乐高经典创意散件大颗粒",
-        "price": 299.0,
-        "stock": 20
+        "name": "猪肉脯+辣条休闲零食包",
+        "price": 68.0,
+        "stock": 80
       }
     ],
-    "delivery_time_mins": null,
-    "delivery_time_std_dev": null
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 5.0
   },
   {
     "shop_id": "s_1006",
-    "name": "花点时间·精品花艺",
+    "name": "名创优品 MINISO",
     "location": {
       "latitude": 3.996,
       "longitude": -1.989,
@@ -182,36 +194,36 @@
     },
     "rating": 4.6,
     "tags": [
-      "鲜花",
-      "浪漫",
-      "惊喜"
+      "生活",
+      "玩偶",
+      "平价"
     ],
     "gifts": [
       {
         "gift_id": "g_1006_1",
-        "name": "单支红玫瑰精美包装",
-        "price": 39.0,
-        "stock": 50
+        "name": "三丽鸥联名公仔(中号)",
+        "price": 59.9,
+        "stock": 30
       },
       {
         "gift_id": "g_1006_2",
-        "name": "99朵红玫瑰花束",
-        "price": 399.0,
-        "stock": 10
+        "name": "香薰精油无火藤条套装",
+        "price": 39.9,
+        "stock": 50
       },
       {
         "gift_id": "g_1006_3",
-        "name": "向日葵清新混搭花篮",
-        "price": 168.0,
-        "stock": 25
+        "name": "旅行分装瓶收纳包",
+        "price": 19.9,
+        "stock": 100
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0
+    "delivery_time_mins": null,
+    "delivery_time_std_dev": null
   },
   {
     "shop_id": "s_1007",
-    "name": "泡泡玛特 POP MART",
+    "name": "花点时间·精品花艺",
     "location": {
       "latitude": -4.762,
       "longitude": -1.319,
@@ -221,30 +233,36 @@
     },
     "rating": 4.5,
     "tags": [
-      "潮玩",
-      "盲盒",
-      "青年"
+      "鲜花",
+      "浪漫",
+      "惊喜"
     ],
     "gifts": [
       {
         "gift_id": "g_1007_1",
-        "name": "Skullpanda 密林古堡盲盒端盒(12个)",
-        "price": 828.0,
-        "stock": 5
+        "name": "单支红玫瑰精美包装",
+        "price": 39.0,
+        "stock": 50
       },
       {
         "gift_id": "g_1007_2",
-        "name": "Dimoo 随机盲盒(单盒)",
-        "price": 69.0,
-        "stock": 200
+        "name": "99朵红玫瑰花束",
+        "price": 399.0,
+        "stock": 10
+      },
+      {
+        "gift_id": "g_1007_3",
+        "name": "向日葵清新混搭花篮",
+        "price": 168.0,
+        "stock": 25
       }
     ],
-    "delivery_time_mins": null,
-    "delivery_time_std_dev": null
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 15.0
   },
   {
     "shop_id": "s_1008",
-    "name": "黑天鹅法式蛋糕房",
+    "name": "泡泡玛特 POP MART",
     "location": {
       "latitude": -3.389,
       "longitude": -0.493,
@@ -254,25 +272,25 @@
     },
     "rating": 4.9,
     "tags": [
-      "蛋糕",
-      "庆生",
-      "高端"
+      "潮玩",
+      "盲盒",
+      "青年"
     ],
     "gifts": [
       {
         "gift_id": "g_1008_1",
-        "name": "6英寸经典黑森林蛋糕",
-        "price": 298.0,
-        "stock": 15
+        "name": "Skullpanda 密林古堡盲盒端盒(12个)",
+        "price": 828.0,
+        "stock": 5
       },
       {
         "gift_id": "g_1008_2",
-        "name": "8英寸草莓鲜奶水果蛋糕",
-        "price": 368.0,
-        "stock": 10
+        "name": "Dimoo 随机盲盒(单盒)",
+        "price": 69.0,
+        "stock": 200
       }
     ],
-    "delivery_time_mins": 90,
-    "delivery_time_std_dev": 20.0
+    "delivery_time_mins": null,
+    "delivery_time_std_dev": null
   }
 ]
