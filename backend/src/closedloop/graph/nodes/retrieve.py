@@ -120,7 +120,7 @@ def _normalize_candidate_items(
 
 
 def retrieve_candidates_node(state: ClosedLoopState) -> ClosedLoopState:
-    """从 MockDB 粗召回候选，并对餐厅/活动应用 15km 距离上限。"""
+    """从 MockDB 粗召回候选，并对餐厅/活动应用 12km 距离上限。"""
     config = get_config()
     LoggerManager.setup(config)
 
@@ -203,11 +203,11 @@ def hard_filter(item: dict, constraints: Constraints) -> bool:
 
     if "distance_km" in item:
         pref_dist = constraints.preferred_distance
-        max_distance = 12.0
+        max_distance = 10.0
         if pref_dist == "<2km":
-            max_distance = 3.0
+            max_distance = 2.0
         elif pref_dist == "2km-5km":
-            max_distance = 6.0
+            max_distance = 5.0
 
         if item["distance_km"] > max_distance:
             return False
@@ -228,14 +228,6 @@ def hard_filter(item: dict, constraints: Constraints) -> bool:
             if not (close_time > 24 and req_start + 24 < close_time):
                 return False
 
-    if item_type == "activity" and constraints.group_type == "family":
-        if constraints.child_ages:
-            min_age = item.get("min_child_age", 0)
-            max_age = item.get("max_child_age", 99)
-            for age in constraints.child_ages:
-                if age < min_age or age > max_age:
-                    return False
-
     return True
 
 
@@ -253,9 +245,17 @@ def rule_filter(item: dict, constraints: Constraints) -> bool:
         diet_keywords: set[str] = set()
         for r in constraints.dietary_restrictions:
             if "辣" in r:
-                diet_keywords.update(["热辣", "重口味", "火锅"])
+                diet_keywords.update(["热辣", "重口味", "火锅", "川菜", "小龙虾", "湘菜"])
             if "海鲜" in r:
                 diet_keywords.update(["海鲜", "日料", "刺身"])
+            if "生冷" in r:
+                diet_keywords.update(["日料", "刺身", "沙拉", "轻食", "冷饮"])
+            if "甜" in r:
+                diet_keywords.update(["甜点", "甜品", "蛋糕", "奶茶", "冰淇淋"])
+            if "快餐" in r or "垃圾食品" in r:
+                diet_keywords.update(["汉堡", "披萨", "炸鸡"])
+            if "牛" in r:
+                diet_keywords.update(["牛排", "潮汕牛肉", "牛肉"])
 
         if tags.intersection(diet_keywords):
             return False

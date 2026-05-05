@@ -25,7 +25,7 @@ class TestExtractConstraints(unittest.TestCase):
             "child_count": 1,
             "child_ages": [5],
             "budget": 500.0,
-            "dietary_restrictions": ["no spicy"],
+            "dietary_restrictions": ["辣"],
             "preferred_distance": "2km-5km",
             "time_period": "13:00-18:00",
             "duration_hours": 5.0,
@@ -68,7 +68,7 @@ class TestExtractConstraints(unittest.TestCase):
         self.assertEqual(constraints["time_period"], "13:00-18:00")
         self.assertEqual(constraints["duration_hours"], 5.0)
         self.assertEqual(constraints["activity_preferences"], ["play"])
-        self.assertEqual(constraints["dietary_restrictions"], ["no spicy"])
+        self.assertEqual(constraints["dietary_restrictions"], ["辣"])
 
         # Ensure the agent was called with the user input
         mock_agent.invoke.assert_called_once()
@@ -87,7 +87,7 @@ class TestExtractConstraints(unittest.TestCase):
             "child_count": 2,
             "child_ages": [5, 8],
             "budget": 500.0,
-            "dietary_restrictions": ["no spicy"],
+            "dietary_restrictions": ["辣"],
             "preferred_distance": "2km-5km",
             "time_period": "13:00-18:00",
             "duration_hours": 5.0,
@@ -121,6 +121,7 @@ class TestExtractConstraints(unittest.TestCase):
         self.assertEqual(constraints["adult_count"], 3)
         self.assertEqual(constraints["child_count"], 2)
         self.assertEqual(constraints["child_ages"], [5, 8])
+        self.assertEqual(constraints["dietary_restrictions"], ["辣"])
 
 
     @patch("closedloop.graph.nodes.extract.build_agent")
@@ -248,6 +249,46 @@ class TestExtractConstraints(unittest.TestCase):
         constraints = new_state["constraints"]
         self.assertEqual(constraints["preferred_distance"], "<2km")
 
+    @patch("closedloop.graph.nodes.extract.build_agent")
+    @patch("closedloop.graph.nodes.extract.logger.warning")
+    def test_extract_constraints_unsupported_dietary(self, mock_warning, mock_build_agent):
+        """
+        Test that unsupported dietary restrictions are filtered and a warning is logged.
+        """
+        mock_agent = MagicMock()
+        mock_agent.invoke.return_value = {
+            "group_type": "friends",
+            "adult_count": 2,
+            "child_count": 0,
+            "child_ages": [],
+            "budget": 200.0,
+            "dietary_restrictions": ["辣", "香菜", "大蒜", "甜", "其他"],
+            "preferred_distance": "2km-5km",
+            "time_period": "18:00-21:00",
+            "duration_hours": 3.0,
+            "activity_preferences": ["dining"]
+        }
+        mock_build_agent.return_value = mock_agent
+
+        state: AgentState = {
+            "user_input": "朋友两人晚上聚餐，不吃辣，不要香菜大蒜",
+            "constraints": {},
+            "itinerary": {},
+            "confirmation": {},
+            "current_step_id": None
+        }
+
+        new_state = extract_constraints(state)
+            
+        constraints = new_state["constraints"]
+        # '辣' and '甜' should be kept, '香菜', '大蒜', '其他' should be filtered
+        self.assertEqual(constraints["dietary_restrictions"], ["辣", "甜"])
+        
+        # Check that warnings were logged for the unsupported items
+        warning_calls = [call[0][0] for call in mock_warning.call_args_list]
+        self.assertTrue(any("value=香菜" in log for log in warning_calls))
+        self.assertTrue(any("value=大蒜" in log for log in warning_calls))
+        self.assertTrue(any("value=其他" in log for log in warning_calls))
 
 if __name__ == "__main__":
     unittest.main()

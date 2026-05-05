@@ -120,12 +120,6 @@ class TestRetrieveCandidates(unittest.TestCase):
         closed_restaurant["close_time"] = "23:00"
         self.assertFalse(hard_filter(closed_restaurant, self.base_constraints))
 
-    def test_hard_filter_child_ages_fail(self):
-        # 孩子年龄不符
-        toddler_activity = self.activity_item.copy()
-        toddler_activity["min_child_age"] = 8
-        self.assertFalse(hard_filter(toddler_activity, self.base_constraints)) # child_ages contains 5
-
     def test_rule_filter_pass(self):
         self.assertTrue(rule_filter(self.restaurant_item, self.base_constraints))
         self.assertTrue(rule_filter(self.activity_item, self.base_constraints))
@@ -141,6 +135,18 @@ class TestRetrieveCandidates(unittest.TestCase):
         spicy_restaurant = self.restaurant_item.copy()
         spicy_restaurant["tags"] = ["热辣", "火锅"]
         self.assertFalse(rule_filter(spicy_restaurant, self.base_constraints))
+
+        # 饮食禁忌: "生冷"
+        cold_constraints = self.base_constraints.model_copy(update={"dietary_restrictions": ["生冷"]})
+        cold_restaurant = self.restaurant_item.copy()
+        cold_restaurant["tags"] = ["沙拉", "轻食"]
+        self.assertFalse(rule_filter(cold_restaurant, cold_constraints))
+
+        # 饮食禁忌: "甜"
+        sweet_constraints = self.base_constraints.model_copy(update={"dietary_restrictions": ["甜"]})
+        sweet_restaurant = self.restaurant_item.copy()
+        sweet_restaurant["tags"] = ["甜点", "奶茶"]
+        self.assertFalse(rule_filter(sweet_restaurant, sweet_constraints))
 
     def test_score_item(self):
         score = score_item(self.restaurant_item, self.base_constraints)

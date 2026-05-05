@@ -176,7 +176,7 @@ class Constraints(BaseModel):
         ..., description="旅行/活动的当地货币总预算。如果提供的是人均预算，请乘以总人数（或等效人数）。"
     )
     dietary_restrictions: list[str] = Field(
-        default_factory=list, description="特定食材（如：香菜、大蒜、海鲜）或口味限制（如：不吃辣、少油）"
+        default_factory=list, description="饮食禁忌与偏好。请尽量归类为以下选项：'辣', '海鲜', '生冷', '甜', '快餐', '牛'。若不在上述分类内，请使用原词提取。"
     )
     preferred_distance: Literal["<2km", "2km-5km", ">5km"] = Field(
         default="2km-5km", description="偏好的出行距离范围"

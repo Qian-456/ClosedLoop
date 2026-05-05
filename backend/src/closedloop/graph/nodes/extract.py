@@ -36,6 +36,17 @@ def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
         else:
             state["constraints"] = {}
             
+        # 过滤未知的饮食禁忌并记录 warning
+        if "constraints" in state and "dietary_restrictions" in state["constraints"]:
+            allowed_dietary = {"辣", "海鲜", "生冷", "甜", "快餐", "牛"}
+            filtered_dietary = []
+            for d in state["constraints"]["dietary_restrictions"]:
+                if d in allowed_dietary:
+                    filtered_dietary.append(d)
+                else:
+                    logger.warning(f"phase=extract_constraints | warn=unsupported_dietary_restriction | value={d}")
+            state["constraints"]["dietary_restrictions"] = filtered_dietary
+
         logger.info(f"phase=extract_constraints | output={state['constraints']}")
     except Exception as e:
         logger.error(f"phase=extract_constraints | error={e}")
