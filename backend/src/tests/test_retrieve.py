@@ -5,8 +5,6 @@ from closedloop.graph.nodes.retrieve import (
     retrieve_candidates_node,
     filter_rank_node,
     hard_filter,
-    effective_people,
-    equivalent_adult,
     rule_filter,
     score_item,
 )
@@ -28,12 +26,14 @@ class TestRetrieveCandidates(unittest.TestCase):
         )
         
         self.restaurant_item = {
-            "id": "r1",
+            "restaurant_id": "r1",
             "type": "restaurant",
-            "avg_price_per_person": 60,
+            "combos": [
+                {"combo_id": "c1", "price": 100},
+                {"combo_id": "c2", "price": 250}
+            ],
+            "location": {"distance_to_center_km": 3.0},
             "distance_km": 3.0,
-            "open_time": "10:00",
-            "close_time": "22:00",
             "tags": ["家庭亲子", "清淡"],
             "avoid_tags": ["吵闹"],
             "suitable_groups": ["family", "friends"],
@@ -42,12 +42,13 @@ class TestRetrieveCandidates(unittest.TestCase):
         }
         
         self.activity_item = {
-            "id": "a1",
+            "venue_id": "a1",
             "type": "activity",
-            "price_per_person": 50,
+            "packages": [
+                {"package_id": "p1", "price": 150}
+            ],
+            "location": {"distance_to_center_km": 4.0},
             "distance_km": 4.0,
-            "open_time": "09:00",
-            "close_time": "20:00",
             "tags": ["游乐", "室内"],
             "avoid_tags": [],
             "suitable_groups": ["family"],
@@ -58,67 +59,47 @@ class TestRetrieveCandidates(unittest.TestCase):
         }
         
         self.addon_item = {
-            "id": "o1",
+            "shop_id": "o1",
             "type": "gift_shop",
-            "price": 80,
+            "gifts": [
+                {"gift_id": "g1", "price": 80}
+            ],
             "tags": ["儿童", "蛋糕"],
             "supported_target_types": ["restaurant"],
+            "location": {"distance_to_center_km": 2.0},
             "distance_km": 2.0,
-            "open_time": "10:00",
-            "close_time": "21:00",
             "duration_minutes": 20,
             "suitable_groups": ["家庭亲子"],
             "description": "生日蛋糕"
         }
 
     def test_hard_filter_pass(self):
-        # 正常通过: 餐厅 60 * 2.4 = 144 <= 300 * 0.7 (210)
+        # 正常通过: 餐厅 budget 300 * 0.7 = 210
+        # combos: c1=100 (<=210, pass), c2=250 (>210, fail) -> rest should pass with c1
         cheap_restaurant = self.restaurant_item.copy()
-        cheap_restaurant["avg_price_per_person"] = 60
+        cheap_restaurant["combos"] = [c.copy() for c in cheap_restaurant["combos"]]
         self.assertTrue(hard_filter(cheap_restaurant, self.base_constraints))
-        self.assertTrue(hard_filter(self.activity_item, self.base_constraints))
+        self.assertEqual(len(cheap_restaurant["combos"]), 1)
+        self.assertEqual(cheap_restaurant["combos"][0]["combo_id"], "c1")
         
+        # activity: p1=150 (<=210, pass)
+        activity_copy = self.activity_item.copy()
+        self.assertTrue(hard_filter(activity_copy, self.base_constraints))
+        
+        # gift: g1=80 (<= 300*0.3 = 90, pass)
         cheap_addon = self.addon_item.copy()
-        cheap_addon["price"] = 50 # <= 300 * 0.3 (90)
         self.assertTrue(hard_filter(cheap_addon, self.base_constraints))
 
     def test_hard_filter_budget_fail(self):
-        # 超出预算: 餐厅 90 * 2.4 = 216 > 210 (300 * 0.7)
+        # 超出预算: 餐厅只有超过 210 的套餐
         expensive_restaurant = self.restaurant_item.copy()
-        expensive_restaurant["avg_price_per_person"] = 90
+        expensive_restaurant["combos"] = [{"combo_id": "c1", "price": 250}]
         self.assertFalse(hard_filter(expensive_restaurant, self.base_constraints))
         
         # add-on 总价超出预算: 100 > 90 (300 * 0.3)
         expensive_addon = self.addon_item.copy()
-        expensive_addon["price"] = 100
+        expensive_addon["gifts"] = [{"gift_id": "g1", "price": 100}]
         self.assertFalse(hard_filter(expensive_addon, self.base_constraints))
-
-    def test_equivalent_adult_mapping(self):
-        self.assertEqual(equivalent_adult(3), 0.2)
-        self.assertEqual(equivalent_adult(6), 0.4)
-        self.assertEqual(equivalent_adult(10), 0.6)
-        self.assertEqual(equivalent_adult(14), 0.8)
-        self.assertEqual(equivalent_adult(15), 1.0)
-
-    def test_effective_people_multi_children(self):
-        constraints = self.base_constraints.model_copy(
-            update={"adult_count": 2, "child_count": 2, "child_ages": [5, 8]}
-        )
-        self.assertAlmostEqual(effective_people(constraints), 3.0, places=6)
-
-    def test_effective_people_unknown_children_default_age_9(self):
-        constraints = self.base_constraints.model_copy(
-            update={"adult_count": 2, "child_count": 2, "child_ages": []}
-        )
-        self.assertAlmostEqual(effective_people(constraints), 3.2, places=6)
-
-    def test_hard_filter_budget_uses_effective_people(self):
-        constraints = self.base_constraints.model_copy(
-            update={"adult_count": 2, "child_count": 1, "child_ages": [3]}
-        )
-        item = self.restaurant_item.copy()
-        item["avg_price_per_person"] = 80
-        self.assertTrue(hard_filter(item, constraints))
 
     def test_hard_filter_distance_fail(self):
         # preferred_distance: "2km-5km" -> max is 6.0
@@ -128,7 +109,9 @@ class TestRetrieveCandidates(unittest.TestCase):
         
         # "<2km" -> max 3.0
         strict_constraints = self.base_constraints.model_copy(update={"preferred_distance": "<2km"})
-        self.assertFalse(hard_filter(self.activity_item, strict_constraints)) # 4.0 > 3.0
+        activity_copy = self.activity_item.copy()
+        activity_copy["distance_km"] = 4.0
+        self.assertFalse(hard_filter(activity_copy, strict_constraints)) # 4.0 > 3.0
 
     def test_hard_filter_time_fail(self):
         # 营业时间不匹配: constraints "12:00-18:00"

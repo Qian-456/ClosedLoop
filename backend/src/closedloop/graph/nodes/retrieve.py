@@ -3,7 +3,7 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.utils.mock_db import load_mock_data
 
-MAX_CANDIDATE_DISTANCE_KM = 15.0
+MAX_CANDIDATE_DISTANCE_KM = 12.0
 
 
 def parse_time(time_str: str) -> float:
@@ -38,18 +38,21 @@ def _empty_candidates(processed_steps: list[str] | None = None) -> dict:
 
 
 def _within_distance_cap(item: dict) -> bool:
-    """判断候选是否满足全局距离上限（15km）。"""
+    """判断候选是否满足全局距离上限（12km）。"""
     distance = item.get("distance_km")
+    if distance is None and "location" in item:
+        distance = item.get("location", {}).get("distance_to_center_km")
+        
     if distance is None:
         logger.warning(
-            f"phase=retrieve_candidates_node | warn=missing_distance_km | item_id={item.get('id')} | item_type={item.get('type')}"
+            f"phase=retrieve_candidates_node | warn=missing_distance_km | item_id={item.get('id') or item.get('restaurant_id') or item.get('venue_id') or item.get('shop_id')} | item_type={item.get('type')}"
         )
         return False
     try:
         return float(distance) <= MAX_CANDIDATE_DISTANCE_KM
     except Exception:
         logger.warning(
-            f"phase=retrieve_candidates_node | warn=invalid_distance_km | item_id={item.get('id')} | item_type={item.get('type')} | distance_km={distance}"
+            f"phase=retrieve_candidates_node | warn=invalid_distance_km | item_id={item.get('id') or item.get('restaurant_id') or item.get('venue_id') or item.get('shop_id')} | item_type={item.get('type')} | distance_km={distance}"
         )
         return False
 
@@ -79,12 +82,22 @@ def _normalize_candidate_items(
             item.pop("score", None)
 
         item_id = item.get("id")
+        if not item_id:
+            item_id = item.get("restaurant_id") or item.get("venue_id") or item.get("shop_id")
+            
         if not isinstance(item_id, str) or not item_id:
             new_id = f"tmp_{expected_type}_{idx}"
             logger.warning(
                 f"phase={stage} | warn=missing_id | category={category} | idx={idx} | new_id={new_id}"
             )
             item["id"] = new_id
+        else:
+            item["id"] = item_id
+
+        if "distance_km" not in item and "location" in item:
+            dist = item["location"].get("distance_to_center_km")
+            if dist is not None:
+                item["distance_km"] = float(dist)
 
         name = item.get("name")
         if not isinstance(name, str) or not name:
@@ -95,9 +108,10 @@ def _normalize_candidate_items(
 
         t = item.get("type")
         if t != expected_type:
-            logger.warning(
-                f"phase={stage} | warn=type_mismatch | category={category} | item_id={item.get('id')} | old_type={t} | new_type={expected_type}"
-            )
+            if t is not None:
+                logger.warning(
+                    f"phase={stage} | warn=type_mismatch | category={category} | item_id={item.get('id')} | old_type={t} | new_type={expected_type}"
+                )
             item["type"] = expected_type
 
         normalized.append(item)
@@ -147,62 +161,45 @@ def retrieve_candidates_node(state: ClosedLoopState) -> ClosedLoopState:
         candidates.update(_empty_candidates())
 
     candidates["processed_steps"] = ["retrieve_candidates_node"]
+    
+    # Calculate combo counts for logging
+    rest_count = len(candidates.get('nearby_restaurants', []))
+    act_count = len(candidates.get('nearby_activities', []))
+    gift_count = len(candidates.get('nearby_gifts', []))
+    
+    rest_combo_count = sum(len(x.get("combos", [])) for x in candidates.get("nearby_restaurants", []))
+    act_pkg_count = sum(len(x.get("packages", [])) for x in candidates.get("nearby_activities", []))
+    gift_item_count = sum(len(x.get("gifts", [])) for x in candidates.get("nearby_gifts", []))
+
     logger.info(
-        f"phase=retrieve_candidates_node | output=loaded {len(candidates.get('nearby_restaurants', []))} restaurants, {len(candidates.get('nearby_activities', []))} activities, {len(candidates.get('nearby_gifts', []))} gifts"
+        f"phase=retrieve_candidates_node | output=loaded {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items)"
     )
     return state
-
-
-def equivalent_adult(age: int | float) -> float:
-    """将儿童年龄映射为等效成人数权重。"""
-    try:
-        value = float(age)
-    except Exception:
-        return 1.0
-
-    if value <= 3:
-        return 0.2
-    if value <= 6:
-        return 0.4
-    if value <= 10:
-        return 0.6
-    if value <= 14:
-        return 0.8
-    return 1.0
-
-
-def effective_people(constraints: Constraints) -> float:
-    """根据成人数与儿童年龄计算预算口径的等效人数。"""
-    adult_count = constraints.adult_count
-    child_count = constraints.child_count
-    child_ages = list(constraints.child_ages or [])
-
-    unknown_children = max(int(child_count) - len(child_ages), 0)
-    total = float(adult_count) + sum(equivalent_adult(age) for age in child_ages)
-    total += float(unknown_children) * equivalent_adult(9)
-    return float(total)
 
 
 def hard_filter(item: dict, constraints: Constraints) -> bool:
     """第一层：硬过滤（预算/距离偏好/营业时间/儿童年龄）。"""
     budget = constraints.budget
-    people = effective_people(constraints)
-    if people <= 0:
-        people = 1.0
 
     item_type = item.get("type")
     if item_type == "restaurant":
-        price = item.get("avg_price_per_person", 0)
-        if price * people > budget * 0.7:
+        combos = item.get("combos", [])
+        valid_combos = [c for c in combos if c.get("price", 0) <= budget * 0.7]
+        if not valid_combos and combos:
             return False
+        item["combos"] = valid_combos
     elif item_type == "activity":
-        price = item.get("price_per_person", 0)
-        if price * people > budget * 0.7:
+        packages = item.get("packages", [])
+        valid_packages = [p for p in packages if p.get("price", 0) <= budget * 0.7]
+        if not valid_packages and packages:
             return False
+        item["packages"] = valid_packages
     elif item_type == "gift_shop":
-        price = item.get("price", 0)
-        if price > budget * 0.3:
+        gifts = item.get("gifts", [])
+        valid_gifts = [g for g in gifts if g.get("price", 0) <= budget * 0.3]
+        if not valid_gifts and gifts:
             return False
+        item["gifts"] = valid_gifts
 
     if "distance_km" in item:
         pref_dist = constraints.preferred_distance
@@ -361,7 +358,15 @@ def filter_rank_node(state: ClosedLoopState) -> ClosedLoopState:
     candidates["nearby_gifts"] = ranked["nearby_gifts"]
     candidates["processed_steps"] = ["retrieve_candidates_node", "filter_rank_node"]
 
+    rest_count = len(ranked['nearby_restaurants'])
+    act_count = len(ranked['nearby_activities'])
+    gift_count = len(ranked['nearby_gifts'])
+    
+    rest_combo_count = sum(len(x.get("combos", [])) for x in ranked["nearby_restaurants"])
+    act_pkg_count = sum(len(x.get("packages", [])) for x in ranked["nearby_activities"])
+    gift_item_count = sum(len(x.get("gifts", [])) for x in ranked["nearby_gifts"])
+
     logger.info(
-        f"phase=filter_rank_node | output=ranked {len(ranked['nearby_restaurants'])} restaurants, {len(ranked['nearby_activities'])} activities, {len(ranked['nearby_gifts'])} gifts"
+        f"phase=filter_rank_node | output=ranked {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items)"
     )
     return state

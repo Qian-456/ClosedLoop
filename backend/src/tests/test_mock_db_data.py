@@ -10,28 +10,20 @@ class TestMockDbData(unittest.TestCase):
 
     def test_activities_count_and_schema(self):
         """
-        Ensure activities.json has 20 items and required keys exist.
+        Ensure activities.json has 15 items and required keys exist.
         """
         activities = load_mock_data("activities.json")
-        self.assertEqual(len(activities), 20)
+        self.assertEqual(len(activities), 15)
 
         required_keys = {
-            "id",
+            "venue_id",
             "name",
-            "type",
             "category",
-            "distance_km",
-            "price_per_person",
+            "packages",
             "rating",
-            "open_time",
-            "close_time",
-            "duration_minutes",
+            "operating_hours",
             "tags",
-            "avoid_tags",
-            "suitable_groups",
-            "supports_reservation",
             "location",
-            "description",
         }
         for item in activities:
             self.assertTrue(required_keys.issubset(set(item.keys())))
@@ -44,31 +36,15 @@ class TestMockDbData(unittest.TestCase):
         self.assertEqual(len(restaurants), 20)
 
         required_keys = {
-            "id",
+            "restaurant_id",
             "name",
-            "type",
-            "category",
-            "distance_km",
-            "avg_price_per_person",
+            "combos",
             "rating",
-            "open_time",
-            "close_time",
-            "avg_wait_minutes",
-            "duration_minutes",
             "tags",
-            "avoid_tags",
-            "suitable_groups",
-            "has_child_seat",
-            "supports_reservation",
-            "supports_queue",
             "location",
-            "description",
         }
         for item in restaurants:
             self.assertTrue(required_keys.issubset(set(item.keys())))
-
-        supports_reservation_count = sum(1 for r in restaurants if r.get("supports_reservation") is True)
-        self.assertLessEqual(supports_reservation_count, 5)
 
 
 if __name__ == "__main__":
