@@ -8,7 +8,7 @@ class ItineraryItem(BaseModel):
 
     id: str = Field(..., description="候选条目的唯一 id")
     name: str = Field(..., description="候选条目的名称")
-    type: Literal["restaurant", "activity", "gift_shop"] = Field(
+    type: Literal["restaurant", "activity", "gift_shop", "commute"] = Field(
         ..., description="候选条目的类型"
     )
     location: str = Field(..., description="候选地点的地址/位置描述")
@@ -19,7 +19,7 @@ class ItineraryItem(BaseModel):
 class ItineraryStep(BaseModel):
     """行程中的一个步骤。"""
 
-    order_id: int = Field(..., description="步骤顺序 id，从 1 开始递增")
+    order_id: str = Field(..., description="步骤顺序 id，实体活动为 1, 2... 通勤为 C1, C2...")
     item: ItineraryItem = Field(..., description="该步骤选择的候选条目")
     duration_minutes: int = Field(..., description="该步骤建议停留时长（分钟）")
     note: str = Field(..., description="该步骤的简短说明/理由")

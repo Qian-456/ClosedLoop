@@ -1264,14 +1264,14 @@ def get_time_of_day(start_time_hours: float) -> str:
     else:
         return "late_night"
 
-def match_pattern(
+def match_patterns(
     group_type: str, 
     child_ages: list[int], 
     start_time_hours: float, 
     duration_hours: float
-) -> Pattern:
+) -> list[Pattern]:
     """
-    根据人群分类、开始时间和持续时间，匹配最合适的 Pattern。
+    根据人群分类、开始时间和持续时间，匹配所有合适的 Pattern 列表。
     """
     # 1. 确定 group_category
     group_category = "friends"
@@ -1303,15 +1303,16 @@ def match_pattern(
                 
     if not candidates:
         # Fallback to a safe default
-        return PATTERNS[0]
+        return [PATTERNS[0]]
         
     # 4. 优先匹配 time_of_day
     preferred = [p for p in candidates if time_of_day in p["start_time_pref"]]
+    
+    # 返回所有满足条件的候选，如果有 preferred 则优先使用 preferred 集合，否则使用所有 candidates
+    # 按时长差值升序排列
     if preferred:
-        # 在 preferred 中找最接近 duration_hours 的
-        best_match = min(preferred, key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
-        return best_match
+        preferred.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
+        return preferred
     else:
-        # 没有匹配时段，直接找最接近时长的
-        best_match = min(candidates, key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
-        return best_match
+        candidates.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
+        return candidates

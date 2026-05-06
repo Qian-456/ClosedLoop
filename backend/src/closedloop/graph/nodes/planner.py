@@ -10,7 +10,7 @@ from closedloop.contracts.itinerary import (
     ItineraryStep,
     ItineraryItem,
 )
-from closedloop.graph.policies import parse_time_period, match_pattern
+from closedloop.graph.policies import parse_time_period, match_patterns
 from closedloop.graph.nodes.planner_utils import get_top_k_combinations, filter_and_score_combinations
 
 def planner_node(state: ClosedLoopState) -> ClosedLoopState:
@@ -53,8 +53,8 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     child_ages = constraints.get("child_ages", [])
 
     # 2. 匹配 Pattern
-    pattern = match_pattern(group_type, child_ages, start_time, duration_hours)
-    logger.info(f"phase=planner_node | pattern_matched={pattern['id']} | desc={pattern['desc']}")
+    patterns = match_patterns(group_type, child_ages, start_time, duration_hours)
+    logger.info(f"phase=planner_node | patterns_matched={len(patterns)}")
 
     # 3. 准备可消费的候选集队列（深拷贝以免影响原状态）
     queues = {
@@ -68,39 +68,67 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     }
 
     # 4. 时间线推演与条目组装 (生成多套方案)
-    MAX_VARIANTS_TO_GENERATE = 500000
-    all_combinations = get_top_k_combinations(queues, pattern["steps"], max_variants=MAX_VARIANTS_TO_GENERATE)
-
-    # 5. 过滤与排序
-    valid_plans_info = filter_and_score_combinations(all_combinations, budget, required_duration_mins)
-    
-    logger.info(f"phase=planner_node | combinations_generated={len(all_combinations)} | valid_after_filter={len(valid_plans_info)}")
-
-    # 检查是否因为缺失了某一步的候选导致无法生成初步方案
+    all_combinations = []
     missing_types = set()
-    if not all_combinations:
-        for step_type in pattern["steps"]:
-            if step_type == "activity" and not queues.get("activity"):
-                missing_types.add("activity")
-            elif step_type == "gift_shop" and not queues.get("gift_shop"):
-                missing_types.add("gift_shop")
-            elif step_type.startswith("restaurant:"):
-                # Simplified check for missing restaurant
-                has_rest = any(f in queues and queues[f] for f in ["dinner", "lunch", "late_night", "breakfast", "afternoon_tea"])
-                if not has_rest:
-                    missing_types.add("restaurant")
-                    
+    
+    for pattern in patterns:
+        combos_for_pattern = get_top_k_combinations(queues, pattern)
+        if not combos_for_pattern:
+            for step_type in pattern["steps"]:
+                if step_type == "activity" and not queues.get("activity"):
+                    missing_types.add("activity")
+                elif step_type == "gift_shop" and not queues.get("gift_shop"):
+                    missing_types.add("gift_shop")
+                elif step_type.startswith("restaurant:"):
+                    has_rest = any(f in queues and queues[f] for f in ["dinner", "lunch", "late_night", "breakfast", "afternoon_tea"])
+                    if not has_rest:
+                        missing_types.add("restaurant")
+        else:
+            all_combinations.extend(combos_for_pattern)
+
+    # 5. 过滤与排序 (直接在内部使用堆排序取 Top 20)
+    valid_plans_info = filter_and_score_combinations(all_combinations, budget, required_duration_mins, top_k=20)
+    
+    logger.info(f"phase=planner_node | total_combinations_generated={len(all_combinations)} | valid_after_filter={len(valid_plans_info)}")
+
     status = "ok" if valid_plans_info else "insufficient_candidates"
     plans = []
     
     if valid_plans_info:
         for plan_index, plan_info in enumerate(valid_plans_info, start=1):
+            pattern = plan_info["pattern"]
             combo = plan_info["combo"]
+            commutes = plan_info["commutes"]
+            
             steps = []
             item_ids = []
             current_time = start_time
             
+            step_counter = 1
+            commute_counter = 1
+            
             for i, selected_item in enumerate(combo):
+                # 1. 先加入通勤节点 (前往当前地点)
+                commute = commutes[i]
+                if commute["time"] > 0:
+                    commute_item = ItineraryItem(
+                        id=f"commute_{plan_index}_{commute_counter}",
+                        name=f"前往 {selected_item.get('name', '目的地')}",
+                        type="commute",
+                        location="途中",
+                        distance_km=commute["distance"],
+                        cost=commute["cost"]
+                    )
+                    steps.append(ItineraryStep(
+                        order_id=f"C{commute_counter}",
+                        item=commute_item,
+                        duration_minutes=int(commute["time"]),
+                        note=f"推荐方式: {commute['mode']}"
+                    ))
+                    commute_counter += 1
+                    current_time += (commute["time"] / 60.0)
+                
+                # 2. 加入实际地点节点
                 step_type = selected_item["_step_type"]
                 meal_category = selected_item.get("_meal_category")
                 
@@ -133,13 +161,32 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
                 )
 
                 steps.append(ItineraryStep(
-                    order_id=i + 1,
+                    order_id=str(step_counter),
                     item=it_item,
                     duration_minutes=duration_mins,
                     note=note
                 ))
+                step_counter += 1
                 item_ids.append(item_id)
                 current_time += (duration_mins / 60.0)
+                
+            # 3. 加入最后返程回家的通勤节点
+            final_commute = commutes[-1]
+            if final_commute["time"] > 0:
+                commute_item = ItineraryItem(
+                    id=f"commute_{plan_index}_{commute_counter}",
+                    name="返程回家",
+                    type="commute",
+                    location="途中",
+                    distance_km=final_commute["distance"],
+                    cost=final_commute["cost"]
+                )
+                steps.append(ItineraryStep(
+                    order_id=f"C{commute_counter}",
+                    item=commute_item,
+                    duration_minutes=int(final_commute["time"]),
+                    note=f"推荐方式: {final_commute['mode']}"
+                ))
             
             plan_variant = ItineraryPlanVariant(
                 plan_id=f"plan_{plan_index}",

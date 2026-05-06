@@ -1,5 +1,6 @@
 import itertools
 import math
+import heapq
 
 def get_coords(item: dict) -> tuple[float, float]:
     """提取经纬度作为 (x, y) 坐标，单位 km"""
@@ -14,37 +15,41 @@ def calculate_distance(p1: tuple[float, float], p2: tuple[float, float]) -> floa
     """计算两点间的欧氏距离（km）"""
     return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
-def calculate_commute_info(dist_km: float) -> tuple[float, float]:
+def calculate_commute_info(dist_km: float) -> tuple[float, float, str]:
     """
-    根据距离计算通勤时间（分钟）和成本（元）。
-    返回: (时间分钟, 成本元)
+    根据距离计算通勤时间（分钟）、成本（元）以及推荐的交通方式。
+    返回: (时间分钟, 成本元, 交通方式)
     """
     if dist_km < 2.0:
         # 步行: 5km/h, 偏置 2分钟, 0元
         speed_km_h = 5.0
         bias_min = 2.0
         cost = 0.0
+        mode = "walking"
     elif dist_km <= 5.0:
-        # 出租车: 30km/h, 偏置 5分钟, 起步价10元 + 2元/km
+        # 出租车: 30km/h, 偏置 5分钟, 起步价10元 + 超出3km部分2元/km
         speed_km_h = 30.0
         bias_min = 5.0
         cost = 10.0 + max(0, dist_km - 3.0) * 2.0
+        mode = "taxi"
     else:
         # 自己开车: 40km/h, 偏置 10分钟, 默认成本 0元（暂不考虑油费/停车费）
         speed_km_h = 40.0
         bias_min = 10.0
         cost = 0.0
+        mode = "driving"
         
     time_min = (dist_km / speed_km_h) * 60.0 + bias_min
-    return time_min, cost
+    return time_min, cost, mode
 
-def get_top_k_combinations(queues: dict, pattern_steps: list[str], max_variants: int = 20) -> list[list[dict]]:
+def get_top_k_combinations(queues: dict, pattern: dict) -> list[dict]:
     """
-    给定各个类型的候选队列和行程的步骤结构，生成最多 max_variants 个组合（多套方案）。
-    返回的是候选条目的组合列表。
+    给定各个类型的候选队列和单个 Pattern，生成所有的组合（限制单步 Top 10，但不截断总数）。
+    返回的是包含 Pattern 信息的字典列表。
     """
+    pattern_steps = pattern.get("steps", [])
     step_pools = []
-    # 我们为每个步骤提取出它的备选池（比如取 top 3）
+    # 我们为每个步骤提取出它的备选池（比如取 top 10）
     TOP_K_PER_STEP = 10
     
     for step_type in pattern_steps:
@@ -98,23 +103,28 @@ def get_top_k_combinations(queues: dict, pattern_steps: list[str], max_variants:
             item_ids.append(item_id)
             
         if is_valid:
-            valid_combinations.append(combo)
-            if len(valid_combinations) >= max_variants:
-                break
+            valid_combinations.append({
+                "pattern": pattern,
+                "combo": combo
+            })
                 
     return valid_combinations
 
 def filter_and_score_combinations(
-    combinations: list[list[dict]],
+    combinations_with_pattern: list[dict],
     budget: float,
-    required_duration_mins: float
+    required_duration_mins: float,
+    top_k: int = 20
 ) -> list[dict]:
     """
     过滤超出预算和时间误差过大的组合，并计算多维度打分，按综合得分降序排列。
     包含：空间与通勤、时间节奏、预算贴合度、场景主题连贯性等维度。
     """
     valid_plans_info = []
-    for combo in combinations:
+    for item_dict in combinations_with_pattern:
+        pattern = item_dict["pattern"]
+        combo = item_dict["combo"]
+        
         cost_without_gift = 0.0
         cost_with_gift = 0.0
         total_duration_minutes = 0
@@ -125,6 +135,8 @@ def filter_and_score_combinations(
         total_commute_time = 0.0
         total_commute_cost = 0.0
         current_pos = (0.0, 0.0) # 起点为家 (0,0)
+        
+        commutes_info = [] # 记录每一步的通勤明细
         
         for selected_item in combo:
             step_type = selected_item["_step_type"]
@@ -154,7 +166,14 @@ def filter_and_score_combinations(
             # 计算从上一位置到当前位置的通勤距离和时间、成本
             next_pos = get_coords(selected_item)
             dist = calculate_distance(current_pos, next_pos)
-            time_min, cost_val = calculate_commute_info(dist)
+            time_min, cost_val, mode = calculate_commute_info(dist)
+            
+            commutes_info.append({
+                "time": time_min,
+                "cost": cost_val,
+                "mode": mode,
+                "distance": dist
+            })
             
             total_commute_distance += dist
             total_commute_time += time_min
@@ -164,7 +183,14 @@ def filter_and_score_combinations(
         
         # 加上最后回家的距离和时间、成本
         dist_home = calculate_distance(current_pos, (0.0, 0.0))
-        time_min_home, cost_val_home = calculate_commute_info(dist_home)
+        time_min_home, cost_val_home, mode_home = calculate_commute_info(dist_home)
+        
+        commutes_info.append({
+            "time": time_min_home,
+            "cost": cost_val_home,
+            "mode": mode_home,
+            "distance": dist_home
+        })
         
         total_commute_distance += dist_home
         total_commute_time += time_min_home
@@ -218,13 +244,19 @@ def filter_and_score_combinations(
         )
         
         valid_plans_info.append({
+            "pattern": pattern,
             "combo": combo,
+            "commutes": commutes_info,
             # 将 average_score 字段覆写为最终加权分 final_score (方便前端兼容和 plan 记录)
             "average_score": round(final_score, 2),
             "total_cost": cost_with_gift,
             "total_duration_minutes": total_duration_minutes
         })
         
-    # 按照综合分降序排序
-    valid_plans_info.sort(key=lambda x: x["average_score"], reverse=True)
+    # 获取 Top K 的方案，使用 heapq.nlargest 减少排序时间 (O(N log K) vs O(N log N))
+    if top_k > 0 and len(valid_plans_info) > top_k:
+        valid_plans_info = heapq.nlargest(top_k, valid_plans_info, key=lambda x: x["average_score"])
+    else:
+        valid_plans_info.sort(key=lambda x: x["average_score"], reverse=True)
+        
     return valid_plans_info
