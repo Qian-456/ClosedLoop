@@ -1,0 +1,160 @@
+from typing import Any
+import copy
+
+from closedloop.core.config import get_config
+from closedloop.core.logger import LoggerManager, logger
+from closedloop.contracts.state import ClosedLoopState
+from closedloop.contracts.itinerary import (
+    ItineraryPlan,
+    ItineraryPlanVariant,
+    ItineraryStep,
+    ItineraryItem,
+)
+from closedloop.graph.policies import parse_time_period, match_pattern
+from closedloop.graph.nodes.planner_utils import get_top_k_combinations
+
+def planner_node(state: ClosedLoopState) -> ClosedLoopState:
+    """
+    根据规则匹配 Pattern，从 rerank 后的候选集中挑选条目组装成最终行程计划。
+    """
+    config = get_config()
+    LoggerManager.setup(config)
+
+    logger.info("phase=planner_node | status=started")
+
+    constraints = state.get("constraints", {})
+    candidates = state.get("candidates", {})
+
+    if not constraints or not candidates:
+        logger.error("phase=planner_node | error=missing_prerequisites")
+        state["itinerary"] = {
+            "plans": [],
+            "status": "insufficient_candidates",
+            "missing_types": ["restaurant", "activity", "gift_shop"]
+        }
+        return state
+
+    # 1. 提取时间与人群信息
+    time_period = constraints.get("time_period", "")
+    duration_hours = constraints.get("duration_hours")
+    
+    # 默认如果没有时长，按 4.0 小时计算
+    start_time, parsed_duration = parse_time_period(time_period)
+    
+    if not duration_hours:
+        duration_hours = parsed_duration
+
+    group_type = constraints.get("group_type", "family")
+    child_ages = constraints.get("child_ages", [])
+
+    # 2. 匹配 Pattern
+    pattern = match_pattern(group_type, child_ages, start_time, duration_hours)
+    logger.info(f"phase=planner_node | pattern_matched={pattern['id']} | desc={pattern['desc']}")
+
+    # 3. 准备可消费的候选集队列（深拷贝以免影响原状态）
+    queues = {
+        "activity": candidates.get("ranked_packages", []),
+        "gift_shop": candidates.get("ranked_gifts", []),
+        "breakfast": candidates.get("ranked_breakfast_combos", []),
+        "lunch": candidates.get("ranked_lunch_combos", []),
+        "afternoon_tea": candidates.get("ranked_afternoon_tea_combos", []),
+        "dinner": candidates.get("ranked_dinner_combos", []),
+        "late_night": candidates.get("ranked_late_night_combos", []),
+    }
+
+    # 4. 时间线推演与条目组装 (生成多套方案)
+    MAX_VARIANTS = 20
+    all_combinations = get_top_k_combinations(queues, pattern["steps"], max_variants=MAX_VARIANTS)
+
+    # 5. 组装最终结果
+    # 检查是否因为缺失了某一步的候选导致无法生成方案
+    missing_types = set()
+    if not all_combinations:
+        for step_type in pattern["steps"]:
+            if step_type == "activity" and not queues.get("activity"):
+                missing_types.add("activity")
+            elif step_type == "gift_shop" and not queues.get("gift_shop"):
+                missing_types.add("gift_shop")
+            elif step_type.startswith("restaurant:"):
+                # Simplified check for missing restaurant
+                has_rest = any(f in queues and queues[f] for f in ["dinner", "lunch", "late_night", "breakfast", "afternoon_tea"])
+                if not has_rest:
+                    missing_types.add("restaurant")
+                    
+    status = "ok" if all_combinations else "insufficient_candidates"
+    plans = []
+    
+    if all_combinations:
+        plan_index = 1
+        for combo in all_combinations:
+            # 组装这套组合的 steps
+            steps = []
+            item_ids = []
+            total_duration_minutes = 0
+            current_time = start_time
+            
+            for i, selected_item in enumerate(combo):
+                step_type = selected_item["_step_type"]
+                meal_category = selected_item.get("_meal_category")
+                
+                # 确定时长和 Note
+                note = ""
+                if step_type == "activity":
+                    duration_mins = selected_item.get("duration_mins", 90)
+                elif step_type == "gift_shop":
+                    duration_mins = 30
+                elif step_type.startswith("restaurant:"):
+                    duration_mins = selected_item.get("duration_mins", 60) if meal_category != "afternoon_tea" else selected_item.get("duration_mins", 45)
+                else:
+                    duration_mins = 60
+
+                item_type = "restaurant" if "restaurant" in step_type else step_type
+                item_id = selected_item.get("combo_id") or selected_item.get("package_id") or selected_item.get("gift_id", "unknown")
+                name = selected_item.get("name", "Unknown")
+                location_dict = selected_item.get("location", {})
+                address = location_dict.get("address", "未知地址")
+                distance = selected_item.get("distance_km", 0.0)
+
+                it_item = ItineraryItem(
+                    id=item_id,
+                    name=name,
+                    type=item_type,
+                    location=address,
+                    distance_km=distance
+                )
+
+                steps.append(ItineraryStep(
+                    order_id=i + 1,
+                    item=it_item,
+                    duration_minutes=duration_mins,
+                    note=note
+                ))
+                item_ids.append(item_id)
+                total_duration_minutes += duration_mins
+                current_time += (duration_mins / 60.0)
+            
+            plan_variant = ItineraryPlanVariant(
+                plan_id=f"plan_{plan_index}",
+                title=f"{pattern['desc']}行程方案 {plan_index}",
+                steps=steps,
+                selected_item_ids=item_ids,
+                total_duration_minutes=total_duration_minutes
+            )
+            plans.append(plan_variant)
+            plan_index += 1
+
+    itinerary_plan = ItineraryPlan(
+        plans=plans,
+        status=status,
+        missing_types=list(missing_types)
+    )
+
+    state["itinerary"] = itinerary_plan.model_dump()
+    
+    # 记录执行步骤
+    processed_steps = state.setdefault("processed_steps", [])
+    processed_steps.append("planner_node")
+    
+    logger.info(f"phase=planner_node | status={status} | generated_plans={len(plans)} | missing={missing_types}")
+
+    return state
