@@ -127,13 +127,15 @@ def build_agent(*, tools: list | None = None, temperature: float = 0.7, response
     deepseek = ChatDeepSeek(
         model=config.deepseek.MODEL,
         api_key=config.deepseek.API_KEY,
-        temperature=temperature
+        temperature=temperature,
+        timeout=15.0
     )
 
     qwen = ChatTongyi(
         model=config.qwen.MODEL,
         api_key=config.qwen.API_KEY,
         temperature=temperature,
+        timeout=15.0
     )
 
     logger.info("LLM initialized | primary=DeepSeek | fallback=Qwen")
