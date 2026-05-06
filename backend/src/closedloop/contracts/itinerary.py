@@ -13,6 +13,7 @@ class ItineraryItem(BaseModel):
     )
     location: str = Field(..., description="候选地点的地址/位置描述")
     distance_km: float = Field(..., description="候选地点相对当前位置的距离（km）")
+    cost: float = Field(default=0.0, description="该条目的价格/花费")
 
 
 class ItineraryStep(BaseModel):
@@ -34,6 +35,8 @@ class ItineraryPlanVariant(BaseModel):
         ..., description="与 steps 顺序一致的候选 id 列表"
     )
     total_duration_minutes: int = Field(..., description="该方案预计总时长（分钟）")
+    total_cost: float = Field(default=0.0, description="该方案的总花费")
+    average_score: float = Field(default=0.0, description="该方案的平均得分")
 
 
 class ItineraryPlan(BaseModel):

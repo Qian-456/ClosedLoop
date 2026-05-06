@@ -65,3 +65,63 @@ def get_top_k_combinations(queues: dict, pattern_steps: list[str], max_variants:
                 break
                 
     return valid_combinations
+
+def filter_and_score_combinations(
+    combinations: list[list[dict]],
+    budget: float,
+    required_duration_mins: float
+) -> list[dict]:
+    """
+    过滤超出预算和时间误差过大的组合，并计算平均分和成本，按平均分降序排列。
+    """
+    valid_plans_info = []
+    for combo in combinations:
+        cost_without_gift = 0.0
+        cost_with_gift = 0.0
+        total_duration_minutes = 0
+        total_score = 0
+        
+        for selected_item in combo:
+            step_type = selected_item["_step_type"]
+            meal_category = selected_item.get("_meal_category")
+            
+            price = selected_item.get("price", 0.0)
+            score = selected_item.get("score", 0)
+            
+            if step_type == "activity":
+                duration_mins = selected_item.get("duration_mins", 90)
+            elif step_type == "gift_shop":
+                duration_mins = 30
+            elif step_type.startswith("restaurant:"):
+                duration_mins = selected_item.get("duration_mins", 60) if meal_category != "afternoon_tea" else selected_item.get("duration_mins", 45)
+            else:
+                duration_mins = 60
+                
+            total_duration_minutes += duration_mins
+            total_score += score
+            
+            if step_type == "gift_shop":
+                cost_with_gift += price
+            else:
+                cost_without_gift += price
+                cost_with_gift += price
+        
+        # 过滤逻辑
+        if cost_without_gift > budget:
+            continue
+        if cost_with_gift > budget * 1.2:
+            continue
+        if abs(total_duration_minutes - required_duration_mins) > 30:
+            continue
+            
+        average_score = total_score / len(combo) if combo else 0
+        valid_plans_info.append({
+            "combo": combo,
+            "average_score": average_score,
+            "total_cost": cost_with_gift,
+            "total_duration_minutes": total_duration_minutes
+        })
+        
+    # 按照平均分降序排序
+    valid_plans_info.sort(key=lambda x: x["average_score"], reverse=True)
+    return valid_plans_info

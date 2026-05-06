@@ -27,17 +27,17 @@ class TestPlannerNode(unittest.TestCase):
             },
             "candidates": {
                 "ranked_packages": [
-                    {"package_id": "act_1", "name": "游乐园", "duration_mins": 120, "score": 90, "location": {"address": "测试路1号"}},
-                    {"package_id": "act_2", "name": "科技馆", "duration_mins": 90, "score": 85, "location": {"address": "测试路2号"}}
+                    {"package_id": "act_1", "name": "游乐园", "duration_mins": 120, "score": 90, "price": 100.0, "location": {"address": "测试路1号"}},
+                    {"package_id": "act_2", "name": "科技馆", "duration_mins": 90, "score": 85, "price": 80.0, "location": {"address": "测试路2号"}}
                 ],
                 "ranked_afternoon_tea_combos": [
-                    {"combo_id": "tea_1", "name": "亲子下午茶", "duration_mins": 45, "score": 88, "location": {"address": "测试路3号"}}
+                    {"combo_id": "tea_1", "name": "亲子下午茶", "duration_mins": 45, "score": 88, "price": 150.0, "location": {"address": "测试路3号"}}
                 ],
                 "ranked_gifts": [
-                    {"gift_id": "gift_1", "name": "盲盒玩具", "score": 80, "location": {"address": "测试路4号"}}
+                    {"gift_id": "gift_1", "name": "盲盒玩具", "score": 80, "price": 50.0, "location": {"address": "测试路4号"}}
                 ],
                 "ranked_dinner_combos": [
-                    {"combo_id": "din_1", "name": "家庭晚餐", "duration_mins": 60, "score": 95, "location": {"address": "测试路5号"}}
+                    {"combo_id": "din_1", "name": "家庭晚餐", "duration_mins": 60, "score": 95, "price": 200.0, "location": {"address": "测试路5号"}}
                 ],
                 "ranked_lunch_combos": [],
                 "ranked_breakfast_combos": [],
@@ -66,6 +66,29 @@ class TestPlannerNode(unittest.TestCase):
         self.assertEqual(steps[2]["item"]["id"], "act_2")
         self.assertEqual(steps[3]["item"]["id"], "gift_1")
         self.assertEqual(steps[3]["note"], "")
+        
+        # Verify calculated values
+        self.assertEqual(plan["total_duration_minutes"], 285)
+        self.assertEqual(plan["total_cost"], 380.0) # 100+150+80+50
+        self.assertEqual(plan["average_score"], 85.75) # (90+88+85+80)/4
+
+    def test_planner_node_budget_filter(self):
+        """测试预算过滤：当超出预算时，组合会被剔除"""
+        self.state["constraints"]["budget"] = 200.0 # 非常低的预算
+        new_state = planner_node(self.state)
+        
+        itinerary = new_state.get("itinerary", {})
+        self.assertEqual(itinerary["status"], "insufficient_candidates")
+        self.assertEqual(len(itinerary["plans"]), 0)
+
+    def test_planner_node_time_filter(self):
+        """测试时间过滤：当时长相差超过30分钟时，组合会被剔除"""
+        self.state["constraints"]["duration_hours"] = 2.0 # 预期 120 分钟，但组合时间为 285 分钟
+        new_state = planner_node(self.state)
+        
+        itinerary = new_state.get("itinerary", {})
+        self.assertEqual(itinerary["status"], "insufficient_candidates")
+        self.assertEqual(len(itinerary["plans"]), 0)
 
     def test_planner_node_fallback(self):
         """测试候选不足时的 fallback"""

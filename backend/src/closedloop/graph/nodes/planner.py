@@ -11,7 +11,7 @@ from closedloop.contracts.itinerary import (
     ItineraryItem,
 )
 from closedloop.graph.policies import parse_time_period, match_pattern
-from closedloop.graph.nodes.planner_utils import get_top_k_combinations
+from closedloop.graph.nodes.planner_utils import get_top_k_combinations, filter_and_score_combinations
 
 def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     """
@@ -37,12 +37,17 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     # 1. 提取时间与人群信息
     time_period = constraints.get("time_period", "")
     duration_hours = constraints.get("duration_hours")
+    budget = constraints.get("budget")
+    if budget is None or budget <= 0:
+        budget = float('inf')
     
     # 默认如果没有时长，按 4.0 小时计算
     start_time, parsed_duration = parse_time_period(time_period)
     
     if not duration_hours:
         duration_hours = parsed_duration
+        
+    required_duration_mins = duration_hours * 60
 
     group_type = constraints.get("group_type", "family")
     child_ages = constraints.get("child_ages", [])
@@ -63,11 +68,15 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     }
 
     # 4. 时间线推演与条目组装 (生成多套方案)
-    MAX_VARIANTS = 20
-    all_combinations = get_top_k_combinations(queues, pattern["steps"], max_variants=MAX_VARIANTS)
+    MAX_VARIANTS_TO_GENERATE = 500000
+    all_combinations = get_top_k_combinations(queues, pattern["steps"], max_variants=MAX_VARIANTS_TO_GENERATE)
 
-    # 5. 组装最终结果
-    # 检查是否因为缺失了某一步的候选导致无法生成方案
+    # 5. 过滤与排序
+    valid_plans_info = filter_and_score_combinations(all_combinations, budget, required_duration_mins)
+    
+    logger.info(f"phase=planner_node | combinations_generated={len(all_combinations)} | valid_after_filter={len(valid_plans_info)}")
+
+    # 检查是否因为缺失了某一步的候选导致无法生成初步方案
     missing_types = set()
     if not all_combinations:
         for step_type in pattern["steps"]:
@@ -81,16 +90,14 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
                 if not has_rest:
                     missing_types.add("restaurant")
                     
-    status = "ok" if all_combinations else "insufficient_candidates"
+    status = "ok" if valid_plans_info else "insufficient_candidates"
     plans = []
     
-    if all_combinations:
-        plan_index = 1
-        for combo in all_combinations:
-            # 组装这套组合的 steps
+    if valid_plans_info:
+        for plan_index, plan_info in enumerate(valid_plans_info, start=1):
+            combo = plan_info["combo"]
             steps = []
             item_ids = []
-            total_duration_minutes = 0
             current_time = start_time
             
             for i, selected_item in enumerate(combo):
@@ -114,13 +121,15 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
                 location_dict = selected_item.get("location", {})
                 address = location_dict.get("address", "未知地址")
                 distance = selected_item.get("distance_km", 0.0)
+                price = selected_item.get("price", 0.0)
 
                 it_item = ItineraryItem(
                     id=item_id,
                     name=name,
                     type=item_type,
                     location=address,
-                    distance_km=distance
+                    distance_km=distance,
+                    cost=price
                 )
 
                 steps.append(ItineraryStep(
@@ -130,7 +139,6 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
                     note=note
                 ))
                 item_ids.append(item_id)
-                total_duration_minutes += duration_mins
                 current_time += (duration_mins / 60.0)
             
             plan_variant = ItineraryPlanVariant(
@@ -138,10 +146,15 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
                 title=f"{pattern['desc']}行程方案 {plan_index}",
                 steps=steps,
                 selected_item_ids=item_ids,
-                total_duration_minutes=total_duration_minutes
+                total_duration_minutes=plan_info["total_duration_minutes"],
+                total_cost=plan_info["total_cost"],
+                average_score=plan_info["average_score"]
             )
             plans.append(plan_variant)
-            plan_index += 1
+
+    if not plans and all_combinations:
+        # 如果生成了组合但是全被过滤掉了，修改状态为 insufficient_candidates 避免报错
+        logger.warning("phase=planner_node | warning=all_plans_filtered_out_by_budget_or_time")
 
     itinerary_plan = ItineraryPlan(
         plans=plans,
