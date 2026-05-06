@@ -151,12 +151,19 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
         scene_fit_score -= capacity_penalty
 
     # 2. 质量热度分 (Quality & Popularity Mock)
-    quality_score = item.get("rating", 0) * 10
+    # 将 rating (例如 4.7) 映射到 0-65 分，使得满分体系更接近 100 分
+    # 因为距离满分 20，人群匹配满分 15，加上 65 刚好 100
+    quality_score = (item.get("rating", 0) / 5.0) * 65.0
+
+    # 核心修正：有机得分（Organic Score）最高严格控制在 100 分
+    organic_score = max(0.0, min(100.0, scene_fit_score + quality_score))
 
     # 3. 商业加权分 (Commercial Boost)
-    commercial_score = 0 # 暂时为 0，留作拓展占位
+    # 生产环境中，这里可从 item.get("commercial_bid", 0) 获取，允许最终得分突破 100
+    commercial_score = 0.0
 
-    total_score = scene_fit_score + quality_score + commercial_score
+    total_score = organic_score + commercial_score
+    
     return int(total_score)
 
 
