@@ -253,10 +253,12 @@ def filter_and_score_combinations(
             "total_duration_minutes": total_duration_minutes
         })
         
+    valid_count_before_topk = len(valid_plans_info)
+    
     # 获取 Top K 的方案，使用 heapq.nlargest 减少排序时间 (O(N log K) vs O(N log N))
     if top_k > 0 and len(valid_plans_info) > top_k:
         valid_plans_info = heapq.nlargest(top_k, valid_plans_info, key=lambda x: x["average_score"])
     else:
         valid_plans_info.sort(key=lambda x: x["average_score"], reverse=True)
         
-    return valid_plans_info
+    return valid_plans_info, valid_count_before_topk

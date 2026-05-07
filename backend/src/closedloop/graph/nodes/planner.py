@@ -87,9 +87,9 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
             all_combinations.extend(combos_for_pattern)
 
     # 5. 过滤与排序 (直接在内部使用堆排序取 Top 20)
-    valid_plans_info = filter_and_score_combinations(all_combinations, budget, required_duration_mins, top_k=20)
+    valid_plans_info, valid_count_before_topk = filter_and_score_combinations(all_combinations, budget, required_duration_mins, top_k=20)
     
-    logger.info(f"phase=planner_node | total_combinations_generated={len(all_combinations)} | valid_after_filter={len(valid_plans_info)}")
+    logger.info(f"phase=planner_node | total_combinations_generated={len(all_combinations)} | valid_after_filter={valid_count_before_topk} | final_top_k={len(valid_plans_info)}")
 
     status = "ok" if valid_plans_info else "insufficient_candidates"
     plans = []
