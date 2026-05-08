@@ -49,7 +49,6 @@ def generate_and_score_combinations(
     patterns: list[dict],
     budget: float,
     required_duration_mins: float,
-    top_k: int = 20
 ) -> tuple[list[dict], int, set[str]]:
     """
     使用 DFS 回溯算法生成、剪枝并对组合进行打分。
@@ -57,7 +56,7 @@ def generate_and_score_combinations(
     返回: (最终TopK方案列表, 过滤前合法方案总数, 缺失的组件类型集合)
     """
     TOP_K_PER_STEP = 10
-    valid_plans_info = []
+    grouped_plans = []
     missing_types = set()
     valid_count_before_topk = 0
     
@@ -122,6 +121,8 @@ def generate_and_score_combinations(
         if not is_pattern_valid:
             continue
             
+        pattern_plans = []
+            
         # 开始 DFS 回溯生成组合
         def dfs(step_idx, current_combo, current_pos, cost_without_gift, cost_with_gift, 
                 total_duration_minutes, total_score, total_commute_distance, commutes_info, used_item_ids):
@@ -183,7 +184,7 @@ def generate_and_score_combinations(
                 
                 valid_count_before_topk += 1
                 
-                valid_plans_info.append({
+                pattern_plans.append({
                     "pattern": pattern,
                     "combo": current_combo.copy(),
                     "commutes": final_commutes_info,
@@ -256,10 +257,25 @@ def generate_and_score_combinations(
         # 从起始点(0.0, 0.0) 开始 DFS
         dfs(0, [], (0.0, 0.0), 0.0, 0.0, 0, 0, 0.0, [], set())
         
-    # 获取 Top K 的方案
-    if top_k > 0 and len(valid_plans_info) > top_k:
-        valid_plans_info = heapq.nlargest(top_k, valid_plans_info, key=lambda x: x["average_score"])
-    else:
-        valid_plans_info.sort(key=lambda x: x["average_score"], reverse=True)
+        if pattern_plans:
+            # 优化：使用 heapq 获取 Top 3，时间复杂度 O(N)，比全量 sort O(N log N) 更快
+            top3_plans = heapq.nlargest(3, pattern_plans, key=lambda x: x["average_score"])
+            grouped_plans.append(top3_plans)
         
-    return valid_plans_info, valid_count_before_topk, missing_types
+    # 根据 Pattern 数量组装最终的候选池
+    final_plans = []
+    num_patterns = len(grouped_plans)
+    
+    if num_patterns >= 3:
+        # 当 num_patterns >= 3 时：将每个 Pattern 的 Top 1 放入候选池
+        for p_plans in grouped_plans:
+            final_plans.append(p_plans[0])
+    elif num_patterns == 2:
+        # 当 num_patterns == 2 时：将这两个 Pattern 的 Top 1 和 Top 2 都放入候选池
+        for p_plans in grouped_plans:
+            final_plans.extend(p_plans[:2])
+    elif num_patterns == 1:
+        # 当 num_patterns == 1 时：将这唯一一个 Pattern 的 Top 1、Top 2、Top 3 放入候选池
+        final_plans.extend(grouped_plans[0][:3])
+        
+    return final_plans, valid_count_before_topk, missing_types

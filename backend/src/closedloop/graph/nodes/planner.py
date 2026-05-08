@@ -67,9 +67,9 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
         "late_night": candidates.get("ranked_late_night_combos", []),
     }
 
-    # 4 & 5. 时间线推演与条目组装，同时进行过滤与排序 (生成多套方案)
+    # 4 & 5. 时间线推演与条目组装，同时进行过滤与提取候选池 (生成多套方案)
     valid_plans_info, valid_count_before_topk, missing_types_set = generate_and_score_combinations(
-        queues, patterns, budget, required_duration_mins, top_k=20
+        queues, patterns, budget, required_duration_mins
     )
     missing_types = list(missing_types_set)
     

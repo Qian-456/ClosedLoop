@@ -64,8 +64,8 @@ def test_dfs_performance():
     start_time = time.time()
     
     valid_plans_info, valid_count, missing = generate_and_score_combinations(
-        queues, patterns, budget, required_duration_mins, top_k=20
-    )
+            queues, patterns, budget, required_duration_mins
+        )
     
     total_time = time.time() - start_time
     print(f"DFS total time: {total_time:.4f}s")
