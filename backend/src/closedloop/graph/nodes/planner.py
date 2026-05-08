@@ -11,7 +11,7 @@ from closedloop.contracts.itinerary import (
     ItineraryItem,
 )
 from closedloop.graph.policies import parse_time_period, match_patterns
-from closedloop.graph.nodes.planner_utils import get_top_k_combinations, filter_and_score_combinations
+from closedloop.graph.nodes.planner_utils import generate_and_score_combinations
 
 def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     """
@@ -67,29 +67,13 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
         "late_night": candidates.get("ranked_late_night_combos", []),
     }
 
-    # 4. 时间线推演与条目组装 (生成多套方案)
-    all_combinations = []
-    missing_types = set()
+    # 4 & 5. 时间线推演与条目组装，同时进行过滤与排序 (生成多套方案)
+    valid_plans_info, valid_count_before_topk, missing_types_set = generate_and_score_combinations(
+        queues, patterns, budget, required_duration_mins, top_k=20
+    )
+    missing_types = list(missing_types_set)
     
-    for pattern in patterns:
-        combos_for_pattern = get_top_k_combinations(queues, pattern)
-        if not combos_for_pattern:
-            for step_type in pattern["steps"]:
-                if step_type == "activity" and not queues.get("activity"):
-                    missing_types.add("activity")
-                elif step_type == "gift_shop" and not queues.get("gift_shop"):
-                    missing_types.add("gift_shop")
-                elif step_type.startswith("restaurant:"):
-                    has_rest = any(f in queues and queues[f] for f in ["dinner", "lunch", "late_night", "breakfast", "afternoon_tea"])
-                    if not has_rest:
-                        missing_types.add("restaurant")
-        else:
-            all_combinations.extend(combos_for_pattern)
-
-    # 5. 过滤与排序 (直接在内部使用堆排序取 Top 20)
-    valid_plans_info, valid_count_before_topk = filter_and_score_combinations(all_combinations, budget, required_duration_mins, top_k=20)
-    
-    logger.info(f"phase=planner_node | total_combinations_generated={len(all_combinations)} | valid_after_filter={valid_count_before_topk} | final_top_k={len(valid_plans_info)}")
+    logger.info(f"phase=planner_node | valid_after_filter={valid_count_before_topk} | final_top_k={len(valid_plans_info)}")
 
     status = "ok" if valid_plans_info else "insufficient_candidates"
     plans = []
@@ -199,7 +183,7 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
             )
             plans.append(plan_variant)
 
-    if not plans and all_combinations:
+    if not plans and not missing_types:
         # 如果生成了组合但是全被过滤掉了，修改状态为 insufficient_candidates 避免报错
         logger.warning("phase=planner_node | warning=all_plans_filtered_out_by_budget_or_time")
 
