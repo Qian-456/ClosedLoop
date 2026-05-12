@@ -2,6 +2,7 @@ from closedloop.contracts.state import ClosedLoopState, Constraints
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.utils.mock_db import load_mock_data
+from closedloop.utils.capacity import _get_capacity_from_name, _get_effective_people
 
 MAX_CANDIDATE_DISTANCE_KM = 12.0
 
@@ -178,19 +179,34 @@ def retrieve_candidates_node(state: ClosedLoopState) -> ClosedLoopState:
 
 
 def hard_filter(item: dict, constraints: Constraints) -> bool:
-    """第一层：硬过滤（预算/距离偏好/营业时间/儿童年龄）。"""
+    """第一层：硬过滤（预算/距离偏好/营业时间/儿童年龄/容量）。"""
     budget = constraints.budget
+    effective_people = _get_effective_people(constraints)
 
     item_type = item.get("type")
     if item_type == "restaurant":
         combos = item.get("combos", [])
-        valid_combos = [c for c in combos if c.get("price", 0) <= budget * 0.7]
+        valid_combos = []
+        for c in combos:
+            if c.get("price", 0) > budget * 0.7:
+                continue
+            capacity = _get_capacity_from_name(c.get("name", ""))
+            if capacity > 0 and abs(capacity - effective_people) >= 1.8:
+                continue
+            valid_combos.append(c)
         if not valid_combos and combos:
             return False
         item["combos"] = valid_combos
     elif item_type == "activity":
         packages = item.get("packages", [])
-        valid_packages = [p for p in packages if p.get("price", 0) <= budget * 0.7]
+        valid_packages = []
+        for p in packages:
+            if p.get("price", 0) > budget * 0.7:
+                continue
+            capacity = _get_capacity_from_name(p.get("name", ""))
+            if capacity > 0 and abs(capacity - effective_people) >= 1.8:
+                continue
+            valid_packages.append(p)
         if not valid_packages and packages:
             return False
         item["packages"] = valid_packages
@@ -235,10 +251,34 @@ def rule_filter(item: dict, constraints: Constraints) -> bool:
     """第二层：规则过滤（家庭常识/饮食限制/避坑标签）。"""
     tags = set(item.get("tags", []))
     avoid_tags = set(item.get("avoid_tags", []))
+    
+    # 提取所有可搜索的文本特征（店铺名，标签，套餐名，描述，特色）
+    searchable_text = item.get("name", "") + " " + " ".join(tags)
+    for c in item.get("combos", []) + item.get("packages", []) + item.get("gifts", []):
+        searchable_text += " " + c.get("name", "")
+        searchable_text += " " + c.get("description", "")
+        searchable_text += " " + c.get("features", "")
 
-    if constraints.group_type == "family":
-        forbidden = {"酒吧", "精酿", "密室", "夜宵"}
-        if tags.intersection(forbidden):
+    if constraints.child_count > 0 or constraints.group_type == "family":
+        # 如果有儿童，提取最小儿童年龄；如果未知则默认假设为 6 岁（更严格的保护）
+        youngest_age = min(constraints.child_ages) if constraints.child_ages else 6
+        
+        # 对于所有未成年人：严格禁止酒精和极端成人向词汇
+        forbidden = {"酒吧", "精酿", "红酒", "啤酒", "酒香", "微醺", "成人", "极速"}
+        
+        if youngest_age < 16:
+            # 16岁以下限制网吧及高强度刺激
+            forbidden.update(["网吧", "电竞", "极限", "尸潮", "失重"])
+            
+        if youngest_age < 12:
+            # 12岁以下限制密室、深夜夜宵场所及盲盒等可能引发冲动消费的内容
+            forbidden.update(["密室", "夜宵", "深夜", "KTV", "盲盒", "端盒", "随机"])
+            
+        if youngest_age < 6:
+            # 6岁以下限制剧本杀、恐怖、烧烤及可能引起不适的搞怪内容
+            forbidden.update(["剧本杀", "恐怖", "刺激", "烧烤", "恶搞", "发泄", "重口味"])
+
+        if any(f in searchable_text for f in forbidden):
             return False
 
     if constraints.dietary_restrictions:

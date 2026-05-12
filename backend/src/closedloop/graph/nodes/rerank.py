@@ -5,73 +5,7 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.state import ClosedLoopState, Constraints, RankedCombo, RankedPackage, RankedGift
 from closedloop.graph.nodes.retrieve import _ensure_candidates_dict, _empty_candidates
-
-def _get_effective_people(constraints: Constraints) -> float:
-    """计算等效人数"""
-    effective = float(constraints.adult_count)
-    child_ages = constraints.child_ages or []
-    for age in child_ages:
-        if age <= 3:
-            effective += 0.2
-        elif age <= 6:
-            effective += 0.4
-        elif age <= 10:
-            effective += 0.6
-        elif age <= 14:
-            effective += 0.8
-        else:
-            effective += 1.0
-            
-    unknown_children = max(0, constraints.child_count - len(child_ages))
-    effective += unknown_children * 0.6
-    return effective
-
-
-def _get_capacity_from_name(name: str) -> float:
-    """从套餐/活动名称中提取适用人数容量（结合成人数与等效儿童数）。"""
-    if not name:
-        return 1.0
-        
-    name = name.lower()
-    
-    # 1. 优先匹配明确的“X大Y小”结构 (例如：2大1小 -> 2.4 人)
-    match = re.search(r'(\d+)\s*[大小]\s*(\d+)\s*[大小]', name)
-    if match:
-        adults = int(match.group(1))
-        kids = int(match.group(2))
-        # 默认儿童等效权重为 0.4
-        return adults + kids * 0.4
-        
-    # 3. 匹配通用家庭/亲子套餐（通常指三口之家或四口之家）
-    if "三口之家" in name or "2大1小" in name:
-        return 2.6
-    if "四口之家" in name or "2大2小" in name:
-        return 3.2
-    if "家庭" in name or "亲子" in name:
-        return 2.6 # 默认小家庭
-
-    # 4. 匹配具体数字
-    if "单人" in name or "一人" in name or "工作餐" in name:
-        return 1.0
-    if "双人" in name or "两人" in name or "情侣" in name or "闺蜜" in name:
-        return 2.0
-    if "三人" in name:
-        return 3.0
-    if "四人" in name:
-        return 4.0
-    if "五人" in name:
-        return 5.0
-    if "六人" in name:
-        return 6.0
-    if "七人" in name:
-        return 7.0
-    if "八人" in name:
-        return 8.0
-    if "多人" in name:
-        return 4.0 # 默认多人为4
-
-    return 1.0 # 无法匹配时默认返回 1.0，因为至少适合一个人使用
-
+from closedloop.utils.capacity import _get_effective_people, _get_capacity_from_name
 
 def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
     """
@@ -129,6 +63,24 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
                 for g in suitable_groups
             ) or any(k in item_features for k in friends_keywords):
                 scene_fit_score += 15
+        elif constraints.group_type == "solo":
+            solo_keywords = ("单人", "一人食", "独处", "工作餐", "静谧")
+            if any(k in item_features for k in solo_keywords):
+                scene_fit_score += 15
+            party_keywords = ("聚会", "闺蜜", "团建", "多人", "派对", "家庭", "双人", "情侣")
+            if any(k in item_features for k in party_keywords):
+                scene_fit_score -= 30
+        elif constraints.group_type == "couple":
+            couple_keywords = ("情侣", "约会", "双人", "浪漫", "七夕")
+            if any(k in item_features for k in couple_keywords):
+                scene_fit_score += 15
+            large_group_keywords = ("聚会", "团建", "多人", "派对", "家庭", "闺蜜", "单人")
+            if any(k in item_features for k in large_group_keywords):
+                scene_fit_score -= 30
+        elif constraints.group_type == "business":
+            business_keywords = ("商务", "宴请", "高端", "安静", "包间")
+            if any(k in item_features for k in business_keywords):
+                scene_fit_score += 15
 
     # 标签命中 (Tag Matching) - 暂时硬编码为 0 分
     tag_matching_score = 0
@@ -146,8 +98,8 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
     if capacity > 0:
         effective_people = _get_effective_people(constraints)
         diff = abs(capacity - effective_people)
-        # 惩罚分：相差 1 个人等效，扣 10 分。
-        capacity_penalty = diff * 10
+        # 惩罚分：指数级惩罚，相差 1 个人等效扣 15 分，相差 2 人扣 50 分，相差 3 人扣 105 分。
+        capacity_penalty = (diff ** 2) * 10 + (diff * 5)
         scene_fit_score -= capacity_penalty
 
     # 2. 质量热度分 (Quality & Popularity Mock)

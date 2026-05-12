@@ -147,8 +147,8 @@ class Constraints(BaseModel):
     """
     为行程提取的用户约束条件 (Constraints)。
     """
-    group_type: Literal["family", "friends"] = Field(
-        ..., description="群体类型：家庭或朋友（内部编码为 family / friends）"
+    group_type: Literal["solo", "couple", "family", "friends", "business"] = Field(
+        ..., description="群体类型：单人、情侣、家庭、朋友或商务"
     )
     budget: float = Field(
         ..., description="旅行/活动的当地货币总预算。如果提供的是人均预算，请乘以总人数（或等效人数）。"
@@ -170,7 +170,7 @@ class Constraints(BaseModel):
     )
 
     adult_count: int = Field(
-        default=2, description="成人数（预算过滤与人数口径以成人为准；朋友默认 2，家庭可推断）"
+        default=2, description="成人数（预算过滤与人数口径以成人为准；单人默认1，情侣/朋友默认2，家庭可推断）"
     )
     child_count: int = Field(default=0, description="小孩数（未提及则为 0；提及但未给数量可按最小默认）")
     child_ages: list[int] = Field(default_factory=list, description="小孩年龄列表（支持多个年龄；可为空）")

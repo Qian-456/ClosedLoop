@@ -28,32 +28,26 @@ class TestRerankNode(unittest.TestCase):
 
     def test_score_item(self):
         score = score_item(self.restaurant_item, {}, self.base_constraints)
-        # rating: 4.5 * 10 = 45
-        # distance: pref="2km-5km", min=2.0, max=5.0, actual=3.0 -> ratio = 0.666... * 20 = 13
+        # rating: 4.5 / 5 * 65 = 58.5
+        # distance: pref="2km-5km", actual=3.0 -> ratio = (5-3)/(5-2) = 2/3. 2/3 * 20 = 13.333 -> 13
         # suitable_groups: family in suitable -> +15
         # capacity: empty name returns capacity 1.0. Base effective_people (2 adult, 1 child(age 5=0.4)) = 2.4.
-        # diff = |1.0 - 2.4| = 1.4 -> penalty = 14
-        # total: 45 + 13 + 15 - 14 = 59
-        self.assertEqual(score, 59)
+        # diff = |1.0 - 2.4| = 1.4 -> penalty = (1.4**2)*10 + 1.4*5 = 1.96*10 + 7 = 19.6 + 7 = 26.6 -> 26
+        # organic_score: min(100, 58.5 + 13.333 + 15 - 26.6) = 60.233 -> 60
+        self.assertEqual(score, 60)
 
     def test_score_item_matches_chinese_suitable_groups(self):
         family_restaurant = self.restaurant_item.copy()
         family_restaurant["suitable_groups"] = ["家庭亲子"]
-        self.assertEqual(score_item(family_restaurant, {}, self.base_constraints), 59)
+        self.assertEqual(score_item(family_restaurant, {}, self.base_constraints), 60)
 
         friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
         friends_restaurant = self.restaurant_item.copy()
         friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        # friends effective people (adult=2) -> diff = |1.0 - 2.0| = 1.0 -> penalty 10
-        # However, for friends_restaurant, "朋友聚会" doesn't match friends_keywords which are ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
-        # Oh, wait. "朋友聚会" contains "朋友". So it matches. Fit = 15.
-        # Rating 45 + Dist 13 + Fit 15 = 73. Penalty = 10.
-        # Wait, the effective people for friends is 2.4 ? No, friends group type uses adult_count + child equivalent. base_constraints child_count=1!
-        # Ah! friends_constraints = base_constraints.model_copy(update={"group_type": "friends"})
-        # The child_count is still 1. effective_people = 2.4.
-        # diff = |1.0 - 2.4| = 1.4 -> penalty 14.
-        # 73 - 14 = 59.
-        self.assertEqual(score_item(friends_restaurant, {}, friends_constraints), 59)
+        # Friends effective people: child_count=1 -> 2.4.
+        # Penalty: diff = 1.4 -> 26.6
+        # organic_score: 58.5 + 13.333 + 15 - 26.6 = 60.233 -> 60
+        self.assertEqual(score_item(friends_restaurant, {}, friends_constraints), 60)
 
     def test_get_capacity_from_name(self):
         # 测试明确的 X大Y小
@@ -84,48 +78,50 @@ class TestRerankNode(unittest.TestCase):
         inner_item = {"name": "家庭欢乐餐", "features": "非常适合三口之家，老少皆宜的口味。"}
         score = score_item(item_no_groups, inner_item, self.base_constraints)
         
-        # rating 45 + dist 13 + fit 15 (features matched)
-        # capacity: "家庭欢乐餐" returns capacity 2.6 (matched "家庭"). effective_people is 2.4.
-        # diff = 0.2 -> penalty = 2
-        # 45 + 13 + 15 - 2 = 71
-        self.assertEqual(score, 71)
+        # rating 58.5 + dist 13.333 + fit 15 (features matched)
+        # capacity: "家庭欢乐餐" returns capacity 2.6. effective_people is 2.4.
+        # diff = 0.2 -> penalty = 0.04*10 + 0.2*5 = 0.4 + 1.0 = 1.4
+        # 58.5 + 13.333 + 15 - 1.4 = 85.433 -> 85
+        self.assertEqual(score, 85)
 
         # Friends match
         friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
         inner_item_friends = {"name": "双人餐", "features": "专为情侣约会打造"}
         score_friends = score_item(item_no_groups, inner_item_friends, friends_constraints)
-        # rating 45 + dist 13 + fit 15 (features matched) 
-        # capacity: "双人餐" returns capacity 2.0. effective_people for friends (adult_count=2, no children) is 2.4.
-        # diff = 0.4 -> penalty 4.
-        # 45 + 13 + 15 - 4 = 69
-        self.assertEqual(score_friends, 69)
+        # rating 58.5 + dist 13.333 + fit 15 (features matched) 
+        # capacity: "双人餐" returns capacity 2.0. effective_people is 2.4.
+        # diff = 0.4 -> penalty = 0.16*10 + 0.4*5 = 1.6 + 2.0 = 3.6
+        # 58.5 + 13.333 + 15 - 3.6 = 83.233 -> 83
+        self.assertEqual(score_friends, 83)
 
     def test_score_item_capacity_penalty(self):
         # Base constraints: 2 adults + 1 child (age 5 -> 0.4) = 2.4 effective people
-        # Base score for this restaurant (from test_score_item) is 73.
+        # Base organic score (without penalty) for friends_restaurant in test_score_item:
+        # rating 58.5 + dist 13.333 + fit 15 = 86.833
+        base_organic = 86.833
         
-        # Test 1: "双人套餐" -> capacity 2.0. diff = 0.4, penalty = 4
+        # Test 1: "双人套餐" -> capacity 2.0. diff = 0.4, penalty = 3.6
         score_2 = score_item(self.restaurant_item, {"name": "双人套餐"}, self.base_constraints)
-        self.assertEqual(score_2, 73 - 4)
+        self.assertEqual(score_2, int(base_organic - 3.6)) # 83
 
-        # Test 2: "三人套餐" -> capacity 3.0. diff = 0.6, penalty = 6
+        # Test 2: "三人套餐" -> capacity 3.0. diff = 0.6, penalty = 0.36*10 + 0.6*5 = 3.6 + 3.0 = 6.6
         score_3 = score_item(self.restaurant_item, {"name": "三人套餐"}, self.base_constraints)
-        self.assertEqual(score_3, 73 - 6)
+        self.assertEqual(score_3, int(base_organic - 6.6)) # 80
         
-        # Test 3: "四人套餐" -> capacity 4.0. diff = 1.6, penalty = 16
+        # Test 3: "四人套餐" -> capacity 4.0. diff = 1.6, penalty = 2.56*10 + 1.6*5 = 25.6 + 8.0 = 33.6
         score_4 = score_item(self.restaurant_item, {"name": "四人套餐"}, self.base_constraints)
-        self.assertEqual(score_4, 73 - 16)
+        self.assertEqual(score_4, int(base_organic - 33.6)) # 53
         
         # Change constraints to 3 adults + 1 child (age 5) = 3.4 effective people
         constraints_3_1 = self.base_constraints.model_copy(update={"adult_count": 3})
         
-        # "双人套餐" -> capacity 2.0. diff = 1.4, penalty = 14
+        # "双人套餐" -> capacity 2.0. diff = 1.4, penalty = 1.96*10 + 1.4*5 = 19.6 + 7.0 = 26.6
         score_2_new = score_item(self.restaurant_item, {"name": "双人套餐"}, constraints_3_1)
-        self.assertEqual(score_2_new, 73 - 14)
+        self.assertEqual(score_2_new, int(base_organic - 26.6)) # 60
         
-        # "三人套餐" -> capacity 3.0. diff = 0.4, penalty = 4
+        # "三人套餐" -> capacity 3.0. diff = 0.4, penalty = 3.6
         score_3_new = score_item(self.restaurant_item, {"name": "三人套餐"}, constraints_3_1)
-        self.assertEqual(score_3_new, 73 - 4)
+        self.assertEqual(score_3_new, int(base_organic - 3.6)) # 83
 
     def test_rerank_node_requires_filter_step(self):
         state = ClosedLoopState(

@@ -129,6 +129,62 @@ class TestRetrieveCandidates(unittest.TestCase):
         bar_restaurant["tags"] = ["酒吧", "精酿"]
         self.assertFalse(rule_filter(bar_restaurant, self.base_constraints))
 
+    def test_rule_filter_age_based_fail(self):
+        # 孩子 5 岁 (<12) 不能去夜宵/密室/盲盒
+        late_night_restaurant = self.restaurant_item.copy()
+        late_night_restaurant["tags"] = ["夜宵", "深夜"]
+        self.assertFalse(rule_filter(late_night_restaurant, self.base_constraints))
+        
+        # 测试盲盒过滤
+        blind_box_shop = self.activity_item.copy()
+        blind_box_shop["packages"] = [{"package_id": "p1", "name": "盲盒端盒", "description": "随机抽取"}]
+        self.assertFalse(rule_filter(blind_box_shop, self.base_constraints))
+        
+        # 孩子 5 岁 (<6) 不能去恐怖/刺激/剧本杀/重口味
+        scary_activity = self.activity_item.copy()
+        scary_activity["tags"] = ["恐怖", "密室"]
+        self.assertFalse(rule_filter(scary_activity, self.base_constraints))
+        
+        heavy_taste_restaurant = self.restaurant_item.copy()
+        heavy_taste_restaurant["tags"] = ["重口味"]
+        self.assertFalse(rule_filter(heavy_taste_restaurant, self.base_constraints))
+        
+        # 修改约束：孩子 14 岁
+        teen_constraints = self.base_constraints.model_copy(update={"child_ages": [14]})
+        # 14岁可以去密室、夜宵、剧本杀、盲盒
+        self.assertTrue(rule_filter(late_night_restaurant, teen_constraints))
+        self.assertTrue(rule_filter(blind_box_shop, teen_constraints))
+        
+        # 但是 14 岁 (<16) 不能去网吧/极限失重
+        internet_cafe = self.activity_item.copy()
+        internet_cafe["tags"] = ["网吧", "电竞"]
+        self.assertFalse(rule_filter(internet_cafe, teen_constraints))
+        
+        vr_extreme = self.activity_item.copy()
+        vr_extreme["packages"] = [{"package_id": "v1", "name": "VR失重体验", "description": "极限刺激"}]
+        self.assertFalse(rule_filter(vr_extreme, teen_constraints))
+        
+        # 测试对所有未成年人的酒精和成人向过滤 (即便 17 岁)
+        almost_adult_constraints = self.base_constraints.model_copy(update={"child_ages": [17]})
+        alcohol_restaurant = self.restaurant_item.copy()
+        alcohol_restaurant["combos"] = [{"combo_id": "c1", "name": "红酒牛排", "description": "送精选红酒一瓶"}]
+        self.assertFalse(rule_filter(alcohol_restaurant, almost_adult_constraints))
+        
+        # 测试在描述或名字中包含敏感词的情况
+        scary_description_activity = self.activity_item.copy()
+        scary_description_activity["packages"] = [
+            {"package_id": "p2", "name": "普通的活动", "description": "带有一点点恐怖元素", "price": 100}
+        ]
+        # 因为包含了"恐怖"，对于 5 岁的小孩应该被拦截
+        self.assertFalse(rule_filter(scary_description_activity, self.base_constraints))
+        
+        scary_name_restaurant = self.restaurant_item.copy()
+        scary_name_restaurant["combos"] = [
+            {"combo_id": "c3", "name": "深夜烧烤狂欢", "price": 100}
+        ]
+        # 对于 5 岁小孩应该拦截
+        self.assertFalse(rule_filter(scary_name_restaurant, self.base_constraints))
+
     def test_rule_filter_dietary_fail(self):
         # 饮食禁忌: "辣"
         spicy_restaurant = self.restaurant_item.copy()

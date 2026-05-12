@@ -10,8 +10,8 @@ EXTRACT_CONSTRAINTS_SYSTEM_PROMPT = """
 
 【关键提取规则】：
 1. 基础人群信息 (group_type, adult_count, child_count, child_ages):
-   - group_type: 判断是家庭("family")还是朋友("friends")。
-   - adult_count: 成人数。若未提及，朋友默认 2；家庭按语境推断。
+   - group_type: 判断是单人("solo")、情侣("couple")、家庭("family")、朋友("friends")还是商务("business")。
+   - adult_count: 成人数。若未提及，单人默认1，情侣/朋友默认2；家庭/商务按语境推断。
    - child_count: 小孩数。未提及则为 0；提及但未给数量可按最小默认值处理。
    - child_ages: 小孩年龄列表（支持多个年龄）；孕妇标记为 0。无明确说明则为空列表 []。
 
