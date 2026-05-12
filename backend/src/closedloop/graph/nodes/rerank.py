@@ -78,8 +78,11 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
             if any(k in item_features for k in large_group_keywords):
                 scene_fit_score -= 30
         elif constraints.group_type == "business":
-            business_keywords = ("商务", "宴请", "高端", "安静", "包间")
-            if any(k in item_features for k in business_keywords):
+            business_keywords = ("business", "商务", "宴请", "高端", "安静", "包间")
+            if any(
+                isinstance(g, str) and any(k in g for k in business_keywords)
+                for g in suitable_groups
+            ) or any(k in item_features for k in business_keywords):
                 scene_fit_score += 15
 
     # 标签命中 (Tag Matching) - 暂时硬编码为 0 分

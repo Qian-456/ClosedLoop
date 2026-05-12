@@ -94,6 +94,34 @@ class TestRerankNode(unittest.TestCase):
         # 58.5 + 13.333 + 15 - 3.6 = 83.233 -> 83
         self.assertEqual(score_friends, 83)
 
+    def test_score_item_business_group(self):
+        business_constraints = self.base_constraints.model_copy(update={"group_type": "business"})
+        
+        # 1. Test feature matching
+        item_no_groups = self.restaurant_item.copy()
+        item_no_groups["suitable_groups"] = []
+        inner_item_business = {"name": "高端双人餐", "features": "环境高端，适合商务洽谈"}
+        score_business_feat = score_item(item_no_groups, inner_item_business, business_constraints)
+        # rating 58.5 + dist 13.333 + fit 15 (features matched)
+        # capacity: "高端双人餐" returns capacity 2.0. effective_people is 2.4.
+        # diff = 0.4 -> penalty = 0.16*10 + 0.4*5 = 1.6 + 2.0 = 3.6
+        # 58.5 + 13.333 + 15 - 3.6 = 83.233 -> 83
+        self.assertEqual(score_business_feat, 83)
+
+        # 2. Test suitable_groups matching (the fixed bug)
+        item_with_groups = self.restaurant_item.copy()
+        item_with_groups["suitable_groups"] = ["商务宴请", "高端人士"]
+        inner_item_no_feat = {"name": "高端双人餐", "features": "普通描述"}
+        score_business_group = score_item(item_with_groups, inner_item_no_feat, business_constraints)
+        # It should still get the +15 fit score from suitable_groups
+        self.assertEqual(score_business_group, 83)
+        
+        # 3. Test English "business" keyword
+        item_with_eng_group = self.restaurant_item.copy()
+        item_with_eng_group["suitable_groups"] = ["business trip"]
+        score_business_eng = score_item(item_with_eng_group, inner_item_no_feat, business_constraints)
+        self.assertEqual(score_business_eng, 83)
+
     def test_score_item_capacity_penalty(self):
         # Base constraints: 2 adults + 1 child (age 5 -> 0.4) = 2.4 effective people
         # Base organic score (without penalty) for friends_restaurant in test_score_item:
