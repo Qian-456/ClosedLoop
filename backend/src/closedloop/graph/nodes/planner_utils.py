@@ -177,7 +177,7 @@ def generate_and_score_combinations(
                 final_commutes_info = commutes_info.copy()
                 final_commutes_info.append({
                     "time": time_min_home,
-                    "cost": cost_val_home,
+                    "cost": round(cost_val_home, 2),
                     "mode": mode_home,
                     "distance": dist_home
                 })
@@ -189,7 +189,7 @@ def generate_and_score_combinations(
                     "combo": current_combo.copy(),
                     "commutes": final_commutes_info,
                     "average_score": round(final_score, 2),
-                    "total_cost": final_cost_with_gift,
+                    "total_cost": round(final_cost_with_gift, 2),
                     "total_duration_minutes": final_total_duration
                 })
                 return
@@ -241,7 +241,7 @@ def generate_and_score_combinations(
                 used_item_ids.add(item_id)
                 commutes_info.append({
                     "time": time_min,
-                    "cost": cost_val,
+                    "cost": round(cost_val, 2),
                     "mode": mode,
                     "distance": dist
                 })
@@ -262,20 +262,72 @@ def generate_and_score_combinations(
             top3_plans = heapq.nlargest(3, pattern_plans, key=lambda x: x["average_score"])
             grouped_plans.append(top3_plans)
         
-    # 根据 Pattern 数量组装最终的候选池
-    final_plans = []
+    candidate_pool = []
     num_patterns = len(grouped_plans)
     
     if num_patterns >= 3:
-        # 当 num_patterns >= 3 时：将每个 Pattern 的 Top 1 放入候选池
         for p_plans in grouped_plans:
-            final_plans.append(p_plans[0])
+            candidate_pool.append(p_plans[0])
     elif num_patterns == 2:
-        # 当 num_patterns == 2 时：将这两个 Pattern 的 Top 1 和 Top 2 都放入候选池
         for p_plans in grouped_plans:
-            final_plans.extend(p_plans[:2])
+            candidate_pool.extend(p_plans[:2])
     elif num_patterns == 1:
-        # 当 num_patterns == 1 时：将这唯一一个 Pattern 的 Top 1、Top 2、Top 3 放入候选池
-        final_plans.extend(grouped_plans[0][:3])
+        candidate_pool.extend(grouped_plans[0][:3])
         
+    def get_combo_signature(plan: dict) -> tuple:
+        return tuple(
+            item.get("combo_id") or item.get("package_id") or item.get("gift_id", "unknown")
+            for item in plan.get("combo", [])
+        )
+        
+    unique_candidates = []
+    seen_sigs = set()
+    for p in candidate_pool:
+        sig = get_combo_signature(p)
+        if sig not in seen_sigs:
+            unique_candidates.append(p)
+            seen_sigs.add(sig)
+            
+    final_plans = []
+    if unique_candidates:
+        sorted_by_cost = sorted(unique_candidates, key=lambda x: x["total_cost"])
+        sorted_by_score = sorted(unique_candidates, key=lambda x: x["average_score"], reverse=True)
+        
+        plan1 = sorted_by_cost[0]
+        plan1_sig = get_combo_signature(plan1)
+        
+        plan2 = None
+        plan2_sig = None
+        for p in sorted_by_score:
+            sig = get_combo_signature(p)
+            if sig != plan1_sig:
+                plan2 = p
+                plan2_sig = sig
+                break
+        if not plan2:
+            plan2 = plan1
+            plan2_sig = plan1_sig
+            
+        plan3 = None
+        for p in reversed(sorted_by_cost):
+            sig = get_combo_signature(p)
+            if sig != plan1_sig and sig != plan2_sig:
+                plan3 = p
+                break
+                
+        final_plans.append(plan1)
+        if plan3:
+            final_plans.append(plan3)
+        if plan2_sig != plan1_sig:
+            final_plans.append(plan2)
+            
+        existing_sigs = {get_combo_signature(p) for p in final_plans}
+        for p in sorted_by_score:
+            if len(final_plans) >= 3:
+                break
+            sig = get_combo_signature(p)
+            if sig not in existing_sigs:
+                final_plans.append(p)
+                existing_sigs.add(sig)
+                
     return final_plans, valid_count_before_topk, missing_types
