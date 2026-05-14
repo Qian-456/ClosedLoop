@@ -13,6 +13,73 @@ from closedloop.contracts.itinerary import (
 from closedloop.graph.policies import parse_time_period, match_patterns
 from closedloop.graph.nodes.planner_utils import generate_and_score_combinations
 
+
+def _plan_signature(plan_info: dict) -> str:
+    combo = plan_info.get("combo", []) or []
+    ids: list[str] = []
+    for item in combo:
+        item_id = item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id")
+        if item_id:
+            ids.append(str(item_id))
+    return "|".join(ids)
+
+
+def _select_three_plans(plan_infos: list[dict]) -> list[dict]:
+    """
+    将候选方案整理为 3 套可比较方案（展示层语义）：
+    - plan_1：价格最低
+    - plan_2：得分最高
+    - plan_3：价格最高
+    若出现重复组合，则按规则回退补齐。
+    """
+    if not plan_infos:
+        return []
+
+    def safe_cost(p: dict) -> float:
+        v = p.get("total_cost")
+        return float(v) if isinstance(v, (int, float)) else float("inf")
+
+    def safe_score(p: dict) -> float:
+        v = p.get("average_score")
+        return float(v) if isinstance(v, (int, float)) else float("-inf")
+
+    remaining = plan_infos[:]
+    selected: list[dict] = []
+    used_signatures: set[str] = set()
+
+    def pick_one(sorted_candidates: list[dict]) -> dict | None:
+        for c in sorted_candidates:
+            sig = _plan_signature(c)
+            if sig in used_signatures:
+                continue
+            used_signatures.add(sig)
+            return c
+        return None
+
+    cheapest = pick_one(sorted(remaining, key=safe_cost))
+    if cheapest:
+        selected.append(cheapest)
+
+    best = pick_one(sorted(remaining, key=safe_score, reverse=True))
+    if best:
+        selected.append(best)
+
+    priciest = pick_one(sorted(remaining, key=safe_cost, reverse=True))
+    if priciest:
+        selected.append(priciest)
+
+    if len(selected) < 3:
+        for c in sorted(remaining, key=safe_score, reverse=True):
+            if len(selected) >= 3:
+                break
+            sig = _plan_signature(c)
+            if sig in used_signatures:
+                continue
+            used_signatures.add(sig)
+            selected.append(c)
+
+    return selected[:3]
+
 def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     """
     根据规则匹配 Pattern，从 rerank 后的候选集中挑选条目组装成最终行程计划。
@@ -79,6 +146,7 @@ def planner_node(state: ClosedLoopState) -> ClosedLoopState:
     plans = []
     
     if valid_plans_info:
+        valid_plans_info = _select_three_plans(valid_plans_info)
         for plan_index, plan_info in enumerate(valid_plans_info, start=1):
             pattern = plan_info["pattern"]
             combo = plan_info["combo"]

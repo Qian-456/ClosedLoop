@@ -55,10 +55,19 @@ class TestPlannerNode(unittest.TestCase):
         
         # 确保生成了多套方案，或者至少一套
         self.assertTrue(len(itinerary["plans"]) >= 1)
-        
-        plan = itinerary["plans"][0]
-        steps = plan["steps"]
-        
+
+        # 在候选方案中找到包含指定 4 个核心条目的方案并校验其结构
+        matched = None
+        for p in itinerary["plans"]:
+            steps = p["steps"]
+            ids = [s["item"]["id"] for s in steps if s["item"]["type"] != "commute"]
+            if ids == ["act_1", "tea_1", "act_2", "gift_1"]:
+                matched = p
+                break
+
+        self.assertIsNotNone(matched)
+        steps = matched["steps"]
+
         # FAM-L-01 steps: ["activity", "restaurant:afternoon_tea", "activity", "gift_shop"]
         # 加上 5 个通勤节点，总共 9 个节点
         self.assertEqual(len(steps), 9)
@@ -67,13 +76,13 @@ class TestPlannerNode(unittest.TestCase):
         self.assertEqual(steps[5]["item"]["id"], "act_2")
         self.assertEqual(steps[7]["item"]["id"], "gift_1")
         self.assertEqual(steps[7]["note"], "")
-        
+
         # Verify calculated values
         # 4个真实步骤耗时 285，5个通勤步骤各 2 分钟 = 10 分钟，总 295
-        self.assertEqual(plan["total_duration_minutes"], 295)
-        self.assertEqual(plan["total_cost"], 380.0) # 100+150+80+50
+        self.assertEqual(matched["total_duration_minutes"], 295)
+        self.assertEqual(matched["total_cost"], 380.0) # 100+150+80+50
         # 打分体系变化了，我们只要确保它是大于 0 的数字
-        self.assertTrue(plan["average_score"] > 0)
+        self.assertTrue(matched["average_score"] > 0)
 
     def test_planner_node_budget_filter(self):
         """测试预算过滤：当超出预算时，组合会被剔除"""
