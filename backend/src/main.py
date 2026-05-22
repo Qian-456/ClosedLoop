@@ -8,6 +8,8 @@ import json
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+from typing import Optional
+
 from pydantic import BaseModel
 
 from closedloop.core.config import get_config
@@ -27,7 +29,8 @@ app = FastAPI(title=config.PROJECT_NAME)
 workflow_app = subgraph_plan()
 
 class InvokeRequest(BaseModel):
-    input: Constraints
+    user_input: Optional[str] = None
+    input: Optional[Constraints] = None
 
 class ChatResponse(BaseModel):
     status: str
@@ -41,12 +44,18 @@ async def invoke_graph(request: InvokeRequest):
     logger.info("phase=api_invoke | status=started")
     
     try:
-        # 初始化状态
-        constraints_dict = request.input.model_dump() if hasattr(request.input, "model_dump") else request.input.dict()
+        if request.user_input is None and request.input is None:
+            raise ValueError("Either user_input or input must be provided.")
+
+        constraints_dict = None
+        if request.input is not None:
+            constraints_dict = request.input.model_dump() if hasattr(request.input, "model_dump") else request.input.dict()
+
         initial_state: ClosedLoopState = {
-            "user_input": "",
-            "constraints": constraints_dict,
+            "user_input": request.user_input or "",
         }
+        if constraints_dict is not None:
+            initial_state["constraints"] = constraints_dict
         
         # 执行 graph
         final_state = workflow_app.invoke(initial_state)

@@ -49,25 +49,7 @@ class TestMainAPI(unittest.TestCase):
         }
 
         # Make the request
-        response = client.post(
-            "/invoke",
-            json={
-                "input": {
-                    "group_type": "family",
-                    "budget": 500.0,
-                    "dietary_restrictions": [],
-                    "preferred_distance": "2km-5km",
-                    "time_period": "14:00",
-                    "duration_hours": (5.0, 5.0),
-                    "activity_preferences": ["play"],
-                    "adult_count": 2,
-                    "child_count": 1,
-                    "adult_genders": ["F", "M"],
-                    "child_profiles": [("F", 5)],
-                    "commute_preference": "auto",
-                }
-            },
-        )
+        response = client.post("/invoke", json={"user_input": "一家三口出去玩"})
         
         # Assertions
         self.assertEqual(response.status_code, 200)
@@ -81,8 +63,7 @@ class TestMainAPI(unittest.TestCase):
         # Check if invoke was called properly
         mock_invoke.assert_called_once()
         called_args = mock_invoke.call_args[0][0]
-        self.assertEqual(called_args["user_input"], "")
-        self.assertEqual(called_args["constraints"]["group_type"], "family")
+        self.assertEqual(called_args["user_input"], "一家三口出去玩")
 
 if __name__ == "__main__":
     unittest.main()
