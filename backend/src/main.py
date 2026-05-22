@@ -14,8 +14,8 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.execution import ExecuteRequest, ExecutionStartResponse
 from closedloop.execution.mock_executor import iter_events, start_execution
-from closedloop.graph.build import build_graph
-from closedloop.contracts.state import ClosedLoopState
+from closedloop.graph.build import subgraph_plan
+from closedloop.contracts.state import ClosedLoopState, Constraints
 
 # 初始化配置与日志
 config = get_config()
@@ -24,26 +24,28 @@ LoggerManager.setup(config)
 app = FastAPI(title=config.PROJECT_NAME)
 
 # 在应用启动时构建单例的 Graph (避免每次请求重建)
-workflow_app = build_graph()
+workflow_app = subgraph_plan()
 
-class ChatRequest(BaseModel):
-    user_input: str
+class InvokeRequest(BaseModel):
+    input: Constraints
 
 class ChatResponse(BaseModel):
     status: str
     state: dict
 
 @app.post("/invoke", response_model=ChatResponse)
-async def invoke_graph(request: ChatRequest):
+async def invoke_graph(request: InvokeRequest):
     """
     Invoke the ClosedLoop graph with user input.
     """
-    logger.info(f"phase=api_invoke | input={request.user_input}")
+    logger.info("phase=api_invoke | status=started")
     
     try:
         # 初始化状态
+        constraints_dict = request.input.model_dump() if hasattr(request.input, "model_dump") else request.input.dict()
         initial_state: ClosedLoopState = {
-            "user_input": request.user_input
+            "user_input": "",
+            "constraints": constraints_dict,
         }
         
         # 执行 graph
