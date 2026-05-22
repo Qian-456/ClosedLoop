@@ -7,6 +7,46 @@ from closedloop.contracts.state import ClosedLoopState, Constraints, RankedCombo
 from closedloop.graph.nodes.retrieve import _ensure_candidates_dict, _empty_candidates
 from closedloop.utils.capacity import _get_effective_people, _get_capacity_from_name
 
+def _has_flexible_people_phrase(text: str) -> bool:
+    if not text:
+        return False
+    t = text
+    if ("单人" in t or "一人" in t) and ("双人" in t or "两人" in t or "情侣" in t or "2人" in t):
+        return True
+    if "单人/双人" in t or "单人 / 双人" in t:
+        return True
+    if re.search(r"\d+\s*[-~到]\s*\d+\s*人", t):
+        return True
+    return False
+
+
+def _get_group_mismatch_penalty(inner_item: dict, constraints: Constraints) -> int:
+    text = f"{inner_item.get('name', '')} {inner_item.get('description', '')} {inner_item.get('features', '')}"
+    if not text.strip():
+        return 0
+    if _has_flexible_people_phrase(text):
+        return 0
+
+    effective_people = _get_effective_people(constraints)
+    group_type = constraints.group_type
+    is_family = group_type == "family" or (constraints.child_count or 0) > 0
+
+    if group_type == "solo":
+        forbidden = ("情侣", "约会", "双人", "闺蜜", "团建", "聚会", "多人", "家庭", "亲子", "三口之家", "四口之家")
+    elif group_type == "couple":
+        forbidden = ("单人", "一人", "独处", "工作餐", "家庭", "亲子", "三口之家", "四口之家", "多人", "团建", "聚会", "闺蜜", "兄弟")
+    elif is_family:
+        forbidden = ("情侣", "约会", "双人", "单人", "一人", "独处", "工作餐", "闺蜜", "兄弟")
+    elif group_type == "friends" and effective_people >= 3.0:
+        forbidden = ("单人", "一人", "独处", "工作餐", "情侣", "约会", "双人", "家庭", "亲子", "三口之家", "四口之家")
+    else:
+        forbidden = ()
+
+    if any(k in text for k in forbidden):
+        return 30
+    return 0
+
+
 def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
     """
     计算排序分数 (三维度打分)：
@@ -64,15 +104,21 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
             ) or any(k in item_features for k in friends_keywords):
                 scene_fit_score += 15
         elif constraints.group_type == "solo":
-            solo_keywords = ("单人", "一人食", "独处", "工作餐", "静谧")
-            if any(k in item_features for k in solo_keywords):
+            solo_keywords = ("solo", "单人", "一人食", "独处", "工作餐", "静谧")
+            if any(
+                isinstance(g, str) and any(k in g for k in solo_keywords)
+                for g in suitable_groups
+            ) or any(k in item_features for k in solo_keywords):
                 scene_fit_score += 15
             party_keywords = ("聚会", "闺蜜", "团建", "多人", "派对", "家庭", "双人", "情侣")
             if any(k in item_features for k in party_keywords):
                 scene_fit_score -= 30
         elif constraints.group_type == "couple":
-            couple_keywords = ("情侣", "约会", "双人", "浪漫", "七夕")
-            if any(k in item_features for k in couple_keywords):
+            couple_keywords = ("couple", "情侣", "约会", "双人", "浪漫", "七夕")
+            if any(
+                isinstance(g, str) and any(k in g for k in couple_keywords)
+                for g in suitable_groups
+            ) or any(k in item_features for k in couple_keywords):
                 scene_fit_score += 15
             large_group_keywords = ("聚会", "团建", "多人", "派对", "家庭", "闺蜜", "单人")
             if any(k in item_features for k in large_group_keywords):
@@ -85,13 +131,76 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
             ) or any(k in item_features for k in business_keywords):
                 scene_fit_score += 15
 
-    # 标签命中 (Tag Matching) - 暂时硬编码为 0 分
+    group_mismatch_penalty = _get_group_mismatch_penalty(inner_item, constraints)
+    if group_mismatch_penalty:
+        scene_fit_score -= group_mismatch_penalty
+
+    if (
+        (constraints.group_type == "family" or (constraints.child_count or 0) > 0)
+        and item.get("type") == "activity"
+        and item.get("age_range_mismatch_for_children")
+        and any(isinstance(a, int) and a >= 0 for _, a in (constraints.child_profiles or []))
+    ):
+        scene_fit_score -= 20
+
     tag_matching_score = 0
     if constraints.activity_preferences:
-        tags = set(item.get("tags", []))
+        tags = [t for t in (item.get("tags", []) or []) if isinstance(t, str)]
+        combined_text = " ".join(tags)
+        combined_text += " " + (inner_item.get("name", "") or "")
+        combined_text += " " + (inner_item.get("features", "") or "")
+        combined_text += " " + (inner_item.get("description", "") or "")
+
+        def _pref_keywords(pref: str) -> tuple[str, ...]:
+            p = pref or ""
+            if any(k in p for k in ("打卡", "拍照", "出片", "大头贴")):
+                return ("打卡", "拍照", "出片", "大头贴", "自拍")
+            if any(k in p for k in ("安静", "静", "静谧", "放松", "书店", "书吧", "展览", "咖啡")):
+                return ("安静", "静谧", "静", "书店", "书吧", "展览", "博物馆", "咖啡", "茶馆", "休闲")
+            if any(k in p for k in ("浪漫", "约会", "情侣", "纪念日")):
+                return ("浪漫", "约会", "情侣", "纪念日", "七夕", "玫瑰", "夜景", "氛围")
+            if any(k in p for k in ("亲子", "儿童", "小朋友", "带娃", "家庭")):
+                return ("亲子", "儿童", "带娃", "家庭", "三口之家", "老少皆宜", "乐园")
+            if "室内" in p:
+                return ("室内", "书吧", "咖啡", "茶馆", "展览", "博物馆", "VR")
+            if any(k in p for k in ("热闹", "聚会", "团建", "派对")):
+                return ("热闹", "聚会", "团建", "派对", "狂欢", "夜市", "宵夜")
+            if any(k in p for k in ("不排队", "别排队")):
+                return ("免排队", "无需排队")
+            return (p,)
+
+        matched = 0
         for pref in constraints.activity_preferences:
-            if pref in tags:
-                tag_matching_score += 0 # 命中标签加分，目前暂设为 0
+            if not isinstance(pref, str) or not pref.strip():
+                continue
+            kws = _pref_keywords(pref.strip())
+            if any(k and k in combined_text for k in kws):
+                matched += 1
+                continue
+            if any(t and (t in pref or pref in t) for t in tags):
+                matched += 1
+                continue
+
+            if any(k in pref for k in ("不排队", "别排队")):
+                if any(k in combined_text for k in ("排队", "网红", "爆款")):
+                    scene_fit_score -= 5
+
+        tag_matching_score = min(20, matched * 5)
+
+        if any(
+            isinstance(p, str)
+            and any(k in p for k in ("安静", "静谧", "放松", "书店", "书吧", "展览", "咖啡"))
+            for p in constraints.activity_preferences
+        ) and any(k in combined_text for k in ("热闹", "派对", "团建", "狂欢", "吵")):
+            scene_fit_score -= 5
+
+        if any(
+            isinstance(p, str)
+            and any(k in p for k in ("热闹", "聚会", "团建", "派对"))
+            for p in constraints.activity_preferences
+        ) and any(k in combined_text for k in ("安静", "静谧")):
+            scene_fit_score -= 5
+
     scene_fit_score += tag_matching_score
 
     # 人数契合度打分 (Capacity Match Penalty)
@@ -102,7 +211,7 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
         effective_people = _get_effective_people(constraints)
         diff = abs(capacity - effective_people)
         # 惩罚分：指数级惩罚，相差 1 个人等效扣 15 分，相差 2 人扣 50 分，相差 3 人扣 105 分。
-        capacity_penalty = (diff ** 2) * 10 + (diff * 5)
+        capacity_penalty = (diff ** 2) * 18 + (diff * 9)
         scene_fit_score -= capacity_penalty
 
     # 2. 质量热度分 (Quality & Popularity Mock)
@@ -166,6 +275,7 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "name": combo.get("name", ""),
                 "price": combo.get("price", 0.0),
                 "description": combo.get("description", ""),
+                "features": combo.get("features", ""),
                 "duration_mins": combo.get("duration_mins", 0),
                 "duration_std_dev": combo.get("duration_std_dev", 0.0),
                 "suitable_time_slots": combo.get("suitable_time_slots", []),
@@ -176,7 +286,16 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "rating": rest.get("rating", 0.0),
                 "tags": rest.get("tags", []),
                 "suitable_groups": rest.get("suitable_groups", []),
-                "location": rest.get("location", {})
+                "experience_tag": rest.get("experience_tag", []),
+                "romantic_score_derived": rest.get("romantic_score_derived"),
+                "photo_score_derived": rest.get("photo_score_derived"),
+                "onsite_walking_level_estimated": rest.get("onsite_walking_level_estimated"),
+                "noise_level_estimated": rest.get("noise_level_estimated"),
+                "district": rest.get("district"),
+                "address": rest.get("address"),
+                "latitude": rest.get("latitude"),
+                "longitude": rest.get("longitude"),
+                "location": rest.get("location", {}),
             }
             
             # 分类逻辑：根据套餐自带的时间段标签进行分流
@@ -201,6 +320,7 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "name": pkg.get("name", ""),
                 "price": pkg.get("price", 0.0),
                 "description": pkg.get("description", ""),
+                "features": pkg.get("features", ""),
                 "duration_mins": pkg.get("duration_mins", 0),
                 "duration_std_dev": pkg.get("duration_std_dev", 0.0),
                 "start_time": pkg.get("start_time", ""),
@@ -212,7 +332,17 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "rating": act.get("rating", 0.0),
                 "tags": act.get("tags", []),
                 "suitable_groups": act.get("suitable_groups", []),
-                "location": act.get("location", {})
+                "age_range": act.get("age_range", []),
+                "experience_tag": act.get("experience_tag", []),
+                "romantic_score_derived": act.get("romantic_score_derived"),
+                "photo_score_derived": act.get("photo_score_derived"),
+                "onsite_walking_level_estimated": act.get("onsite_walking_level_estimated"),
+                "noise_level_estimated": act.get("noise_level_estimated"),
+                "district": act.get("district"),
+                "address": act.get("address"),
+                "latitude": act.get("latitude"),
+                "longitude": act.get("longitude"),
+                "location": act.get("location", {}),
             }
             ranked_packages.append(rp)
 
@@ -223,16 +353,29 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
                 "gift_id": gift.get("gift_id") or gift.get("id", ""),
                 "name": gift.get("name", ""),
                 "price": gift.get("price", 0.0),
+                "receive_duration_mins": int(gift.get("receive_duration_mins") or 10),
+                "receive_duration_std_dev": float(gift.get("receive_duration_std_dev") or 3.0),
                 "description": gift.get("description", ""),
+                "features": gift.get("features", ""),
                 "score": score_item(gift_shop, gift, constraints),
                 "shop_id": gift_shop.get("id", ""),
                 "shop_name": gift_shop.get("name", ""),
                 "category": gift_shop.get("category", ""),
                 "distance_km": gift_shop.get("distance_km", 0.0),
+                "delivery_radius_km": float(gift_shop.get("delivery_radius_km") or 5.0),
                 "rating": gift_shop.get("rating", 0.0),
                 "tags": gift_shop.get("tags", []),
                 "suitable_groups": gift_shop.get("suitable_groups", []),
-                "location": gift_shop.get("location", {})
+                "experience_tag": gift_shop.get("experience_tag", []),
+                "romantic_score_derived": gift_shop.get("romantic_score_derived"),
+                "photo_score_derived": gift_shop.get("photo_score_derived"),
+                "onsite_walking_level_estimated": gift_shop.get("onsite_walking_level_estimated"),
+                "noise_level_estimated": gift_shop.get("noise_level_estimated"),
+                "district": gift_shop.get("district"),
+                "address": gift_shop.get("address"),
+                "latitude": gift_shop.get("latitude"),
+                "longitude": gift_shop.get("longitude"),
+                "location": gift_shop.get("location", {}),
             }
             ranked_gifts.append(rg)
 
@@ -245,6 +388,8 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
     ranked_late_night_combos.sort(key=lambda x: x.get("score", 0), reverse=True)
     
     ranked_packages.sort(key=lambda x: x.get("score", 0), reverse=True)
+    ranked_light_packages = [p for p in ranked_packages if int(p.get("duration_mins") or 0) <= 60]
+    ranked_packages = [p for p in ranked_packages if int(p.get("duration_mins") or 0) > 60]
     ranked_gifts.sort(key=lambda x: x.get("score", 0), reverse=True)
 
     candidates["ranked_breakfast_combos"] = ranked_breakfast_combos
@@ -253,6 +398,7 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
     candidates["ranked_dinner_combos"] = ranked_dinner_combos
     candidates["ranked_late_night_combos"] = ranked_late_night_combos
     
+    candidates["ranked_light_packages"] = ranked_light_packages
     candidates["ranked_packages"] = ranked_packages
     candidates["ranked_gifts"] = ranked_gifts
     candidates["processed_steps"].append("rerank_node")
@@ -263,6 +409,7 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
     
     rest_combo_count = len(ranked_combos)
     act_pkg_count = len(ranked_packages)
+    act_light_pkg_count = len(ranked_light_packages)
     gift_item_count = len(ranked_gifts)
     
     b_c = len(ranked_breakfast_combos)
@@ -273,7 +420,7 @@ def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
 
     logger.info(
         f"phase=rerank_node | output=reranked {b_c} breakfast, {l_c} lunch, {a_c} tea, {d_c} dinner, {n_c} night combos (from {rest_count} restaurants), "
-        f"{act_pkg_count} packages (from {act_count} activities), "
+        f"{act_pkg_count} packages (from {act_count} activities), {act_light_pkg_count} light packages, "
         f"{gift_item_count} gifts (from {gift_count} shops)"
     )
     return state

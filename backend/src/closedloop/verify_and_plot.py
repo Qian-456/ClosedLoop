@@ -35,22 +35,22 @@ def verify_and_plot():
     print("开始校验距离数据...")
     for category in ['restaurants', 'activity_venues', 'gift_shops']:
         for item in data[category]:
-            loc = item['location']
-            x, y = loc['latitude'], loc['longitude']
-            stored_dist = loc['distance_to_center_km']
-            zone_name = loc.get('zone_name')
+            x, y = item.get('latitude'), item.get('longitude')
+            zone_name = item.get('district')
+            if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
+                errors.append(f"坐标缺失 -> {item.get('name')}")
+                continue
             
-            if zone_name and zone_name != "独立区域":
+            if zone_name:
                 if zone_name not in zone_coords:
                     zone_coords[zone_name] = {'x': [], 'y': []}
                 zone_coords[zone_name]['x'].append(x)
                 zone_coords[zone_name]['y'].append(y)
-            # 重新计算欧几里得距离
-            calc_dist = math.sqrt(x**2 + y**2)
+
+            calc_dist = math.sqrt(float(x)**2 + float(y)**2)
             
-            # 允许 0.02 的浮点数舍入误差（因为保存时保留了两位小数）
-            if abs(calc_dist - stored_dist) > 0.02: 
-                errors.append(f"误差发现 -> {item['name']}: 存储距离 {stored_dist}km, 实际计算 {calc_dist:.2f}km")
+            if calc_dist > 12.0 + 1e-6:
+                errors.append(f"超出12km -> {item.get('name')}: {calc_dist:.2f}km")
 
             plot_data[category]['x'].append(x)
             plot_data[category]['y'].append(y)
@@ -60,7 +60,7 @@ def verify_and_plot():
         for e in errors:
             print(e)
     else:
-        print("校验通过：所有地点的 distance_to_center_km 数据正确，符合欧几里得距离公式！\n")
+        print("校验通过：所有地点坐标均在 12km 范围内，符合欧几里得距离约束！\n")
 
     # 2. 可视化绘制
     print("开始绘制可视化分布图...")

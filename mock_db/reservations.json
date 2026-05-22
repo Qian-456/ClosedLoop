@@ -1,139 +1,2064 @@
 [
   {
-    "target_id": "r001",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_003_1",
     "time_slots": [
-      {"start_time": "11:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 0},
-      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 15},
-      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 20},
-      {"start_time": "19:00", "end_time": "20:00", "queue_required": false, "wait_minutes": 5}
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 49,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
     ]
   },
   {
-    "target_id": "r002",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_003_2",
     "time_slots": [
-      {"start_time": "11:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 5},
-      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 30},
-      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 45},
-      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 20}
+      {
+        "start_time": "15:00",
+        "end_time": "16:30",
+        "capacity_total": 20,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "r003",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_003_3",
     "time_slots": [
-      {"start_time": "11:00", "end_time": "12:00", "queue_required": true, "wait_minutes": 20},
-      {"start_time": "12:00", "end_time": "13:00", "queue_required": true, "wait_minutes": 50},
-      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 60},
-      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 30}
+      {
+        "start_time": "14:00",
+        "end_time": "15:45",
+        "capacity_total": 28,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:30",
+        "end_time": "17:15",
+        "capacity_total": 28,
+        "capacity_remaining": 6,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "17:45",
+        "capacity_total": 28,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "20:15",
+        "capacity_total": 28,
+        "capacity_remaining": 22,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "20:45",
+        "capacity_total": 28,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "r004",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_004_1",
     "time_slots": [
-      {"start_time": "17:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 10},
-      {"start_time": "18:00", "end_time": "19:00", "queue_required": true, "wait_minutes": 60},
-      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 90},
-      {"start_time": "20:00", "end_time": "21:00", "queue_required": true, "wait_minutes": 40}
+      {
+        "start_time": "20:00",
+        "end_time": "21:30",
+        "capacity_total": 40,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
     ]
   },
   {
-    "target_id": "r005",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_004_2",
     "time_slots": [
-      {"start_time": "18:00", "end_time": "19:00", "queue_required": false, "wait_minutes": 0},
-      {"start_time": "19:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 20},
-      {"start_time": "20:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 45},
-      {"start_time": "22:00", "end_time": "24:00", "queue_required": true, "wait_minutes": 15}
+      {
+        "start_time": "19:00",
+        "end_time": "21:30",
+        "capacity_total": 27,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "r006",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_004_3",
     "time_slots": [
-      {"start_time": "11:30", "end_time": "13:00", "queue_required": false, "wait_minutes": 0},
-      {"start_time": "18:00", "end_time": "20:00", "queue_required": false, "wait_minutes": 0}
+      {
+        "start_time": "18:00",
+        "end_time": "20:45",
+        "capacity_total": 50,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 88
+      }
     ]
   },
   {
-    "target_id": "r007",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_005_1",
     "time_slots": [
-      {"start_time": "12:00", "end_time": "13:00", "queue_required": false, "wait_minutes": 10},
-      {"start_time": "18:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 15}
+      {
+        "start_time": "11:00",
+        "end_time": "13:00",
+        "capacity_total": 23,
+        "capacity_remaining": 20,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "13:00",
+        "end_time": "15:00",
+        "capacity_total": 23,
+        "capacity_remaining": 4,
+        "queue_required": true,
+        "wait_minutes": 76
+      },
+      {
+        "start_time": "14:30",
+        "end_time": "16:30",
+        "capacity_total": 23,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "16:30",
+        "end_time": "18:30",
+        "capacity_total": 23,
+        "capacity_remaining": 19,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "19:00",
+        "capacity_total": 23,
+        "capacity_remaining": 16,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "19:30",
+        "capacity_total": 23,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "r008",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_005_2",
     "time_slots": [
-      {"start_time": "11:00", "end_time": "12:00", "queue_required": true, "wait_minutes": 45},
-      {"start_time": "12:00", "end_time": "14:00", "queue_required": true, "wait_minutes": 120},
-      {"start_time": "17:00", "end_time": "18:00", "queue_required": true, "wait_minutes": 60},
-      {"start_time": "18:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 150}
+      {
+        "start_time": "15:00",
+        "end_time": "17:30",
+        "capacity_total": 38,
+        "capacity_remaining": 34,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "a001",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_005_3",
     "time_slots": [
-      {"start_time": "09:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 0},
-      {"start_time": "13:00", "end_time": "17:00", "queue_required": true, "wait_minutes": 20}
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 21,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "a002",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_006_1",
     "time_slots": [
-      {"start_time": "10:00", "end_time": "12:00", "queue_required": false, "wait_minutes": 10},
-      {"start_time": "14:00", "end_time": "18:00", "queue_required": true, "wait_minutes": 40}
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 61,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
     ]
   },
   {
-    "target_id": "a003",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_006_2",
     "time_slots": [
-      {"start_time": "00:00", "end_time": "23:59", "queue_required": false, "wait_minutes": 0}
+      {
+        "start_time": "16:30",
+        "end_time": "18:00",
+        "capacity_total": 61,
+        "capacity_remaining": 43,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "a004",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_006_3",
     "time_slots": [
-      {"start_time": "10:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 5},
-      {"start_time": "19:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 15}
+      {
+        "start_time": "15:00",
+        "end_time": "16:45",
+        "capacity_total": 41,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
     ]
   },
   {
-    "target_id": "a005",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_007_1",
     "time_slots": [
-      {"start_time": "09:00", "end_time": "17:30", "queue_required": false, "wait_minutes": 0}
+      {
+        "start_time": "18:00",
+        "end_time": "20:00",
+        "capacity_total": 21,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "a006",
-    "mock_action": "reservation_failed",
+    "target_type": "package",
+    "target_id": "package_007_2",
     "time_slots": [
-      {"start_time": "00:00", "end_time": "23:59", "queue_required": false, "wait_minutes": 0}
+      {
+        "start_time": "16:30",
+        "end_time": "19:00",
+        "capacity_total": 50,
+        "capacity_remaining": 37,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
     ]
   },
   {
-    "target_id": "a007",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_007_3",
     "time_slots": [
-      {"start_time": "13:00", "end_time": "18:00", "queue_required": false, "wait_minutes": 10},
-      {"start_time": "19:00", "end_time": "22:00", "queue_required": true, "wait_minutes": 30}
+      {
+        "start_time": "12:00",
+        "end_time": "14:15",
+        "capacity_total": 16,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "12:30",
+        "end_time": "14:45",
+        "capacity_total": 16,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "18:15",
+        "capacity_total": 16,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "19:15",
+        "capacity_total": 16,
+        "capacity_remaining": 6,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "20:15",
+        "capacity_total": 16,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 75
+      }
     ]
   },
   {
-    "target_id": "a008",
-    "mock_action": "reservation_confirmed",
+    "target_type": "package",
+    "target_id": "package_008_1",
     "time_slots": [
-      {"start_time": "10:00", "end_time": "14:00", "queue_required": false, "wait_minutes": 10},
-      {"start_time": "15:00", "end_time": "20:00", "queue_required": true, "wait_minutes": 45}
+      {
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "capacity_total": 64,
+        "capacity_remaining": 57,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_008_2",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:30",
+        "capacity_total": 71,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_008_3",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:15",
+        "capacity_total": 41,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_009_1",
+    "time_slots": [
+      {
+        "start_time": "12:30",
+        "end_time": "13:30",
+        "capacity_total": 30,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "13:30",
+        "end_time": "14:30",
+        "capacity_total": 30,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 30,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 77
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:30",
+        "capacity_total": 30,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_009_2",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:30",
+        "capacity_total": 76,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_009_3",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:15",
+        "capacity_total": 20,
+        "capacity_remaining": 6,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_010_1",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "capacity_total": 71,
+        "capacity_remaining": 8,
+        "queue_required": true,
+        "wait_minutes": 81
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_010_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 71,
+        "capacity_remaining": 68,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_010_3",
+    "time_slots": [
+      {
+        "start_time": "11:30",
+        "end_time": "12:45",
+        "capacity_total": 59,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "14:00",
+        "end_time": "15:15",
+        "capacity_total": 59,
+        "capacity_remaining": 54,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:00",
+        "end_time": "16:15",
+        "capacity_total": 59,
+        "capacity_remaining": 43,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "17:15",
+        "capacity_total": 59,
+        "capacity_remaining": 39,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "18:45",
+        "capacity_total": 59,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:15",
+        "capacity_total": 59,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_013_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 43,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_013_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 28,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_013_3",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:15",
+        "capacity_total": 60,
+        "capacity_remaining": 34,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_014_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "16:00",
+        "capacity_total": 26,
+        "capacity_remaining": 17,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_014_2",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 26,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_014_3",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 37,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_015_1",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "17:00",
+        "capacity_total": 27,
+        "capacity_remaining": 26,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_015_2",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 46,
+        "capacity_remaining": 26,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_015_3",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "22:00",
+        "capacity_total": 43,
+        "capacity_remaining": 31,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_016_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 70,
+        "capacity_remaining": 28,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_016_2",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 54,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_016_3",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:30",
+        "capacity_total": 67,
+        "capacity_remaining": 63,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_017_1",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "17:30",
+        "capacity_total": 27,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_017_2",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 43,
+        "capacity_remaining": 34,
+        "queue_required": true,
+        "wait_minutes": 27
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_017_3",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:30",
+        "capacity_total": 66,
+        "capacity_remaining": 56,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_019_1",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 26,
+        "capacity_remaining": 23,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_019_2",
+    "time_slots": [
+      {
+        "start_time": "10:30",
+        "end_time": "11:30",
+        "capacity_total": 48,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 78
+      },
+      {
+        "start_time": "11:00",
+        "end_time": "12:00",
+        "capacity_total": 48,
+        "capacity_remaining": 15,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 48,
+        "capacity_remaining": 44,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:30",
+        "end_time": "16:30",
+        "capacity_total": 48,
+        "capacity_remaining": 40,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "18:00",
+        "capacity_total": 48,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_019_3",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:30",
+        "capacity_total": 56,
+        "capacity_remaining": 22,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_020_1",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 30,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_020_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 32,
+        "capacity_remaining": 32,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_020_3",
+    "time_slots": [
+      {
+        "start_time": "10:30",
+        "end_time": "13:00",
+        "capacity_total": 32,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "12:00",
+        "end_time": "14:30",
+        "capacity_total": 32,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:30",
+        "end_time": "19:00",
+        "capacity_total": 32,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_021_1",
+    "time_slots": [
+      {
+        "start_time": "10:00",
+        "end_time": "10:45",
+        "capacity_total": 60,
+        "capacity_remaining": 50,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:00",
+        "end_time": "15:45",
+        "capacity_total": 60,
+        "capacity_remaining": 32,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:30",
+        "end_time": "16:15",
+        "capacity_total": 60,
+        "capacity_remaining": 56,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "16:45",
+        "capacity_total": 60,
+        "capacity_remaining": 20,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "19:45",
+        "capacity_total": 60,
+        "capacity_remaining": 54,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_021_2",
+    "time_slots": [
+      {
+        "start_time": "10:00",
+        "end_time": "11:00",
+        "capacity_total": 45,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "14:30",
+        "end_time": "15:30",
+        "capacity_total": 45,
+        "capacity_remaining": 31,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "18:30",
+        "capacity_total": 45,
+        "capacity_remaining": 21,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 45,
+        "capacity_remaining": 31,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:30",
+        "capacity_total": 45,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "20:00",
+        "end_time": "21:00",
+        "capacity_total": 45,
+        "capacity_remaining": 40,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_021_3",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "18:00",
+        "capacity_total": 27,
+        "capacity_remaining": 27,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_022_1",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 47,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_022_2",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "capacity_total": 76,
+        "capacity_remaining": 38,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_022_3",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 37,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 79
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_023_1",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "17:30",
+        "capacity_total": 36,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 79
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_023_2",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 77,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_023_3",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:30",
+        "capacity_total": 60,
+        "capacity_remaining": 19,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_024_1",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "17:30",
+        "capacity_total": 47,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_024_2",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 26,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_024_3",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "18:00",
+        "capacity_total": 24,
+        "capacity_remaining": 4,
+        "queue_required": true,
+        "wait_minutes": 77
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_025_1",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "capacity_total": 53,
+        "capacity_remaining": 43,
+        "queue_required": true,
+        "wait_minutes": 25
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_025_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 41,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 76
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_025_3",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "18:00",
+        "capacity_total": 47,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_026_1",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "18:15",
+        "capacity_total": 24,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_026_2",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 21,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 79
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_026_3",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 34,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_027_1",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "21:45",
+        "capacity_total": 75,
+        "capacity_remaining": 17,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_027_2",
+    "time_slots": [
+      {
+        "start_time": "10:00",
+        "end_time": "12:00",
+        "capacity_total": 25,
+        "capacity_remaining": 14,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "20:00",
+        "capacity_total": 25,
+        "capacity_remaining": 23,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 25,
+        "capacity_remaining": 21,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_027_3",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "20:30",
+        "capacity_total": 21,
+        "capacity_remaining": 4,
+        "queue_required": true,
+        "wait_minutes": 75
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_028_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 57,
+        "capacity_remaining": 46,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_028_2",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 40,
+        "capacity_remaining": 8,
+        "queue_required": true,
+        "wait_minutes": 74
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_028_3",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "21:30",
+        "capacity_total": 61,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 83
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_030_1",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 58,
+        "capacity_remaining": 38,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_030_2",
+    "time_slots": [
+      {
+        "start_time": "13:00",
+        "end_time": "14:30",
+        "capacity_total": 58,
+        "capacity_remaining": 32,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "14:30",
+        "end_time": "16:00",
+        "capacity_total": 58,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:30",
+        "capacity_total": 58,
+        "capacity_remaining": 57,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_030_3",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 39,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 76
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_031_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 60,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_031_2",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "21:30",
+        "capacity_total": 76,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 89
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_031_3",
+    "time_slots": [
+      {
+        "start_time": "12:00",
+        "end_time": "14:00",
+        "capacity_total": 45,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "12:30",
+        "end_time": "14:30",
+        "capacity_total": 45,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "15:30",
+        "end_time": "17:30",
+        "capacity_total": 45,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "18:00",
+        "capacity_total": 45,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 85
+      },
+      {
+        "start_time": "16:30",
+        "end_time": "18:30",
+        "capacity_total": 45,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_032_1",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "19:30",
+        "capacity_total": 47,
+        "capacity_remaining": 26,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_032_2",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "18:30",
+        "capacity_total": 49,
+        "capacity_remaining": 34,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_032_3",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "22:00",
+        "capacity_total": 19,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 82
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_033_1",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 28,
+        "capacity_remaining": 25,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_033_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "21:30",
+        "capacity_total": 19,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_033_3",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "21:30",
+        "capacity_total": 30,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 87
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_034_1",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 42,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 77
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_034_2",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "19:00",
+        "capacity_total": 18,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_034_3",
+    "time_slots": [
+      {
+        "start_time": "20:00",
+        "end_time": "22:00",
+        "capacity_total": 26,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_035_1",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "capacity_total": 28,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_035_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 51,
+        "capacity_remaining": 22,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_035_3",
+    "time_slots": [
+      {
+        "start_time": "11:30",
+        "end_time": "13:30",
+        "capacity_total": 16,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "12:00",
+        "end_time": "14:00",
+        "capacity_total": 16,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 80
+      },
+      {
+        "start_time": "12:30",
+        "end_time": "14:30",
+        "capacity_total": 16,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 80
+      },
+      {
+        "start_time": "14:00",
+        "end_time": "16:00",
+        "capacity_total": 16,
+        "capacity_remaining": 16,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:30",
+        "end_time": "17:30",
+        "capacity_total": 16,
+        "capacity_remaining": 5,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_036_1",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "19:00",
+        "capacity_total": 26,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_036_2",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 35,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 85
+      },
+      {
+        "start_time": "22:00",
+        "end_time": "23:30",
+        "capacity_total": 35,
+        "capacity_remaining": 24,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "22:30",
+        "end_time": "00:00",
+        "capacity_total": 35,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 85
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_036_3",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 41,
+        "capacity_remaining": 14,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_040_1",
+    "time_slots": [
+      {
+        "start_time": "15:00",
+        "end_time": "16:00",
+        "capacity_total": 66,
+        "capacity_remaining": 40,
+        "queue_required": true,
+        "wait_minutes": 42
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_040_2",
+    "time_slots": [
+      {
+        "start_time": "16:30",
+        "end_time": "17:30",
+        "capacity_total": 43,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 77
+      }
+    ]
+  },
+  {
+    "target_type": "package",
+    "target_id": "package_040_3",
+    "time_slots": [
+      {
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 77,
+        "capacity_remaining": 6,
+        "queue_required": true,
+        "wait_minutes": 84
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_002_2",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "11:58",
+        "capacity_total": 12,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "11:30",
+        "end_time": "12:28",
+        "capacity_total": 12,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "12:30",
+        "end_time": "13:28",
+        "capacity_total": 12,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "18:58",
+        "capacity_total": 12,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_002_4",
+    "time_slots": [
+      {
+        "start_time": "17:30",
+        "end_time": "18:30",
+        "capacity_total": 10,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 10,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:30",
+        "capacity_total": 10,
+        "capacity_remaining": 5,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_004_5",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "11:55",
+        "capacity_total": 18,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "18:25",
+        "capacity_total": 18,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 55
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_011_2",
+    "time_slots": [
+      {
+        "start_time": "17:00",
+        "end_time": "18:23",
+        "capacity_total": 8,
+        "capacity_remaining": 2,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:53",
+        "capacity_total": 8,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_012_1",
+    "time_slots": [
+      {
+        "start_time": "17:00",
+        "end_time": "17:58",
+        "capacity_total": 9,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "18:58",
+        "capacity_total": 9,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:28",
+        "capacity_total": 9,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:28",
+        "capacity_total": 9,
+        "capacity_remaining": 2,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_013_4",
+    "time_slots": [
+      {
+        "start_time": "17:30",
+        "end_time": "18:58",
+        "capacity_total": 15,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:28",
+        "capacity_total": 15,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:58",
+        "capacity_total": 15,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_015_4",
+    "time_slots": [
+      {
+        "start_time": "18:00",
+        "end_time": "18:56",
+        "capacity_total": 9,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:26",
+        "capacity_total": 9,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:26",
+        "capacity_total": 9,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_018_5",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "12:05",
+        "capacity_total": 13,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "18:05",
+        "capacity_total": 13,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "18:35",
+        "capacity_total": 13,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "21:30",
+        "end_time": "22:35",
+        "capacity_total": 13,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_019_1",
+    "time_slots": [
+      {
+        "start_time": "17:00",
+        "end_time": "18:40",
+        "capacity_total": 7,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:40",
+        "capacity_total": 7,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "20:10",
+        "capacity_total": 7,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_020_3",
+    "time_slots": [
+      {
+        "start_time": "17:30",
+        "end_time": "19:03",
+        "capacity_total": 12,
+        "capacity_remaining": 5,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "21:30",
+        "end_time": "23:03",
+        "capacity_total": 12,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 60
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_025_5",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "11:59",
+        "capacity_total": 11,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "11:30",
+        "end_time": "12:29",
+        "capacity_total": 11,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:29",
+        "capacity_total": 11,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_026_2",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:12",
+        "capacity_total": 8,
+        "capacity_remaining": 6,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "14:30",
+        "end_time": "15:42",
+        "capacity_total": 8,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "15:00",
+        "end_time": "16:12",
+        "capacity_total": 8,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 12
+      }
     ]
   }
 ]

@@ -5,6 +5,7 @@ from closedloop.graph.nodes.extract import extract_constraints
 from closedloop.graph.nodes.retrieve import retrieve_candidates_node, filter_node
 from closedloop.graph.nodes.rerank import rerank_node
 from closedloop.graph.nodes.planner import planner_node
+from closedloop.graph.nodes.copywriting import copywriting_node
 
 def build_graph():
     """
@@ -20,6 +21,7 @@ def build_graph():
     workflow.add_node("filter_node", filter_node)
     workflow.add_node("rerank_node", rerank_node)
     workflow.add_node("planner_node", planner_node)
+    workflow.add_node("copywriting_node", copywriting_node)
 
     # 3. 定义边
     workflow.add_edge(START, "extract_constraints")
@@ -27,7 +29,8 @@ def build_graph():
     workflow.add_edge("retrieve_candidates_node", "filter_node")
     workflow.add_edge("filter_node", "rerank_node")
     workflow.add_edge("rerank_node", "planner_node")
-    workflow.add_edge("planner_node", END)
+    workflow.add_edge("planner_node", "copywriting_node")
+    workflow.add_edge("copywriting_node", END)
 
     # 4. 编译图
     app = workflow.compile()

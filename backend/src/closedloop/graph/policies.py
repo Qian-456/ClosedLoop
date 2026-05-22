@@ -70,7 +70,7 @@ PATTERNS: list[Pattern] = [
         ],
         "steps": [
             "restaurant:lunch",
-            "activity",
+            "activity_light",
             "gift_shop"
         ],
         "desc": "午餐 + 轻玩 + 惊喜",
@@ -87,7 +87,7 @@ PATTERNS: list[Pattern] = [
         ],
         "steps": [
             "restaurant:dinner",
-            "activity",
+            "activity_light",
             "gift_shop"
         ],
         "desc": "晚餐 + 轻玩 + 惊喜",
@@ -103,7 +103,7 @@ PATTERNS: list[Pattern] = [
             3.5
         ],
         "steps": [
-            "activity",
+            "activity_light",
             "restaurant:dinner",
             "gift_shop"
         ],
@@ -208,7 +208,7 @@ PATTERNS: list[Pattern] = [
         "steps": [
             "activity",
             "restaurant:lunch",
-            "activity",
+            "activity_light",
             "gift_shop"
         ],
         "desc": "玩 + 午餐 + 轻玩 + 惊喜",
@@ -226,7 +226,7 @@ PATTERNS: list[Pattern] = [
         "steps": [
             "activity",
             "restaurant:dinner",
-            "activity",
+            "activity_light",
             "gift_shop"
         ],
         "desc": "玩 + 晚餐 + 轻玩 + 惊喜",
@@ -1228,13 +1228,327 @@ PATTERNS: list[Pattern] = [
         "start_time_pref": [
             "dinner"
         ]
+    },
+    {
+        "id": "SOL-S-01-L",
+        "group": "solo",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "gift_shop"
+        ],
+        "desc": "午餐 + 轻松活动 + 小惊喜",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "SOL-S-01-A",
+        "group": "solo",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "activity",
+            "restaurant:afternoon_tea",
+            "gift_shop"
+        ],
+        "desc": "轻松活动 + 下午茶歇脚 + 小惊喜",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "SOL-S-01-D",
+        "group": "solo",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "restaurant:dinner",
+            "activity",
+            "gift_shop"
+        ],
+        "desc": "晚餐 + 轻松活动 + 小惊喜",
+        "start_time_pref": [
+            "dinner"
+        ]
+    },
+    {
+        "id": "SOL-M-01-L",
+        "group": "solo",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "restaurant:afternoon_tea"
+        ],
+        "desc": "午餐 + 轻松活动 + 下午茶",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "SOL-M-01-A",
+        "group": "solo",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "activity",
+            "restaurant:afternoon_tea",
+            "activity"
+        ],
+        "desc": "轻松活动 + 下午茶歇脚 + 再轻松活动",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "SOL-M-01-D",
+        "group": "solo",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "activity",
+            "restaurant:dinner",
+            "activity"
+        ],
+        "desc": "轻松活动 + 晚餐 + 饭后轻松活动",
+        "start_time_pref": [
+            "dinner"
+        ]
+    },
+    {
+        "id": "SOL-L-01-L",
+        "group": "solo",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "restaurant:afternoon_tea",
+            "gift_shop"
+        ],
+        "desc": "午餐 + 轻松活动 + 下午茶 + 小惊喜",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "SOL-L-01-A",
+        "group": "solo",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "restaurant:afternoon_tea",
+            "activity",
+            "gift_shop",
+            "restaurant:dinner"
+        ],
+        "desc": "下午茶开场 + 轻松活动 + 小惊喜 + 晚餐收尾",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "SOL-L-01-D",
+        "group": "solo",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "restaurant:dinner",
+            "activity",
+            "gift_shop",
+            "activity"
+        ],
+        "desc": "晚餐 + 轻松活动 + 小惊喜 + 再轻松活动",
+        "start_time_pref": [
+            "dinner"
+        ]
+    },
+    {
+        "id": "CPL-S-01-L",
+        "group": "couple",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "gift_shop"
+        ],
+        "desc": "午餐约会 + 轻松活动 + 小惊喜",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "CPL-S-01-A",
+        "group": "couple",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "restaurant:afternoon_tea",
+            "activity",
+            "gift_shop"
+        ],
+        "desc": "下午茶约会 + 轻松活动 + 小惊喜",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "CPL-S-01-D",
+        "group": "couple",
+        "duration_range": [
+            2.5,
+            3.5
+        ],
+        "steps": [
+            "activity",
+            "restaurant:dinner",
+            "gift_shop"
+        ],
+        "desc": "轻松活动 + 晚餐约会 + 小惊喜",
+        "start_time_pref": [
+            "dinner"
+        ]
+    },
+    {
+        "id": "CPL-M-01-L",
+        "group": "couple",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "restaurant:afternoon_tea"
+        ],
+        "desc": "午餐约会 + 轻松活动 + 下午茶",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "CPL-M-01-A",
+        "group": "couple",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "activity",
+            "restaurant:afternoon_tea",
+            "activity"
+        ],
+        "desc": "打卡/互动 + 下午茶歇脚 + 再轻松活动",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "CPL-M-01-D",
+        "group": "couple",
+        "duration_range": [
+            3.5,
+            5.0
+        ],
+        "steps": [
+            "activity",
+            "gift_shop",
+            "restaurant:dinner"
+        ],
+        "desc": "打卡/互动 + 小惊喜 + 晚餐约会",
+        "start_time_pref": [
+            "dinner"
+        ]
+    },
+    {
+        "id": "CPL-L-01-L",
+        "group": "couple",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "restaurant:lunch",
+            "activity",
+            "gift_shop",
+            "restaurant:dinner"
+        ],
+        "desc": "午餐约会 + 轻松活动 + 小惊喜 + 晚餐收尾",
+        "start_time_pref": [
+            "lunch"
+        ]
+    },
+    {
+        "id": "CPL-L-01-A",
+        "group": "couple",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "activity",
+            "restaurant:afternoon_tea",
+            "activity",
+            "restaurant:dinner"
+        ],
+        "desc": "打卡/互动 + 下午茶 + 轻松活动 + 晚餐约会",
+        "start_time_pref": [
+            "afternoon_tea"
+        ]
+    },
+    {
+        "id": "CPL-L-01-D",
+        "group": "couple",
+        "duration_range": [
+            5.0,
+            6.5
+        ],
+        "steps": [
+            "activity",
+            "restaurant:dinner",
+            "activity",
+            "gift_shop"
+        ],
+        "desc": "打卡/互动 + 晚餐约会 + 饭后轻松活动 + 小惊喜",
+        "start_time_pref": [
+            "dinner"
+        ]
     }
 ]
 
 def parse_time_period(time_period: str) -> tuple[float, float]:
     """
     解析时间段字符串，返回 (start_time_hours, duration_hours)。
-    根据 Constraints 结构，time_period 必然是 'HH:MM-HH:MM' 的精确格式。
+    兼容两种格式：
+    - 新语义：'HH:MM'（目标开始时间）
+    - 旧语义：'HH:MM-HH:MM'（起止时间段）
     例如 "13:00-18:00" 返回 (13.0, 5.0)。
     """
     match = re.search(r"(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})", time_period)
@@ -1248,8 +1562,24 @@ def parse_time_period(time_period: str) -> tuple[float, float]:
             
         return start_h, end_h - start_h
 
+    match_start = re.search(r"(\d{1,2}):(\d{2})", time_period or "")
+    if match_start:
+        start_h = int(match_start.group(1)) + int(match_start.group(2)) / 60.0
+        return start_h, 6.0
+
     # 理论上不会走到这里，作为容错返回默认值
     return 14.0, 6.0
+
+def parse_target_start_time(time_period: str) -> float:
+    if not isinstance(time_period, str):
+        return 14.0
+    s = time_period.strip()
+    if "-" in s:
+        s = s.split("-", 1)[0].strip()
+    match = re.search(r"(\d{1,2}):(\d{2})", s)
+    if not match:
+        return 14.0
+    return int(match.group(1)) + int(match.group(2)) / 60.0
 
 def get_time_of_day(start_time_hours: float) -> str:
     """根据开始时间归类时段：breakfast, lunch, afternoon_tea, dinner, late_night"""
@@ -1266,16 +1596,17 @@ def get_time_of_day(start_time_hours: float) -> str:
 
 def match_patterns(
     group_type: str, 
-    child_ages: list[int], 
+    child_profiles: list[tuple[str, int]], 
     start_time_hours: float, 
-    duration_hours: float
+    duration_hours_range: tuple[float, float] | float
 ) -> list[Pattern]:
     """
     根据人群分类、开始时间和持续时间，匹配所有合适的 Pattern 列表。
     """
     # 1. 确定 group_category
-    group_category = "friends"
+    group_category = group_type if group_type in ("solo", "couple", "friends") else "friends"
     if group_type == "family":
+        child_ages = [age for _, age in (child_profiles or []) if isinstance(age, int)]
         if child_ages and max(child_ages) >= 10:
             group_category = "family_teens"
         else:
@@ -1285,6 +1616,11 @@ def match_patterns(
     time_of_day = get_time_of_day(start_time_hours)
     
     # 3. 筛选候选
+    if isinstance(duration_hours_range, (int, float)):
+        duration_hours_range = (float(duration_hours_range), float(duration_hours_range))
+    is_range = abs(duration_hours_range[0] - duration_hours_range[1]) > 1e-9
+    duration_mid = (duration_hours_range[0] + duration_hours_range[1]) / 2.0
+
     candidates = []
     for p in PATTERNS:
         if p["group"] != group_category:
@@ -1292,7 +1628,9 @@ def match_patterns(
         
         min_d, max_d = p["duration_range"]
         # 容差范围
-        if min_d - 0.5 <= duration_hours <= max_d + 0.5:
+        p_min = min_d - 0.5
+        p_max = max_d + 0.5
+        if duration_hours_range[0] <= p_max and duration_hours_range[1] >= p_min:
             candidates.append(p)
             
     # 如果没有找到匹配时长的，放宽时长限制
@@ -1311,8 +1649,12 @@ def match_patterns(
     # 返回所有满足条件的候选，如果有 preferred 则优先使用 preferred 集合，否则使用所有 candidates
     # 按时长差值升序排列
     if preferred:
-        preferred.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
+        if is_range:
+            return preferred
+        preferred.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1]) / 2 - duration_mid))
         return preferred
     else:
-        candidates.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1])/2 - duration_hours))
+        if is_range:
+            return candidates
+        candidates.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1]) / 2 - duration_mid))
         return candidates

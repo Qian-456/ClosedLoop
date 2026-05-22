@@ -59,12 +59,12 @@ def test_dfs_performance():
         }
     ]
     budget = 400
-    required_duration_mins = 300
+    required_duration_range_mins = (300, 300)
 
     start_time = time.time()
     
     valid_plans_info, valid_count, missing = generate_and_score_combinations(
-            queues, patterns, budget, required_duration_mins
+            queues, patterns, budget, required_duration_range_mins
         )
     
     total_time = time.time() - start_time

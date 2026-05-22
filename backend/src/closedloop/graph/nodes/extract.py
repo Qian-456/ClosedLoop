@@ -35,6 +35,13 @@ def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
             state["constraints"] = parsed_output
         else:
             state["constraints"] = {}
+
+        if isinstance(state.get("constraints"), dict):
+            try:
+                state["constraints"] = Constraints(**state["constraints"]).model_dump()
+            except Exception as e:
+                logger.error(f"phase=extract_constraints | error=constraints_validation_failed | error={e}")
+                state["constraints"] = {}
             
         # 过滤未知的饮食禁忌并记录 warning
         if "constraints" in state and "dietary_restrictions" in state["constraints"]:

@@ -23,13 +23,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "family",
             "adult_count": 2,
             "child_count": 1,
-            "child_ages": [5],
+            "child_profiles": [("U", 5)],
             "budget": 500.0,
             "dietary_restrictions": ["辣"],
             "preferred_distance": "2km-5km",
-            "time_period": "13:00-18:00",
-            "duration_hours": 5.0,
-            "activity_preferences": ["play"]
+            "time_period": "14:00",
+            "duration_hours": (5.0, 5.0),
+            "activity_preferences": ["play"],
         }
         mock_build_agent.return_value = mock_agent
 
@@ -50,25 +50,29 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type",
             "adult_count",
             "child_count",
-            "child_ages",
+            "adult_genders",
+            "child_profiles",
             "budget",
             "dietary_restrictions",
             "preferred_distance",
             "time_period",
             "duration_hours",
             "activity_preferences",
+            "commute_preference",
         }
         self.assertEqual(set(constraints.keys()), expected_keys)
         self.assertEqual(constraints["group_type"], "family")
         self.assertEqual(constraints["budget"], 500.0)
         self.assertEqual(constraints["adult_count"], 2)
         self.assertEqual(constraints["child_count"], 1)
-        self.assertEqual(constraints["child_ages"], [5])
+        self.assertEqual(constraints["adult_genders"], ["F", "M"])
+        self.assertEqual(constraints["child_profiles"], [("F", 5)])
         self.assertEqual(constraints["preferred_distance"], "2km-5km")
-        self.assertEqual(constraints["time_period"], "13:00-18:00")
-        self.assertEqual(constraints["duration_hours"], 5.0)
+        self.assertEqual(constraints["time_period"], "14:00")
+        self.assertEqual(constraints["duration_hours"], (5.0, 5.0))
         self.assertEqual(constraints["activity_preferences"], ["play"])
         self.assertEqual(constraints["dietary_restrictions"], ["辣"])
+        self.assertEqual(constraints["commute_preference"], "auto")
 
         # Ensure the agent was called with the user input
         mock_agent.invoke.assert_called_once()
@@ -85,13 +89,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "family",
             "adult_count": 3,
             "child_count": 2,
-            "child_ages": [5, 8],
+            "child_profiles": [("U", 5), ("U", 8)],
             "budget": 500.0,
             "dietary_restrictions": ["辣"],
             "preferred_distance": "2km-5km",
-            "time_period": "13:00-18:00",
-            "duration_hours": 5.0,
-            "activity_preferences": ["play"]
+            "time_period": "14:00",
+            "duration_hours": (5.0, 5.0),
+            "activity_preferences": ["play"],
         }
         mock_build_agent.return_value = mock_agent
 
@@ -109,19 +113,23 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type",
             "adult_count",
             "child_count",
-            "child_ages",
+            "adult_genders",
+            "child_profiles",
             "budget",
             "dietary_restrictions",
             "preferred_distance",
             "time_period",
             "duration_hours",
             "activity_preferences",
+            "commute_preference",
         }
         self.assertEqual(set(constraints.keys()), expected_keys)
         self.assertEqual(constraints["adult_count"], 3)
         self.assertEqual(constraints["child_count"], 2)
-        self.assertEqual(constraints["child_ages"], [5, 8])
+        self.assertEqual(constraints["adult_genders"], ["F", "M", "F"])
+        self.assertEqual(constraints["child_profiles"], [("F", 5), ("F", 8)])
         self.assertEqual(constraints["dietary_restrictions"], ["辣"])
+        self.assertEqual(constraints["commute_preference"], "auto")
 
 
     @patch("closedloop.graph.nodes.extract.build_agent")
@@ -135,13 +143,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "friends",
             "adult_count": 2,
             "child_count": 0,
-            "child_ages": [],
+            "child_profiles": [],
             "budget": 800.0,
             "dietary_restrictions": [],
             "preferred_distance": "2km-5km",
-            "time_period": "18:00-21:00",
-            "duration_hours": 3.0,
-            "activity_preferences": ["dining"]
+            "time_period": "18:00",
+            "duration_hours": (3.0, 3.0),
+            "activity_preferences": ["dining"],
         }
         mock_build_agent.return_value = mock_agent
 
@@ -161,24 +169,28 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type",
             "adult_count",
             "child_count",
-            "child_ages",
+            "adult_genders",
+            "child_profiles",
             "budget",
             "dietary_restrictions",
             "preferred_distance",
             "time_period",
             "duration_hours",
             "activity_preferences",
+            "commute_preference",
         }
         self.assertEqual(set(constraints.keys()), expected_keys)
         self.assertEqual(constraints["group_type"], "friends")
         self.assertEqual(constraints["budget"], 800.0)
         self.assertEqual(constraints["adult_count"], 2)
         self.assertEqual(constraints["child_count"], 0)
-        self.assertEqual(constraints["child_ages"], [])
+        self.assertEqual(constraints["adult_genders"], ["F", "F"])
+        self.assertEqual(constraints["child_profiles"], [])
         self.assertEqual(constraints["preferred_distance"], "2km-5km")
-        self.assertEqual(constraints["time_period"], "18:00-21:00")
-        self.assertEqual(constraints["duration_hours"], 3.0)
+        self.assertEqual(constraints["time_period"], "18:00")
+        self.assertEqual(constraints["duration_hours"], (3.0, 3.0))
         self.assertEqual(constraints["activity_preferences"], ["dining"])
+        self.assertEqual(constraints["commute_preference"], "auto")
 
 
     @patch("closedloop.graph.nodes.extract.build_agent")
@@ -191,13 +203,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "friends",
             "adult_count": 2,
             "child_count": 0,
-            "child_ages": [],
+            "child_profiles": [],
             "budget": 200.0,
             "dietary_restrictions": [],
             "preferred_distance": "2km-5km",
-            "time_period": "18:00-21:00",
-            "duration_hours": 3.0,
-            "activity_preferences": ["dining"]
+            "time_period": "18:00",
+            "duration_hours": (3.0, 3.0),
+            "activity_preferences": ["dining"],
         }
         mock_build_agent.return_value = mock_agent
 
@@ -225,13 +237,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "friends",
             "adult_count": 2,
             "child_count": 0,
-            "child_ages": [],
+            "child_profiles": [],
             "budget": 200.0,
             "dietary_restrictions": [],
             "preferred_distance": "<2km",
-            "time_period": "18:00-21:00",
-            "duration_hours": 3.0,
-            "activity_preferences": ["dining"]
+            "time_period": "18:00",
+            "duration_hours": (3.0, 3.0),
+            "activity_preferences": ["dining"],
         }
         mock_build_agent.return_value = mock_agent
 
@@ -260,13 +272,13 @@ class TestExtractConstraints(unittest.TestCase):
             "group_type": "friends",
             "adult_count": 2,
             "child_count": 0,
-            "child_ages": [],
+            "child_profiles": [],
             "budget": 200.0,
             "dietary_restrictions": ["辣", "香菜", "大蒜", "甜", "其他"],
             "preferred_distance": "2km-5km",
-            "time_period": "18:00-21:00",
-            "duration_hours": 3.0,
-            "activity_preferences": ["dining"]
+            "time_period": "18:00",
+            "duration_hours": (3.0, 3.0),
+            "activity_preferences": ["dining"],
         }
         mock_build_agent.return_value = mock_agent
 

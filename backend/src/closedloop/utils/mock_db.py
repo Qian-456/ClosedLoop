@@ -1,6 +1,8 @@
 import json
 import os
 
+from closedloop.core.config import REPO_ROOT_DIR, get_config
+
 def load_mock_data(filename: str) -> list[dict]:
     """
     加载 mock_db 目录下的 JSON 数据文件。
@@ -11,14 +13,23 @@ def load_mock_data(filename: str) -> list[dict]:
     Returns:
         list[dict]: 解析后的 JSON 列表数据
     """
-    # 当前文件位于 backend/src/closedloop/utils/mock_db.py
-    # 往上推 4 层得到项目根目录 (ClosedLoop)
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
-    mock_db_dir = os.path.join(base_dir, "mock_db")
-    file_path = os.path.join(mock_db_dir, filename)
-    
+    config = get_config()
+
+    def _resolve_dir(v: str) -> str:
+        if not v:
+            return ""
+        if os.path.isabs(v):
+            return os.path.abspath(v)
+        return os.path.abspath(os.path.join(REPO_ROOT_DIR, v))
+
+    repo_dir = _resolve_dir(config.data.MOCK_DB_REPO_DIR)
+    file_path = os.path.join(repo_dir, filename)
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Mock DB file not found: {file_path}")
-        
+
     with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    if not isinstance(data, list):
+        raise ValueError(f"Mock DB file must be a list: {file_path}")
+    return data

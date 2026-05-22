@@ -1,6 +1,14 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
+
+
+class CommuteOption(BaseModel):
+    """通勤选项（用于前端切换交通方式）。"""
+
+    mode: Literal["walking", "taxi", "driving"] = Field(..., description="交通方式")
+    time_minutes: int = Field(..., description="预计通勤时间（分钟）")
+    cost: float = Field(default=0.0, description="预计通勤费用（元）")
 
 
 class ItineraryItem(BaseModel):
@@ -14,6 +22,24 @@ class ItineraryItem(BaseModel):
     location: str = Field(..., description="候选地点的地址/位置描述")
     distance_km: float = Field(..., description="候选地点相对当前位置的距离（km）")
     cost: float = Field(default=0.0, description="该条目的价格/花费")
+    gift_price: Optional[float] = Field(default=None, description="礼物价格（仅 gift_shop）")
+    delivery_fee: Optional[float] = Field(default=None, description="配送费（仅 gift_shop）")
+    delivery_distance_km: Optional[float] = Field(default=None, description="配送距离（仅 gift_shop）")
+    parent_name: Optional[str] = Field(default=None, description="父级地点名，如餐厅名或活动场地名")
+    display_name: Optional[str] = Field(default=None, description="前端主展示名，优先显示地点名")
+    sub_name: Optional[str] = Field(default=None, description="前端副展示名，优先显示套餐名或票种名")
+
+    intro: Optional[str] = Field(default=None, description="条目介绍（来自 Mock DB）")
+    features: Optional[str] = Field(default=None, description="条目特色/亮点（来自 Mock DB）")
+
+    commute_from: Optional[str] = Field(default=None, description="通勤：出发点名称")
+    commute_to: Optional[str] = Field(default=None, description="通勤：目的地名称")
+    commute_mode: Optional[Literal["walking", "taxi", "driving"]] = Field(
+        default=None, description="通勤：当前交通方式"
+    )
+    commute_options: Optional[list[CommuteOption]] = Field(
+        default=None, description="通勤：可选交通方式列表"
+    )
 
 
 class ItineraryStep(BaseModel):
@@ -22,7 +48,6 @@ class ItineraryStep(BaseModel):
     order_id: str = Field(..., description="步骤顺序 id，实体活动为 1, 2... 通勤为 C1, C2...")
     item: ItineraryItem = Field(..., description="该步骤选择的候选条目")
     duration_minutes: int = Field(..., description="该步骤建议停留时长（分钟）")
-    note: str = Field(..., description="该步骤的简短说明/理由")
 
 
 class ItineraryPlanVariant(BaseModel):
@@ -37,6 +62,7 @@ class ItineraryPlanVariant(BaseModel):
     total_duration_minutes: int = Field(..., description="该方案预计总时长（分钟）")
     total_cost: float = Field(default=0.0, description="该方案的总花费")
     average_score: float = Field(default=0.0, description="该方案的平均得分")
+    experience_score: float = Field(default=0.0, description="该方案的体验分（用于前端展示，0-100）")
 
 
 class ItineraryPlan(BaseModel):
@@ -49,4 +75,3 @@ class ItineraryPlan(BaseModel):
     missing_types: list[Literal["restaurant", "activity", "gift_shop"]] = Field(
         default_factory=list, description="候选不足时缺失的类型列表"
     )
-

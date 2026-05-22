@@ -1,12 +1,35 @@
 import re
 from closedloop.contracts.state import Constraints
 
+_CN_NUM = {
+    "一": 1,
+    "二": 2,
+    "两": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
+}
+
+def _cn_num_to_int(s: str) -> int | None:
+    if not isinstance(s, str) or not s:
+        return None
+    return _CN_NUM.get(s)
+
 def _get_effective_people(constraints: Constraints) -> float:
     """计算等效人数"""
     effective = float(constraints.adult_count)
-    child_ages = constraints.child_ages or []
-    for age in child_ages:
-        if age <= 3:
+    child_profiles = constraints.child_profiles or []
+    for _, age in child_profiles:
+        if not isinstance(age, int):
+            effective += 0.6
+            continue
+        if age < 0:
+            effective += 0.6
+        elif age <= 3:
             effective += 0.2
         elif age <= 6:
             effective += 0.4
@@ -17,7 +40,7 @@ def _get_effective_people(constraints: Constraints) -> float:
         else:
             effective += 1.0
             
-    unknown_children = max(0, constraints.child_count - len(child_ages))
+    unknown_children = max(0, constraints.child_count - len(child_profiles))
     effective += unknown_children * 0.6
     return effective
 
@@ -27,6 +50,23 @@ def _get_capacity_from_name(name: str) -> float:
         return 1.0
         
     name = name.lower()
+
+    match_range = re.search(r"(\d+)\s*[-~到]\s*(\d+)\s*人", name)
+    if match_range:
+        try:
+            a = int(match_range.group(1))
+            b = int(match_range.group(2))
+            if a > 0 and b > 0:
+                lo, hi = (a, b) if a <= b else (b, a)
+                return (lo + hi) / 2.0
+        except Exception:
+            pass
+
+    if (
+        ("单人" in name or "一人" in name)
+        and ("双人" in name or "两人" in name or "情侣" in name or "2人" in name)
+    ) or re.search(r"1\s*[-~到]\s*2\s*人", name):
+        return 1.5
     
     # 1. 优先匹配明确的“X大Y小”结构 (例如：2大1小 -> 2.4 人)
     match = re.search(r'(\d+)\s*[大小]\s*(\d+)\s*[大小]', name)
@@ -35,6 +75,13 @@ def _get_capacity_from_name(name: str) -> float:
         kids = int(match.group(2))
         # 默认儿童等效权重为 0.4
         return adults + kids * 0.4
+
+    match_cn = re.search(r"([一二两三四五六七八九])\s*[大小]\s*([一二两三四五六七八九])\s*[大小]", name)
+    if match_cn:
+        a = _cn_num_to_int(match_cn.group(1))
+        b = _cn_num_to_int(match_cn.group(2))
+        if a is not None and b is not None:
+            return a + b * 0.4
         
     # 3. 匹配通用家庭/亲子套餐（通常指三口之家或四口之家）
     if "三口之家" in name or "2大1小" in name:
@@ -49,6 +96,21 @@ def _get_capacity_from_name(name: str) -> float:
         return 1.0
     if "双人" in name or "两人" in name or "情侣" in name or "闺蜜" in name:
         return 2.0
+    if "二人" in name or "俩人" in name:
+        return 2.0
+
+    match_people_num = re.search(r"(\d+)\s*人", name)
+    if match_people_num:
+        try:
+            return float(int(match_people_num.group(1)))
+        except Exception:
+            pass
+
+    match_people_cn = re.search(r"([一二两三四五六七八九])\s*人", name)
+    if match_people_cn:
+        v = _cn_num_to_int(match_people_cn.group(1))
+        if v is not None:
+            return float(v)
     if "三人" in name:
         return 3.0
     if "四人" in name:

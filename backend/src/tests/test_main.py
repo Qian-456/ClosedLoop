@@ -37,13 +37,14 @@ class TestMainAPI(unittest.TestCase):
                 "group_type": "family",
                 "adult_count": 2,
                 "child_count": 1,
-                "child_ages": [5],
+                "child_profiles": [("F", 5)],
                 "budget": 500.0,
                 "dietary_restrictions": [],
                 "preferred_distance": "2km-5km",
-                "time_period": "13:00-18:00",
-                "duration_hours": 5.0,
-                "activity_preferences": ["play"]
+                "time_period": "14:00",
+                "duration_hours": (5.0, 5.0),
+                "activity_preferences": ["play"],
+                "commute_preference": "auto",
             }
         }
 

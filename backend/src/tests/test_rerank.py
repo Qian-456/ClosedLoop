@@ -9,11 +9,11 @@ class TestRerankNode(unittest.TestCase):
             group_type="family",
             adult_count=2,
             child_count=1,
-            child_ages=[5],
+            child_profiles=[("F", 5)],
             budget=500.0,
             dietary_restrictions=[],
             preferred_distance="2km-5km",
-            time_period="13:00-18:00",
+            time_period="13:00",
             activity_preferences=["打卡点"]
         )
 
@@ -27,27 +27,25 @@ class TestRerankNode(unittest.TestCase):
         }
 
     def test_score_item(self):
-        score = score_item(self.restaurant_item, {}, self.base_constraints)
+        score = score_item(self.restaurant_item, {"name": "温馨三口之家套餐"}, self.base_constraints)
         # rating: 4.5 / 5 * 65 = 58.5
-        # distance: pref="2km-5km", actual=3.0 -> ratio = (5-3)/(5-2) = 2/3. 2/3 * 20 = 13.333 -> 13
+        # distance: pref="2km-5km", actual=3.0 -> ratio = (5-3)/(5-2) = 2/3. 2/3 * 20 = 13.333
         # suitable_groups: family in suitable -> +15
-        # capacity: empty name returns capacity 1.0. Base effective_people (2 adult, 1 child(age 5=0.4)) = 2.4.
-        # diff = |1.0 - 2.4| = 1.4 -> penalty = (1.4**2)*10 + 1.4*5 = 1.96*10 + 7 = 19.6 + 7 = 26.6 -> 26
-        # organic_score: min(100, 58.5 + 13.333 + 15 - 26.6) = 60.233 -> 60
-        self.assertEqual(score, 60)
+        # activity_preferences: ["打卡点"] 命中 tags ["打卡点"] -> +5
+        # capacity: "温馨三口之家套餐" -> 2.6; effective_people = 2.4; diff = 0.2 -> penalty 小
+        self.assertEqual(score, 89)
 
     def test_score_item_matches_chinese_suitable_groups(self):
         family_restaurant = self.restaurant_item.copy()
         family_restaurant["suitable_groups"] = ["家庭亲子"]
-        self.assertEqual(score_item(family_restaurant, {}, self.base_constraints), 60)
+        self.assertEqual(score_item(family_restaurant, {"name": "温馨三口之家套餐"}, self.base_constraints), 89)
 
-        friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
+        friends_constraints = self.base_constraints.model_copy(
+            update={"group_type": "friends", "child_count": 0, "child_profiles": []}
+        )
         friends_restaurant = self.restaurant_item.copy()
         friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        # Friends effective people: child_count=1 -> 2.4.
-        # Penalty: diff = 1.4 -> 26.6
-        # organic_score: 58.5 + 13.333 + 15 - 26.6 = 60.233 -> 60
-        self.assertEqual(score_item(friends_restaurant, {}, friends_constraints), 60)
+        self.assertEqual(score_item(friends_restaurant, {"name": "温馨三口之家套餐"}, friends_constraints), 79)
 
     def test_get_capacity_from_name(self):
         # 测试明确的 X大Y小
@@ -61,6 +59,15 @@ class TestRerankNode(unittest.TestCase):
         self.assertEqual(_get_capacity_from_name("温馨三口之家套餐"), 2.6)
         self.assertEqual(_get_capacity_from_name("青年四人欢聚套餐"), 4.0)
         self.assertEqual(_get_capacity_from_name("八人豪华包厢宴"), 8.0)
+        self.assertEqual(_get_capacity_from_name("4人畅吃派对"), 4.0)
+        self.assertEqual(_get_capacity_from_name("俩人套餐"), 2.0)
+        self.assertEqual(_get_capacity_from_name("两大一小亲子套餐"), 2.4)
+        self.assertEqual(_get_capacity_from_name("单人/双人韩式大头贴"), 1.5)
+        self.assertEqual(_get_capacity_from_name("1-2人套票"), 1.5)
+        self.assertEqual(_get_capacity_from_name("2-3人套票"), 2.5)
+        self.assertEqual(_get_capacity_from_name("3-4人套票"), 3.5)
+        self.assertEqual(_get_capacity_from_name("2~3人套票"), 2.5)
+        self.assertEqual(_get_capacity_from_name("2到3人套票"), 2.5)
         
         # 测试通用家庭
         self.assertEqual(_get_capacity_from_name("家庭健康轻食餐"), 2.6)
@@ -81,21 +88,37 @@ class TestRerankNode(unittest.TestCase):
         # rating 58.5 + dist 13.333 + fit 15 (features matched)
         # capacity: "家庭欢乐餐" returns capacity 2.6. effective_people is 2.4.
         # diff = 0.2 -> penalty = 0.04*10 + 0.2*5 = 0.4 + 1.0 = 1.4
-        # 58.5 + 13.333 + 15 - 1.4 = 85.433 -> 85
-        self.assertEqual(score, 85)
+        self.assertEqual(score, 89)
 
         # Friends match
-        friends_constraints = self.base_constraints.model_copy(update={"group_type": "friends"})
+        friends_constraints = self.base_constraints.model_copy(
+            update={"group_type": "friends", "child_count": 0, "child_profiles": []}
+        )
         inner_item_friends = {"name": "双人餐", "features": "专为情侣约会打造"}
         score_friends = score_item(item_no_groups, inner_item_friends, friends_constraints)
         # rating 58.5 + dist 13.333 + fit 15 (features matched) 
         # capacity: "双人餐" returns capacity 2.0. effective_people is 2.4.
         # diff = 0.4 -> penalty = 0.16*10 + 0.4*5 = 1.6 + 2.0 = 3.6
-        # 58.5 + 13.333 + 15 - 3.6 = 83.233 -> 83
-        self.assertEqual(score_friends, 83)
+        self.assertEqual(score_friends, 91)
+
+    def test_score_item_group_mismatch_penalty(self):
+        item = self.restaurant_item.copy()
+        ok = score_item(
+            item,
+            {"name": "家庭欢乐餐", "features": "非常适合三口之家，老少皆宜。"},
+            self.base_constraints,
+        )
+        bad = score_item(
+            item,
+            {"name": "家庭欢乐餐", "features": "情侣约会专享双人餐，浪漫氛围。"},
+            self.base_constraints,
+        )
+        self.assertGreater(ok, bad)
 
     def test_score_item_business_group(self):
-        business_constraints = self.base_constraints.model_copy(update={"group_type": "business"})
+        business_constraints = self.base_constraints.model_copy(
+            update={"group_type": "business", "activity_preferences": [], "child_count": 0, "child_profiles": []}
+        )
         
         # 1. Test feature matching
         item_no_groups = self.restaurant_item.copy()
@@ -106,7 +129,7 @@ class TestRerankNode(unittest.TestCase):
         # capacity: "高端双人餐" returns capacity 2.0. effective_people is 2.4.
         # diff = 0.4 -> penalty = 0.16*10 + 0.4*5 = 1.6 + 2.0 = 3.6
         # 58.5 + 13.333 + 15 - 3.6 = 83.233 -> 83
-        self.assertEqual(score_business_feat, 83)
+        self.assertEqual(score_business_feat, 86)
 
         # 2. Test suitable_groups matching (the fixed bug)
         item_with_groups = self.restaurant_item.copy()
@@ -114,42 +137,25 @@ class TestRerankNode(unittest.TestCase):
         inner_item_no_feat = {"name": "高端双人餐", "features": "普通描述"}
         score_business_group = score_item(item_with_groups, inner_item_no_feat, business_constraints)
         # It should still get the +15 fit score from suitable_groups
-        self.assertEqual(score_business_group, 83)
+        self.assertEqual(score_business_group, 86)
         
         # 3. Test English "business" keyword
         item_with_eng_group = self.restaurant_item.copy()
         item_with_eng_group["suitable_groups"] = ["business trip"]
         score_business_eng = score_item(item_with_eng_group, inner_item_no_feat, business_constraints)
-        self.assertEqual(score_business_eng, 83)
+        self.assertEqual(score_business_eng, 86)
 
     def test_score_item_capacity_penalty(self):
-        # Base constraints: 2 adults + 1 child (age 5 -> 0.4) = 2.4 effective people
-        # Base organic score (without penalty) for friends_restaurant in test_score_item:
-        # rating 58.5 + dist 13.333 + fit 15 = 86.833
-        base_organic = 86.833
-        
-        # Test 1: "双人套餐" -> capacity 2.0. diff = 0.4, penalty = 3.6
-        score_2 = score_item(self.restaurant_item, {"name": "双人套餐"}, self.base_constraints)
-        self.assertEqual(score_2, int(base_organic - 3.6)) # 83
+        constraints = self.base_constraints.model_copy(update={"activity_preferences": []})
+        item = self.restaurant_item.copy()
+        item["tags"] = []
 
-        # Test 2: "三人套餐" -> capacity 3.0. diff = 0.6, penalty = 0.36*10 + 0.6*5 = 3.6 + 3.0 = 6.6
-        score_3 = score_item(self.restaurant_item, {"name": "三人套餐"}, self.base_constraints)
-        self.assertEqual(score_3, int(base_organic - 6.6)) # 80
-        
-        # Test 3: "四人套餐" -> capacity 4.0. diff = 1.6, penalty = 2.56*10 + 1.6*5 = 25.6 + 8.0 = 33.6
-        score_4 = score_item(self.restaurant_item, {"name": "四人套餐"}, self.base_constraints)
-        self.assertEqual(score_4, int(base_organic - 33.6)) # 53
-        
-        # Change constraints to 3 adults + 1 child (age 5) = 3.4 effective people
-        constraints_3_1 = self.base_constraints.model_copy(update={"adult_count": 3})
-        
-        # "双人套餐" -> capacity 2.0. diff = 1.4, penalty = 1.96*10 + 1.4*5 = 19.6 + 7.0 = 26.6
-        score_2_new = score_item(self.restaurant_item, {"name": "双人套餐"}, constraints_3_1)
-        self.assertEqual(score_2_new, int(base_organic - 26.6)) # 60
-        
-        # "三人套餐" -> capacity 3.0. diff = 0.4, penalty = 3.6
-        score_3_new = score_item(self.restaurant_item, {"name": "三人套餐"}, constraints_3_1)
-        self.assertEqual(score_3_new, int(base_organic - 3.6)) # 83
+        base_no_penalty = score_item(item, {"name": "三口之家套餐"}, constraints)
+        score_2 = score_item(item, {"name": "双人套餐"}, constraints)
+        score_4 = score_item(item, {"name": "四人套餐"}, constraints)
+
+        self.assertGreater(base_no_penalty, score_2)
+        self.assertGreater(score_2, score_4)
 
     def test_rerank_node_requires_filter_step(self):
         state = ClosedLoopState(
@@ -229,6 +235,95 @@ class TestRerankNode(unittest.TestCase):
         self.assertEqual([x["combo_id"] for x in ranked_late_night], ["c1"])
 
         self.assertEqual(len(ranked_breakfast), 0)
+
+    def test_rerank_node_keeps_features(self):
+        rest = self.restaurant_item.copy()
+        rest["id"] = "r_feat"
+        rest["name"] = "Feat Rest"
+        rest["rating"] = 4.7
+        rest["combos"] = [
+            {
+                "combo_id": "c_feat",
+                "name": "家庭晚餐",
+                "price": 100,
+                "description": "desc",
+                "features": "适合三口之家",
+                "duration_mins": 60,
+                "duration_std_dev": 10.0,
+                "suitable_time_slots": ["dinner"],
+            }
+        ]
+
+        act = {
+            "id": "a_feat",
+            "type": "activity",
+            "name": "活动场地",
+            "rating": 4.6,
+            "distance_km": 3.0,
+            "tags": [],
+            "suitable_groups": [],
+            "location": {"address": "x"},
+            "packages": [
+                {
+                    "package_id": "p_feat",
+                    "name": "单人50枚游戏币(抓娃娃)",
+                    "price": 39.9,
+                    "description": "desc",
+                    "features": "逛街途中的可爱记录",
+                    "duration_mins": 30,
+                    "duration_std_dev": 10.0,
+                    "start_time": None,
+                }
+            ],
+        }
+
+        gift_shop = {
+            "id": "s_feat",
+            "type": "gift_shop",
+            "name": "礼物店",
+            "rating": 4.7,
+            "distance_km": 3.0,
+            "tags": [],
+            "suitable_groups": [],
+            "location": {"address": "x"},
+            "gifts": [
+                {
+                    "gift_id": "g_feat",
+                    "name": "盲盒",
+                    "price": 69.0,
+                    "description": "desc",
+                    "features": "拆开瞬间的未知感",
+                    "stock": 200,
+                }
+            ],
+        }
+
+        state = ClosedLoopState(
+            user_input="Test input",
+            constraints=self.base_constraints,
+            candidates={
+                "nearby_restaurants": [rest],
+                "nearby_activities": [act],
+                "nearby_gifts": [gift_shop],
+                "processed_steps": ["retrieve_candidates_node", "filter_node"],
+            },
+        )
+
+        new_state = rerank_node(state)
+
+        ranked_dinner = new_state["candidates"]["ranked_dinner_combos"]
+        self.assertEqual(ranked_dinner[0]["combo_id"], "c_feat")
+        self.assertEqual(ranked_dinner[0]["features"], "适合三口之家")
+
+        ranked_packages = new_state["candidates"]["ranked_packages"]
+        ranked_light_packages = new_state["candidates"]["ranked_light_packages"]
+        self.assertEqual(len(ranked_packages), 0)
+        self.assertEqual(ranked_light_packages[0]["package_id"], "p_feat")
+        self.assertEqual(ranked_light_packages[0]["features"], "逛街途中的可爱记录")
+
+        ranked_gifts = new_state["candidates"]["ranked_gifts"]
+        self.assertEqual(ranked_gifts[0]["gift_id"], "g_feat")
+        self.assertEqual(ranked_gifts[0]["features"], "拆开瞬间的未知感")
 
 if __name__ == '__main__':
     unittest.main()

@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 
 # 确定 backend/src 目录的绝对路径
 SRC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+# 仓库根目录 (ClosedLoop)
+REPO_ROOT_DIR = os.path.abspath(os.path.join(SRC_DIR, "..", ".."))
 # 指向 backend/.env
 ENV_FILE_PATH = os.path.abspath(os.path.join(SRC_DIR, "..", ".env"))
 LOG_DIR_PATH = os.path.join(SRC_DIR, "logs")
@@ -21,6 +23,12 @@ class LoggingSettings(BaseSettings):
     LOG_DIR: str = LOG_DIR_PATH
     LOG_ROTATION: str = "10 MB"
     LOG_RETENTION: str = "30 days"
+    LOG_ELK_ENABLED: bool = False
+    LOG_ELK_JSON_PATH: str = os.path.join(LOG_DIR_PATH, "elk.jsonl")
+    LOG_ELK_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "DEBUG"
+    FILTER_LOG_DETAILED_DEBUG: bool = True
+    LOG_PLANNER_STATS: bool = False
+    PLANNER_LOG_DETAILED_DEBUG: bool = False
 
 class DeepSeekSettings(BaseSettings):
     API_KEY: Optional[str] = Field(default=None)
@@ -34,12 +42,18 @@ class QwenSettings(BaseSettings):
     
     model_config = SettingsConfigDict(env_prefix="DASHSCOPE_")
 
+class DataSettings(BaseSettings):
+    MOCK_DB_REPO_DIR: str = os.path.join(REPO_ROOT_DIR, "mock_db")
+    MOCK_DB_CATALOG_DIR: str = os.path.join(REPO_ROOT_DIR, "local_mock_db", "catalog")
+    MOCK_DB_RW_DIR: str = os.path.join(REPO_ROOT_DIR, "local_mock_db", "runtime")
+
 class AppConfig(BaseSettings):
     PROJECT_NAME: str = "ClosedLoop"
 
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)
     qwen: QwenSettings = Field(default_factory=QwenSettings)
+    data: DataSettings = Field(default_factory=DataSettings)
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE_PATH,
@@ -56,5 +70,6 @@ def get_config() -> AppConfig:
     return AppConfig(
         logging=LoggingSettings(),
         deepseek=DeepSeekSettings(),
-        qwen=QwenSettings()
+        qwen=QwenSettings(),
+        data=DataSettings(),
     )

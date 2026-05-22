@@ -1,0 +1,1618 @@
+[
+  {
+    "id": "gift_shop_001",
+    "name": "花点时间·鲜花店(CBD核心商圈)",
+    "category": "gift_shop",
+    "sub_category": "鲜花店",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场8F 539号铺",
+    "latitude": -4.127,
+    "longitude": 3.16,
+    "business_hours": "11:00-20:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "氛围感",
+      "惊喜",
+      "高级感",
+      "可同城配送",
+      "鲜花店"
+    ],
+    "rating": 4.5,
+    "tags": [
+      "鲜花",
+      "约会",
+      "纪念日"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_001_1",
+        "name": "单支花束精美包装",
+        "price": 39.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "单支花束+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感，适合临时制造惊喜。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_001_2",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "拍照出片，氛围感更强，适合约会节点。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_001_3",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "纪念日更有意义，适合送到餐厅制造惊喜。",
+        "stock": 20
+      }
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 5.0,
+      "confidence": 0.89,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [
+          "适合约会",
+          "氛围感",
+          "惊喜"
+        ],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.35,
+      "confidence": 0.73,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [
+          "高级感"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.2,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_002",
+    "name": "花语花店(大学城商圈)",
+    "category": "gift_shop",
+    "sub_category": "鲜花店",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场6F 132号铺",
+    "latitude": -1.681,
+    "longitude": -8.958,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "氛围感",
+      "惊喜",
+      "高级感",
+      "可同城配送",
+      "鲜花店"
+    ],
+    "rating": 4.7,
+    "tags": [
+      "鲜花",
+      "浪漫"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_002_1",
+        "name": "单支花束精美包装",
+        "price": 39.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "单支花束+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感，适合临时制造惊喜。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_002_2",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "拍照出片，氛围感更强，适合约会节点。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_002_3",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "receive_duration_mins": 10,
+        "receive_duration_std_dev": 3.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "纪念日更有意义，适合送到餐厅制造惊喜。",
+        "stock": 20
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 8.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 5.0,
+      "confidence": 0.89,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [
+          "适合约会",
+          "氛围感",
+          "惊喜"
+        ],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.35,
+      "confidence": 0.73,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [
+          "高级感"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.2,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "鲜花店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_003",
+    "name": "永生花小花束(CBD核心商圈)",
+    "category": "gift_shop",
+    "sub_category": "永生花",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场5F 169号铺",
+    "latitude": -1.082,
+    "longitude": -3.943,
+    "business_hours": "11:00-20:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "氛围感",
+      "惊喜",
+      "高级感",
+      "可同城配送",
+      "永生花"
+    ],
+    "rating": 4.6,
+    "tags": [
+      "永生花",
+      "可保存"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_003_1",
+        "name": "单支花束精美包装",
+        "price": 39.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "单支花束+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感，适合临时制造惊喜。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_003_2",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "拍照出片，氛围感更强，适合约会节点。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_003_3",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "纪念日更有意义，适合送到餐厅制造惊喜。",
+        "stock": 20
+      }
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 2.05,
+      "confidence": 0.89,
+      "source": {
+        "sub_category": "永生花",
+        "matched_review_keywords": [
+          "适合约会",
+          "氛围感",
+          "惊喜"
+        ],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.35,
+      "confidence": 0.73,
+      "source": {
+        "sub_category": "永生花",
+        "matched_review_keywords": [
+          "高级感"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "永生花",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "永生花",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_004",
+    "name": "香薰蜡烛礼品(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "香薰蜡烛",
+    "district": "高新科技园",
+    "address": "高新科技园某商场5F 202号铺",
+    "latitude": -3.132,
+    "longitude": 1.118,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "氛围感",
+      "惊喜",
+      "高级感",
+      "可同城配送",
+      "香薰蜡烛"
+    ],
+    "rating": 4.8,
+    "tags": [
+      "香薰",
+      "氛围感"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_004_1",
+        "name": "无火香薰扩香套装",
+        "price": 59.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "白茶/蓝风铃香型，含扩香藤条与精油",
+        "features": "氛围感提升神器，适合情侣或独居生活。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_004_2",
+        "name": "香薰蜡烛礼盒(双支)",
+        "price": 88.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "两支香薰蜡烛+火柴+礼盒包装",
+        "features": "点燃一秒变温柔，适合送礼不踩雷。",
+        "stock": 40
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 5.0,
+      "confidence": 0.89,
+      "source": {
+        "sub_category": "香薰蜡烛",
+        "matched_review_keywords": [
+          "适合约会",
+          "氛围感",
+          "惊喜"
+        ],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.35,
+      "confidence": 0.73,
+      "source": {
+        "sub_category": "香薰蜡烛",
+        "matched_review_keywords": [
+          "高级感"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "香薰蜡烛",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "香薰蜡烛",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_005",
+    "name": "手工巧克力工坊(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "手工巧克力",
+    "district": "高新科技园",
+    "address": "高新科技园某商场3F 607号铺",
+    "latitude": -7.157,
+    "longitude": 2.527,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "氛围感",
+      "惊喜",
+      "高级感",
+      "可同城配送",
+      "手工巧克力"
+    ],
+    "rating": 4.8,
+    "tags": [
+      "巧克力",
+      "惊喜"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_005_1",
+        "name": "手工夹心巧克力礼盒(12颗)",
+        "price": 128.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "12颗手工夹心巧克力，口味随机搭配",
+        "features": "甜而不腻，适合约会/庆生的小惊喜。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_005_2",
+        "name": "可可脆片巧克力棒(4支)",
+        "price": 58.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "4支巧克力棒，带可可脆片口感",
+        "features": "低成本但很讨喜，适合随手送。",
+        "stock": 80
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 8.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 5.0,
+      "confidence": 0.89,
+      "source": {
+        "sub_category": "手工巧克力",
+        "matched_review_keywords": [
+          "适合约会",
+          "氛围感",
+          "惊喜"
+        ],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.35,
+      "confidence": 0.73,
+      "source": {
+        "sub_category": "手工巧克力",
+        "matched_review_keywords": [
+          "高级感"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "手工巧克力",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "手工巧克力",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_006",
+    "name": "小蛋糕店A(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "小蛋糕店",
+    "district": "高新科技园",
+    "address": "高新科技园某商场1F 846号铺",
+    "latitude": -7.205,
+    "longitude": 5.799,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "庆生",
+      "有团购",
+      "出品稳定",
+      "可同城配送",
+      "小蛋糕店"
+    ],
+    "rating": 5.0,
+    "tags": [
+      "蛋糕",
+      "庆生"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_006_1",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "receive_duration_mins": 35,
+        "receive_duration_std_dev": 8.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好，朋友聚会更有记忆点。",
+        "stock": 18
+      },
+      {
+        "gift_id": "gift_006_2",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "receive_duration_mins": 35,
+        "receive_duration_std_dev": 8.0,
+        "description": "4份小甜品组合，口味随机",
+        "features": "分享更方便，适合朋友聚会或亲子奖励。",
+        "stock": 35
+      }
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_007",
+    "name": "小蛋糕店B(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "小蛋糕店",
+    "district": "高新科技园",
+    "address": "高新科技园某商场7F 633号铺",
+    "latitude": -5.519,
+    "longitude": 3.925,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "庆生",
+      "有团购",
+      "出品稳定",
+      "可同城配送",
+      "小蛋糕店"
+    ],
+    "rating": 4.9,
+    "tags": [
+      "蛋糕",
+      "朋友聚会"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_007_1",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "receive_duration_mins": 35,
+        "receive_duration_std_dev": 8.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好，朋友聚会更有记忆点。",
+        "stock": 18
+      },
+      {
+        "gift_id": "gift_007_2",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "receive_duration_mins": 35,
+        "receive_duration_std_dev": 8.0,
+        "description": "4份小甜品组合，口味随机",
+        "features": "分享更方便，适合朋友聚会或亲子奖励。",
+        "stock": 35
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "小蛋糕店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_008",
+    "name": "甜品礼盒店(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "甜品礼盒",
+    "district": "高新科技园",
+    "address": "高新科技园某商场8F 251号铺",
+    "latitude": -6.351,
+    "longitude": 6.539,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "庆生",
+      "有团购",
+      "出品稳定",
+      "可同城配送",
+      "甜品礼盒"
+    ],
+    "rating": 4.7,
+    "tags": [
+      "甜品",
+      "礼盒"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_008_1",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "receive_duration_mins": 35,
+        "receive_duration_std_dev": 8.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好，朋友聚会更有记忆点。",
+        "stock": 18
+      },
+      {
+        "gift_id": "gift_008_2",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "receive_duration_mins": 20,
+        "receive_duration_std_dev": 5.0,
+        "description": "4份小甜品组合，口味随机",
+        "features": "分享更方便，适合朋友聚会或亲子奖励。",
+        "stock": 35
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "couple",
+      "friends"
+    ],
+    "experience_tag": [
+      "适合拍照",
+      "出片率高",
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 4.2,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "甜品礼盒",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 4.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "甜品礼盒",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "甜品礼盒",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "甜品礼盒",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_009",
+    "name": "奶茶咖啡团单(CBD核心商圈)",
+    "category": "gift_shop",
+    "sub_category": "奶茶/咖啡团单",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场8F 209号铺",
+    "latitude": -1.12,
+    "longitude": -1.06,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "庆生",
+      "有团购",
+      "出品稳定",
+      "可同城配送",
+      "奶茶/咖啡团单"
+    ],
+    "rating": 4.9,
+    "tags": [
+      "奶茶",
+      "咖啡",
+      "低成本惊喜"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_009_1",
+        "name": "双杯奶茶团单",
+        "price": 49.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "两杯奶茶任选，适合约会/朋友同行",
+        "features": "低成本惊喜，送到手就很开心。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_2",
+        "name": "四杯咖啡团单",
+        "price": 99.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "四杯咖啡任选，适合朋友聚会",
+        "features": "聚会标配补给，省事又体面。",
+        "stock": 999
+      }
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 8.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "solo",
+      "friends"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松",
+      "庆生友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "奶茶/咖啡团单",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "奶茶/咖啡团单",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "奶茶/咖啡团单",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "奶茶/咖啡团单",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_010",
+    "name": "儿童玩具店(大学城商圈)",
+    "category": "gift_shop",
+    "sub_category": "儿童玩具店",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场7F 134号铺",
+    "latitude": -0.95,
+    "longitude": -10.643,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合亲子",
+      "儿童喜欢",
+      "可爱",
+      "适合送礼",
+      "可同城配送",
+      "儿童玩具店"
+    ],
+    "rating": 4.6,
+    "tags": [
+      "玩具",
+      "3-6岁"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_010_1",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "作为小奖励很合适，孩子更有成就感。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_010_2",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "低龄孩子和情侣都喜欢，抱着很治愈。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_010_3",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "适合7-14岁的小礼物，实用又好看。",
+        "stock": 40
+      }
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "儿童玩具店",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "儿童玩具店",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "儿童玩具店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "儿童玩具店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_011",
+    "name": "益智拼图玩具(CBD核心商圈)",
+    "category": "gift_shop",
+    "sub_category": "益智玩具/拼图",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 52号铺",
+    "latitude": -2.093,
+    "longitude": -1.237,
+    "business_hours": "11:00-20:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合亲子",
+      "儿童喜欢",
+      "可爱",
+      "适合送礼",
+      "可同城配送",
+      "益智玩具/拼图"
+    ],
+    "rating": 4.7,
+    "tags": [
+      "拼图",
+      "7-10岁"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_011_1",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "作为小奖励很合适，孩子更有成就感。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_011_2",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "低龄孩子和情侣都喜欢，抱着很治愈。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_011_3",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "适合7-14岁的小礼物，实用又好看。",
+        "stock": 40
+      }
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "益智玩具/拼图",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "益智玩具/拼图",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "益智玩具/拼图",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "益智玩具/拼图",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_012",
+    "name": "毛绒玩具屋(老城文化街区)",
+    "category": "gift_shop",
+    "sub_category": "毛绒玩具",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场6F 195号铺",
+    "latitude": 0.939,
+    "longitude": -0.584,
+    "business_hours": "11:00-20:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合亲子",
+      "儿童喜欢",
+      "可爱",
+      "适合送礼",
+      "可同城配送",
+      "毛绒玩具"
+    ],
+    "rating": 4.7,
+    "tags": [
+      "毛绒",
+      "可爱"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_012_1",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "作为小奖励很合适，孩子更有成就感。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_012_2",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "低龄孩子和情侣都喜欢，抱着很治愈。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_012_3",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "适合7-14岁的小礼物，实用又好看。",
+        "stock": 40
+      }
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "毛绒玩具",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "毛绒玩具",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "毛绒玩具",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "毛绒玩具",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_013",
+    "name": "文具手账小礼物(大学城商圈)",
+    "category": "gift_shop",
+    "sub_category": "文具/手账小礼物",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场7F 518号铺",
+    "latitude": -1.306,
+    "longitude": -7.668,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合亲子",
+      "儿童喜欢",
+      "可爱",
+      "适合送礼",
+      "可同城配送",
+      "文具/手账小礼物"
+    ],
+    "rating": 4.8,
+    "tags": [
+      "文具",
+      "手账"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_013_1",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "作为小奖励很合适，孩子更有成就感。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_013_2",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "低龄孩子和情侣都喜欢，抱着很治愈。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_013_3",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "适合7-14岁的小礼物，实用又好看。",
+        "stock": 40
+      }
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 8.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "文具/手账小礼物",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "文具/手账小礼物",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "文具/手账小礼物",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "文具/手账小礼物",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_014",
+    "name": "文创礼品店(CBD核心商圈)",
+    "category": "gift_shop",
+    "sub_category": "文创礼品店",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场8F 293号铺",
+    "latitude": -0.303,
+    "longitude": -1.815,
+    "business_hours": "10:00-21:00",
+    "indoor": true,
+    "review_keywords": [
+      "通用文创",
+      "好看",
+      "适合送礼",
+      "打卡",
+      "可同城配送",
+      "文创礼品店"
+    ],
+    "rating": 4.7,
+    "tags": [
+      "文创",
+      "展览后"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_014_1",
+        "name": "城市明信片套装(10张)",
+        "price": 39.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "10张城市明信片，含贴纸",
+        "features": "城市打卡纪念感强，适合展览/街区后带走。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_014_2",
+        "name": "文创小摆件",
+        "price": 59.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "小摆件/挂件随机款，适合送礼",
+        "features": "不贵但有心意，适合作为旅途纪念。",
+        "stock": 80
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [],
+    "experience_tag": [
+      "适合拍照",
+      "出片率高",
+      "安静",
+      "轻松",
+      "轻文化",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "文创礼品店",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 4.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "文创礼品店",
+        "matched_review_keywords": [
+          "好看",
+          "打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "文创礼品店",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.2,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "文创礼品店",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_015",
+    "name": "潮玩盲盒店(大学城商圈)",
+    "category": "gift_shop",
+    "sub_category": "盲盒/潮玩",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场6F 47号铺",
+    "latitude": -1.013,
+    "longitude": -10.202,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "通用文创",
+      "好看",
+      "适合送礼",
+      "打卡",
+      "可自提",
+      "盲盒/潮玩"
+    ],
+    "rating": 4.5,
+    "tags": [
+      "盲盒",
+      "潮玩"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_015_1",
+        "name": "随机盲盒(单盒)",
+        "price": 69.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "热门系列盲盒，款式随机",
+        "features": "拆盒瞬间最上头，适合年轻人惊喜玩法。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_015_2",
+        "name": "盲盒端盒(6个)",
+        "price": 399.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "整盒未拆封，适合收藏",
+        "features": "朋友聚会开盒更有仪式感。",
+        "stock": 10
+      }
+    ],
+    "delivery_time_mins": null,
+    "delivery_time_std_dev": null,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [
+      "teen"
+    ],
+    "experience_tag": [
+      "适合拍照",
+      "出片率高",
+      "轻文化",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "盲盒/潮玩",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 4.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "盲盒/潮玩",
+        "matched_review_keywords": [
+          "好看",
+          "打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "盲盒/潮玩",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "盲盒/潮玩",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "gift_shop_016",
+    "name": "城市明信片纪念品(高新科技园)",
+    "category": "gift_shop",
+    "sub_category": "明信片/纪念品",
+    "district": "高新科技园",
+    "address": "高新科技园某商场2F 396号铺",
+    "latitude": -4.775,
+    "longitude": 4.687,
+    "business_hours": "11:00-20:30",
+    "indoor": true,
+    "review_keywords": [
+      "通用文创",
+      "好看",
+      "适合送礼",
+      "打卡",
+      "可同城配送",
+      "明信片/纪念品"
+    ],
+    "rating": 4.6,
+    "tags": [
+      "明信片",
+      "纪念品"
+    ],
+    "gifts": [
+      {
+        "gift_id": "gift_016_1",
+        "name": "城市明信片套装(10张)",
+        "price": 39.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "10张城市明信片，含贴纸",
+        "features": "城市打卡纪念感强，适合展览/街区后带走。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_016_2",
+        "name": "文创小摆件",
+        "price": 59.0,
+        "receive_duration_mins": 12,
+        "receive_duration_std_dev": 3.0,
+        "description": "小摆件/挂件随机款，适合送礼",
+        "features": "不贵但有心意，适合作为旅途纪念。",
+        "stock": 80
+      }
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "suitable_groups": [],
+    "experience_tag": [
+      "适合拍照",
+      "出片率高",
+      "轻文化",
+      "惊喜感"
+    ],
+    "romantic_score_derived": {
+      "score": 1.0,
+      "confidence": 0.68,
+      "source": {
+        "sub_category": "明信片/纪念品",
+        "matched_review_keywords": [],
+        "rule": "romantic_from_sub_category_and_keywords"
+      }
+    },
+    "photo_score_derived": {
+      "score": 1.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "明信片/纪念品",
+        "matched_review_keywords": [
+          "好看",
+          "打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "明信片/纪念品",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "明信片/纪念品",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    }
+  }
+]
