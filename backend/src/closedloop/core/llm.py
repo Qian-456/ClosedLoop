@@ -102,7 +102,15 @@ class _StructuredOutputAgent:
         return {"structured_response": structured}
 
 
-def build_agent(*, tools: list | None = None, temperature: float = 0.7, response_format=None):
+def build_agent(
+    *,
+    tools: list | None = None,
+    temperature: float = 0.7,
+    response_format=None,
+    state_schema: Any = None,
+    middleware: list | None = None,
+    checkpointer: Any = None,
+):
     """创建带有回退机制（fallback）和重试机制（retry）的标准 agent。
 
     这是本项目中初始化 LLM 的唯一允许方式。
@@ -151,19 +159,29 @@ def build_agent(*, tools: list | None = None, temperature: float = 0.7, response
         )
 
     # 4. create agent
+    merged_middleware = [
+        ModelFallbackMiddleware(qwen),
+        ModelRetryMiddleware(
+            max_retries=3,
+            backoff_factor=2.0,
+            initial_delay=1.0,
+            on_failure="error",
+        ),
+    ]
+    if middleware:
+        merged_middleware.extend(middleware)
+
     agent_kwargs = {
         "model": deepseek,
         "tools": tools or [],
-        "middleware": [
-            ModelFallbackMiddleware(qwen),
-            ModelRetryMiddleware(
-                max_retries=3,
-                backoff_factor=2.0,
-                initial_delay=1.0,
-                on_failure="error",
-            ),
-        ],
+        "middleware": merged_middleware,
     }
+
+    if state_schema is not None:
+        agent_kwargs["state_schema"] = state_schema
+        
+    if checkpointer is not None:
+        agent_kwargs["checkpointer"] = checkpointer
 
     agent = create_agent(**agent_kwargs)
 

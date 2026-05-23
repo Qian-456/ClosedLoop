@@ -2,7 +2,7 @@ import re
 import uuid
 import math
 
-from closedloop.contracts.state import ClosedLoopState, Constraints
+from closedloop.contracts.state import Constraints, PlanState
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.utils.mock_db import load_mock_data
@@ -21,7 +21,7 @@ def parse_time(time_str: str) -> float:
     return 0.0
 
 
-def _ensure_candidates_dict(state: ClosedLoopState) -> dict:
+def _ensure_candidates_dict(state: PlanState) -> dict:
     """确保 state['candidates'] 存在且为 dict。"""
     candidates = state.get("candidates")
     if candidates is None:
@@ -650,7 +650,7 @@ def _normalize_candidate_items(
     return normalized
 
 
-def retrieve_candidates_node(state: ClosedLoopState) -> ClosedLoopState:
+def retrieve_candidates_node(state: PlanState) -> PlanState:
     """从 MockDB 粗召回候选，并对餐厅/活动应用 12km 距离上限。"""
     config = get_config()
     LoggerManager.setup(config)
@@ -928,7 +928,7 @@ def rule_filter(item: dict, constraints: Constraints) -> bool:
     return True
 
 
-def filter_node(state: ClosedLoopState) -> ClosedLoopState:
+def filter_node(state: PlanState) -> PlanState:
     """对候选做确定性过滤；要求先完成 retrieve_candidates_node。"""
     config = get_config()
     LoggerManager.setup(config)

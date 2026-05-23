@@ -367,9 +367,12 @@ class Constraints(BaseModel):
         data["duration_hours"] = None
         return data
 
-class ClosedLoopState(AgentState):
+class PlanState(TypedDict):
     """
-    表示 Agent 在整个执行图中的状态。
+    规划子图状态。
+
+    该状态服务于结构化规划链路：召回、过滤、重排、规划。
+    顶层 Agent 编排与 handoff 状态请使用 ClosedLoopState。
     """
     user_input: str
     constraints: NotRequired[Constraints]
@@ -377,3 +380,20 @@ class ClosedLoopState(AgentState):
     itinerary: NotRequired[dict]
     confirmation: NotRequired[dict]
     current_step: NotRequired[str]
+    processed_steps: NotRequired[list[str]]
+
+
+class ClosedLoopState(AgentState):
+    """
+    顶层 ClosedLoop Agent 状态。
+
+    该状态用于 build_graph 之后的 Agent 编排、工具调用与后续 handoff。
+    """
+    user_input: str
+    active_agent: NotRequired[str]
+    latest_plan_result: NotRequired[list[dict]]
+    plan_option: NotRequired[dict]
+    constraints: NotRequired[Constraints]
+    itinerary: NotRequired[list[dict]]
+    confirmation: NotRequired[dict]
+    current_step: NotRequired[Literal["plan_trip", "confirm_trip"]]

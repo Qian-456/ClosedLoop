@@ -4,7 +4,7 @@ import math
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.contracts.state import ClosedLoopState
+from closedloop.contracts.state import PlanState
 from closedloop.contracts.itinerary import (
     ItineraryPlan,
     ItineraryPlanVariant,
@@ -240,7 +240,7 @@ def _rewrite_commutes_for_taxi_preference(commutes: list[dict]) -> list[dict]:
 
     return rewritten
 
-def planner_node(state: ClosedLoopState) -> ClosedLoopState:
+def planner_node(state: PlanState) -> PlanState:
     """
     根据规则匹配 Pattern，从 rerank 后的候选集中挑选条目组装成最终行程计划。
     """

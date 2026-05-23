@@ -3,7 +3,7 @@ from typing import Any
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.contracts.state import ClosedLoopState, Constraints, RankedCombo, RankedPackage, RankedGift
+from closedloop.contracts.state import Constraints, PlanState, RankedCombo, RankedPackage, RankedGift
 from closedloop.graph.nodes.retrieve import _ensure_candidates_dict, _empty_candidates
 from closedloop.utils.capacity import _get_effective_people, _get_capacity_from_name
 
@@ -231,7 +231,7 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
     return int(total_score)
 
 
-def rerank_node(state: ClosedLoopState) -> ClosedLoopState:
+def rerank_node(state: PlanState) -> PlanState:
     """
     对 filter 节点输出的候选列表进行打分并重新排序。
     """

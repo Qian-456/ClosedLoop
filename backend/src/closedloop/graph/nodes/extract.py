@@ -1,11 +1,11 @@
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.core.llm import build_agent
-from closedloop.contracts.state import ClosedLoopState, Constraints
+from closedloop.contracts.state import Constraints, PlanState
 from closedloop.graph.prompts.extract import EXTRACT_CONSTRAINTS_SYSTEM_PROMPT
 from langchain.messages import SystemMessage, HumanMessage
 
-def extract_constraints(state: ClosedLoopState) -> ClosedLoopState:
+def extract_constraints(state: PlanState) -> PlanState:
     """
     从用户输入中提取约束条件的节点。
     """

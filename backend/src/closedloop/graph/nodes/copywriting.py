@@ -9,7 +9,7 @@ from closedloop.core.config import get_config
 from closedloop.core.llm import build_agent
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.copywriting import ThreePlansCopywriting
-from closedloop.contracts.state import ClosedLoopState
+from closedloop.contracts.state import PlanState
 from closedloop.graph.prompts.copywriting import COPYWRITING_SYSTEM_PROMPT
 
 
@@ -224,7 +224,7 @@ def _fallback_copywriting(constraints: dict, itinerary: dict) -> dict[str, Any]:
     }
 
 
-def copywriting_node(state: ClosedLoopState) -> ClosedLoopState:
+def copywriting_node(state: PlanState) -> PlanState:
     """Generate human-friendly copywriting for the three plans."""
 
     config = get_config()
@@ -308,4 +308,3 @@ def copywriting_node(state: ClosedLoopState) -> ClosedLoopState:
         processed_steps = state.setdefault("processed_steps", [])
         processed_steps.append("copywriting_node")
         return state
-
