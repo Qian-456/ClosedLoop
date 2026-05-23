@@ -32,7 +32,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 """.strip()
 
 EXECUTE_AGENT_SYSTEM_PROMPT = """
-你现在是执行 Agent。
+你现在是 ClosedLoop 的执行 Agent。
 
 你的主要任务是向用户确认即将执行的方案详情，并调用 execute_itinerary 工具完成预订。
 这是用户最终选定的方案（plan_option）：
@@ -40,7 +40,7 @@ EXECUTE_AGENT_SYSTEM_PROMPT = """
 
 在执行或向用户确认时，请遵循以下规则：
 1. 请先向用户确认现有的方案详情（即包含哪些餐厅、活动,各地的通勤方案等）。
-2. 关于交通预约：默认情况下，我们只会自动为您预约“从出发地到第一目的地”的车程。
+2. 关于交通预约：默认情况下，如果第一段车程是打车，我们只会自动为您预约“从出发地到第一目的地”的车程；如果第一段是不需要预约的出行方式（如步行、自驾），则直接不预约。
 3. 请向用户询问是否需要把后续行程的所有交通都一次性预约好。
 4. 【风险提示】：请务必提醒用户，如果选择一次性预约所有后续车程（如打车），万一某个地方游玩超时、太晚了或者临时改变主意不想坐车，可能会导致后续车程只能部分退款或产生损失。请让用户确认是否仍要全部预约（如果用户是偏J型计划性极强，他们可能会选择全部预约）。
 
@@ -92,31 +92,53 @@ def apply_step_config(
 
 
 # 4. Create agent with middleware
-agent = build_agent(
+plan_agent_node = build_agent(
     tools=[plan_trip, transfer_to_execute, execute_itinerary],
     state_schema=ClosedLoopState,
     middleware=[apply_step_config],
     checkpointer=InMemorySaver()  # Persist state across turns  #
 )
 
-# 定义配置
-config = {"configurable": {"thread_id": "support_session_002"}}
-input_data = {"messages": [("user", "周六下午一家三口出去玩，预算600，别太累，最好有吃饭和适合小孩的活动。选方案plan_2。")]}
+if __name__ == "__main__":
+    # 定义配置
+    config = {"configurable": {"thread_id": "support_session_002"}}
+    print("Agent已启动。您可以开始对话。输入 '/exit' 退出。")
 
-# 使用 stream 循环打印
-# stream_mode="values" 会返回每一步图状态更新后的结果
-for event in agent.stream(input_data, config=config, stream_mode="values"):
-    # 获取最后一条消息
-    if "messages" in event:
-        print(f"--- Agent 动作 ---")
+    while True:
         try:
-            print(event["messages"][-1].content)
-        except Exception:
-            print(event["messages"][-1].content.encode("gbk", "ignore").decode("gbk"))
+            user_input = input("\nUser: ")
+        except (KeyboardInterrupt, EOFError):
+            break
+            
+        if user_input.strip() == "/exit":
+            print("退出对话。")
+            break
+            
+        if not user_input.strip():
+            continue
 
-        # 如果有 tool_calls，也打印出来
-        if hasattr(event["messages"][-1], "tool_calls"):
-            print("Tool Calls:", event["messages"][-1].tool_calls)
+        input_data = {"messages": [("user", user_input)]}
 
-# 如果你想精确控制打印内容，可以使用 stream_mode="updates"
-# 这会只显示当前节点执行产生的新增内容
+        # 使用 stream 循环打印
+        # stream_mode="values" 会返回每一步图状态更新后的结果
+        for event in plan_agent_node.stream(input_data, config=config, stream_mode="values"):
+            # 获取最后一条消息
+            if "messages" in event:
+                last_msg = event["messages"][-1]
+                
+                # 跳过打印用户自己刚刚输入的消息
+                if getattr(last_msg, "type", "") == "human":
+                    continue
+                    
+                print(f"--- Agent 动作 ---")
+                try:
+                    print(last_msg.content)
+                except Exception:
+                    print(last_msg.content.encode("gbk", "ignore").decode("gbk"))
+
+                # 如果有 tool_calls，也打印出来
+                if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
+                    print("Tool Calls:", last_msg.tool_calls)
+
+    # 如果你想精确控制打印内容，可以使用 stream_mode="updates"
+    # 这会只显示当前节点执行产生的新增内容
