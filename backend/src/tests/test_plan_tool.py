@@ -37,7 +37,7 @@ class TestPlanTripTool(unittest.TestCase):
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("closedloop.graph.tools.plan_tool.build_subgraph_plan", return_value=subgraph):
             out = plan_trip.func(
-                group_type="couple",
+                group_type="friends",
                 budget=500,
                 time_period="18:00",
                 duration_hours=[4.0, 6.0],
@@ -46,7 +46,7 @@ class TestPlanTripTool(unittest.TestCase):
             )
 
         self.assertIsInstance(out, Command)
-        self.assertEqual(out.update["constraints"]["group_type"], "couple")
+        self.assertEqual(out.update["constraints"]["group_type"], "friends")
         self.assertEqual(out.update["constraints"]["duration_hours"], (4.0, 6.0))
         self.assertEqual(subgraph.state["constraints"]["budget"], 500.0)
         self.assertIn("itinerary", out.update)
@@ -59,10 +59,10 @@ class TestPlanTripTool(unittest.TestCase):
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("closedloop.graph.tools.plan_tool.build_subgraph_plan", return_value=subgraph):
             out = plan_trip.func(
-                group_type="solo",
+                group_type="friends",
                 budget=200,
                 time_period="14:00",
-                state={"user_input": "一个人下午随便逛逛"},
+                state={"user_input": "和朋友下午随便逛逛"},
                 tool_call_id="call_1",
             )
 

@@ -58,6 +58,7 @@ cover/
 
 # Local backups
 .local_backup/
+mock_data/runtime/
 
 # OS generated files
 .DS_Store

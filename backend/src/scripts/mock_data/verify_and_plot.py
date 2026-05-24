@@ -1,18 +1,26 @@
+import os
+import sys
 import json
 import math
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from closedloop.core.config import get_config
 
 def verify_and_plot():
+    config = get_config()
+    repo_dir = config.data.MOCK_DB_REPO_DIR
+    
     # 解决 matplotlib 中文字体显示问题
     plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS']
     plt.rcParams['axes.unicode_minus'] = False
 
-    with open('mock_db/restaurants.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(repo_dir, 'restaurants.json'), 'r', encoding='utf-8') as f:
         restaurants = json.load(f)
-    with open('mock_db/activities.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(repo_dir, 'activities.json'), 'r', encoding='utf-8') as f:
         activities = json.load(f)
-    with open('mock_db/add_ons.json', 'r', encoding='utf-8') as f:
+    with open(os.path.join(repo_dir, 'add_ons.json'), 'r', encoding='utf-8') as f:
         add_ons = json.load(f)
 
     data = {

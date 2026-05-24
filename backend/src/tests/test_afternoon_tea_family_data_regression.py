@@ -2,11 +2,13 @@ import json
 import os
 import unittest
 
+from closedloop.core.config import get_config
+
 
 class TestAfternoonTeaFamilyDataRegression(unittest.TestCase):
     def test_family_afternoon_tea_combo_count_at_least_4(self):
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-        path = os.path.join(repo_root, "mock_db", "restaurants.json")
+        config = get_config()
+        path = os.path.join(config.data.MOCK_DB_REPO_DIR, "restaurants.json")
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
 

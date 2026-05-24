@@ -4,7 +4,7 @@ import sys
 from pydantic import BaseModel, Field, ValidationError
 from typing import List, Optional, Literal
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from closedloop.core.config import get_config
 from closedloop.utils.mock_db import load_mock_data
@@ -176,7 +176,7 @@ class ReservationRecord(BaseModel):
 def verify_schema():
     try:
         config = get_config()
-        print(f"使用数据目录: repo={os.path.abspath(config.data.MOCK_DB_REPO_DIR)} | catalog={os.path.abspath(config.data.MOCK_DB_CATALOG_DIR)}")
+        print(f"使用数据目录: repo={os.path.abspath(config.data.MOCK_DB_REPO_DIR)}")
 
         restaurants = load_mock_data("restaurants.json")
         activities = load_mock_data("activities.json")

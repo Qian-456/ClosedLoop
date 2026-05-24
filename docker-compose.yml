@@ -8,8 +8,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./mock_db:/app/mock_db:ro
-      - ./local_mock_db/runtime:/app/local_mock_db/runtime
+      - ./mock_data/base:/app/mock_data/base:ro
+      - ./mock_data/runtime:/app/mock_data/runtime
       - ./backend/src/logs:/app/backend/src/logs
 
   frontend:

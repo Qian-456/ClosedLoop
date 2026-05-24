@@ -203,20 +203,15 @@ class TestExecuteAPI(unittest.TestCase):
                 self.assertTrue(execution_id)
 
                 events: list[dict] = []
-                with client.stream("GET", f"/execute/events/{execution_id}") as r:
-                    self.assertEqual(r.status_code, 200)
-                    for line in r.iter_lines():
-                        if not line:
-                            continue
-                        if isinstance(line, bytes):
-                            text = line.decode("utf-8")
-                        else:
-                            text = line
-                        if text.startswith("data:"):
-                            raw = text[len("data:") :].strip()
-                            events.append(json.loads(raw))
-                        if events and events[-1].get("type") == "done":
-                            break
+                r = client.get(f"/execute/events/{execution_id}")
+                self.assertEqual(r.status_code, 200)
+                for block in r.text.split("\n\n"):
+                    block = block.strip()
+                    if not block:
+                        continue
+                    if block.startswith("data:"):
+                        raw = block[len("data:") :].strip()
+                        events.append(json.loads(raw))
 
                 phases = [e.get("data", {}).get("phase") for e in events if e.get("type") == "item_update"]
                 self.assertIn("checking", phases)
