@@ -11,7 +11,7 @@ from closedloop.contracts.itinerary import (
     ItineraryStep,
     ItineraryItem,
 )
-from closedloop.graph.policies import parse_time_period, parse_target_start_time, match_patterns
+from closedloop.graph.policies import parse_time_period, parse_target_start_time, match_patterns, get_time_of_day
 from closedloop.graph.plan_subgraph.planner_utils import (
     generate_and_score_combinations,
     calculate_commute_options,
@@ -213,11 +213,17 @@ def planner_node(state: PlanState) -> PlanState:
         v = float(duration_hours)
         duration_hours_range = (v, v)
 
+    preferred_pattern_steps = constraints.get("preferred_pattern_steps")
+
     if duration_hours_range is None:
         if isinstance(time_period, str) and "-" in time_period:
             duration_hours_range = (float(parsed_duration), float(parsed_duration))
         else:
-            duration_hours_range = (4.0, 6.0)
+            # 如果未指定时长范围，如果是自定义较长序列，我们应该根据步骤数量放大默认的最大时间，防止因为默认的(4.0, 6.0)太短而排不下
+            if preferred_pattern_steps and len(preferred_pattern_steps) >= 4:
+                duration_hours_range = (4.0, 10.0)
+            else:
+                duration_hours_range = (4.0, 6.0)
 
     if isinstance(time_period, str) and "-" in time_period:
         window_h = float(parsed_duration)
@@ -233,10 +239,66 @@ def planner_node(state: PlanState) -> PlanState:
     child_profiles = constraints.get("child_profiles", [])
     commute_preference = constraints.get("commute_preference", "auto")
     commute_preference_for_dfs = "auto" if commute_preference == "taxi" else commute_preference
+    include_gift = constraints.get("include_gift", True)
 
     # 2. 匹配 Pattern
     patterns = match_patterns(group_type, child_profiles, start_time, duration_hours_range)
-    logger.info(f"phase=planner_node | patterns_matched={len(patterns)}")
+
+    preferred_pattern_steps = constraints.get("preferred_pattern_steps")
+    if preferred_pattern_steps:
+        def is_subsequence(sub, full):
+            it = iter(full)
+            return all(x in it for x in sub)
+
+        matching_patterns = [p for p in patterns if is_subsequence(preferred_pattern_steps, p.get("steps", []))]
+
+        if matching_patterns:
+            # 存在子集匹配的 pattern，将其排到最前面（优先短的，即包含额外步骤最少的）
+            patterns.sort(key=lambda p: (not is_subsequence(preferred_pattern_steps, p.get("steps", [])), len(p.get("steps", []))))
+            logger.info(f"phase=planner_node | patterns_matched={len(patterns)} (sorted by subset match)")
+        else:
+            # 没有任何 pattern 包含该子集，构造自定义 pattern
+            custom_patterns = []
+            base_desc = "用户自定义顺序"
+            start_pref = [get_time_of_day(start_time)]
+
+            # 无论如何先放入原始指定的 pattern
+            custom_patterns.append({
+                "id": "CUSTOM-00",
+                "group": group_type,
+                "duration_range": duration_hours_range,
+                "steps": preferred_pattern_steps,
+                "desc": base_desc,
+                "start_time_pref": start_pref
+            })
+
+            # 如果允许礼品，则在每个步骤之后尝试插入 gift_shop
+            if include_gift:
+                for i in range(len(preferred_pattern_steps)):
+                    new_steps = preferred_pattern_steps[:]
+                    new_steps.insert(i + 1, "gift_shop")
+                    custom_patterns.append({
+                        "id": f"CUSTOM-GIFT-{i+1}",
+                        "group": group_type,
+                        "duration_range": duration_hours_range,
+                        "steps": new_steps,
+                        "desc": f"{base_desc}(含礼品)",
+                        "start_time_pref": start_pref
+                    })
+
+            patterns = custom_patterns + patterns
+            logger.info(f"phase=planner_node | patterns_matched={len(patterns)} (generated {len(custom_patterns)} custom patterns)")
+    else:
+        logger.info(f"phase=planner_node | patterns_matched={len(patterns)}")
+
+    # 如果用户明确不需要 gift_shop，我们需要对匹配出来的 pattern 进行修改，剔除 gift_shop 步骤
+    if not include_gift:
+        new_patterns = []
+        for p in patterns:
+            p_copy = p.copy()
+            p_copy["steps"] = [step for step in p["steps"] if step != "gift_shop"]
+            new_patterns.append(p_copy)
+        patterns = new_patterns
 
     # 3. 准备可消费的候选集队列（深拷贝以免影响原状态）
     queues = {
@@ -251,12 +313,25 @@ def planner_node(state: PlanState) -> PlanState:
     }
 
     # 4 & 5. 时间线推演与条目组装，同时进行过滤与提取候选池 (生成多套方案)
+    
+    # 用来记录 dfs 剪枝丢弃的各类原因（统计最后给 Agent 报错用）
+    dfs_global_prune_stats = {
+        "prune_budget_over": 0,
+        "prune_partial_time_over": 0,
+        "prune_walk_leg_over_2km": 0,
+        "prune_walk_home_over_2km": 0,
+        "prune_gift_delivery_radius": 0,
+        "prune_final_duration_too_short": 0,
+        "prune_final_duration_too_long": 0,
+    }
+
     valid_plans_info, valid_count_before_topk, missing_types_set = generate_and_score_combinations(
         queues,
         patterns,
         budget,
         required_duration_range_mins,
         commute_preference=commute_preference_for_dfs,
+        dfs_global_prune_stats=dfs_global_prune_stats,
     )
     missing_types = list(missing_types_set)
     
@@ -467,9 +542,92 @@ def planner_node(state: PlanState) -> PlanState:
             )
             plans.append(plan_variant)
 
-    if not plans and not missing_types:
-        # 如果生成了组合但是全被过滤掉了，修改状态为 insufficient_candidates 避免报错
+    if not plans:
         logger.warning("phase=planner_node | warning=all_plans_filtered_out_by_budget_or_time")
+        error_msg = "规划失败：符合条件的方案组合为 0。\n\n"
+        
+        # 初步过滤统计报告 (从 filter_node 传递过来)
+        filter_stats = candidates.get("filter_stats", {})
+        if filter_stats:
+            error_msg += "【初步过滤阶段】\n"
+            global_reason_counts = {}
+            for cat, stats in filter_stats.items():
+                before_count = stats.get("before_count", 0)
+                after_count = stats.get("after_count", 0)
+                dropped = stats.get("dropped_count", 0)
+                sub_dropped = stats.get("dropped_sub_item_count", 0)
+                
+                cat_name = "餐厅" if "restaurants" in cat else "活动" if "activities" in cat else "礼品" if "gifts" in cat else cat
+                if before_count > 0:
+                    error_msg += f"- {cat_name}: 初始 {before_count} 家，过滤后剩余 {after_count} 家 (剔除了 {dropped} 家店，{sub_dropped} 个单品套餐)\n"
+                
+                for rc, count in stats.get("reason_counts", {}).items():
+                    global_reason_counts[rc] = global_reason_counts.get(rc, 0) + count
+
+            if global_reason_counts:
+                reason_translations = {
+                    "sub_item_price_too_high": "单品价格超出预算",
+                    "sub_item_capacity_mismatch": "容纳人数不匹配",
+                    "all_sub_items_filtered": "子项(套餐)全部被过滤",
+                    "distance_over_max": "超出偏好距离",
+                    "outside_open_hours": "营业时间不匹配",
+                    "suitable_groups_missing_or_empty": "缺少适合群体标签",
+                    "suitable_groups_mismatch": "群体类型不匹配",
+                    "activity_age_range_missing_or_empty": "缺少儿童年龄标签",
+                    "activity_age_range_mismatch": "儿童年龄不匹配",
+                    "family_forbidden_terms": "包含亲子不宜内容",
+                    "dietary_restriction_hit": "触碰饮食禁忌",
+                    "family_avoid_infant": "婴儿不宜",
+                }
+                
+                error_msg += "  过滤主要原因分布：\n"
+                sorted_reasons = sorted(global_reason_counts.items(), key=lambda x: x[1], reverse=True)
+                for rc, count in sorted_reasons:
+                    if count > 0:
+                        desc = reason_translations.get(rc, rc)
+                        error_msg += f"  * {count} 次因为 [{desc}]\n"
+                        
+            error_msg += "\n"
+
+        # 尝试分析失败原因并生成统计报告
+        total_pruned = sum(dfs_global_prune_stats.values())
+        if total_pruned > 0:
+            error_msg += f"【深度组合阶段】\n系统共尝试了 {total_pruned} 种潜在组合，均因不满足约束被过滤，具体原因分布如下：\n"
+            
+            budget_pruned = dfs_global_prune_stats.get("prune_budget_over", 0)
+            time_long_pruned = dfs_global_prune_stats.get("prune_partial_time_over", 0) + dfs_global_prune_stats.get("prune_final_duration_too_long", 0)
+            time_short_pruned = dfs_global_prune_stats.get("prune_final_duration_too_short", 0)
+            dist_pruned = dfs_global_prune_stats.get("prune_walk_leg_over_2km", 0) + dfs_global_prune_stats.get("prune_walk_home_over_2km", 0)
+            gift_pruned = dfs_global_prune_stats.get("prune_gift_delivery_radius", 0)
+            
+            reasons = [
+                (budget_pruned, "因为超出预算限制"),
+                (time_long_pruned, "因为行程耗时过长(超出预期上限)"),
+                (time_short_pruned, "因为行程耗时过短(达不到预期下限)"),
+                (dist_pruned, "因为步行距离超限(>2km)"),
+                (gift_pruned, "因为礼品配送距离超限")
+            ]
+            
+            # 过滤掉为 0 的项，并按占比(即数量)降序排序
+            reasons = sorted([(count, msg) for count, msg in reasons if count > 0], key=lambda x: x[0], reverse=True)
+            
+            for count, msg in reasons:
+                error_msg += f"- {count/total_pruned*100:.1f}% {msg}\n"
+        elif missing_types:
+            error_msg += f"原因：缺乏对应的组件库存或该类型无法匹配当前条件：{', '.join(missing_types)}\n"
+
+        state["itinerary"] = {
+            "status": "failed",
+            "plans": [],
+            "error": error_msg,
+            "missing_types": list(missing_types)
+        }
+        
+        processed_steps = state.setdefault("processed_steps", [])
+        processed_steps.append("planner_node")
+        
+        logger.info(f"phase=planner_node | status=failed | missing={missing_types}")
+        return state
 
     itinerary_plan = ItineraryPlan(
         plans=plans,

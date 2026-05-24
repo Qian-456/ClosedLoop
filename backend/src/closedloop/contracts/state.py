@@ -262,6 +262,14 @@ class Constraints(BaseModel):
         default="auto",
         description="出行偏好：auto(默认，按距离在 walking/taxi 中选择)、walking(偏走路)、taxi(少走路)、driving(开车)。",
     )
+    preferred_pattern_steps: Optional[list[str]] = Field(
+        default=None,
+        description="用户指定的行程活动顺序。如果提供，将优先使用该顺序生成方案。",
+    )
+    include_gift: bool = Field(
+        default=True,
+        description="是否推荐包含礼品（gift_shop）的行程。默认为 True。除非用户明确说不要推荐礼品、惊喜等，才设为 False。"
+    )
 
     @model_validator(mode="before")
     @classmethod
@@ -335,6 +343,10 @@ class Constraints(BaseModel):
         commute_pref = data.get("commute_preference")
         if commute_pref not in ("auto", "walking", "taxi", "driving"):
             data["commute_preference"] = "auto"
+            
+        include_gift = data.get("include_gift")
+        if include_gift is None or not isinstance(include_gift, bool):
+            data["include_gift"] = True
 
         tp = data.get("time_period")
         if not isinstance(tp, str) or not tp.strip():

@@ -971,6 +971,8 @@ def filter_node(state: PlanState) -> PlanState:
                 item_id = ev.get("item_id")
                 if isinstance(item_id, str) and item_id:
                     age_range_missing_ids.append(item_id)
+        
+        counts_by_category[category]["reason_counts"] = reason_code_counts
 
         logger.info(
             f"phase=filter_node | output=drop_reasons run_id={run_id} | category={category} | reason_code_counts={reason_code_counts}"
@@ -1003,6 +1005,7 @@ def filter_node(state: PlanState) -> PlanState:
     candidates["nearby_activities"] = filtered["nearby_activities"]
     candidates["nearby_gifts"] = filtered["nearby_gifts"]
     candidates["processed_steps"] = ["retrieve_candidates_node", "filter_node"]
+    candidates["filter_stats"] = counts_by_category
 
     rest_after = len(filtered["nearby_restaurants"])
     act_after = len(filtered["nearby_activities"])

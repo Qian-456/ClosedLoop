@@ -172,6 +172,7 @@ def generate_and_score_combinations(
     budget: float,
     required_duration_range_mins: tuple[float, float],
     commute_preference: str = "auto",
+    dfs_global_prune_stats: dict = None,
 ) -> tuple[list[dict], int, set[str]]:
     """
     使用 DFS 回溯算法生成、剪枝并对组合进行打分。
@@ -214,7 +215,8 @@ def generate_and_score_combinations(
             "prune_walk_leg_over_2km": 0,
             "prune_walk_home_over_2km": 0,
             "prune_gift_delivery_radius": 0,
-            "prune_final_duration_out_of_range": 0,
+            "prune_final_duration_too_short": 0,
+            "prune_final_duration_too_long": 0,
         }
         
         for step_type in pattern_steps:
@@ -362,12 +364,18 @@ def generate_and_score_combinations(
                     return
                 if is_range:
                     hard_min_mins = float(time_params["hard_min_mins"])
-                    if final_total_duration < hard_min_mins or final_total_duration > hard_max_mins:
-                        prune_counts["prune_final_duration_out_of_range"] += 1
+                    if final_total_duration < hard_min_mins:
+                        prune_counts["prune_final_duration_too_short"] += 1
+                        return
+                    if final_total_duration > hard_max_mins:
+                        prune_counts["prune_final_duration_too_long"] += 1
                         return
                 else:
-                    if abs(final_total_duration - target_duration_mins) > 45:
-                        prune_counts["prune_final_duration_out_of_range"] += 1
+                    if final_total_duration < target_duration_mins - 45:
+                        prune_counts["prune_final_duration_too_short"] += 1
+                        return
+                    if final_total_duration > target_duration_mins + 45:
+                        prune_counts["prune_final_duration_too_long"] += 1
                         return
                     
                 # 计算打分
@@ -577,6 +585,10 @@ def generate_and_score_combinations(
                     )
                     sigs.add(sig)
                 top3_unique_sigs_count = len(sigs)
+
+            for k, v in prune_counts.items():
+                if dfs_global_prune_stats is not None:
+                    dfs_global_prune_stats[k] = dfs_global_prune_stats.get(k, 0) + v
 
             pattern_id = pattern.get("id") or pattern.get("pattern_id")
             pattern_desc = pattern.get("desc")

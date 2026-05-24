@@ -119,7 +119,7 @@ class TestPlannerNode(unittest.TestCase):
         new_state = planner_node(self.state)
         
         itinerary = new_state.get("itinerary", {})
-        self.assertEqual(itinerary["status"], "insufficient_candidates")
+        self.assertEqual(itinerary["status"], "failed")
         self.assertEqual(len(itinerary["plans"]), 0)
 
     def test_planner_node_time_filter(self):
@@ -128,7 +128,7 @@ class TestPlannerNode(unittest.TestCase):
         new_state = planner_node(self.state)
         
         itinerary = new_state.get("itinerary", {})
-        self.assertEqual(itinerary["status"], "insufficient_candidates")
+        self.assertEqual(itinerary["status"], "failed")
         self.assertEqual(len(itinerary["plans"]), 0)
 
     def test_planner_node_time_period_window_overrides_duration_range(self):
@@ -148,7 +148,7 @@ class TestPlannerNode(unittest.TestCase):
         new_state = planner_node(self.state)
         
         itinerary = new_state.get("itinerary", {})
-        self.assertEqual(itinerary["status"], "insufficient_candidates")
+        self.assertEqual(itinerary["status"], "failed")
         self.assertIn("gift_shop", itinerary["missing_types"])
 
     def test_planner_node_taxi_preference_rewrites_commutes(self):

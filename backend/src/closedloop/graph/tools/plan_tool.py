@@ -56,11 +56,19 @@ class PlanTripInput(BaseModel):
     )
     child_profiles: list[tuple[Literal["M", "F", "U"], int]] = Field(
         default_factory=list,
-        description="小孩信息列表，每个元素为 (性别, 年龄)；年龄未知用 -1；孕妇标记为 0；性别未知用 U。",
+        description="小孩信息列表，每个元素为 (性别, 年龄)；小孩的性别默认女(F)，如果不知道岁数默认-1，年龄为0代表孕妇，性别可以填U。",
     )
     commute_preference: Literal["auto", "walking", "taxi", "driving"] = Field(
         default="auto",
         description="出行偏好：auto 默认按距离选择；walking 偏走路；taxi 少走路；driving 开车。",
+    )
+    preferred_pattern_steps: Optional[list[str]] = Field(
+        default=None,
+        description="用户指定的行程活动顺序。如果提供，将优先使用该顺序生成方案。例如 ['activity', 'activity', 'restaurant:dinner']"
+    )
+    include_gift: bool = Field(
+        default=True,
+        description="是否推荐包含礼品（gift_shop）的行程。默认为 True。除非用户明确说不要推荐礼品、惊喜等，才设为 False。"
     )
 
 
@@ -86,6 +94,8 @@ def plan_trip(
     adult_genders: list[Literal["M", "F", "U"]] | None = None,
     child_profiles: list[tuple[Literal["M", "F", "U"], int]] | None = None,
     commute_preference: Literal["auto", "walking", "taxi", "driving"] = "auto",
+    preferred_pattern_steps: Optional[list[str]] = None,
+    include_gift: bool = True,
 ) -> Command:
     """
     根据结构化参数调用本地规划子图，生成多套本地生活行程方案。
@@ -113,6 +123,8 @@ def plan_trip(
         "adult_genders": adult_genders or [],
         "child_profiles": child_profiles or [],
         "commute_preference": commute_preference,
+        "preferred_pattern_steps": preferred_pattern_steps,
+        "include_gift": include_gift,
     }
 
     try:
