@@ -97,12 +97,8 @@ def plan_trip(
 
     logger.info(f"phase=plan_trip | input=group_type={group_type} budget={budget} time_period={time_period}")
 
-    user_input = str(state.get("user_input", ""))
-    
-    # 提取已有的 itinerary 历史，确保是列表
-    past_itinerary = state.get("itinerary", [])
-    if not isinstance(past_itinerary, list):
-        past_itinerary = [past_itinerary] if past_itinerary else []
+    # 因为 plan_trip 代表全新的约束规划，所以清空历史方案，使 plan_id 重新从 plan_1 开始
+    past_itinerary = []
 
     raw_constraints = {
         "group_type": group_type,
@@ -122,8 +118,9 @@ def plan_trip(
     try:
         constraints = _normalize_constraints(raw_constraints)
         subgraph_state: PlanState = {
-            "user_input": user_input,
             "constraints": constraints,
+            "past_itinerary": past_itinerary,
+            "top_k": 1,
         }
         subgraph_output = build_subgraph_plan().invoke(subgraph_state)
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
@@ -156,10 +153,83 @@ def plan_trip(
     }
 
     if isinstance(result, dict) and "error" not in result:
-        # 将新生成的 plans 扩展进历史中
+        # 因为是全新约束，所以直接覆盖历史
+        new_plans = result.get("plans", []) if isinstance(result, dict) else []
+        update["itinerary"] = new_plans
+        update["latest_plan_result"] = new_plans
+
+    return Command(update=update)
+
+
+class GenerateAlternativePlansInput(BaseModel):
+    count: int = Field(default=2, description="需要生成的额外备选方案数量。默认生成2个。")
+
+@tool(args_schema=GenerateAlternativePlansInput)
+def generate_alternative_plans(
+    count: int,
+    tool_call_id: Annotated[str, InjectedToolCallId],
+    state: Annotated[dict, InjectedState],
+) -> Command:
+    """
+    基于当前已有的 constraints，生成更多与历史方案不同的备选方案。
+    这会保证生成的方案和已有的历史方案有较大的相似度差异（至少一半元素不同）。
+    """
+    config = get_config()
+    LoggerManager.setup(config)
+    
+    logger.info(f"phase=generate_alternative_plans | count={count}")
+    
+    constraints = state.get("constraints")
+    if not constraints:
+        return Command(update={
+            "messages": [
+                ToolMessage(
+                    content="错误：当前没有可用的约束条件，请先调用 plan_trip。",
+                    tool_call_id=tool_call_id,
+                )
+            ]
+        })
+        
+    past_itinerary = state.get("itinerary", [])
+    if not isinstance(past_itinerary, list):
+        past_itinerary = [past_itinerary] if past_itinerary else []
+        
+    subgraph_state: PlanState = {
+        "constraints": constraints,
+        "past_itinerary": past_itinerary,
+        "top_k": count,
+    }
+    
+    try:
+        subgraph_output = build_subgraph_plan().invoke(subgraph_state)
+        result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
+        status = "success"
+        logger.info(f"phase=generate_alternative_plans | result=success | itinerary_status={result.get('status')}")
+    except Exception as e:
+        result = {"error": str(e)}
+        status = "failed"
+        logger.error(f"phase=generate_alternative_plans | error={e}")
+        
+    transfer_message = ToolMessage(
+        content={
+            "tool": "generate_alternative_plans",
+            "status": status,
+            "result": result,
+        },
+        tool_call_id=tool_call_id,
+    )
+    
+    update = {
+        "current_step": "generate_alternative_plans",
+        "messages": [transfer_message],
+    }
+    
+    if isinstance(result, dict) and "error" not in result:
         new_plans = result.get("plans", []) if isinstance(result, dict) else []
         past_itinerary.extend(new_plans)
         update["itinerary"] = past_itinerary
+        # 将追加了新方案的完整列表作为 latest_plan_result，让用户可以选择当前约束下的所有历史方案
+        update["latest_plan_result"] = past_itinerary
 
     return Command(update=update)
 

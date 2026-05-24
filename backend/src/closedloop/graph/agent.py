@@ -9,14 +9,14 @@ from closedloop.contracts.state import ClosedLoopState
 from closedloop.core.config import get_config
 from closedloop.core.llm import build_agent
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.tools.plan_tool import plan_trip, transfer_to_execute
+from closedloop.graph.tools.plan_tool import plan_trip, transfer_to_execute, generate_alternative_plans
 from closedloop.graph.tools.execute_tool import execute_itinerary
 
 
 PLAN_AGENT_SYSTEM_PROMPT = """
 你是 ClosedLoop 的规划 Agent。
 
-你的唯一任务是理解用户自然语言需求，并调用 plan_trip 工具生成本地生活行程。
+你的唯一任务是理解用户自然语言需求，并调用相关工具生成本地生活行程。
 禁止直接编写 itinerary，禁止跳过工具，禁止用单一 prompt 完成规划。
 
 提取要求：
@@ -28,17 +28,15 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 - dietary_restrictions 优先归类为：辣、海鲜、生冷、甜、快餐、牛；其他保留原词。
 - commute_preference 未明确时使用 auto。
 
-注意：调用 plan_trip 工具生成方案后，请直接告诉用户“方案已生成”，不需要在回复中提及或总结具体的方案内容（如餐厅名字、活动细节等），因为具体的方案内容将由前端界面负责展示。同时，请主动询问用户是否有不满意的地方，例如：
-1. 活动的排列顺序是否需要调整？
+注意：调用工具生成方案后，请直接告诉用户“方案已生成”，不需要在回复中提及或总结具体的方案内容（如餐厅名字、活动细节等），因为具体的方案内容将由前端界面负责展示。同时，请主动询问用户是否有不满意的地方，例如：
+1. 是否想要看看其他不同的方案（新增2个可能的方案）？
 2. 是否需要修改整体的行程设置（例如：增加或减少总预算、调整出发时间、改变游玩总时长、更改出行交通方式等）？
-3. 是否有想更换的具体项目类别（例如：换一家餐厅、换一个游玩的地方等）？
 
 对于用户的任何修改需求：
-- 如果用户提出的修改属于整体行程设置（如修改预算、时间、时长、交通偏好等），你可以直接通过再次调用 `plan_trip` 工具并传入更新后的参数来实现。
-- 如果用户提出的是针对特定项目或顺序的微调，也请通过相关工具或直接记录以反馈给系统。
+- 如果用户希望在【不改变当前约束条件】的情况下，看更多或其他的备选方案（比如“换一批”、“看看其他的”、“不满意当前的”），你必须调用 `generate_alternative_plans` 工具来生成更多差异化的备选方案。
+- 如果用户提出的修改属于【整体行程设置或约束条件】的变更（如修改预算、时间、时长、交通偏好等），你可以直接通过再次调用 `plan_trip` 工具并传入更新后的参数来实现。
 
-
-你必须调用 plan_trip，并将用户需求转换成该工具的结构化参数。
+你必须根据用户需求选择合适的工具，并将用户需求转换成对应工具的结构化参数。
 """.strip()
 
 EXECUTE_AGENT_SYSTEM_PROMPT = """
@@ -72,7 +70,7 @@ def apply_step_config(
     configs = {
         "plan_agent": {
             "prompt": PLAN_AGENT_SYSTEM_PROMPT,
-            "tools": [plan_trip, transfer_to_execute]
+            "tools": [plan_trip, transfer_to_execute, generate_alternative_plans]
         },
         "execute_agent": {
             "prompt": EXECUTE_AGENT_SYSTEM_PROMPT,
@@ -103,7 +101,7 @@ def apply_step_config(
 
 # 4. Create agent with middleware
 agent = build_agent(
-    tools=[plan_trip, transfer_to_execute, execute_itinerary],
+    tools=[plan_trip, transfer_to_execute, generate_alternative_plans, execute_itinerary],
     state_schema=ClosedLoopState,
     middleware=[apply_step_config],
     checkpointer=InMemorySaver()  # Persist state across turns

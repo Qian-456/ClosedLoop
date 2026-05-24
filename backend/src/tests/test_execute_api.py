@@ -163,7 +163,7 @@ class TestExecuteAPI(unittest.TestCase):
             )()
 
             payload = {
-                "plan_id": "plan_1",
+                "plan_id": "plan_A",
                 "steps": [
                     {
                         "item_id": "combo_1",

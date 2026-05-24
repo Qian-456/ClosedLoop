@@ -6,11 +6,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from closedloop.graph.plan_subgraph.planner_utils import generate_and_score_combinations
 from closedloop.graph.plan_subgraph.planner_utils import calculate_commute_options
-from closedloop.graph.plan_subgraph.planner import _select_three_plans
+from closedloop.graph.plan_subgraph.planner import _select_top_k_diverse_plans
  
  
 class TestPlannerUtilsSelection(unittest.TestCase):
-    def test_plan1_plan2_plan3_selection_from_candidate_pool(self):
+    def test_plan_selection_from_candidate_pool(self):
         queues = {
             "activity": [
                 {"package_id": "act_low", "name": "低价活动", "duration_mins": 60, "score": 60, "price": 50.0, "location": {}},
@@ -41,11 +41,12 @@ class TestPlannerUtilsSelection(unittest.TestCase):
             self.assertGreaterEqual(p["experience_score"], 0)
             self.assertLessEqual(p["experience_score"], 100)
 
-        selected = _select_three_plans(plans)
+        selected = _select_top_k_diverse_plans(plans, 3, [])
         self.assertEqual(len(selected), 3)
-        self.assertEqual(selected[0]["combo"][0]["package_id"], "act_low")
-        self.assertEqual(selected[1]["combo"][0]["package_id"], "act_highscore")
-        self.assertEqual(selected[2]["combo"][0]["package_id"], "act_highcost")
+        # Should be ordered by average_score descending
+        self.assertEqual(selected[0]["combo"][0]["package_id"], "act_highscore")
+        self.assertEqual(selected[1]["combo"][0]["package_id"], "act_highcost")
+        self.assertEqual(selected[2]["combo"][0]["package_id"], "act_low")
 
     def test_commute_cost_rounded_two_decimals(self):
         queues = {

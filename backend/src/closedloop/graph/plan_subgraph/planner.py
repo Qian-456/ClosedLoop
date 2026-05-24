@@ -28,25 +28,41 @@ def _plan_signature(plan_info: dict) -> str:
             ids.append(str(item_id))
     return "|".join(ids)
 
+def _get_letter_id(index: int) -> str:
+    """将数字索引转换为字母 (如 1->A, 2->B, 27->AA)"""
+    result = ""
+    while index > 0:
+        index, rem = divmod(index - 1, 26)
+        result = chr(65 + rem) + result
+    return result
 
-def _select_three_plans(plan_infos: list[dict]) -> list[dict]:
+def _is_sufficiently_different(new_plan: dict, past_plans: list[dict]) -> bool:
+    """判断新方案与已有方案集合是否有足够差异（至少一半元素不同）"""
+    new_ids = set(_plan_signature(new_plan).split("|"))
+    if not new_ids or new_ids == {""}:
+        return True
+        
+    for past_plan in past_plans:
+        past_ids = set(past_plan.get("selected_item_ids", []))
+        if not past_ids:
+            continue
+            
+        intersection = new_ids.intersection(past_ids)
+        if len(intersection) > len(new_ids) / 2:
+            return False
+            
+    return True
+
+def _select_top_k_diverse_plans(plan_infos: list[dict], top_k: int, past_itinerary: list[dict]) -> list[dict]:
     """
-    将候选方案整理为 3 套可比较方案（展示层语义）：
-    - plan_1：价格最低
-    - plan_2：比 plan_1 贵一些，但体验分明显更高（主推升级款）
-    - plan_3：比 plan_2 贵很多，但体验分只高一点点（豪华款/锚点）
-    若无法形成上述 decoy 结构，则按回退规则补齐。
+    根据分数排序并挑选出与历史行程有足够差异的 Top K 方案。
     """
     if not plan_infos:
         return []
 
-    def safe_cost(p: dict) -> float:
-        v = p.get("total_cost")
-        return float(v) if isinstance(v, (int, float)) else float("inf")
-
-    def safe_experience(p: dict) -> float:
-        v = p.get("experience_score", p.get("average_score"))
-        return float(v) if isinstance(v, (int, float)) else float("-inf")
+    def safe_score(p: dict) -> float:
+        v = p.get("average_score", 0.0)
+        return float(v) if isinstance(v, (int, float)) else 0.0
 
     unique: list[dict] = []
     seen: set[str] = set()
@@ -56,145 +72,32 @@ def _select_three_plans(plan_infos: list[dict]) -> list[dict]:
             continue
         seen.add(sig)
         unique.append(p)
-    if not unique:
-        return []
 
-    sorted_by_cost = sorted(unique, key=safe_cost)
-    if len(sorted_by_cost) <= 3:
-        return sorted_by_cost
+    unique.sort(key=safe_score, reverse=True)
 
-    cheapest = sorted_by_cost[0]
-    cheapest_sig = _plan_signature(cheapest)
-    cheapest_cost = safe_cost(cheapest)
-    cheapest_exp = safe_experience(cheapest)
-
-    most_expensive: dict | None = None
-    for c in reversed(sorted_by_cost):
-        sig = _plan_signature(c)
-        if sig == cheapest_sig:
-            continue
-        most_expensive = c
-        break
-    if not most_expensive:
-        return [cheapest]
-
-    most_expensive_sig = _plan_signature(most_expensive)
-    most_expensive_cost = safe_cost(most_expensive)
-
-    def pick_plan2(max_multiplier: float) -> dict | None:
-        lo = cheapest_cost * 1.10
-        hi = cheapest_cost * max_multiplier
-        best: dict | None = None
-        best_key: tuple[float, float, float] | None = None
-        for c in sorted_by_cost:
-            sig = _plan_signature(c)
-            if sig == cheapest_sig or sig == most_expensive_sig:
-                continue
-            cost = safe_cost(c)
-            if not (lo <= cost <= hi) or not (cost < most_expensive_cost):
-                continue
-            exp = safe_experience(c)
-            key = (exp - cheapest_exp, exp, -cost)
-            if best_key is None or key > best_key:
-                best_key = key
-                best = c
-        return best
-
-    plan2: dict | None = None
-    for mult in (1.40, 1.60, 1.80, 2.00):
-        plan2 = pick_plan2(mult)
-        if plan2:
+    selected: list[dict] = []
+    current_past = list(past_itinerary)
+    
+    for p in unique:
+        if len(selected) >= top_k:
             break
+            
+        if _is_sufficiently_different(p, current_past):
+            selected.append(p)
+            mock_past_plan = {"selected_item_ids": _plan_signature(p).split("|")}
+            current_past.append(mock_past_plan)
 
-    if not plan2:
-        best: dict | None = None
-        best_key: tuple[float, float] | None = None
-        for c in sorted_by_cost:
-            sig = _plan_signature(c)
-            if sig == cheapest_sig or sig == most_expensive_sig:
-                continue
-            cost = safe_cost(c)
-            if not (cheapest_cost < cost < most_expensive_cost):
-                continue
-            exp = safe_experience(c)
-            key = (exp, -cost)
-            if best_key is None or key > best_key:
-                best_key = key
-                best = c
-        plan2 = best
-
-    if not plan2:
-        return [cheapest, most_expensive]
-
-    plan2_sig = _plan_signature(plan2)
-    plan2_cost = safe_cost(plan2)
-    plan2_exp = safe_experience(plan2)
-
-    plan3: dict | None = None
-    best_cost = float("-inf")
-    for c in reversed(sorted_by_cost):
-        sig = _plan_signature(c)
-        if sig in {cheapest_sig, most_expensive_sig, plan2_sig}:
-            continue
-        cost = safe_cost(c)
-        if cost <= plan2_cost:
-            continue
-        exp = safe_experience(c)
-        if cost < plan2_cost * 1.40 or cost > plan2_cost * 2.20:
-            continue
-        if exp < plan2_exp or exp > plan2_exp + 8.0:
-            continue
-        if cost > best_cost:
-            best_cost = cost
-            plan3 = c
-
-    if not plan3:
-        plan3 = most_expensive
-
-    if safe_cost(plan3) <= plan2_cost:
-        plan3 = most_expensive
-
-    if safe_cost(plan3) <= plan2_cost:
-        best: dict | None = None
-        best_key: tuple[float, float] | None = None
-        for c in sorted_by_cost:
-            sig = _plan_signature(c)
-            if sig == cheapest_sig or sig == most_expensive_sig:
-                continue
-            cost = safe_cost(c)
-            if not (cheapest_cost < cost < most_expensive_cost):
-                continue
-            exp = safe_experience(c)
-            key = (exp, -cost)
-            if best_key is None or key > best_key:
-                best_key = key
-                best = c
-        if best:
-            plan2 = best
-            plan2_sig = _plan_signature(plan2)
-            plan2_cost = safe_cost(plan2)
-
-    selected = [cheapest, plan2, plan3]
-    used = set()
-    deduped: list[dict] = []
-    for c in selected:
-        sig = _plan_signature(c)
-        if sig in used:
-            continue
-        used.add(sig)
-        deduped.append(c)
-
-    if len(deduped) < 3:
-        for c in sorted_by_cost:
-            if len(deduped) >= 3:
+    if len(selected) < top_k:
+        used_sigs = { _plan_signature(p) for p in selected }
+        for p in unique:
+            if len(selected) >= top_k:
                 break
-            sig = _plan_signature(c)
-            if sig in used:
-                continue
-            used.add(sig)
-            deduped.append(c)
+            sig = _plan_signature(p)
+            if sig not in used_sigs:
+                selected.append(p)
+                used_sigs.add(sig)
 
-    return deduped[:3]
+    return selected
 
 def _rewrite_commutes_for_taxi_preference(commutes: list[dict]) -> list[dict]:
     if not commutes:
@@ -337,7 +240,7 @@ def planner_node(state: PlanState) -> PlanState:
     
     if valid_plans_info:
         if bool(getattr(config.logging, "LOG_PLANNER_STATS", False)):
-            logger.info(f"phase=planner_node_stats | before_select_three={len(valid_plans_info)}")
+            logger.info(f"phase=planner_node_stats | before_select_diverse={len(valid_plans_info)}")
 
         if commute_preference == "taxi":
             for p in valid_plans_info:
@@ -349,10 +252,18 @@ def planner_node(state: PlanState) -> PlanState:
                 commutes_cost = sum(float(c.get("cost", 0.0) or 0.0) for c in rewritten)
                 p["total_cost"] = float(round(items_cost + commutes_cost, 2))
 
-        valid_plans_info = _select_three_plans(valid_plans_info)
+        top_k = state.get("top_k", 1)
+        past_itinerary = state.get("past_itinerary", [])
+        
+        valid_plans_info = _select_top_k_diverse_plans(valid_plans_info, top_k, past_itinerary)
+        
         if bool(getattr(config.logging, "LOG_PLANNER_STATS", False)):
-            logger.info(f"phase=planner_node_stats | after_select_three={len(valid_plans_info)}")
-        for plan_index, plan_info in enumerate(valid_plans_info, start=1):
+            logger.info(f"phase=planner_node_stats | after_select_diverse={len(valid_plans_info)}")
+            
+        start_index = len(past_itinerary) + 1
+        
+        for plan_index_offset, plan_info in enumerate(valid_plans_info, start=0):
+            plan_index = start_index + plan_index_offset
             pattern = plan_info["pattern"]
             combo = plan_info["combo"]
             commutes = plan_info["commutes"]
@@ -518,8 +429,8 @@ def planner_node(state: PlanState) -> PlanState:
             total_cost = sum(float(s.item.cost or 0.0) for s in steps)
 
             plan_variant = ItineraryPlanVariant(
-                plan_id=f"plan_{plan_index}",
-                title=f"{pattern['desc']}行程方案 {plan_index}",
+                plan_id=f"plan_{_get_letter_id(plan_index)}",
+                title=f"{pattern['desc']}行程方案 {_get_letter_id(plan_index)}",
                 steps=steps,
                 selected_item_ids=item_ids,
                 total_duration_minutes=total_duration_minutes,

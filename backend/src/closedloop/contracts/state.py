@@ -368,9 +368,10 @@ class PlanState(TypedDict):
     该状态服务于结构化规划链路：召回、过滤、重排、规划。
     顶层 Agent 编排与 handoff 状态请使用 ClosedLoopState。
     """
-    user_input: str
     constraints: NotRequired[Constraints]
     candidates: NotRequired[Candidates]
+    past_itinerary: NotRequired[list[dict]]
+    top_k: NotRequired[int]
     itinerary: NotRequired[dict]
     confirmation: NotRequired[dict]
     current_step: NotRequired[str]

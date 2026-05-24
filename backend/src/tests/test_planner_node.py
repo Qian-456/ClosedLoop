@@ -60,6 +60,7 @@ class TestPlannerNode(unittest.TestCase):
 
     def test_planner_node_family_afternoon(self):
         """测试家庭下午5小时场景（FAM-L-01 完整亲子下午）"""
+        self.state["top_k"] = 10  # 获取所有可能的方案
         new_state = planner_node(self.state)
         
         itinerary = new_state.get("itinerary", {})
@@ -74,7 +75,7 @@ class TestPlannerNode(unittest.TestCase):
         for p in itinerary["plans"]:
             steps = p["steps"]
             ids = [s["item"]["id"] for s in steps if s["item"]["type"] != "commute"]
-            if ids == ["act_1", "tea_1", "act_2", "gift_1"]:
+            if set(ids) == {"act_1", "tea_1", "act_2", "gift_1"}:
                 matched = p
                 break
 
@@ -150,8 +151,9 @@ class TestPlannerNode(unittest.TestCase):
         self.assertEqual(itinerary["status"], "insufficient_candidates")
         self.assertIn("gift_shop", itinerary["missing_types"])
 
-    def test_planner_node_taxi_preference_keeps_plan_costs_monotonic(self):
+    def test_planner_node_taxi_preference_rewrites_commutes(self):
         self.state["constraints"]["commute_preference"] = "taxi"
+        self.state["top_k"] = 3
 
         plan_infos = [
             {
@@ -170,8 +172,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 25.0, "cost": 0.0, "mode": "driving", "distance": 10.0},
                     {"time": 25.0, "cost": 0.0, "mode": "driving", "distance": 10.0},
                 ],
-                "average_score": 50.0,
-                "experience_score": 50.0,
+                "average_score": 90.0,
+                "experience_score": 90.0,
                 "total_cost": 100.0,
                 "total_duration_minutes": 60,
             },
@@ -191,8 +193,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 8.0, "cost": 0.0, "mode": "walking", "distance": 0.5},
                     {"time": 8.0, "cost": 0.0, "mode": "walking", "distance": 0.5},
                 ],
-                "average_score": 60.0,
-                "experience_score": 60.0,
+                "average_score": 80.0,
+                "experience_score": 80.0,
                 "total_cost": 110.0,
                 "total_duration_minutes": 60,
             },
@@ -228,9 +230,10 @@ class TestPlannerNode(unittest.TestCase):
         itinerary = new_state.get("itinerary", {})
         self.assertEqual(itinerary["status"], "ok")
         self.assertEqual(len(itinerary["plans"]), 3)
-
-        costs = [p["total_cost"] for p in itinerary["plans"]]
-        self.assertTrue(costs[0] <= costs[1] <= costs[2])
+        # Should be ordered by score descending
+        self.assertEqual(itinerary["plans"][0]["selected_item_ids"][0], "p1")
+        self.assertEqual(itinerary["plans"][1]["selected_item_ids"][0], "p2")
+        self.assertEqual(itinerary["plans"][2]["selected_item_ids"][0], "p3")
 
     def test_planner_node_activity_light_type_normalized_to_activity(self):
         plan_infos = [

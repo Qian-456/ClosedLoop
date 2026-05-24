@@ -83,7 +83,7 @@ class TestExecuteReadonlyRepoDir(unittest.TestCase):
             )()
 
             payload = {
-                "plan_id": "plan_1",
+                "plan_id": "plan_A",
                 "steps": [
                     {"item_id": "combo_1", "item_type": "restaurant", "start_time": "14:00", "end_time": "15:00"},
                     {"item_id": "package_1", "item_type": "activity", "start_time": "15:10", "end_time": "16:40"},
