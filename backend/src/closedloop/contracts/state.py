@@ -23,7 +23,6 @@ class RetrievedRestaurant(TypedDict, total=False):
     reviews_count: NotRequired[int]
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -62,7 +61,6 @@ class RetrievedActivity(TypedDict, total=False):
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
     age_range: NotRequired[list[Literal["3-6", "7-10", "11-17", "adult"]]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -95,7 +93,6 @@ class RetrievedGift(TypedDict, total=False):
     reviews_count: NotRequired[int]
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -131,7 +128,6 @@ class RankedCombo(TypedDict, total=False):
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
     experience_tag: NotRequired[list[str]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -163,7 +159,6 @@ class RankedPackage(TypedDict, total=False):
     suitable_groups: NotRequired[list[str]]
     age_range: NotRequired[list[Literal["3-6", "7-10", "11-17", "adult"]]]
     experience_tag: NotRequired[list[str]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -194,7 +189,6 @@ class RankedGift(TypedDict, total=False):
     tags: NotRequired[list[str]]
     suitable_groups: NotRequired[list[str]]
     experience_tag: NotRequired[list[str]]
-    romantic_score_derived: NotRequired[dict[str, Any]]
     photo_score_derived: NotRequired[dict[str, Any]]
     onsite_walking_level_estimated: NotRequired[dict[str, Any]]
     noise_level_estimated: NotRequired[dict[str, Any]]
@@ -230,8 +224,8 @@ class Constraints(BaseModel):
     """
     为行程提取的用户约束条件 (Constraints)。
     """
-    group_type: Literal["solo", "couple", "family", "friends", "business"] = Field(
-        ..., description="群体类型：单人、情侣、家庭、朋友或商务"
+    group_type: Literal["family", "friends"] = Field(
+        ..., description="群体类型：家庭或朋友"
     )
     budget: float = Field(
         ..., description="旅行/活动的当地货币总预算。如果提供的是人均预算，请乘以总人数（或等效人数）。"

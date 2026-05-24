@@ -15,8 +15,8 @@ from closedloop.graph.plan_subgraph.builder import build_subgraph_plan
 class PlanTripInput(BaseModel):
     """用于生成本地生活行程规划的结构化输入。"""
 
-    group_type: Literal["solo", "couple", "family", "friends", "business"] = Field(
-        ..., description="群体类型：单人、情侣、家庭、朋友或商务"
+    group_type: Literal["family", "friends"] = Field(
+        ..., description="群体类型：家庭或朋友"
     )
     budget: float = Field(
         ...,
@@ -72,7 +72,7 @@ def _normalize_constraints(data: dict) -> dict:
 
 @tool(args_schema=PlanTripInput)
 def plan_trip(
-    group_type: Literal["solo", "couple", "family", "friends", "business"],
+    group_type: Literal["family", "friends"],
     budget: float,
     time_period: str,
     tool_call_id: Annotated[str, InjectedToolCallId],

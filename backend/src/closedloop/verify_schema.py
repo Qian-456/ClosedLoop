@@ -65,7 +65,6 @@ class Restaurant(BaseModel):
     review_keywords: List[str]
     suitable_groups: List[str]
     experience_tag: List[str]
-    romantic_score_derived: DerivedScore
     photo_score_derived: DerivedScore
     onsite_walking_level_estimated: DerivedScore
     noise_level_estimated: DerivedScore
@@ -105,7 +104,6 @@ class ActivityVenue(BaseModel):
     suitable_groups: List[str]
     age_range: List[Literal["3-6", "7-10", "11-17", "adult"]]
     experience_tag: List[str]
-    romantic_score_derived: DerivedScore
     photo_score_derived: DerivedScore
     onsite_walking_level_estimated: DerivedScore
     noise_level_estimated: DerivedScore
@@ -139,7 +137,6 @@ class GiftShop(BaseModel):
     review_keywords: List[str]
     suitable_groups: List[str]
     experience_tag: List[str]
-    romantic_score_derived: DerivedScore
     photo_score_derived: DerivedScore
     onsite_walking_level_estimated: DerivedScore
     noise_level_estimated: DerivedScore

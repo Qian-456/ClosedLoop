@@ -20,7 +20,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 禁止直接编写 itinerary，禁止跳过工具，禁止用单一 prompt 完成规划。
 
 提取要求：
-- group_type 目前优先归一化为 family 或 friends；如果无法判断，再按 solo/couple/business 选择。
+- group_type 必须归一化为 family 或 friends；如果无法判断，默认选择 friends。
 - budget 是总预算；如果用户说人均预算，请结合人数换算为总预算。
 - time_period 使用目标开始时间，如 14:00、18:00；如果用户给时间段，也可保留 HH:MM-HH:MM。
 - duration_hours 提取为小时范围；未明确时可按 4 到 6 小时。

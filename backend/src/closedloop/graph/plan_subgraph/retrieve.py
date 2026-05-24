@@ -88,15 +88,9 @@ def _apply_filters_with_events(
             return False
         family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
         friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
-        solo_keywords = ("solo", "单人", "一人食", "独处", "工作餐", "静谧")
-        couple_keywords = ("couple", "情侣", "约会", "双人", "浪漫", "七夕")
-        business_keywords = ("business", "商务", "宴请", "高端", "安静", "包间")
         kw_map = {
             "family": family_keywords,
             "friends": friends_keywords,
-            "solo": solo_keywords,
-            "couple": couple_keywords,
-            "business": business_keywords,
         }
         kws = kw_map.get(target_group, ())
         for g in suitable_groups:
@@ -180,11 +174,7 @@ def _apply_filters_with_events(
         group_type = constraints.group_type
         is_family = group_type == "family" or (constraints.child_count or 0) > 0
 
-        if group_type == "solo":
-            forbidden = ["情侣", "约会", "双人", "闺蜜", "团建", "聚会", "多人", "家庭", "亲子", "三口之家", "四口之家"]
-        elif group_type == "couple":
-            forbidden = ["单人", "一人", "独处", "工作餐", "家庭", "亲子", "三口之家", "四口之家", "多人", "团建", "聚会", "闺蜜", "兄弟"]
-        elif is_family:
+        if is_family:
             forbidden = ["情侣", "约会", "双人", "单人", "一人", "独处", "工作餐", "闺蜜", "兄弟"]
         elif group_type == "friends" and effective_people >= 3.0:
             forbidden = ["单人", "一人", "独处", "工作餐", "情侣", "约会", "双人", "家庭", "亲子", "三口之家", "四口之家"]
@@ -725,15 +715,9 @@ def hard_filter(item: dict, constraints: Constraints) -> bool:
             return False
         family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
         friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
-        solo_keywords = ("solo", "单人", "一人食", "独处", "工作餐", "静谧")
-        couple_keywords = ("couple", "情侣", "约会", "双人", "浪漫", "七夕")
-        business_keywords = ("business", "商务", "宴请", "高端", "安静", "包间")
         kw_map = {
             "family": family_keywords,
             "friends": friends_keywords,
-            "solo": solo_keywords,
-            "couple": couple_keywords,
-            "business": business_keywords,
         }
         kws = kw_map.get(target_group, ())
         for g in suitable_groups:

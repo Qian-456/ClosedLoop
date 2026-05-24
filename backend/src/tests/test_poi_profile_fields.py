@@ -36,7 +36,6 @@ class TestPoiProfileFields(unittest.TestCase):
     def _assert_common_fields(self, item: dict):
         self.assertIn("suitable_groups", item)
         self.assertIn("experience_tag", item)
-        self.assertIn("romantic_score_derived", item)
         self.assertIn("photo_score_derived", item)
         self.assertIn("onsite_walking_level_estimated", item)
         self.assertIn("noise_level_estimated", item)
@@ -46,7 +45,6 @@ class TestPoiProfileFields(unittest.TestCase):
         self.assertIsInstance(item["experience_tag"], list)
         self.assertTrue(all(isinstance(x, str) for x in item["experience_tag"]))
 
-        self._assert_derived_score(item["romantic_score_derived"])
         self._assert_derived_score(item["photo_score_derived"])
         self._assert_derived_score(item["onsite_walking_level_estimated"])
         self._assert_derived_score(item["noise_level_estimated"])

@@ -31,11 +31,7 @@ def _get_group_mismatch_penalty(inner_item: dict, constraints: Constraints) -> i
     group_type = constraints.group_type
     is_family = group_type == "family" or (constraints.child_count or 0) > 0
 
-    if group_type == "solo":
-        forbidden = ("情侣", "约会", "双人", "闺蜜", "团建", "聚会", "多人", "家庭", "亲子", "三口之家", "四口之家")
-    elif group_type == "couple":
-        forbidden = ("单人", "一人", "独处", "工作餐", "家庭", "亲子", "三口之家", "四口之家", "多人", "团建", "聚会", "闺蜜", "兄弟")
-    elif is_family:
+    if is_family:
         forbidden = ("情侣", "约会", "双人", "单人", "一人", "独处", "工作餐", "闺蜜", "兄弟")
     elif group_type == "friends" and effective_people >= 3.0:
         forbidden = ("单人", "一人", "独处", "工作餐", "情侣", "约会", "双人", "家庭", "亲子", "三口之家", "四口之家")
@@ -102,33 +98,6 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
                 isinstance(g, str) and any(k in g for k in friends_keywords)
                 for g in suitable_groups
             ) or any(k in item_features for k in friends_keywords):
-                scene_fit_score += 15
-        elif constraints.group_type == "solo":
-            solo_keywords = ("solo", "单人", "一人食", "独处", "工作餐", "静谧")
-            if any(
-                isinstance(g, str) and any(k in g for k in solo_keywords)
-                for g in suitable_groups
-            ) or any(k in item_features for k in solo_keywords):
-                scene_fit_score += 15
-            party_keywords = ("聚会", "闺蜜", "团建", "多人", "派对", "家庭", "双人", "情侣")
-            if any(k in item_features for k in party_keywords):
-                scene_fit_score -= 30
-        elif constraints.group_type == "couple":
-            couple_keywords = ("couple", "情侣", "约会", "双人", "浪漫", "七夕")
-            if any(
-                isinstance(g, str) and any(k in g for k in couple_keywords)
-                for g in suitable_groups
-            ) or any(k in item_features for k in couple_keywords):
-                scene_fit_score += 15
-            large_group_keywords = ("聚会", "团建", "多人", "派对", "家庭", "闺蜜", "单人")
-            if any(k in item_features for k in large_group_keywords):
-                scene_fit_score -= 30
-        elif constraints.group_type == "business":
-            business_keywords = ("business", "商务", "宴请", "高端", "安静", "包间")
-            if any(
-                isinstance(g, str) and any(k in g for k in business_keywords)
-                for g in suitable_groups
-            ) or any(k in item_features for k in business_keywords):
                 scene_fit_score += 15
 
     group_mismatch_penalty = _get_group_mismatch_penalty(inner_item, constraints)
@@ -287,7 +256,6 @@ def rerank_node(state: PlanState) -> PlanState:
                 "tags": rest.get("tags", []),
                 "suitable_groups": rest.get("suitable_groups", []),
                 "experience_tag": rest.get("experience_tag", []),
-                "romantic_score_derived": rest.get("romantic_score_derived"),
                 "photo_score_derived": rest.get("photo_score_derived"),
                 "onsite_walking_level_estimated": rest.get("onsite_walking_level_estimated"),
                 "noise_level_estimated": rest.get("noise_level_estimated"),
@@ -334,7 +302,6 @@ def rerank_node(state: PlanState) -> PlanState:
                 "suitable_groups": act.get("suitable_groups", []),
                 "age_range": act.get("age_range", []),
                 "experience_tag": act.get("experience_tag", []),
-                "romantic_score_derived": act.get("romantic_score_derived"),
                 "photo_score_derived": act.get("photo_score_derived"),
                 "onsite_walking_level_estimated": act.get("onsite_walking_level_estimated"),
                 "noise_level_estimated": act.get("noise_level_estimated"),
@@ -367,7 +334,6 @@ def rerank_node(state: PlanState) -> PlanState:
                 "tags": gift_shop.get("tags", []),
                 "suitable_groups": gift_shop.get("suitable_groups", []),
                 "experience_tag": gift_shop.get("experience_tag", []),
-                "romantic_score_derived": gift_shop.get("romantic_score_derived"),
                 "photo_score_derived": gift_shop.get("photo_score_derived"),
                 "onsite_walking_level_estimated": gift_shop.get("onsite_walking_level_estimated"),
                 "noise_level_estimated": gift_shop.get("noise_level_estimated"),

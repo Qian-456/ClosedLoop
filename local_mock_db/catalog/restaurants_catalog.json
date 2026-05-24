@@ -19,7 +19,64 @@
       "建议预约",
       "粤菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.7,
+    "tags": [
+      "少辣",
+      "家庭",
+      "亲子"
+    ],
     "combos": [
       {
         "combo_id": "combo_001_1",
@@ -90,64 +147,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "亲子"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_002",
@@ -169,7 +169,64 @@
       "建议预约",
       "茶餐厅"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "茶餐厅",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "茶餐厅",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.7,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "茶餐厅",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "茶餐厅",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.8,
+    "tags": [
+      "少辣",
+      "家庭",
+      "单人"
+    ],
     "combos": [
       {
         "combo_id": "combo_002_1",
@@ -240,64 +297,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "单人"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "茶餐厅",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "茶餐厅",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.7,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "茶餐厅",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "茶餐厅",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_003",
@@ -319,7 +319,64 @@
       "建议预约",
       "粤菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.5,
+    "tags": [
+      "少辣",
+      "家庭",
+      "兜底"
+    ],
     "combos": [
       {
         "combo_id": "combo_003_1",
@@ -390,64 +447,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "兜底"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_004",
@@ -469,7 +469,66 @@
       "建议预约",
       "江浙菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松",
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.7,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "少辣",
+      "家庭",
+      "安静"
+    ],
     "combos": [
       {
         "combo_id": "combo_004_1",
@@ -540,66 +599,7 @@
         ],
         "requires_booking": true
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "安静"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松",
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.7,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_005",
@@ -621,7 +621,68 @@
       "建议预约",
       "本帮菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "安静",
+      "轻松",
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "本帮菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "本帮菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.7,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "本帮菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "本帮菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "少辣",
+      "家庭",
+      "安静约会"
+    ],
     "combos": [
       {
         "combo_id": "combo_005_1",
@@ -692,68 +753,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "安静约会"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "安静",
-      "轻松",
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "本帮菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "本帮菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.7,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "本帮菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "本帮菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_006",
@@ -775,7 +775,66 @@
       "建议预约",
       "江浙菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松",
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.7,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.6,
+    "tags": [
+      "少辣",
+      "家庭",
+      "安静"
+    ],
     "combos": [
       {
         "combo_id": "combo_006_1",
@@ -846,66 +905,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "家庭",
-      "安静"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松",
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.7,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_007",
@@ -927,7 +927,66 @@
       "建议预约",
       "家常菜"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "高性价比",
+      "低决策成本"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "家常菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "家常菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "家常菜",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "家常菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.8,
+    "tags": [
+      "低预算",
+      "家庭",
+      "单人"
+    ],
     "combos": [
       {
         "combo_id": "combo_007_1",
@@ -998,66 +1057,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "低预算",
-      "家庭",
-      "单人"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "高性价比",
-      "低决策成本"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_008",
@@ -1079,7 +1079,66 @@
       "建议预约",
       "社区小馆"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "高性价比",
+      "低决策成本"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "社区小馆",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "社区小馆",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "社区小馆",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "社区小馆",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "低预算",
+      "家庭",
+      "单人"
+    ],
     "combos": [
       {
         "combo_id": "combo_008_1",
@@ -1150,66 +1209,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "低预算",
-      "家庭",
-      "单人"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "高性价比",
-      "低决策成本"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "社区小馆",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "社区小馆",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "社区小馆",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.83,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "社区小馆",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_009",
@@ -1231,7 +1231,66 @@
       "建议预约",
       "连锁简餐"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "室内兜底",
+      "少走路"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "连锁简餐",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "连锁简餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "连锁简餐",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "likely",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.98,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "连锁简餐",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.6,
+    "tags": [
+      "亲子",
+      "少走路",
+      "兜底"
+    ],
     "combos": [
       {
         "combo_id": "combo_009_1",
@@ -1302,66 +1361,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "亲子",
-      "少走路",
-      "兜底"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "室内兜底",
-      "少走路"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "连锁简餐",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "连锁简餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "连锁简餐",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "likely",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.98,
-      "confidence": 0.71,
-      "source": {
-        "sub_category": "连锁简餐",
-        "matched_review_keywords": [
-          "适合亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_010",
@@ -1383,7 +1383,69 @@
       "建议预约",
       "商场家庭餐厅"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "室内兜底",
+      "少走路"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "商场家庭餐厅",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "商场家庭餐厅",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "商场家庭餐厅",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "likely",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "商场内",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.48,
+      "confidence": 0.79,
+      "source": {
+        "sub_category": "商场家庭餐厅",
+        "matched_review_keywords": [
+          "适合亲子",
+          "商场家庭餐厅"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "亲子",
+      "少走路",
+      "室内"
+    ],
     "combos": [
       {
         "combo_id": "combo_010_1",
@@ -1454,69 +1516,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "亲子",
-      "少走路",
-      "室内"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "室内兜底",
-      "少走路"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "商场家庭餐厅",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "商场家庭餐厅",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "商场家庭餐厅",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "possible",
-    "stroller_friendly_status": "likely",
-    "child_facility_tags": [
-      "儿童座椅",
-      "亲子卫生间",
-      "商场内",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 4.48,
-      "confidence": 0.79,
-      "source": {
-        "sub_category": "商场家庭餐厅",
-        "matched_review_keywords": [
-          "适合亲子",
-          "商场家庭餐厅"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_011",
@@ -1538,7 +1538,67 @@
       "建议预约",
       "西餐"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高",
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.8,
+    "tags": [
+      "纪念日",
+      "情侣",
+      "安静"
+    ],
     "combos": [
       {
         "combo_id": "combo_011_1",
@@ -1608,11 +1668,27 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "纪念日",
-      "情侣",
-      "安静"
+    ]
+  },
+  {
+    "id": "restaurant_012",
+    "name": "蓝蛙西餐厅(老城文化街区)",
+    "category": "restaurant",
+    "sub_category": "西餐",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场5F 103号铺",
+    "latitude": -0.081,
+    "longitude": 3.158,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合约会",
+      "适合拍照",
+      "氛围浪漫",
+      "灯光舒服",
+      "热门打卡",
+      "建议预约",
+      "西餐"
     ],
     "suitable_groups": [
       "friends"
@@ -1621,9 +1697,7 @@
       "浪漫",
       "仪式感",
       "适合拍照",
-      "出片率高",
-      "安静",
-      "轻松"
+      "出片率高"
     ],
     "photo_score_derived": {
       "score": 1.7,
@@ -1668,29 +1742,13 @@
         "matched_review_keywords": [],
         "rule": "child_friendly_from_facilities_and_keywords"
       }
-    }
-  },
-  {
-    "id": "restaurant_012",
-    "name": "蓝蛙西餐厅(老城文化街区)",
-    "category": "restaurant",
-    "sub_category": "西餐",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场5F 103号铺",
-    "latitude": -0.081,
-    "longitude": 3.158,
-    "business_hours": "10:00-22:00",
-    "indoor": true,
-    "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
-      "建议预约",
-      "西餐"
-    ],
+    },
     "rating": 4.4,
+    "tags": [
+      "意面",
+      "牛排",
+      "约会"
+    ],
     "combos": [
       {
         "combo_id": "combo_012_1",
@@ -1760,65 +1818,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "意面",
-      "牛排",
-      "约会"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_013",
@@ -1840,7 +1840,65 @@
       "建议预约",
       "Brunch"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高"
+    ],
+    "photo_score_derived": {
+      "score": 1.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "Brunch",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "Brunch",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "Brunch",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "Brunch",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.7,
+    "tags": [
+      "轻食",
+      "下午约会",
+      "拍照"
+    ],
     "combos": [
       {
         "combo_id": "combo_013_1",
@@ -1910,65 +1968,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "轻食",
-      "下午约会",
-      "拍照"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "Brunch",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "Brunch",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "Brunch",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "Brunch",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_014",
@@ -1990,7 +1990,63 @@
       "建议预约",
       "景观餐厅"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高"
+    ],
+    "photo_score_derived": {
+      "score": 4.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "景观餐厅",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.6,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "景观餐厅",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "景观餐厅",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [],
+    "child_friendly_score_derived": {
+      "score": 2.5,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "景观餐厅",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.6,
+    "tags": [
+      "拍照",
+      "夜景",
+      "浪漫"
+    ],
     "combos": [
       {
         "combo_id": "combo_014_1",
@@ -2060,63 +2116,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "拍照",
-      "夜景",
-      "浪漫"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "景观餐厅",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.6,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "景观餐厅",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "景观餐厅",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [],
-    "child_friendly_score_derived": {
-      "score": 2.5,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "景观餐厅",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_015",
@@ -2138,7 +2138,65 @@
       "建议预约",
       "甜品下午茶"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高"
+    ],
+    "photo_score_derived": {
+      "score": 4.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "甜品下午茶",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "甜品下午茶",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "甜品下午茶",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "甜品下午茶",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "女生友好",
+      "拍照",
+      "甜品"
+    ],
     "combos": [
       {
         "combo_id": "combo_015_1",
@@ -2208,65 +2266,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "女生友好",
-      "拍照",
-      "甜品"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "甜品下午茶",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "甜品下午茶",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "甜品下午茶",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "甜品下午茶",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_016",
@@ -2288,7 +2288,67 @@
       "建议预约",
       "日式定食"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高",
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.6,
+    "tags": [
+      "少辣",
+      "安静",
+      "约会"
+    ],
     "combos": [
       {
         "combo_id": "combo_016_1",
@@ -2358,67 +2418,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣",
-      "安静",
-      "约会"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高",
-      "安静",
-      "轻松"
-    ],
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_017",
@@ -2440,7 +2440,65 @@
       "建议预约",
       "融合菜"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "浪漫",
+      "仪式感",
+      "适合拍照",
+      "出片率高"
+    ],
+    "photo_score_derived": {
+      "score": 1.7,
+      "confidence": 0.81,
+      "source": {
+        "sub_category": "融合菜",
+        "matched_review_keywords": [
+          "适合拍照",
+          "热门打卡"
+        ],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "融合菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.64,
+      "source": {
+        "sub_category": "融合菜",
+        "matched_review_keywords": [],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "融合菜",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "高体验",
+      "出片",
+      "预约"
+    ],
     "combos": [
       {
         "combo_id": "combo_017_1",
@@ -2510,65 +2568,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "高体验",
-      "出片",
-      "预约"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "融合菜",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "融合菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "融合菜",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "融合菜",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_018",
@@ -2590,7 +2590,63 @@
       "建议预约",
       "东北菜"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "高性价比",
+      "低决策成本"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.6,
+    "tags": [
+      "多人",
+      "高性价比",
+      "热闹"
+    ],
     "combos": [
       {
         "combo_id": "combo_018_1",
@@ -2662,11 +2718,27 @@
         ],
         "requires_booking": true
       }
-    ],
-    "tags": [
-      "多人",
-      "高性价比",
-      "热闹"
+    ]
+  },
+  {
+    "id": "restaurant_019",
+    "name": "东北大板·家常东北菜(大学城商圈)",
+    "category": "restaurant",
+    "sub_category": "东北菜",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场2F 972号铺",
+    "latitude": 0.348,
+    "longitude": -4.376,
+    "business_hours": "11:00-22:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
+      "建议预约",
+      "东北菜"
     ],
     "suitable_groups": [
       "friends"
@@ -2718,29 +2790,13 @@
         "matched_review_keywords": [],
         "rule": "child_friendly_from_facilities_and_keywords"
       }
-    }
-  },
-  {
-    "id": "restaurant_019",
-    "name": "东北大板·家常东北菜(大学城商圈)",
-    "category": "restaurant",
-    "sub_category": "东北菜",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 972号铺",
-    "latitude": 0.348,
-    "longitude": -4.376,
-    "business_hours": "11:00-22:30",
-    "indoor": true,
-    "review_keywords": [
-      "适合朋友聚会",
-      "热闹",
-      "适合多人",
-      "上菜快",
-      "饭点排队",
-      "建议预约",
-      "东北菜"
-    ],
+    },
     "rating": 4.5,
+    "tags": [
+      "多人",
+      "高性价比",
+      "热闹"
+    ],
     "combos": [
       {
         "combo_id": "combo_019_1",
@@ -2812,63 +2868,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "多人",
-      "高性价比",
-      "热闹"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "高性价比",
-      "低决策成本"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 3.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_020",
@@ -2890,7 +2890,60 @@
       "建议预约",
       "韩餐烤肉"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "韩餐烤肉",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "韩餐烤肉",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 5.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "韩餐烤肉",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "韩餐烤肉",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "朋友",
+      "热闹",
+      "烤肉"
+    ],
     "combos": [
       {
         "combo_id": "combo_020_1",
@@ -2962,60 +3015,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "朋友",
-      "热闹",
-      "烤肉"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "韩餐烤肉",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "韩餐烤肉",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 5.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "韩餐烤肉",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.48,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "韩餐烤肉",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_021",
@@ -3037,7 +3037,63 @@
       "建议预约",
       "披萨炸鸡"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "高性价比",
+      "低决策成本"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "披萨炸鸡",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "披萨炸鸡",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 5.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "披萨炸鸡",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "披萨炸鸡",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.2,
+    "tags": [
+      "朋友",
+      "年轻人",
+      "低决策成本"
+    ],
     "combos": [
       {
         "combo_id": "combo_021_1",
@@ -3109,63 +3165,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "朋友",
-      "年轻人",
-      "低决策成本"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "高性价比",
-      "低决策成本"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "披萨炸鸡",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "披萨炸鸡",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 5.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "披萨炸鸡",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.48,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "披萨炸鸡",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_022",
@@ -3187,7 +3187,60 @@
       "建议预约",
       "火锅"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "火锅",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "火锅",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 5.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "火锅",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "火锅",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.4,
+    "tags": [
+      "热闹",
+      "可选微辣",
+      "不辣锅"
+    ],
     "combos": [
       {
         "combo_id": "combo_022_1",
@@ -3259,60 +3312,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "热闹",
-      "可选微辣",
-      "不辣锅"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "火锅",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "火锅",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 5.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "火锅",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.48,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "火锅",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_023",
@@ -3334,7 +3334,60 @@
       "建议预约",
       "烤鱼"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "烤鱼",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "烤鱼",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "烤鱼",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "烤鱼",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.7,
+    "tags": [
+      "夜间",
+      "聚会",
+      "热闹"
+    ],
     "combos": [
       {
         "combo_id": "combo_023_1",
@@ -3406,60 +3459,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "夜间",
-      "聚会",
-      "热闹"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "烤鱼",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "烤鱼",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 3.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "烤鱼",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "烤鱼",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_024",
@@ -3481,7 +3481,60 @@
       "建议预约",
       "猪肚鸡"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "猪肚鸡",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "猪肚鸡",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "猪肚鸡",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "猪肚鸡",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "少辣替代火锅",
+      "聚餐",
+      "温和"
+    ],
     "combos": [
       {
         "combo_id": "combo_024_1",
@@ -3553,60 +3606,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少辣替代火锅",
-      "聚餐",
-      "温和"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "猪肚鸡",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "猪肚鸡",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 3.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "猪肚鸡",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "猪肚鸡",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_025",
@@ -3628,7 +3628,67 @@
       "周末人多",
       "亲子餐厅"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "亲子餐厅",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "亲子餐厅",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "亲子餐厅",
+        "matched_review_keywords": [
+          "周末人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.88,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "亲子餐厅",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "亲子餐厅"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "3-8岁",
+      "亲子",
+      "儿童"
+    ],
     "combos": [
       {
         "combo_id": "combo_025_1",
@@ -3697,67 +3757,7 @@
         ],
         "requires_booking": true
       }
-    ],
-    "tags": [
-      "3-8岁",
-      "亲子",
-      "儿童"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "亲子餐厅",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "亲子餐厅",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "亲子餐厅",
-        "matched_review_keywords": [
-          "周末人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "explicit",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "亲子卫生间",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 4.88,
-      "confidence": 0.93,
-      "source": {
-        "sub_category": "亲子餐厅",
-        "matched_review_keywords": [
-          "儿童友好",
-          "有儿童座椅",
-          "亲子餐厅"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_026",
@@ -3779,7 +3779,66 @@
       "周末人多",
       "儿童套餐友好"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "儿童套餐友好",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "儿童套餐友好",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "儿童套餐友好",
+        "matched_review_keywords": [
+          "周末人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.62,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "儿童套餐友好",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "儿童套餐友好"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.9,
+    "tags": [
+      "3-10岁",
+      "亲子",
+      "清淡"
+    ],
     "combos": [
       {
         "combo_id": "combo_026_1",
@@ -3848,66 +3907,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "3-10岁",
-      "亲子",
-      "清淡"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "儿童套餐友好",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "儿童套餐友好",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "儿童套餐友好",
-        "matched_review_keywords": [
-          "周末人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "explicit",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 4.62,
-      "confidence": 0.93,
-      "source": {
-        "sub_category": "儿童套餐友好",
-        "matched_review_keywords": [
-          "儿童友好",
-          "有儿童座椅",
-          "儿童套餐友好"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_027",
@@ -3929,7 +3929,71 @@
       "周末人多",
       "商场儿童友好"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好",
+      "室内兜底",
+      "少走路"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "商场儿童友好",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "商场儿童友好",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "商场儿童友好",
+        "matched_review_keywords": [
+          "周末人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "yes",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "商场内",
+      "室内",
+      "少走路"
+    ],
+    "child_friendly_score_derived": {
+      "score": 5.0,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "商场儿童友好",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "商场儿童友好"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "少走路",
+      "室内",
+      "亲子"
+    ],
     "combos": [
       {
         "combo_id": "combo_027_1",
@@ -3998,71 +4062,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "少走路",
-      "室内",
-      "亲子"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "室内兜底",
-      "少走路"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "商场儿童友好",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 1.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "商场儿童友好",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "商场儿童友好",
-        "matched_review_keywords": [
-          "周末人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "explicit",
-    "stroller_friendly_status": "yes",
-    "child_facility_tags": [
-      "儿童座椅",
-      "亲子卫生间",
-      "商场内",
-      "室内",
-      "少走路"
-    ],
-    "child_friendly_score_derived": {
-      "score": 5.0,
-      "confidence": 0.93,
-      "source": {
-        "sub_category": "商场儿童友好",
-        "matched_review_keywords": [
-          "儿童友好",
-          "有儿童座椅",
-          "商场儿童友好"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_028",
@@ -4084,7 +4084,66 @@
       "周末人多",
       "烘焙轻食亲子"
     ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "烘焙轻食亲子",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "烘焙轻食亲子",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "烘焙轻食亲子",
+        "matched_review_keywords": [
+          "周末人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.62,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "烘焙轻食亲子",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "烘焙轻食亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.3,
+    "tags": [
+      "下午茶",
+      "轻食",
+      "亲子"
+    ],
     "combos": [
       {
         "combo_id": "combo_028_1",
@@ -4153,66 +4212,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "下午茶",
-      "轻食",
-      "亲子"
-    ],
-    "suitable_groups": [
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "烘焙轻食亲子",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "烘焙轻食亲子",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "烘焙轻食亲子",
-        "matched_review_keywords": [
-          "周末人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "explicit",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "儿童座椅",
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 4.62,
-      "confidence": 0.93,
-      "source": {
-        "sub_category": "烘焙轻食亲子",
-        "matched_review_keywords": [
-          "儿童友好",
-          "有儿童座椅",
-          "烘焙轻食亲子"
-        ],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_029",
@@ -4234,7 +4234,64 @@
       "可做不辣",
       "咖啡简餐"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "咖啡简餐",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 1.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "咖啡简餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.9,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "咖啡简餐",
+        "matched_review_keywords": [
+          "环境安静",
+          "不用排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "yes",
+    "child_facility_tags": [
+      "室内",
+      "少走路"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.73,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "咖啡简餐",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.5,
+    "tags": [
+      "单人",
+      "放松",
+      "安静"
+    ],
     "combos": [
       {
         "combo_id": "combo_029_1",
@@ -4306,64 +4363,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "单人",
-      "放松",
-      "安静"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "咖啡简餐",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 1.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "咖啡简餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "咖啡简餐",
-        "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "yes",
-    "child_facility_tags": [
-      "室内",
-      "少走路"
-    ],
-    "child_friendly_score_derived": {
-      "score": 3.73,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "咖啡简餐",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_030",
@@ -4385,7 +4385,63 @@
       "可做不辣",
       "日式拉面乌冬"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.9,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [
+          "环境安静",
+          "不用排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.5,
+    "tags": [
+      "单人",
+      "快速",
+      "少辣"
+    ],
     "combos": [
       {
         "combo_id": "combo_030_1",
@@ -4457,63 +4513,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "单人",
-      "快速",
-      "少辣"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "日式拉面乌冬",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "日式拉面乌冬",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "日式拉面乌冬",
-        "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "日式拉面乌冬",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_031",
@@ -4535,7 +4535,63 @@
       "可做不辣",
       "面包烘焙简餐"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "面包烘焙简餐",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "面包烘焙简餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.9,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "面包烘焙简餐",
+        "matched_review_keywords": [
+          "环境安静",
+          "不用排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "面包烘焙简餐",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.4,
+    "tags": [
+      "下午轻食",
+      "单人",
+      "烘焙"
+    ],
     "combos": [
       {
         "combo_id": "combo_031_1",
@@ -4607,63 +4663,7 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "下午轻食",
-      "单人",
-      "烘焙"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   },
   {
     "id": "restaurant_032",
@@ -4685,7 +4685,63 @@
       "可做不辣",
       "粉面饭轻餐"
     ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "粉面饭轻餐",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "粉面饭轻餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 1.9,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "粉面饭轻餐",
+        "matched_review_keywords": [
+          "环境安静",
+          "不用排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "粉面饭轻餐",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    },
     "rating": 4.2,
+    "tags": [
+      "预算低",
+      "时间短",
+      "单人"
+    ],
     "combos": [
       {
         "combo_id": "combo_032_1",
@@ -4757,62 +4813,6 @@
         ],
         "requires_booking": false
       }
-    ],
-    "tags": [
-      "预算低",
-      "时间短",
-      "单人"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松"
-    ],
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "粉面饭轻餐",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "粉面饭轻餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "粉面饭轻餐",
-        "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    },
-    "kid_menu_status": "unknown",
-    "stroller_friendly_status": "unknown",
-    "child_facility_tags": [
-      "室内"
-    ],
-    "child_friendly_score_derived": {
-      "score": 2.88,
-      "confidence": 0.55,
-      "source": {
-        "sub_category": "粉面饭轻餐",
-        "matched_review_keywords": [],
-        "rule": "child_friendly_from_facilities_and_keywords"
-      }
-    }
+    ]
   }
 ]

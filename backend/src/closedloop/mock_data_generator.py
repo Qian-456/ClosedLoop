@@ -416,21 +416,13 @@ def _build_derived_score(*, score: float, confidence: float, sub_category: str, 
 def _derive_suitable_groups(*, category: str, sub_category: str, tags: list[str], review_keywords: list[str]) -> list[str]:
     text = " ".join([sub_category] + list(tags or []) + list(review_keywords or []))
     groups: list[str] = []
-    if any(k in text for k in ("单人", "独立书店", "咖啡", "书店", "轻食", "安静", "治愈")):
-        groups.append("solo")
-    if any(k in text for k in ("西餐", "景观", "甜品", "下午茶", "花艺", "浪漫", "约会", "纪念日", "私人影院", "夜景")):
-        groups.append("couple")
     if any(k in text for k in ("亲子", "儿童", "家庭", "乐园", "绘本", "商场儿童友好", "DIY", "玩具")):
         groups.append("family")
     if any(k in text for k in ("聚会", "热闹", "桌游", "KTV", "烤肉", "火锅", "剧本杀", "密室", "朋友")):
         groups.append("friends")
-    if any(k in text for k in ("商务", "包间", "洽谈", "高端", "安静约会")):
-        groups.append("business")
-    if any(k in text for k in ("VR", "电玩城", "街机", "轻恐", "密室", "剧本杀", "盲盒", "潮玩", "11-17", "13+")):
-        groups.append("teen")
 
-    if category == "activity" and not groups:
-        groups.append("solo")
+    if not groups:
+        groups.append("friends")
     return _dedupe_str_list(groups)
 
 
@@ -476,20 +468,6 @@ def _derive_experience_tags(*, category: str, sub_category: str, tags: list[str]
     if category == "gift_shop" and "惊喜感" not in experience_tags:
         experience_tags.append("惊喜感")
     return _dedupe_str_list(experience_tags)[:6]
-
-
-def _derive_romantic_score(*, sub_category: str, review_keywords: list[str]) -> dict[str, Any]:
-    base = 1.0
-    if any(k in sub_category for k in ("西餐", "景观", "甜品", "下午茶", "花艺", "鲜花", "巧克力", "私人影院", "夜景", "香薰")):
-        base = 4.2
-    matched = _matched_keywords(review_keywords, ("约会", "氛围", "纪念日", "浪漫", "惊喜"))
-    return _build_derived_score(
-        score=base + 0.35 * len(matched),
-        confidence=0.68 + 0.07 * len(matched),
-        sub_category=sub_category,
-        matched_review_keywords=matched,
-        rule="romantic_from_sub_category_and_keywords",
-    )
 
 
 def _derive_photo_score(*, sub_category: str, review_keywords: list[str]) -> dict[str, Any]:
@@ -564,10 +542,6 @@ def _derive_profile_fields(*, category: str, profile: str, sub_category: str, ta
             category=category,
             sub_category=sub_category,
             tags=tags,
-            review_keywords=review_keywords,
-        ),
-        "romantic_score_derived": _derive_romantic_score(
-            sub_category=sub_category,
             review_keywords=review_keywords,
         ),
         "photo_score_derived": _derive_photo_score(
@@ -2035,7 +2009,6 @@ def generate_mock_db_from_catalog(
             {k: r.get(k) for k in (
                 "suitable_groups",
                 "experience_tag",
-                "romantic_score_derived",
                 "photo_score_derived",
                 "onsite_walking_level_estimated",
                 "noise_level_estimated",
@@ -2135,7 +2108,6 @@ def generate_mock_db_from_catalog(
                 "suitable_groups",
                 "age_range",
                 "experience_tag",
-                "romantic_score_derived",
                 "photo_score_derived",
                 "onsite_walking_level_estimated",
                 "noise_level_estimated",
@@ -2222,7 +2194,6 @@ def generate_mock_db_from_catalog(
                 {k: s.get(k) for k in (
                     "suitable_groups",
                     "experience_tag",
-                    "romantic_score_derived",
                     "photo_score_derived",
                     "onsite_walking_level_estimated",
                     "noise_level_estimated",

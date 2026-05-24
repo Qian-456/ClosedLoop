@@ -18,77 +18,6 @@
       "可同城配送",
       "鲜花店"
     ],
-    "rating": 4.9,
-    "tags": [
-      "鲜花",
-      "约会",
-      "纪念日"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_001_1",
-        "name": "单支红玫瑰精美包装",
-        "price": 39.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
-        "features": "轻负担但很有仪式感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_001_2",
-        "name": "迷你花束(小束)",
-        "price": 49.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "小束花束+贺卡，适合临时加一份惊喜",
-        "features": "拿着拍照也很好看。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_001_3",
-        "name": "19朵混搭花束",
-        "price": 169.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "19朵混搭花束+贺卡+小彩灯",
-        "features": "出片率更高，氛围感更强。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_001_4",
-        "name": "永生花小礼盒",
-        "price": 199.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "永生花礼盒，可保存更久",
-        "features": "更适合做纪念。",
-        "stock": 30
-      },
-      {
-        "gift_id": "gift_001_5",
-        "name": "香槟色花束(中束)",
-        "price": 129.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "中束花束+丝带包装，颜色更高级",
-        "features": "更显质感，适合拍照。",
-        "stock": 50
-      },
-      {
-        "gift_id": "gift_001_6",
-        "name": "手写贺卡服务",
-        "price": 19.9,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "附赠手写贺卡与封蜡贴",
-        "features": "小小加成但很加分。",
-        "stock": 999
-      }
-    ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 10.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -141,7 +70,66 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.9,
+    "tags": [
+      "鲜花",
+      "约会",
+      "纪念日"
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_001_1",
+        "name": "单支红玫瑰精美包装",
+        "price": 39.0,
+        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_001_2",
+        "name": "迷你花束(小束)",
+        "price": 49.0,
+        "description": "小束花束+贺卡，适合临时加一份惊喜",
+        "features": "拿着拍照也很好看。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_001_3",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "出片率更高，氛围感更强。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_001_4",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "更适合做纪念。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_001_5",
+        "name": "香槟色花束(中束)",
+        "price": 129.0,
+        "description": "中束花束+丝带包装，颜色更高级",
+        "features": "更显质感，适合拍照。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_001_6",
+        "name": "手写贺卡服务",
+        "price": 19.9,
+        "description": "附赠手写贺卡与封蜡贴",
+        "features": "小小加成但很加分。",
+        "stock": 999
+      }
+    ]
   },
   {
     "id": "gift_shop_002",
@@ -162,76 +150,6 @@
       "可同城配送",
       "鲜花店"
     ],
-    "rating": 4.8,
-    "tags": [
-      "鲜花",
-      "浪漫"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_002_1",
-        "name": "单支红玫瑰精美包装",
-        "price": 39.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
-        "features": "轻负担但很有仪式感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_002_2",
-        "name": "迷你花束(小束)",
-        "price": 49.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "小束花束+贺卡，适合临时加一份惊喜",
-        "features": "拿着拍照也很好看。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_002_3",
-        "name": "19朵混搭花束",
-        "price": 169.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "19朵混搭花束+贺卡+小彩灯",
-        "features": "出片率更高，氛围感更强。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_002_4",
-        "name": "永生花小礼盒",
-        "price": 199.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "永生花礼盒，可保存更久",
-        "features": "更适合做纪念。",
-        "stock": 30
-      },
-      {
-        "gift_id": "gift_002_5",
-        "name": "香槟色花束(中束)",
-        "price": 129.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "中束花束+丝带包装，颜色更高级",
-        "features": "更显质感，适合拍照。",
-        "stock": 50
-      },
-      {
-        "gift_id": "gift_002_6",
-        "name": "手写贺卡服务",
-        "price": 19.9,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "附赠手写贺卡与封蜡贴",
-        "features": "小小加成但很加分。",
-        "stock": 999
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -284,7 +202,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.8,
+    "tags": [
+      "鲜花",
+      "浪漫"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_002_1",
+        "name": "单支红玫瑰精美包装",
+        "price": 39.0,
+        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_002_2",
+        "name": "迷你花束(小束)",
+        "price": 49.0,
+        "description": "小束花束+贺卡，适合临时加一份惊喜",
+        "features": "拿着拍照也很好看。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_002_3",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "出片率更高，氛围感更强。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_002_4",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "更适合做纪念。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_002_5",
+        "name": "香槟色花束(中束)",
+        "price": 129.0,
+        "description": "中束花束+丝带包装，颜色更高级",
+        "features": "更显质感，适合拍照。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_002_6",
+        "name": "手写贺卡服务",
+        "price": 19.9,
+        "description": "附赠手写贺卡与封蜡贴",
+        "features": "小小加成但很加分。",
+        "stock": 999
+      }
+    ]
   },
   {
     "id": "gift_shop_003",
@@ -305,76 +281,6 @@
       "可同城配送",
       "永生花"
     ],
-    "rating": 5.0,
-    "tags": [
-      "永生花",
-      "可保存"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_003_1",
-        "name": "单支红玫瑰精美包装",
-        "price": 39.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
-        "features": "轻负担但很有仪式感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_003_2",
-        "name": "迷你花束(小束)",
-        "price": 49.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "小束花束+贺卡，适合临时加一份惊喜",
-        "features": "拿着拍照也很好看。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_003_3",
-        "name": "19朵混搭花束",
-        "price": 169.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "19朵混搭花束+贺卡+小彩灯",
-        "features": "出片率更高，氛围感更强。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_003_4",
-        "name": "永生花小礼盒",
-        "price": 199.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "永生花礼盒，可保存更久",
-        "features": "更适合做纪念。",
-        "stock": 30
-      },
-      {
-        "gift_id": "gift_003_5",
-        "name": "香槟色花束(中束)",
-        "price": 129.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "中束花束+丝带包装，颜色更高级",
-        "features": "更显质感，适合拍照。",
-        "stock": 50
-      },
-      {
-        "gift_id": "gift_003_6",
-        "name": "手写贺卡服务",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "附赠手写贺卡与封蜡贴",
-        "features": "小小加成但很加分。",
-        "stock": 999
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 10.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -426,7 +332,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 5.0,
+    "tags": [
+      "永生花",
+      "可保存"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_003_1",
+        "name": "单支红玫瑰精美包装",
+        "price": 39.0,
+        "description": "单支红玫瑰+精美包装，适合日常小惊喜",
+        "features": "轻负担但很有仪式感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_003_2",
+        "name": "迷你花束(小束)",
+        "price": 49.0,
+        "description": "小束花束+贺卡，适合临时加一份惊喜",
+        "features": "拿着拍照也很好看。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_003_3",
+        "name": "19朵混搭花束",
+        "price": 169.0,
+        "description": "19朵混搭花束+贺卡+小彩灯",
+        "features": "出片率更高，氛围感更强。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_003_4",
+        "name": "永生花小礼盒",
+        "price": 199.0,
+        "description": "永生花礼盒，可保存更久",
+        "features": "更适合做纪念。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_003_5",
+        "name": "香槟色花束(中束)",
+        "price": 129.0,
+        "description": "中束花束+丝带包装，颜色更高级",
+        "features": "更显质感，适合拍照。",
+        "stock": 50
+      },
+      {
+        "gift_id": "gift_003_6",
+        "name": "手写贺卡服务",
+        "price": 19.9,
+        "description": "附赠手写贺卡与封蜡贴",
+        "features": "小小加成但很加分。",
+        "stock": 999
+      }
+    ]
   },
   {
     "id": "gift_shop_004",
@@ -447,76 +411,6 @@
       "可同城配送",
       "香薰蜡烛"
     ],
-    "rating": 4.5,
-    "tags": [
-      "香薰",
-      "氛围感"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_004_1",
-        "name": "小样香薰蜡烛(1支)",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "一支小样香薰蜡烛，香味清新",
-        "features": "低价但很有氛围。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_004_2",
-        "name": "无火香薰扩香套装",
-        "price": 59.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "白茶/蓝风铃香型，含扩香藤条与精油",
-        "features": "提升房间氛围感的入门款。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_004_3",
-        "name": "香薰蜡烛礼盒(双支)",
-        "price": 88.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "两支香薰蜡烛+火柴+礼盒包装",
-        "features": "送礼更体面。",
-        "stock": 80
-      },
-      {
-        "gift_id": "gift_004_4",
-        "name": "香薰精油补充装(2瓶)",
-        "price": 79.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "两瓶精油补充装，持香更久",
-        "features": "更适合长期使用。",
-        "stock": 90
-      },
-      {
-        "gift_id": "gift_004_5",
-        "name": "氛围感香薰礼盒",
-        "price": 139.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "扩香+蜡烛+小摆件组合礼盒",
-        "features": "仪式感更强，包装更好看。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_004_6",
-        "name": "暖光小夜灯(礼物装)",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "暖光小夜灯，适合卧室/桌面",
-        "features": "氛围感拉满的小物件。",
-        "stock": 70
-      }
-    ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -568,7 +462,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.5,
+    "tags": [
+      "香薰",
+      "氛围感"
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_004_1",
+        "name": "小样香薰蜡烛(1支)",
+        "price": 39.9,
+        "description": "一支小样香薰蜡烛，香味清新",
+        "features": "低价但很有氛围。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_004_2",
+        "name": "无火香薰扩香套装",
+        "price": 59.9,
+        "description": "白茶/蓝风铃香型，含扩香藤条与精油",
+        "features": "提升房间氛围感的入门款。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_004_3",
+        "name": "香薰蜡烛礼盒(双支)",
+        "price": 88.0,
+        "description": "两支香薰蜡烛+火柴+礼盒包装",
+        "features": "送礼更体面。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_004_4",
+        "name": "香薰精油补充装(2瓶)",
+        "price": 79.0,
+        "description": "两瓶精油补充装，持香更久",
+        "features": "更适合长期使用。",
+        "stock": 90
+      },
+      {
+        "gift_id": "gift_004_5",
+        "name": "氛围感香薰礼盒",
+        "price": 139.0,
+        "description": "扩香+蜡烛+小摆件组合礼盒",
+        "features": "仪式感更强，包装更好看。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_004_6",
+        "name": "暖光小夜灯(礼物装)",
+        "price": 69.0,
+        "description": "暖光小夜灯，适合卧室/桌面",
+        "features": "氛围感拉满的小物件。",
+        "stock": 70
+      }
+    ]
   },
   {
     "id": "gift_shop_005",
@@ -589,76 +541,6 @@
       "可同城配送",
       "手工巧克力"
     ],
-    "rating": 4.8,
-    "tags": [
-      "巧克力",
-      "惊喜"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_005_1",
-        "name": "巧克力小方块(6颗)",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "6颗小方块巧克力组合",
-        "features": "低成本但很讨喜。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_005_2",
-        "name": "可可脆片巧克力棒(4支)",
-        "price": 58.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "4支巧克力棒，带可可脆片口感",
-        "features": "随手送也不尴尬。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_005_3",
-        "name": "手工夹心巧克力礼盒(12颗)",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "12颗手工夹心巧克力，多口味搭配",
-        "features": "更适合认真准备的礼物。",
-        "stock": 60
-      },
-      {
-        "gift_id": "gift_005_4",
-        "name": "高可可含量黑巧礼盒",
-        "price": 99.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "高可可含量黑巧礼盒，口感更醇",
-        "features": "更显高级，甜度更克制。",
-        "stock": 70
-      },
-      {
-        "gift_id": "gift_005_5",
-        "name": "巧克力玫瑰花束",
-        "price": 169.0,
-        "receive_duration_mins": 10,
-        "receive_duration_std_dev": 3.0,
-        "description": "巧克力组成的花束造型礼物",
-        "features": "好看又能吃，惊喜感更强。",
-        "stock": 30
-      },
-      {
-        "gift_id": "gift_005_6",
-        "name": "礼物包装升级服务",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "升级礼物包装与丝带",
-        "features": "更有仪式感。",
-        "stock": 999
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 5.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -710,7 +592,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.8,
+    "tags": [
+      "巧克力",
+      "惊喜"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_005_1",
+        "name": "巧克力小方块(6颗)",
+        "price": 39.9,
+        "description": "6颗小方块巧克力组合",
+        "features": "低成本但很讨喜。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_005_2",
+        "name": "可可脆片巧克力棒(4支)",
+        "price": 58.0,
+        "description": "4支巧克力棒，带可可脆片口感",
+        "features": "随手送也不尴尬。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_005_3",
+        "name": "手工夹心巧克力礼盒(12颗)",
+        "price": 128.0,
+        "description": "12颗手工夹心巧克力，多口味搭配",
+        "features": "更适合认真准备的礼物。",
+        "stock": 60
+      },
+      {
+        "gift_id": "gift_005_4",
+        "name": "高可可含量黑巧礼盒",
+        "price": 99.0,
+        "description": "高可可含量黑巧礼盒，口感更醇",
+        "features": "更显高级，甜度更克制。",
+        "stock": 70
+      },
+      {
+        "gift_id": "gift_005_5",
+        "name": "巧克力玫瑰花束",
+        "price": 169.0,
+        "description": "巧克力组成的花束造型礼物",
+        "features": "好看又能吃，惊喜感更强。",
+        "stock": 30
+      },
+      {
+        "gift_id": "gift_005_6",
+        "name": "礼物包装升级服务",
+        "price": 19.9,
+        "description": "升级礼物包装与丝带",
+        "features": "更有仪式感。",
+        "stock": 999
+      }
+    ]
   },
   {
     "id": "gift_shop_006",
@@ -731,76 +671,6 @@
       "可同城配送",
       "小蛋糕店"
     ],
-    "rating": 4.9,
-    "tags": [
-      "蛋糕",
-      "庆生"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_006_1",
-        "name": "半熟芝士(一盒5枚)",
-        "price": 38.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "招牌半熟芝士，入口即化",
-        "features": "小成本但很有幸福感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_006_2",
-        "name": "生日蜡烛+帽子小套装",
-        "price": 19.9,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "蜡烛+生日帽+小拉旗",
-        "features": "氛围立刻到位。",
-        "stock": 300
-      },
-      {
-        "gift_id": "gift_006_3",
-        "name": "小甜品礼盒(4份)",
-        "price": 98.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "4份小甜品组合，口味搭配更均衡",
-        "features": "分享更方便，适合朋友小聚。",
-        "stock": 80
-      },
-      {
-        "gift_id": "gift_006_4",
-        "name": "6英寸生日蛋糕",
-        "price": 168.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
-        "features": "3-4人小型庆生刚刚好。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_006_5",
-        "name": "8英寸水果蛋糕",
-        "price": 198.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "8英寸水果蛋糕，适合多人分享",
-        "features": "更适合朋友聚会。",
-        "stock": 25
-      },
-      {
-        "gift_id": "gift_006_6",
-        "name": "庆生甜品拼盘",
-        "price": 128.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "甜品拼盘+小卡片，适合摆拍",
-        "features": "仪式感更强，照片更好看。",
-        "stock": 50
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 10.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -847,7 +717,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.9,
+    "tags": [
+      "蛋糕",
+      "庆生"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_006_1",
+        "name": "半熟芝士(一盒5枚)",
+        "price": 38.0,
+        "description": "招牌半熟芝士，入口即化",
+        "features": "小成本但很有幸福感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_006_2",
+        "name": "生日蜡烛+帽子小套装",
+        "price": 19.9,
+        "description": "蜡烛+生日帽+小拉旗",
+        "features": "氛围立刻到位。",
+        "stock": 300
+      },
+      {
+        "gift_id": "gift_006_3",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "description": "4份小甜品组合，口味搭配更均衡",
+        "features": "分享更方便，适合朋友小聚。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_006_4",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_006_5",
+        "name": "8英寸水果蛋糕",
+        "price": 198.0,
+        "description": "8英寸水果蛋糕，适合多人分享",
+        "features": "更适合朋友聚会。",
+        "stock": 25
+      },
+      {
+        "gift_id": "gift_006_6",
+        "name": "庆生甜品拼盘",
+        "price": 128.0,
+        "description": "甜品拼盘+小卡片，适合摆拍",
+        "features": "仪式感更强，照片更好看。",
+        "stock": 50
+      }
+    ]
   },
   {
     "id": "gift_shop_007",
@@ -868,76 +796,6 @@
       "可同城配送",
       "小蛋糕店"
     ],
-    "rating": 4.5,
-    "tags": [
-      "蛋糕",
-      "朋友聚会"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_007_1",
-        "name": "半熟芝士(一盒5枚)",
-        "price": 38.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "招牌半熟芝士，入口即化",
-        "features": "小成本但很有幸福感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_007_2",
-        "name": "生日蜡烛+帽子小套装",
-        "price": 19.9,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "蜡烛+生日帽+小拉旗",
-        "features": "氛围立刻到位。",
-        "stock": 300
-      },
-      {
-        "gift_id": "gift_007_3",
-        "name": "小甜品礼盒(4份)",
-        "price": 98.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "4份小甜品组合，口味搭配更均衡",
-        "features": "分享更方便，适合朋友小聚。",
-        "stock": 80
-      },
-      {
-        "gift_id": "gift_007_4",
-        "name": "6英寸生日蛋糕",
-        "price": 168.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
-        "features": "3-4人小型庆生刚刚好。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_007_5",
-        "name": "8英寸水果蛋糕",
-        "price": 198.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "8英寸水果蛋糕，适合多人分享",
-        "features": "更适合朋友聚会。",
-        "stock": 25
-      },
-      {
-        "gift_id": "gift_007_6",
-        "name": "庆生甜品拼盘",
-        "price": 128.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "甜品拼盘+小卡片，适合摆拍",
-        "features": "仪式感更强，照片更好看。",
-        "stock": 50
-      }
-    ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 10.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -984,7 +842,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.5,
+    "tags": [
+      "蛋糕",
+      "朋友聚会"
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_007_1",
+        "name": "半熟芝士(一盒5枚)",
+        "price": 38.0,
+        "description": "招牌半熟芝士，入口即化",
+        "features": "小成本但很有幸福感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_007_2",
+        "name": "生日蜡烛+帽子小套装",
+        "price": 19.9,
+        "description": "蜡烛+生日帽+小拉旗",
+        "features": "氛围立刻到位。",
+        "stock": 300
+      },
+      {
+        "gift_id": "gift_007_3",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "description": "4份小甜品组合，口味搭配更均衡",
+        "features": "分享更方便，适合朋友小聚。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_007_4",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_007_5",
+        "name": "8英寸水果蛋糕",
+        "price": 198.0,
+        "description": "8英寸水果蛋糕，适合多人分享",
+        "features": "更适合朋友聚会。",
+        "stock": 25
+      },
+      {
+        "gift_id": "gift_007_6",
+        "name": "庆生甜品拼盘",
+        "price": 128.0,
+        "description": "甜品拼盘+小卡片，适合摆拍",
+        "features": "仪式感更强，照片更好看。",
+        "stock": 50
+      }
+    ]
   },
   {
     "id": "gift_shop_008",
@@ -1005,76 +921,6 @@
       "可同城配送",
       "甜品礼盒"
     ],
-    "rating": 4.6,
-    "tags": [
-      "甜品",
-      "礼盒"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_008_1",
-        "name": "半熟芝士(一盒5枚)",
-        "price": 38.0,
-        "receive_duration_mins": 20,
-        "receive_duration_std_dev": 5.0,
-        "description": "招牌半熟芝士，入口即化",
-        "features": "小成本但很有幸福感。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_008_2",
-        "name": "生日蜡烛+帽子小套装",
-        "price": 19.9,
-        "receive_duration_mins": 20,
-        "receive_duration_std_dev": 5.0,
-        "description": "蜡烛+生日帽+小拉旗",
-        "features": "氛围立刻到位。",
-        "stock": 300
-      },
-      {
-        "gift_id": "gift_008_3",
-        "name": "小甜品礼盒(4份)",
-        "price": 98.0,
-        "receive_duration_mins": 20,
-        "receive_duration_std_dev": 5.0,
-        "description": "4份小甜品组合，口味搭配更均衡",
-        "features": "分享更方便，适合朋友小聚。",
-        "stock": 80
-      },
-      {
-        "gift_id": "gift_008_4",
-        "name": "6英寸生日蛋糕",
-        "price": 168.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
-        "features": "3-4人小型庆生刚刚好。",
-        "stock": 40
-      },
-      {
-        "gift_id": "gift_008_5",
-        "name": "8英寸水果蛋糕",
-        "price": 198.0,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "8英寸水果蛋糕，适合多人分享",
-        "features": "更适合朋友聚会。",
-        "stock": 25
-      },
-      {
-        "gift_id": "gift_008_6",
-        "name": "庆生甜品拼盘",
-        "price": 128.0,
-        "receive_duration_mins": 20,
-        "receive_duration_std_dev": 5.0,
-        "description": "甜品拼盘+小卡片，适合摆拍",
-        "features": "仪式感更强，照片更好看。",
-        "stock": 50
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 5.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -1123,7 +969,65 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.6,
+    "tags": [
+      "甜品",
+      "礼盒"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_008_1",
+        "name": "半熟芝士(一盒5枚)",
+        "price": 38.0,
+        "description": "招牌半熟芝士，入口即化",
+        "features": "小成本但很有幸福感。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_008_2",
+        "name": "生日蜡烛+帽子小套装",
+        "price": 19.9,
+        "description": "蜡烛+生日帽+小拉旗",
+        "features": "氛围立刻到位。",
+        "stock": 300
+      },
+      {
+        "gift_id": "gift_008_3",
+        "name": "小甜品礼盒(4份)",
+        "price": 98.0,
+        "description": "4份小甜品组合，口味搭配更均衡",
+        "features": "分享更方便，适合朋友小聚。",
+        "stock": 80
+      },
+      {
+        "gift_id": "gift_008_4",
+        "name": "6英寸生日蛋糕",
+        "price": 168.0,
+        "description": "6英寸奶油蛋糕，附蜡烛刀叉",
+        "features": "3-4人小型庆生刚刚好。",
+        "stock": 40
+      },
+      {
+        "gift_id": "gift_008_5",
+        "name": "8英寸水果蛋糕",
+        "price": 198.0,
+        "description": "8英寸水果蛋糕，适合多人分享",
+        "features": "更适合朋友聚会。",
+        "stock": 25
+      },
+      {
+        "gift_id": "gift_008_6",
+        "name": "庆生甜品拼盘",
+        "price": 128.0,
+        "description": "甜品拼盘+小卡片，适合摆拍",
+        "features": "仪式感更强，照片更好看。",
+        "stock": 50
+      }
+    ]
   },
   {
     "id": "gift_shop_009",
@@ -1144,77 +1048,6 @@
       "可同城配送",
       "奶茶/咖啡团单"
     ],
-    "rating": 4.9,
-    "tags": [
-      "奶茶",
-      "咖啡",
-      "低成本惊喜"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_009_1",
-        "name": "单杯奶茶加料券",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "单杯加料券，可选珍珠/椰果等",
-        "features": "低成本的小惊喜。",
-        "stock": 999
-      },
-      {
-        "gift_id": "gift_009_2",
-        "name": "双杯奶茶团单",
-        "price": 49.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "两杯奶茶任选",
-        "features": "省事又体面。",
-        "stock": 999
-      },
-      {
-        "gift_id": "gift_009_3",
-        "name": "四杯咖啡团单",
-        "price": 99.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "四杯咖啡任选",
-        "features": "聚会补给很省心。",
-        "stock": 999
-      },
-      {
-        "gift_id": "gift_009_4",
-        "name": "六杯奶茶聚会团单",
-        "price": 139.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "六杯奶茶任选，适合多人聚会",
-        "features": "人多也不怕不够喝。",
-        "stock": 999
-      },
-      {
-        "gift_id": "gift_009_5",
-        "name": "蛋糕券(小份)",
-        "price": 39.9,
-        "receive_duration_mins": 35,
-        "receive_duration_std_dev": 8.0,
-        "description": "小份蛋糕兑换券，方便搭配饮品",
-        "features": "更适合临时加一份甜。",
-        "stock": 999
-      },
-      {
-        "gift_id": "gift_009_6",
-        "name": "聚会零食小礼包",
-        "price": 59.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "零食小礼包，适合配奶茶咖啡",
-        "features": "边聊边吃更开心。",
-        "stock": 200
-      }
-    ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -1263,7 +1096,66 @@
         ],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.9,
+    "tags": [
+      "奶茶",
+      "咖啡",
+      "低成本惊喜"
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_009_1",
+        "name": "单杯奶茶加料券",
+        "price": 19.9,
+        "description": "单杯加料券，可选珍珠/椰果等",
+        "features": "低成本的小惊喜。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_2",
+        "name": "双杯奶茶团单",
+        "price": 49.9,
+        "description": "两杯奶茶任选",
+        "features": "省事又体面。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_3",
+        "name": "四杯咖啡团单",
+        "price": 99.0,
+        "description": "四杯咖啡任选",
+        "features": "聚会补给很省心。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_4",
+        "name": "六杯奶茶聚会团单",
+        "price": 139.0,
+        "description": "六杯奶茶任选，适合多人聚会",
+        "features": "人多也不怕不够喝。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_5",
+        "name": "蛋糕券(小份)",
+        "price": 39.9,
+        "description": "小份蛋糕兑换券，方便搭配饮品",
+        "features": "更适合临时加一份甜。",
+        "stock": 999
+      },
+      {
+        "gift_id": "gift_009_6",
+        "name": "聚会零食小礼包",
+        "price": 59.0,
+        "description": "零食小礼包，适合配奶茶咖啡",
+        "features": "边聊边吃更开心。",
+        "stock": 200
+      }
+    ]
   },
   {
     "id": "gift_shop_010",
@@ -1284,76 +1176,6 @@
       "可同城配送",
       "儿童玩具店"
     ],
-    "rating": 4.9,
-    "tags": [
-      "玩具",
-      "3-6岁"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_010_1",
-        "name": "儿童贴纸+涂鸦本套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "涂鸦本+贴纸，适合安静时间",
-        "features": "上手简单，孩子更专注。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_010_2",
-        "name": "迷你积木小套装",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "迷你积木套装，适合动手搭建",
-        "features": "作为小奖励很合适。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_010_3",
-        "name": "儿童益智拼图",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "适合7-10岁拼图，难度适中",
-        "features": "更有成就感，适合亲子一起拼。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_010_4",
-        "name": "毛绒玩具(中号)",
-        "price": 59.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "中号毛绒玩具，柔软亲肤",
-        "features": "孩子更容易喜欢，抱着很安心。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_010_5",
-        "name": "文具手账礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "手账本+贴纸+彩笔组合",
-        "features": "实用又好看，适合送小朋友。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_010_6",
-        "name": "益智桌游(亲子版)",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "亲子版桌游，规则简单易上手",
-        "features": "更适合一家人一起玩。",
-        "stock": 60
-      }
-    ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
     ],
@@ -1398,7 +1220,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.9,
+    "tags": [
+      "玩具",
+      "3-6岁"
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_010_1",
+        "name": "儿童贴纸+涂鸦本套装",
+        "price": 19.9,
+        "description": "涂鸦本+贴纸，适合安静时间",
+        "features": "上手简单，孩子更专注。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_010_2",
+        "name": "迷你积木小套装",
+        "price": 39.9,
+        "description": "迷你积木套装，适合动手搭建",
+        "features": "作为小奖励很合适。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_010_3",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "更有成就感，适合亲子一起拼。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_010_4",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "孩子更容易喜欢，抱着很安心。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_010_5",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "实用又好看，适合送小朋友。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_010_6",
+        "name": "益智桌游(亲子版)",
+        "price": 128.0,
+        "description": "亲子版桌游，规则简单易上手",
+        "features": "更适合一家人一起玩。",
+        "stock": 60
+      }
+    ]
   },
   {
     "id": "gift_shop_011",
@@ -1419,76 +1299,6 @@
       "可同城配送",
       "益智玩具/拼图"
     ],
-    "rating": 4.7,
-    "tags": [
-      "拼图",
-      "7-10岁"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_011_1",
-        "name": "儿童贴纸+涂鸦本套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "涂鸦本+贴纸，适合安静时间",
-        "features": "上手简单，孩子更专注。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_011_2",
-        "name": "迷你积木小套装",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "迷你积木套装，适合动手搭建",
-        "features": "作为小奖励很合适。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_011_3",
-        "name": "儿童益智拼图",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "适合7-10岁拼图，难度适中",
-        "features": "更有成就感，适合亲子一起拼。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_011_4",
-        "name": "毛绒玩具(中号)",
-        "price": 59.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "中号毛绒玩具，柔软亲肤",
-        "features": "孩子更容易喜欢，抱着很安心。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_011_5",
-        "name": "文具手账礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "手账本+贴纸+彩笔组合",
-        "features": "实用又好看，适合送小朋友。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_011_6",
-        "name": "益智桌游(亲子版)",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "亲子版桌游，规则简单易上手",
-        "features": "更适合一家人一起玩。",
-        "stock": 60
-      }
-    ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 10.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
     ],
@@ -1533,7 +1343,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.7,
+    "tags": [
+      "拼图",
+      "7-10岁"
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 10.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_011_1",
+        "name": "儿童贴纸+涂鸦本套装",
+        "price": 19.9,
+        "description": "涂鸦本+贴纸，适合安静时间",
+        "features": "上手简单，孩子更专注。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_011_2",
+        "name": "迷你积木小套装",
+        "price": 39.9,
+        "description": "迷你积木套装，适合动手搭建",
+        "features": "作为小奖励很合适。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_011_3",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "更有成就感，适合亲子一起拼。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_011_4",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "孩子更容易喜欢，抱着很安心。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_011_5",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "实用又好看，适合送小朋友。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_011_6",
+        "name": "益智桌游(亲子版)",
+        "price": 128.0,
+        "description": "亲子版桌游，规则简单易上手",
+        "features": "更适合一家人一起玩。",
+        "stock": 60
+      }
+    ]
   },
   {
     "id": "gift_shop_012",
@@ -1554,76 +1422,6 @@
       "可同城配送",
       "毛绒玩具"
     ],
-    "rating": 4.5,
-    "tags": [
-      "毛绒",
-      "可爱"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_012_1",
-        "name": "儿童贴纸+涂鸦本套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "涂鸦本+贴纸，适合安静时间",
-        "features": "上手简单，孩子更专注。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_012_2",
-        "name": "迷你积木小套装",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "迷你积木套装，适合动手搭建",
-        "features": "作为小奖励很合适。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_012_3",
-        "name": "儿童益智拼图",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "适合7-10岁拼图，难度适中",
-        "features": "更有成就感，适合亲子一起拼。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_012_4",
-        "name": "毛绒玩具(中号)",
-        "price": 59.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "中号毛绒玩具，柔软亲肤",
-        "features": "孩子更容易喜欢，抱着很安心。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_012_5",
-        "name": "文具手账礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "手账本+贴纸+彩笔组合",
-        "features": "实用又好看，适合送小朋友。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_012_6",
-        "name": "益智桌游(亲子版)",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "亲子版桌游，规则简单易上手",
-        "features": "更适合一家人一起玩。",
-        "stock": 60
-      }
-    ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
     ],
@@ -1668,7 +1466,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.5,
+    "tags": [
+      "毛绒",
+      "可爱"
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_012_1",
+        "name": "儿童贴纸+涂鸦本套装",
+        "price": 19.9,
+        "description": "涂鸦本+贴纸，适合安静时间",
+        "features": "上手简单，孩子更专注。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_012_2",
+        "name": "迷你积木小套装",
+        "price": 39.9,
+        "description": "迷你积木套装，适合动手搭建",
+        "features": "作为小奖励很合适。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_012_3",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "更有成就感，适合亲子一起拼。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_012_4",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "孩子更容易喜欢，抱着很安心。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_012_5",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "实用又好看，适合送小朋友。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_012_6",
+        "name": "益智桌游(亲子版)",
+        "price": 128.0,
+        "description": "亲子版桌游，规则简单易上手",
+        "features": "更适合一家人一起玩。",
+        "stock": 60
+      }
+    ]
   },
   {
     "id": "gift_shop_013",
@@ -1689,76 +1545,6 @@
       "可同城配送",
       "文具/手账小礼物"
     ],
-    "rating": 4.7,
-    "tags": [
-      "文具",
-      "手账"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_013_1",
-        "name": "儿童贴纸+涂鸦本套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "涂鸦本+贴纸，适合安静时间",
-        "features": "上手简单，孩子更专注。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_013_2",
-        "name": "迷你积木小套装",
-        "price": 39.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "迷你积木套装，适合动手搭建",
-        "features": "作为小奖励很合适。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_013_3",
-        "name": "儿童益智拼图",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "适合7-10岁拼图，难度适中",
-        "features": "更有成就感，适合亲子一起拼。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_013_4",
-        "name": "毛绒玩具(中号)",
-        "price": 59.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "中号毛绒玩具，柔软亲肤",
-        "features": "孩子更容易喜欢，抱着很安心。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_013_5",
-        "name": "文具手账礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "手账本+贴纸+彩笔组合",
-        "features": "实用又好看，适合送小朋友。",
-        "stock": 100
-      },
-      {
-        "gift_id": "gift_013_6",
-        "name": "益智桌游(亲子版)",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "亲子版桌游，规则简单易上手",
-        "features": "更适合一家人一起玩。",
-        "stock": 60
-      }
-    ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 5.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
     ],
@@ -1803,7 +1589,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.7,
+    "tags": [
+      "文具",
+      "手账"
+    ],
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 5.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_013_1",
+        "name": "儿童贴纸+涂鸦本套装",
+        "price": 19.9,
+        "description": "涂鸦本+贴纸，适合安静时间",
+        "features": "上手简单，孩子更专注。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_013_2",
+        "name": "迷你积木小套装",
+        "price": 39.9,
+        "description": "迷你积木套装，适合动手搭建",
+        "features": "作为小奖励很合适。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_013_3",
+        "name": "儿童益智拼图",
+        "price": 69.0,
+        "description": "适合7-10岁拼图，难度适中",
+        "features": "更有成就感，适合亲子一起拼。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_013_4",
+        "name": "毛绒玩具(中号)",
+        "price": 59.9,
+        "description": "中号毛绒玩具，柔软亲肤",
+        "features": "孩子更容易喜欢，抱着很安心。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_013_5",
+        "name": "文具手账礼盒",
+        "price": 68.0,
+        "description": "手账本+贴纸+彩笔组合",
+        "features": "实用又好看，适合送小朋友。",
+        "stock": 100
+      },
+      {
+        "gift_id": "gift_013_6",
+        "name": "益智桌游(亲子版)",
+        "price": 128.0,
+        "description": "亲子版桌游，规则简单易上手",
+        "features": "更适合一家人一起玩。",
+        "stock": 60
+      }
+    ]
   },
   {
     "id": "gift_shop_014",
@@ -1824,76 +1668,6 @@
       "可同城配送",
       "文创礼品店"
     ],
-    "rating": 4.7,
-    "tags": [
-      "文创",
-      "展览后"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_014_1",
-        "name": "城市明信片套装(10张)",
-        "price": 39.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "10张城市明信片，含贴纸",
-        "features": "纪念感很强，适合带走。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_014_2",
-        "name": "文创贴纸手账套装",
-        "price": 29.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "贴纸+胶带组合，适合记录生活",
-        "features": "低成本但很实用。",
-        "stock": 220
-      },
-      {
-        "gift_id": "gift_014_3",
-        "name": "文创小摆件",
-        "price": 59.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "桌面小摆件，适合送礼",
-        "features": "不贵但有心意。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_014_4",
-        "name": "复古手帐本礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "笔记本+羽毛笔+和纸胶带",
-        "features": "颜值更高，送礼更体面。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_014_5",
-        "name": "城市纪念徽章套装",
-        "price": 49.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "纪念徽章套装，可别在包上",
-        "features": "小而精致，适合当伴手礼。",
-        "stock": 180
-      },
-      {
-        "gift_id": "gift_014_6",
-        "name": "明信片邮票贴纸套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "邮票贴纸+装饰贴，适合写信",
-        "features": "细节更有趣。",
-        "stock": 260
-      }
-    ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 8.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -1945,7 +1719,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.7,
+    "tags": [
+      "文创",
+      "展览后"
+    ],
+    "delivery_time_mins": 60,
+    "delivery_time_std_dev": 8.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_014_1",
+        "name": "城市明信片套装(10张)",
+        "price": 39.0,
+        "description": "10张城市明信片，含贴纸",
+        "features": "纪念感很强，适合带走。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_014_2",
+        "name": "文创贴纸手账套装",
+        "price": 29.9,
+        "description": "贴纸+胶带组合，适合记录生活",
+        "features": "低成本但很实用。",
+        "stock": 220
+      },
+      {
+        "gift_id": "gift_014_3",
+        "name": "文创小摆件",
+        "price": 59.0,
+        "description": "桌面小摆件，适合送礼",
+        "features": "不贵但有心意。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_014_4",
+        "name": "复古手帐本礼盒",
+        "price": 68.0,
+        "description": "笔记本+羽毛笔+和纸胶带",
+        "features": "颜值更高，送礼更体面。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_014_5",
+        "name": "城市纪念徽章套装",
+        "price": 49.0,
+        "description": "纪念徽章套装，可别在包上",
+        "features": "小而精致，适合当伴手礼。",
+        "stock": 180
+      },
+      {
+        "gift_id": "gift_014_6",
+        "name": "明信片邮票贴纸套装",
+        "price": 19.9,
+        "description": "邮票贴纸+装饰贴，适合写信",
+        "features": "细节更有趣。",
+        "stock": 260
+      }
+    ]
   },
   {
     "id": "gift_shop_015",
@@ -1966,76 +1798,6 @@
       "可自提",
       "盲盒/潮玩"
     ],
-    "rating": 4.7,
-    "tags": [
-      "盲盒",
-      "潮玩"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_015_1",
-        "name": "盲盒(单盒)",
-        "price": 69.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "热门系列盲盒，款式随机",
-        "features": "拆盒瞬间最上头。",
-        "stock": 300
-      },
-      {
-        "gift_id": "gift_015_2",
-        "name": "盲盒双盒装",
-        "price": 128.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "两盒盲盒组合装，款式随机",
-        "features": "更适合一起拆。",
-        "stock": 180
-      },
-      {
-        "gift_id": "gift_015_3",
-        "name": "盲盒三盒装",
-        "price": 188.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "三盒装组合，款式随机",
-        "features": "拆得更过瘾。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_015_4",
-        "name": "盲盒端盒(6个)",
-        "price": 399.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "整盒未拆封，适合收藏",
-        "features": "开盒仪式感更强。",
-        "stock": 25
-      },
-      {
-        "gift_id": "gift_015_5",
-        "name": "潮玩展示收纳盒",
-        "price": 49.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "透明展示收纳盒，防尘更好看",
-        "features": "摆出来更有成就感。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_015_6",
-        "name": "潮玩钥匙扣挂件",
-        "price": 29.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "潮玩钥匙扣挂件，随身带着更开心",
-        "features": "低成本但很可爱。",
-        "stock": 240
-      }
-    ],
-    "delivery_time_mins": null,
-    "delivery_time_std_dev": null,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -2085,7 +1847,65 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.7,
+    "tags": [
+      "盲盒",
+      "潮玩"
+    ],
+    "delivery_time_mins": null,
+    "delivery_time_std_dev": null,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_015_1",
+        "name": "盲盒(单盒)",
+        "price": 69.0,
+        "description": "热门系列盲盒，款式随机",
+        "features": "拆盒瞬间最上头。",
+        "stock": 300
+      },
+      {
+        "gift_id": "gift_015_2",
+        "name": "盲盒双盒装",
+        "price": 128.0,
+        "description": "两盒盲盒组合装，款式随机",
+        "features": "更适合一起拆。",
+        "stock": 180
+      },
+      {
+        "gift_id": "gift_015_3",
+        "name": "盲盒三盒装",
+        "price": 188.0,
+        "description": "三盒装组合，款式随机",
+        "features": "拆得更过瘾。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_015_4",
+        "name": "盲盒端盒(6个)",
+        "price": 399.0,
+        "description": "整盒未拆封，适合收藏",
+        "features": "开盒仪式感更强。",
+        "stock": 25
+      },
+      {
+        "gift_id": "gift_015_5",
+        "name": "潮玩展示收纳盒",
+        "price": 49.9,
+        "description": "透明展示收纳盒，防尘更好看",
+        "features": "摆出来更有成就感。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_015_6",
+        "name": "潮玩钥匙扣挂件",
+        "price": 29.9,
+        "description": "潮玩钥匙扣挂件，随身带着更开心",
+        "features": "低成本但很可爱。",
+        "stock": 240
+      }
+    ]
   },
   {
     "id": "gift_shop_016",
@@ -2106,76 +1926,6 @@
       "可同城配送",
       "明信片/纪念品"
     ],
-    "rating": 4.8,
-    "tags": [
-      "明信片",
-      "纪念品"
-    ],
-    "gifts": [
-      {
-        "gift_id": "gift_016_1",
-        "name": "城市明信片套装(10张)",
-        "price": 39.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "10张城市明信片，含贴纸",
-        "features": "纪念感很强，适合带走。",
-        "stock": 200
-      },
-      {
-        "gift_id": "gift_016_2",
-        "name": "文创贴纸手账套装",
-        "price": 29.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "贴纸+胶带组合，适合记录生活",
-        "features": "低成本但很实用。",
-        "stock": 220
-      },
-      {
-        "gift_id": "gift_016_3",
-        "name": "文创小摆件",
-        "price": 59.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "桌面小摆件，适合送礼",
-        "features": "不贵但有心意。",
-        "stock": 150
-      },
-      {
-        "gift_id": "gift_016_4",
-        "name": "复古手帐本礼盒",
-        "price": 68.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "笔记本+羽毛笔+和纸胶带",
-        "features": "颜值更高，送礼更体面。",
-        "stock": 120
-      },
-      {
-        "gift_id": "gift_016_5",
-        "name": "城市纪念徽章套装",
-        "price": 49.0,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "纪念徽章套装，可别在包上",
-        "features": "小而精致，适合当伴手礼。",
-        "stock": 180
-      },
-      {
-        "gift_id": "gift_016_6",
-        "name": "明信片邮票贴纸套装",
-        "price": 19.9,
-        "receive_duration_mins": 12,
-        "receive_duration_std_dev": 3.0,
-        "description": "邮票贴纸+装饰贴，适合写信",
-        "features": "细节更有趣。",
-        "stock": 260
-      }
-    ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 15.0,
-    "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
     ],
@@ -2225,6 +1975,64 @@
         "matched_review_keywords": [],
         "rule": "surprise_from_gift_type_and_delivery"
       }
-    }
+    },
+    "rating": 4.8,
+    "tags": [
+      "明信片",
+      "纪念品"
+    ],
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
+    "delivery_radius_km": 5.0,
+    "gifts": [
+      {
+        "gift_id": "gift_016_1",
+        "name": "城市明信片套装(10张)",
+        "price": 39.0,
+        "description": "10张城市明信片，含贴纸",
+        "features": "纪念感很强，适合带走。",
+        "stock": 200
+      },
+      {
+        "gift_id": "gift_016_2",
+        "name": "文创贴纸手账套装",
+        "price": 29.9,
+        "description": "贴纸+胶带组合，适合记录生活",
+        "features": "低成本但很实用。",
+        "stock": 220
+      },
+      {
+        "gift_id": "gift_016_3",
+        "name": "文创小摆件",
+        "price": 59.0,
+        "description": "桌面小摆件，适合送礼",
+        "features": "不贵但有心意。",
+        "stock": 150
+      },
+      {
+        "gift_id": "gift_016_4",
+        "name": "复古手帐本礼盒",
+        "price": 68.0,
+        "description": "笔记本+羽毛笔+和纸胶带",
+        "features": "颜值更高，送礼更体面。",
+        "stock": 120
+      },
+      {
+        "gift_id": "gift_016_5",
+        "name": "城市纪念徽章套装",
+        "price": 49.0,
+        "description": "纪念徽章套装，可别在包上",
+        "features": "小而精致，适合当伴手礼。",
+        "stock": 180
+      },
+      {
+        "gift_id": "gift_016_6",
+        "name": "明信片邮票贴纸套装",
+        "price": 19.9,
+        "description": "邮票贴纸+装饰贴，适合写信",
+        "features": "细节更有趣。",
+        "stock": 260
+      }
+    ]
   }
 ]

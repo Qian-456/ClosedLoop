@@ -38,15 +38,6 @@ class TestCatalogSync(unittest.TestCase):
                         "review_keywords": ["适合约会", "环境安静", "可做不辣"],
                         "suitable_groups": ["couple", "solo"],
                         "experience_tag": ["安静", "轻松", "仪式感"],
-                        "romantic_score_derived": {
-                            "score": 4.2,
-                            "confidence": 0.9,
-                            "source": {
-                                "sub_category": "粤菜",
-                                "matched_review_keywords": ["适合约会"],
-                                "rule": "romantic_from_sub_category_and_keywords",
-                            },
-                        },
                         "photo_score_derived": {
                             "score": 2.8,
                             "confidence": 0.7,
@@ -120,15 +111,6 @@ class TestCatalogSync(unittest.TestCase):
                         "suitable_groups": ["family", "adult"],
                         "age_range": ["7-10", "adult"],
                         "experience_tag": ["亲子友好", "互动感强", "室内兜底"],
-                        "romantic_score_derived": {
-                            "score": 0.8,
-                            "confidence": 0.8,
-                            "source": {
-                                "sub_category": "电影院",
-                                "matched_review_keywords": [],
-                                "rule": "romantic_from_sub_category_and_keywords",
-                            },
-                        },
                         "photo_score_derived": {
                             "score": 1.2,
                             "confidence": 0.7,
@@ -197,15 +179,6 @@ class TestCatalogSync(unittest.TestCase):
                                 "review_keywords": ["氛围感", "适合约会", "可同城配送"],
                                 "suitable_groups": ["couple"],
                                 "experience_tag": ["惊喜感", "仪式感", "浪漫"],
-                                "romantic_score_derived": {
-                                    "score": 4.8,
-                                    "confidence": 0.95,
-                                    "source": {
-                                        "sub_category": "鲜花",
-                                        "matched_review_keywords": ["氛围感", "适合约会"],
-                                        "rule": "romantic_from_sub_category_and_keywords",
-                                    },
-                                },
                                 "photo_score_derived": {
                                     "score": 3.5,
                                     "confidence": 0.8,
@@ -283,15 +256,6 @@ class TestCatalogSync(unittest.TestCase):
                             "review_keywords": ["氛围感", "适合约会", "可同城配送"],
                             "suitable_groups": ["couple"],
                             "experience_tag": ["惊喜感", "仪式感", "浪漫"],
-                            "romantic_score_derived": {
-                                "score": 4.8,
-                                "confidence": 0.95,
-                                "source": {
-                                    "sub_category": "鲜花",
-                                    "matched_review_keywords": ["氛围感", "适合约会"],
-                                    "rule": "romantic_from_sub_category_and_keywords",
-                                },
-                            },
                             "photo_score_derived": {
                                 "score": 3.5,
                                 "confidence": 0.8,
@@ -373,7 +337,6 @@ class TestCatalogSync(unittest.TestCase):
                 self.assertEqual(restaurants[0]["suitable_groups"], ["couple", "solo"])
                 self.assertEqual(activities[0]["age_range"], ["7-10", "adult"])
                 self.assertEqual(add_ons[0]["experience_tag"], ["惊喜感", "仪式感", "浪漫"])
-                self.assertEqual(restaurants[0]["romantic_score_derived"]["source"]["rule"], "romantic_from_sub_category_and_keywords")
                 self.assertEqual(restaurants[0]["kid_menu_status"], "possible")
                 self.assertEqual(add_ons[0]["delivery_radius_km"], 5.0)
                 self.assertEqual(add_ons[0]["gift_type"], "flower")
