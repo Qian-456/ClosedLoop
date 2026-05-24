@@ -19,10 +19,12 @@ from closedloop.graph.plan_subgraph.planner_utils import (
 )
 
 
-def _plan_signature(plan_info: dict) -> str:
+def _plan_signature(plan_info: dict, exclude_gifts: bool = False) -> str:
     combo = plan_info.get("combo", []) or []
     ids: list[str] = []
     for item in combo:
+        if exclude_gifts and (item.get("gift_id") or item.get("_step_type") == "gift_shop"):
+            continue
         item_id = item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id")
         if item_id:
             ids.append(str(item_id))
@@ -36,19 +38,19 @@ def _get_letter_id(index: int) -> str:
         result = chr(65 + rem) + result
     return result
 
-def _is_sufficiently_different(new_plan: dict, past_plans: list[dict]) -> bool:
-    """判断新方案与已有方案集合是否有足够差异（至少一半元素不同）"""
-    new_ids = set(_plan_signature(new_plan).split("|"))
-    if not new_ids or new_ids == {""}:
+def _is_sufficiently_different(new_plan: dict, past_plans: list[dict], threshold_ratio: float = 0.0) -> bool:
+    """判断新方案与已有方案集合是否有足够差异（允许重合的比例 <= threshold_ratio）"""
+    new_ids = set([x for x in _plan_signature(new_plan, exclude_gifts=True).split("|") if x])
+    if not new_ids:
         return True
         
     for past_plan in past_plans:
-        past_ids = set(past_plan.get("selected_item_ids", []))
+        past_ids = set(past_plan.get("core_item_ids", []))
         if not past_ids:
             continue
             
         intersection = new_ids.intersection(past_ids)
-        if len(intersection) > len(new_ids) / 2:
+        if len(intersection) > len(new_ids) * threshold_ratio:
             return False
             
     return True
@@ -56,6 +58,8 @@ def _is_sufficiently_different(new_plan: dict, past_plans: list[dict]) -> bool:
 def _select_top_k_diverse_plans(plan_infos: list[dict], top_k: int, past_itinerary: list[dict]) -> list[dict]:
     """
     根据分数排序并挑选出与历史行程有足够差异的 Top K 方案。
+    使用梯度降级策略：默认要求 0% 重合 -> 25% 重合 -> 50% 重合 -> 无视重合度
+    在计算重合度时，剔除礼品项目。
     """
     if not plan_infos:
         return []
@@ -78,15 +82,38 @@ def _select_top_k_diverse_plans(plan_infos: list[dict], top_k: int, past_itinera
     selected: list[dict] = []
     current_past = list(past_itinerary)
     
-    for p in unique:
+    # 历史方案也要预处理出 core_item_ids 供 _is_sufficiently_different 使用
+    for pp in current_past:
+        if "core_item_ids" not in pp:
+            # 如果是传进来的旧历史，我们假设 selected_item_ids 都在里面，
+            # 为了安全起见我们直接把原来的全拿过来。由于旧数据无法精确排除，所以尽量兼容。
+            pp["core_item_ids"] = pp.get("selected_item_ids", [])
+    
+    thresholds = [0.0, 0.25, 0.50]
+    
+    for threshold in thresholds:
         if len(selected) >= top_k:
             break
             
-        if _is_sufficiently_different(p, current_past):
-            selected.append(p)
-            mock_past_plan = {"selected_item_ids": _plan_signature(p).split("|")}
-            current_past.append(mock_past_plan)
+        for p in unique:
+            if len(selected) >= top_k:
+                break
+            
+            # 如果该方案已经被选中过了，跳过
+            if _plan_signature(p) in { _plan_signature(s) for s in selected }:
+                continue
+                
+            if _is_sufficiently_different(p, current_past, threshold_ratio=threshold):
+                selected.append(p)
+                # 将当前选中的方案模拟为历史，提取剔除礼品后的 core_ids
+                core_ids = [x for x in _plan_signature(p, exclude_gifts=True).split("|") if x]
+                mock_past_plan = {
+                    "selected_item_ids": _plan_signature(p).split("|"),
+                    "core_item_ids": core_ids
+                }
+                current_past.append(mock_past_plan)
 
+    # 兜底：如果跑完了 50% 的容忍度还是没凑够 top_k，直接按分数硬塞
     if len(selected) < top_k:
         used_sigs = { _plan_signature(p) for p in selected }
         for p in unique:
