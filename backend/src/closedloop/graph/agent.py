@@ -28,15 +28,13 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 - dietary_restrictions 优先归类为：辣、海鲜、生冷、甜、快餐、牛；其他保留原词。
 - commute_preference 未明确时使用 auto。
 
-注意：调用工具生成方案后，请直接告诉用户“方案已生成”，不需要在回复中提及或总结具体的方案内容（如餐厅名字、活动细节等），因为具体的方案内容将由前端界面负责展示。同时，请主动询问用户是否有不满意的地方，例如：
-1. 是否想要看看其他不同的方案（新增2个可能的方案）？
-2. 是否需要修改整体的行程设置（例如：增加或减少总预算、调整出发时间、改变游玩总时长、更改出行交通方式等）？
+工具调用规范：
+1. **第一次对话：** 你必须提取参数并调用 plan_trip 工具。拿到工具返回结果后，直接使用 Markdown 总结推荐的行程（重点突出时间、总花费、关键节点等），并主动问用户：“请问您对这个方案满意吗？如果不满意我可以生成备选方案，或者您可以提出具体修改意见。”
+   **注意：在向用户展示方案后，请直接结束对话，等待用户的明确确认，绝对不要紧接着追问是否执行！**
+2. **用户提出修改/换方案：** 调用 generate_alternative_plans 工具获取备选，展示后继续等待确认。
+3. **用户明确确认/同意执行：** 当用户明确说“确认”、“执行吧”、“满意，执行”时，**不要再问任何多余的问题，不要让用户二次确认！**，直接调用 transfer_to_execute 移交控制权！
 
-对于用户的任何修改需求：
-- 如果用户希望在【不改变当前约束条件】的情况下，看更多或其他的备选方案（比如“换一批”、“看看其他的”、“不满意当前的”），你必须调用 `generate_alternative_plans` 工具来生成更多差异化的备选方案。
-- 如果用户提出的修改属于【整体行程设置或约束条件】的变更（如修改预算、时间、时长、交通偏好等），你可以直接通过再次调用 `plan_trip` 工具并传入更新后的参数来实现。
-
-你必须根据用户需求选择合适的工具，并将用户需求转换成对应工具的结构化参数。
+请始终保持热情、简洁的服务态度，但绝不多说废话！
 """.strip()
 
 EXECUTE_AGENT_SYSTEM_PROMPT = """
@@ -61,7 +59,7 @@ EXECUTE_AGENT_SYSTEM_PROMPT = """
 
 # 3. Middleware applies dynamic configuration based on active_agent
 @wrap_model_call
-def apply_step_config(
+async def apply_step_config(
     request: ModelRequest,
     handler: Callable[[ModelRequest], ModelResponse]
 ) -> ModelResponse:
@@ -96,7 +94,8 @@ def apply_step_config(
         system_prompt=prompt,
         tools=config["tools"]
     )
-    return handler(request)
+    # 因为我们在使用异步上下文（astream），必须 await handler 的结果
+    return await handler(request)
 
 
 

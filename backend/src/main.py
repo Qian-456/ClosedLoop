@@ -40,7 +40,7 @@ async def invoke_graph(request: ChatRequest):
     
     try:
         config_run = {"configurable": {"thread_id": request.thread_id}}
-        final_state = workflow_app.invoke(
+        final_state = await workflow_app.ainvoke(
             {"messages": [("user", request.user_input)]}, 
             config=config_run
         )

@@ -3,7 +3,7 @@ import time
 from typing import Any
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import ModelFallbackMiddleware, ModelRetryMiddleware
+from langchain.agents.middleware import ModelFallbackMiddleware, ModelRetryMiddleware, HumanInTheLoopMiddleware
 from langchain_deepseek import ChatDeepSeek
 from langchain_community.chat_models import ChatTongyi
 

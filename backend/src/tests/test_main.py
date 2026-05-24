@@ -25,28 +25,32 @@ class TestMainAPI(unittest.TestCase):
         self.assertEqual(data["status"], "ok")
         self.assertIn("project", data)
 
-    @patch("main.workflow_app.invoke")
-    def test_invoke_graph(self, mock_invoke):
+    @patch("main.workflow_app.ainvoke")
+    def test_invoke_graph(self, mock_ainvoke):
         """
         Test the invoke graph endpoint with a mock graph response.
         """
+        import asyncio
+        
         # Mock what the graph would return
-        mock_invoke.return_value = {
-            "user_input": "一家三口出去玩",
-            "constraints": {
-                "group_type": "family",
-                "adult_count": 2,
-                "child_count": 1,
-                "child_profiles": [("F", 5)],
-                "budget": 500.0,
-                "dietary_restrictions": [],
-                "preferred_distance": "2km-5km",
-                "time_period": "14:00",
-                "duration_hours": (5.0, 5.0),
-                "activity_preferences": ["play"],
-                "commute_preference": "auto",
+        async def mock_coro(*args, **kwargs):
+            return {
+                "user_input": "一家三口出去玩",
+                "constraints": {
+                    "group_type": "family",
+                    "adult_count": 2,
+                    "child_count": 1,
+                    "child_profiles": [("F", 5)],
+                    "budget": 500.0,
+                    "dietary_restrictions": [],
+                    "preferred_distance": "2km-5km",
+                    "time_period": "14:00",
+                    "duration_hours": (5.0, 5.0),
+                    "activity_preferences": ["play"],
+                    "commute_preference": "auto",
+                }
             }
-        }
+        mock_ainvoke.side_effect = mock_coro
 
         # Make the request
         response = client.post("/invoke", json={"user_input": "一家三口出去玩"})
@@ -61,8 +65,8 @@ class TestMainAPI(unittest.TestCase):
         self.assertEqual(data["state"]["constraints"]["budget"], 500.0)
 
         # Check if invoke was called properly
-        mock_invoke.assert_called_once()
-        called_args = mock_invoke.call_args[0][0]
+        mock_ainvoke.assert_called_once()
+        called_args = mock_ainvoke.call_args[0][0]
         self.assertEqual(called_args["messages"][0][1], "一家三口出去玩")
 
 if __name__ == "__main__":

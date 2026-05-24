@@ -113,7 +113,13 @@ def _atomic_write_json(path: str, data: Any) -> None:
 
 
 def _parse_hhmm_to_minutes(v: str) -> int:
-    h, m = v.strip().split(":")
+    # 防止因为 float(13.0) 被强转为 "13.0" 从而无法按 ":" 分割的问题
+    if not v or ":" not in str(v):
+        try:
+            return int(float(v) * 60)
+        except Exception:
+            return 0
+    h, m = str(v).strip().split(":")
     return int(h) * 60 + int(m)
 
 
@@ -400,7 +406,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
         ),
     )
 
-async def _book_first_taxi(execution_id: str, ctx: _ExecutionContext, step: ExecuteStep) -> None:
+async def _book_taxi(execution_id: str, ctx: _ExecutionContext, step: ExecuteStep) -> None:
     await _emit(
         ctx,
         ExecuteEvent(
@@ -465,13 +471,8 @@ async def _run_execution(execution_id: str, ctx: _ExecutionContext) -> None:
     steps = [s for s in ctx.request.steps if s.item_type != "commute"]
     commutes = [s for s in ctx.request.steps if s.item_type == "commute"]
 
-    taxi_step: ExecuteStep | None = None
-    if commutes:
-        first = commutes[0]
-        if (first.commute_mode or "") == "taxi":
-            taxi_step = first
-
-    total = len(steps) + (1 if taxi_step else 0)
+    taxi_steps = [c for c in commutes if (c.commute_mode or "") == "taxi"]
+    total = len(steps) + len(taxi_steps)
 
     await _emit(
         ctx,
@@ -479,8 +480,8 @@ async def _run_execution(execution_id: str, ctx: _ExecutionContext) -> None:
     )
 
     tasks: list[asyncio.Task] = []
-    if taxi_step:
-        tasks.append(asyncio.create_task(_book_first_taxi(execution_id, ctx, taxi_step)))
+    for taxi_step in taxi_steps:
+        tasks.append(asyncio.create_task(_book_taxi(execution_id, ctx, taxi_step)))
     tasks.extend([asyncio.create_task(_check_and_reserve_one(execution_id, ctx, s)) for s in steps])
     await asyncio.gather(*tasks, return_exceptions=True)
 
