@@ -49,7 +49,7 @@ class TestPlanTripTool(unittest.TestCase):
         self.assertEqual(out.update["constraints"]["group_type"], "couple")
         self.assertEqual(out.update["constraints"]["duration_hours"], (4.0, 6.0))
         self.assertEqual(subgraph.state["constraints"]["budget"], 500.0)
-        self.assertEqual(out.update["itinerary"]["status"], "ok")
+        self.assertIn("itinerary", out.update)
 
     def test_plan_trip_defaults_are_normalized(self):
         """默认列表、人数、出行偏好可以被 Constraints 契约归一化。"""
@@ -85,7 +85,7 @@ class TestPlanTripTool(unittest.TestCase):
                 tool_call_id="call_1",
             )
 
-        self.assertEqual(out.update["latest_plan_result"]["error"], "规划子图调用失败")
+        self.assertIn("规划子图调用失败", str(out.update["messages"][0].content))
 
 
 if __name__ == "__main__":

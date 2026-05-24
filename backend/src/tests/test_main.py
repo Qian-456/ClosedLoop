@@ -63,7 +63,7 @@ class TestMainAPI(unittest.TestCase):
         # Check if invoke was called properly
         mock_invoke.assert_called_once()
         called_args = mock_invoke.call_args[0][0]
-        self.assertEqual(called_args["user_input"], "一家三口出去玩")
+        self.assertEqual(called_args["messages"][0][1], "一家三口出去玩")
 
 if __name__ == "__main__":
     unittest.main()

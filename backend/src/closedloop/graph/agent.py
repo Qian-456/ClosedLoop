@@ -28,6 +28,16 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 - dietary_restrictions 优先归类为：辣、海鲜、生冷、甜、快餐、牛；其他保留原词。
 - commute_preference 未明确时使用 auto。
 
+注意：调用 plan_trip 工具生成方案后，请直接告诉用户“方案已生成”，不需要在回复中提及或总结具体的方案内容（如餐厅名字、活动细节等），因为具体的方案内容将由前端界面负责展示。同时，请主动询问用户是否有不满意的地方，例如：
+1. 活动的排列顺序是否需要调整？
+2. 是否需要修改整体的行程设置（例如：增加或减少总预算、调整出发时间、改变游玩总时长、更改出行交通方式等）？
+3. 是否有想更换的具体项目类别（例如：换一家餐厅、换一个游玩的地方等）？
+
+对于用户的任何修改需求：
+- 如果用户提出的修改属于整体行程设置（如修改预算、时间、时长、交通偏好等），你可以直接通过再次调用 `plan_trip` 工具并传入更新后的参数来实现。
+- 如果用户提出的是针对特定项目或顺序的微调，也请通过相关工具或直接记录以反馈给系统。
+
+
 你必须调用 plan_trip，并将用户需求转换成该工具的结构化参数。
 """.strip()
 
@@ -92,53 +102,9 @@ def apply_step_config(
 
 
 # 4. Create agent with middleware
-plan_agent_node = build_agent(
+agent = build_agent(
     tools=[plan_trip, transfer_to_execute, execute_itinerary],
     state_schema=ClosedLoopState,
     middleware=[apply_step_config],
-    checkpointer=InMemorySaver()  # Persist state across turns  #
+    checkpointer=InMemorySaver()  # Persist state across turns
 )
-
-if __name__ == "__main__":
-    # 定义配置
-    config = {"configurable": {"thread_id": "support_session_002"}}
-    print("Agent已启动。您可以开始对话。输入 '/exit' 退出。")
-
-    while True:
-        try:
-            user_input = input("\nUser: ")
-        except (KeyboardInterrupt, EOFError):
-            break
-            
-        if user_input.strip() == "/exit":
-            print("退出对话。")
-            break
-            
-        if not user_input.strip():
-            continue
-
-        input_data = {"messages": [("user", user_input)]}
-
-        # 使用 stream 循环打印
-        # stream_mode="values" 会返回每一步图状态更新后的结果
-        for event in plan_agent_node.stream(input_data, config=config, stream_mode="values"):
-            # 获取最后一条消息
-            if "messages" in event:
-                last_msg = event["messages"][-1]
-                
-                # 跳过打印用户自己刚刚输入的消息
-                if getattr(last_msg, "type", "") == "human":
-                    continue
-                    
-                print(f"--- Agent 动作 ---")
-                try:
-                    print(last_msg.content)
-                except Exception:
-                    print(last_msg.content.encode("gbk", "ignore").decode("gbk"))
-
-                # 如果有 tool_calls，也打印出来
-                if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
-                    print("Tool Calls:", last_msg.tool_calls)
-
-    # 如果你想精确控制打印内容，可以使用 stream_mode="updates"
-    # 这会只显示当前节点执行产生的新增内容

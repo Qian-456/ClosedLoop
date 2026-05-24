@@ -14,7 +14,7 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.execution import ExecuteRequest, ExecutionStartResponse
 from closedloop.execution.mock_executor import iter_events, start_execution
-from closedloop.graph.build import build_graph
+from closedloop.graph.agent import agent as workflow_app
 from closedloop.contracts.state import ClosedLoopState
 
 # 初始化配置与日志
@@ -23,11 +23,9 @@ LoggerManager.setup(config)
 
 app = FastAPI(title=config.PROJECT_NAME)
 
-# 在应用启动时构建单例的 Graph (避免每次请求重建)
-workflow_app = build_graph()
-
 class ChatRequest(BaseModel):
     user_input: str
+    thread_id: str = "default_session"
 
 class ChatResponse(BaseModel):
     status: str
@@ -41,20 +39,14 @@ async def invoke_graph(request: ChatRequest):
     logger.info(f"phase=api_invoke | input={request.user_input}")
     
     try:
-        # 初始化状态
-        initial_state: ClosedLoopState = {
-            "user_input": request.user_input
-        }
-        
-        # 执行 graph
-        final_state = workflow_app.invoke(initial_state)
-        
-        return ChatResponse(
-            status="success",
-            state=final_state
+        config_run = {"configurable": {"thread_id": request.thread_id}}
+        final_state = workflow_app.invoke(
+            {"messages": [("user", request.user_input)]}, 
+            config=config_run
         )
+        return ChatResponse(status="success", state=final_state)
     except Exception as e:
-        logger.error(f"phase=api_invoke | error={str(e)}")
+        logger.error(f"phase=api_invoke | error={e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
