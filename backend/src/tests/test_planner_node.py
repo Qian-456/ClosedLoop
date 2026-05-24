@@ -7,7 +7,7 @@ from unittest.mock import patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
 from closedloop.contracts.state import ClosedLoopState
-from closedloop.graph.nodes.planner import planner_node
+from closedloop.graph.plan_subgraph.planner import planner_node
 
 class TestPlannerNode(unittest.TestCase):
     def setUp(self):
@@ -220,7 +220,7 @@ class TestPlannerNode(unittest.TestCase):
         ]
 
         with patch(
-            "closedloop.graph.nodes.planner.generate_and_score_combinations",
+            "closedloop.graph.plan_subgraph.planner.generate_and_score_combinations",
             return_value=(plan_infos, len(plan_infos), set()),
         ):
             new_state = planner_node(self.state)
@@ -259,7 +259,7 @@ class TestPlannerNode(unittest.TestCase):
         ]
 
         with patch(
-            "closedloop.graph.nodes.planner.generate_and_score_combinations",
+            "closedloop.graph.plan_subgraph.planner.generate_and_score_combinations",
             return_value=(plan_infos, len(plan_infos), set()),
         ):
             new_state = planner_node(self.state)
@@ -303,7 +303,7 @@ class TestPlannerNode(unittest.TestCase):
         ]
 
         with patch(
-            "closedloop.graph.nodes.planner.generate_and_score_combinations",
+            "closedloop.graph.plan_subgraph.planner.generate_and_score_combinations",
             return_value=(plan_infos, len(plan_infos), set()),
         ):
             new_state = planner_node(self.state)

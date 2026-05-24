@@ -4,7 +4,7 @@ from typing import Any
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.state import Constraints, PlanState, RankedCombo, RankedPackage, RankedGift
-from closedloop.graph.nodes.retrieve import _ensure_candidates_dict, _empty_candidates
+from closedloop.graph.plan_subgraph.retrieve import _ensure_candidates_dict, _empty_candidates
 from closedloop.utils.capacity import _get_effective_people, _get_capacity_from_name
 
 def _has_flexible_people_phrase(text: str) -> bool:

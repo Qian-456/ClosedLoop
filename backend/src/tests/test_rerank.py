@@ -1,6 +1,6 @@
 import unittest
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.rerank import score_item, rerank_node, _get_capacity_from_name
+from closedloop.graph.plan_subgraph.rerank import score_item, rerank_node, _get_capacity_from_name
 
 class TestRerankNode(unittest.TestCase):
 

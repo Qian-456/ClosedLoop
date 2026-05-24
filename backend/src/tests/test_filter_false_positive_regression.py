@@ -1,7 +1,7 @@
 import unittest
 
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.retrieve import retrieve_candidates_node, filter_node, _apply_filters_with_events
+from closedloop.graph.plan_subgraph.retrieve import retrieve_candidates_node, filter_node, _apply_filters_with_events
 
 
 class TestFilterFalsePositiveRegression(unittest.TestCase):

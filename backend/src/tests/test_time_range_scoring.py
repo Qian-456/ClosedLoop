@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
-from closedloop.graph.nodes.planner_utils import compute_time_window_params, compute_time_score
+from closedloop.graph.plan_subgraph.planner_utils import compute_time_window_params, compute_time_score
 
 
 class TestTimeRangeScoring(unittest.TestCase):

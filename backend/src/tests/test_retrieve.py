@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.retrieve import (
+from closedloop.graph.plan_subgraph.retrieve import (
     retrieve_candidates_node,
     filter_node,
     hard_filter,
@@ -421,7 +421,7 @@ class TestRetrieveCandidates(unittest.TestCase):
 
 
 
-    @patch('closedloop.graph.nodes.retrieve.load_mock_data')
+    @patch('closedloop.graph.plan_subgraph.retrieve.load_mock_data')
     def test_retrieve_candidates_node_loads_mock_db_applies_15km_cap_and_sets_steps(self, mock_load):
         scored_restaurant = self.restaurant_item.copy()
         scored_restaurant["score"] = 999
@@ -468,7 +468,7 @@ class TestRetrieveCandidates(unittest.TestCase):
         self.assertEqual([x["id"] for x in candidates["nearby_gifts"]], ["o1"])
         self.assertEqual(candidates["nearby_gifts"][0].get("delivery_radius_km"), 5.0)
 
-    @patch("closedloop.graph.nodes.retrieve.load_mock_data")
+    @patch("closedloop.graph.plan_subgraph.retrieve.load_mock_data")
     def test_filter_node_requires_retrieve_step_and_does_not_load_db(self, mock_load):
         mock_load.side_effect = AssertionError("filter_node 不应加载 MockDB 数据")
 

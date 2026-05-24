@@ -4,7 +4,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
-from closedloop.graph.nodes.planner import _select_three_plans
+from closedloop.graph.plan_subgraph.planner import _select_three_plans
 
 
 class TestPlanSelection(unittest.TestCase):

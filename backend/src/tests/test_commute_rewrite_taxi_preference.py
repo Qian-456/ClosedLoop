@@ -1,6 +1,6 @@
 import unittest
 
-from closedloop.graph.nodes.planner import _rewrite_commutes_for_taxi_preference
+from closedloop.graph.plan_subgraph.planner import _rewrite_commutes_for_taxi_preference
 
 
 class TestCommuteRewriteTaxiPreference(unittest.TestCase):

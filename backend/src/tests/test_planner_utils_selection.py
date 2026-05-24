@@ -1,12 +1,12 @@
 import unittest
 import sys
 import os
- 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
- 
-from closedloop.graph.nodes.planner_utils import generate_and_score_combinations
-from closedloop.graph.nodes.planner_utils import calculate_commute_options
-from closedloop.graph.nodes.planner import _select_three_plans
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from closedloop.graph.plan_subgraph.planner_utils import generate_and_score_combinations
+from closedloop.graph.plan_subgraph.planner_utils import calculate_commute_options
+from closedloop.graph.plan_subgraph.planner import _select_three_plans
  
  
 class TestPlannerUtilsSelection(unittest.TestCase):

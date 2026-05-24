@@ -1,8 +1,8 @@
 import unittest
 
 from closedloop.contracts.state import Constraints, ClosedLoopState
-from closedloop.graph.nodes.rerank import rerank_node
-from closedloop.graph.nodes.planner_utils import generate_and_score_combinations
+from closedloop.graph.plan_subgraph.rerank import rerank_node
+from closedloop.graph.plan_subgraph.planner_utils import generate_and_score_combinations
 
 
 class TestLightActivityPipeline(unittest.TestCase):

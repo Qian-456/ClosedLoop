@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 from closedloop.contracts.state import ClosedLoopState, Constraints, PlanState
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.subgraph_plan import build_subgraph_plan
+from closedloop.graph.plan_subgraph.builder import build_subgraph_plan
 
 
 class PlanTripInput(BaseModel):

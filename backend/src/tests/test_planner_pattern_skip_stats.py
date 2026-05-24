@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager
-from closedloop.graph.nodes import planner_utils
+from closedloop.graph.plan_subgraph import planner_utils
 
 
 class TestPlannerPatternSkipStats(unittest.TestCase):

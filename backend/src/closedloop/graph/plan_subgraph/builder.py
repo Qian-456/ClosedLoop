@@ -2,9 +2,9 @@ from langgraph.graph import END, START, StateGraph
 from typing_extensions import NotRequired, TypedDict
 
 from closedloop.contracts.state import PlanState
-from closedloop.graph.nodes.planner import planner_node
-from closedloop.graph.nodes.rerank import rerank_node
-from closedloop.graph.nodes.retrieve import filter_node, retrieve_candidates_node
+from closedloop.graph.plan_subgraph.planner import planner_node
+from closedloop.graph.plan_subgraph.rerank import rerank_node
+from closedloop.graph.plan_subgraph.retrieve import filter_node, retrieve_candidates_node
 
 
 class PlanSubgraphOutput(TypedDict):
