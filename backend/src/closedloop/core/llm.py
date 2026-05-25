@@ -3,7 +3,7 @@ import time
 from typing import Any
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import ModelFallbackMiddleware, ModelRetryMiddleware, HumanInTheLoopMiddleware
+from langchain.agents.middleware import ModelFallbackMiddleware, ModelRetryMiddleware, HumanInTheLoopMiddleware, ToolCallLimitMiddleware
 from langchain_deepseek import ChatDeepSeek
 from langchain_community.chat_models import ChatTongyi
 
@@ -167,6 +167,7 @@ def build_agent(
             initial_delay=1.0,
             on_failure="error",
         ),
+        ToolCallLimitMiddleware(thread_limit=20, run_limit=3),
     ]
     if middleware:
         merged_middleware.extend(middleware)

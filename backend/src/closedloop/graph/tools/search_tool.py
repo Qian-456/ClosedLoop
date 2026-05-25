@@ -1,4 +1,5 @@
 import json
+import httpx
 from typing import Annotated, Literal
 
 from langchain_core.messages import ToolMessage
@@ -9,7 +10,6 @@ from pydantic import BaseModel, Field
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
 
 from langchain_core.runnables import RunnableConfig
 
@@ -43,8 +43,25 @@ def search_candidates(
 
     logger.info(f"phase=search_candidates | category={category} | query={user_request} | top_k={top_k} | offset={offset} | session_id={session_id}")
 
-    indexer = SearchIndexer.get_instance()
-    results = indexer.search(category=category, query=user_request, top_k=top_k, offset=offset, session_id=session_id)
+    api_url = getattr(config_app, "PLAN_SUB_API_URL", "http://localhost:8001/plan").replace("/plan", "/search")
+    
+    payload = {
+        "category": category,
+        "user_request": user_request,
+        "top_k": top_k,
+        "offset": offset,
+        "session_id": session_id
+    }
+    
+    try:
+        with httpx.Client(timeout=30.0, trust_env=False, proxy=None) as client:
+            resp = client.post(api_url, json=payload)
+            resp.raise_for_status()
+            search_output = resp.json()
+            results = search_output.get("results", [])
+    except Exception as e:
+        logger.error(f"phase=search_candidates | error={e}")
+        results = []
     
     simplified_results = []
     for item in results:

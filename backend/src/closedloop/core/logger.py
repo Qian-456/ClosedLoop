@@ -42,7 +42,7 @@ class LoggerManager:
         )
 
         logger.add(
-            os.path.join(log_dir, "app.log"),
+            os.path.join(log_dir, "app", "app_{time:YYYY-MM-DD}.log"),
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level=config.logging.LOG_LEVEL,
@@ -65,7 +65,7 @@ class LoggerManager:
                 )
 
         logger.add(
-            os.path.join(log_dir, "error.log"),
+            os.path.join(log_dir, "error", "error_{time:YYYY-MM-DD}.log"),
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level="ERROR",
@@ -73,7 +73,7 @@ class LoggerManager:
 
         # 专门针对 planner_subgraph 相关的模块设置单独的日志输出 (普通日志)
         logger.add(
-            os.path.join(log_dir, "planner_subgraph.log"),
+            os.path.join(log_dir, "planner_subgraph", "planner_subgraph_{time:YYYY-MM-DD}.log"),
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level=config.logging.LOG_LEVEL,
@@ -82,7 +82,7 @@ class LoggerManager:
 
         # 专门针对 planner_subgraph 相关的模块设置单独的错误日志输出
         logger.add(
-            os.path.join(log_dir, "planner_subgraph_error.log"),
+            os.path.join(log_dir, "planner_subgraph_error", "planner_subgraph_error_{time:YYYY-MM-DD}.log"),
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level="ERROR",

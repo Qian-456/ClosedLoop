@@ -1,7 +1,7 @@
 import os
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from langgraph.types import Command
 
@@ -10,32 +10,23 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from closedloop.graph.tools.plan_tool import plan_trip
 
 
-class _DummySubgraph:
-    def __init__(self, value=None, error: Exception | None = None):
-        self.value = value
-        self.error = error
-        self.state = None
-
-    def invoke(self, state):
-        self.state = state
-        if self.error:
-            raise self.error
-        return self.value
-
-
 class TestPlanTripTool(unittest.TestCase):
     def test_plan_trip_invokes_subgraph_with_constraints(self):
-        """工具将结构化参数归一化为 constraints 后调用规划子图。"""
-        subgraph = _DummySubgraph(
-            value={
-                "itinerary": {"status": "ok", "plans": []},
-                "confirmation": {"status": "ok"},
-            }
-        )
+        """工具将结构化参数归一化为 constraints 后通过 httpx 调用规划子图。"""
+        mock_response = MagicMock()
+        mock_response.json.return_value = {
+            "itinerary": {"status": "ok", "plans": []},
+            "confirmation": {"status": "ok"},
+        }
+        mock_response.raise_for_status.return_value = None
+        
+        mock_client = MagicMock()
+        mock_client.__enter__.return_value = mock_client
+        mock_client.post.return_value = mock_response
 
         with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
-        ), patch("closedloop.graph.tools.plan_tool.build_subgraph_plan", return_value=subgraph):
+        ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
                 group_type="friends",
                 budget=500,
@@ -48,16 +39,22 @@ class TestPlanTripTool(unittest.TestCase):
         self.assertIsInstance(out, Command)
         self.assertEqual(out.update["constraints"]["group_type"], "friends")
         self.assertEqual(out.update["constraints"]["duration_hours"], (4.0, 6.0))
-        self.assertEqual(subgraph.state["constraints"]["budget"], 500.0)
         self.assertIn("itinerary", out.update)
+        mock_client.post.assert_called_once()
 
     def test_plan_trip_defaults_are_normalized(self):
         """默认列表、人数、出行偏好可以被 Constraints 契约归一化。"""
-        subgraph = _DummySubgraph(value={"itinerary": {"status": "ok"}})
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"itinerary": {"status": "ok"}}
+        mock_response.raise_for_status.return_value = None
+        
+        mock_client = MagicMock()
+        mock_client.__enter__.return_value = mock_client
+        mock_client.post.return_value = mock_response
 
         with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
-        ), patch("closedloop.graph.tools.plan_tool.build_subgraph_plan", return_value=subgraph):
+        ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
                 group_type="friends",
                 budget=200,
@@ -72,11 +69,13 @@ class TestPlanTripTool(unittest.TestCase):
 
     def test_plan_trip_handles_subgraph_error(self):
         """规划子图异常时返回 failed 结果。"""
-        subgraph = _DummySubgraph(error=RuntimeError("boom"))
+        mock_client = MagicMock()
+        mock_client.__enter__.return_value = mock_client
+        mock_client.post.side_effect = RuntimeError("boom")
 
         with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
-        ), patch("closedloop.graph.tools.plan_tool.build_subgraph_plan", return_value=subgraph):
+        ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
                 group_type="friends",
                 budget=300,

@@ -1,3 +1,4 @@
+import json
 from typing import Annotated, Literal, Optional
 
 from langchain_core.messages import ToolMessage
@@ -6,10 +7,11 @@ from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
+import httpx
+
 from closedloop.contracts.state import ClosedLoopState, Constraints, PlanState
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.plan_subgraph.builder import build_subgraph_plan
 
 
 class PlanTripInput(BaseModel):
@@ -129,12 +131,19 @@ def plan_trip(
 
     try:
         constraints = _normalize_constraints(raw_constraints)
-        subgraph_state: PlanState = {
+        
+        payload = {
             "constraints": constraints,
             "past_itinerary": past_itinerary,
             "top_k": 1,
         }
-        subgraph_output = build_subgraph_plan().invoke(subgraph_state)
+        
+        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
+        with httpx.Client(timeout=60.0, trust_env=False, proxy=None) as client:
+            resp = client.post(api_url, json=payload)
+            resp.raise_for_status()
+            subgraph_output = resp.json()
+            
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
         logger.info(f"phase=plan_trip | result=success | itinerary_status={result.get('status')}")
@@ -149,11 +158,11 @@ def plan_trip(
         logger.error(f"phase=plan_trip | error={e}")
 
     transfer_message = ToolMessage(
-        content={
+        content=json.dumps({
             "tool": "plan_trip",
             "status": status,
             "result": result,
-        },
+        }, ensure_ascii=False),
         tool_call_id=tool_call_id,
     )
 
@@ -206,28 +215,33 @@ def generate_alternative_plans(
     if not isinstance(past_itinerary, list):
         past_itinerary = [past_itinerary] if past_itinerary else []
         
-    subgraph_state: PlanState = {
-        "constraints": constraints,
-        "past_itinerary": past_itinerary,
-        "top_k": count,
-    }
-    
     try:
-        subgraph_output = build_subgraph_plan().invoke(subgraph_state)
+        payload = {
+            "constraints": constraints,
+            "past_itinerary": past_itinerary,
+            "top_k": count,
+        }
+        
+        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
+        with httpx.Client(timeout=60.0, trust_env=False, proxy=None) as client:
+            resp = client.post(api_url, json=payload)
+            resp.raise_for_status()
+            subgraph_output = resp.json()
+            
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
-        logger.info(f"phase=generate_alternative_plans | result=success | itinerary_status={result.get('status')}")
+        logger.info(f"phase=generate_alternative_plans | result=success | count={count}")
     except Exception as e:
         result = {"error": str(e)}
         status = "failed"
         logger.error(f"phase=generate_alternative_plans | error={e}")
         
     transfer_message = ToolMessage(
-        content={
+        content=json.dumps({
             "tool": "generate_alternative_plans",
             "status": status,
             "result": result,
-        },
+        }, ensure_ascii=False),
         tool_call_id=tool_call_id,
     )
     

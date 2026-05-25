@@ -4,20 +4,27 @@ from unittest.mock import patch, MagicMock
 from closedloop.graph.tools.search_tool import search_candidates
 
 class TestSearchTool(unittest.TestCase):
-    @patch('closedloop.graph.tools.search_tool.SearchIndexer')
-    def test_search_candidates(self, mock_search_indexer):
-        mock_indexer_instance = MagicMock()
-        mock_indexer_instance.search.return_value = [
-            {
-                "combo_id": "c1",
-                "name": "Combo 1",
-                "price": 100,
-                "duration_mins": 60,
-                "features": "Feat 1",
-                "description": "Desc 1"
-            }
-        ]
-        mock_search_indexer.get_instance.return_value = mock_indexer_instance
+    @patch('closedloop.graph.tools.search_tool.httpx.Client')
+    def test_search_candidates(self, mock_client_class):
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.json.return_value = {
+            "status": "success",
+            "results": [
+                {
+                    "combo_id": "c1",
+                    "name": "Combo 1",
+                    "price": 100,
+                    "duration_mins": 60,
+                    "features": "Feat 1",
+                    "description": "Desc 1"
+                }
+            ]
+        }
+        mock_response.raise_for_status.return_value = None
+        mock_client.post.return_value = mock_response
+        mock_client.__enter__.return_value = mock_client
+        mock_client_class.return_value = mock_client
 
         # Invoke the tool
         command = search_candidates.invoke({

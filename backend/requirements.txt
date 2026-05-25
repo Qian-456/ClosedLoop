@@ -10,3 +10,7 @@ langchain-community
 langchain-deepseek
 dashscope
 typing_extensions
+httpx
+
+pymilvus
+llama-index-embeddings-dashscope

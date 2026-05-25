@@ -1,30 +1,11 @@
 import os
-import threading
 from typing import List, Dict, Any
 from dataclasses import dataclass
-
-# -------------------------------------------------------------------------
-# Windows milvus-lite os.rename workaround
-# milvus-lite's manifest.py uses os.rename(tmp_path, target_path) which 
-# raises WinError 183 if target_path already exists on Windows.
-# We patch os.rename locally to silently remove the target file first.
-# -------------------------------------------------------------------------
-if os.name == 'nt':
-    _original_rename = os.rename
-    def _safe_rename(src, dst):
-        if os.path.exists(dst):
-            try:
-                os.remove(dst)
-            except Exception:
-                pass
-        _original_rename(src, dst)
-    os.rename = _safe_rename
-# -------------------------------------------------------------------------
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 
-from pymilvus import MilvusClient, AnnSearchRequest, WeightedRanker, CollectionSchema, FieldSchema, DataType
+from pymilvus import MilvusClient, AnnSearchRequest, WeightedRanker, DataType
 from llama_index.embeddings.dashscope import DashScopeEmbedding
 
 @dataclass 
@@ -66,22 +47,18 @@ class MilvusHybridSearcher:
 
         self.ranker = WeightedRanker(dense_weight, sparse_weight) 
 
-    def search_page( 
+    def search_offset(
         self, 
         query: str, 
-        page: int = 1, 
-        page_size: int = 15, 
+        top_k: int = 15, 
+        offset: int = 0, 
         expr: str | None = None, 
         output_fields: list[str] | None = None, 
     ) -> list[SearchResultItem]: 
-        """ 
-        page=1 -> top 1-15 
-        """ 
-        assert page >= 1 
-        assert page_size >= 1 
+        assert offset >= 0
+        assert top_k >= 1
 
-        start = (page - 1) * page_size 
-        end = page * page_size 
+        end = offset + top_k
 
         if output_fields is None: 
             output_fields = [self.id_field, self.text_field] 
@@ -103,13 +80,13 @@ class MilvusHybridSearcher:
             expr=expr, 
         ) 
 
-        sparse_req = AnnSearchRequest( 
+        sparse_req = AnnSearchRequest(
             data=[query], 
             anns_field=self.sparse_field, 
-            param={ 
-                "metric_type": "BM25", 
-                "params": {}, 
-            }, 
+            param={
+                "metric_type": "IP",
+                "params": {"drop_ratio_search": 0.2},
+            },
             limit=branch_limit, 
             expr=expr, 
         ) 
@@ -130,16 +107,23 @@ class MilvusHybridSearcher:
             return []
             
         hits = raw_results[0] 
-        page_hits = hits[start:end] 
+        page_hits = hits[offset:end]
 
         results: list[SearchResultItem] = [] 
-        for i, hit in enumerate(page_hits, start=start + 1): 
-            entity = hit.get("entity", {}) if isinstance(hit, dict) else hit.entity 
+        for i, hit in enumerate(page_hits, start=offset + 1): 
+            if isinstance(hit, dict): 
+                entity = hit.get("entity", {}) or {} 
+                score = hit.get("distance", 0.0) 
+            else: 
+                entity = dict(hit.entity) if getattr(hit, "entity", None) is not None else {} 
+                score = getattr(hit, "score", None) 
+                if score is None: 
+                    score = getattr(hit, "distance", 0.0) 
 
             item = SearchResultItem( 
                 rank=i, 
                 id=entity.get(self.id_field), 
-                score=hit.get("distance") if isinstance(hit, dict) else hit.score, 
+                score=float(score or 0.0), 
                 text=entity.get(self.text_field, ""), 
                 entity=entity, 
             ) 
@@ -152,7 +136,7 @@ class SearchIndexer:
 
     def __init__(self):
         self.config = get_config()
-        self.milvus_uri = os.path.join(os.path.abspath(os.path.dirname(__file__)), "../../../../milvus_demo.db")
+        self.milvus_uri = getattr(self.config, "MILVUS_URI", "http://milvus:19530")
         self.dim = 1024
         
         api_key = getattr(self.config.qwen, "API_KEY", os.getenv("DASHSCOPE_API_KEY"))
@@ -257,8 +241,8 @@ class SearchIndexer:
                     index_params=index_params
                 )
             except Exception as e:
-                logger.warning(f"phase=search_indexer | msg=milvus_create_collection_issue | error={e}")
-                pass
+                logger.error(f"phase=search_indexer | msg=create_collection_failed | collection={collection_name} | error={e}")
+                raise
             
             # Insert data (Use DashScope to get dense embeddings in batches if possible, but here we do it sequentially or via bulk API)
             # To speed up building, we use get_text_embedding_batch
@@ -301,6 +285,17 @@ class SearchIndexer:
                             logger.error(f"phase=search_indexer | msg=single_embedding_failed | id={tid} | error={inner_e}")
                             dense_vecs.append([0.0] * self.dim) # Fallback empty vector
             
+            # 防御：避免 embedding 数量和 item 数量不一致 
+            if len(dense_vecs) != len(item_ids): 
+                logger.error( 
+                    f"phase=search_indexer | msg=embedding_count_mismatch | " 
+                    f"items={len(item_ids)} | embeddings={len(dense_vecs)}" 
+                ) 
+                min_len = min(len(item_ids), len(dense_vecs)) 
+                item_ids = item_ids[:min_len] 
+                texts = texts[:min_len] 
+                dense_vecs = dense_vecs[:min_len] 
+
             for item_id, text, dense_vec in zip(item_ids, texts, dense_vecs):
                 data.append({
                     "id": item_id,
@@ -310,6 +305,9 @@ class SearchIndexer:
                 
             if data:
                 client.insert(collection_name=collection_name, data=data)
+            
+            client.flush(collection_name) 
+            client.load_collection(collection_name)
             
             elapsed = time.time() - start_time
             logger.info(f"phase=search_indexer | msg=index_built_successfully | category={category} | count={len(items)} | session_id={session_id} | elapsed_sec={elapsed:.2f}")
@@ -341,7 +339,7 @@ class SearchIndexer:
                 embed_fn=lambda q: self.embed_model.get_text_embedding(q)
             )
             
-            results = searcher.search_page(query=query, page=page, page_size=page_size)
+            results = searcher.search_offset(query=query, top_k=top_k, offset=offset)
             
             # Match with original items
             found_items = []
@@ -361,3 +359,13 @@ class SearchIndexer:
         # Fallback default: return top_k from category_docs directly
         items = session_docs.get(category, [])
         return items[offset:offset+top_k]
+
+    def get_item(self, item_id: str, session_id: str = "default") -> Dict[str, Any]:
+        """从内存缓存中获取完整的 item 数据"""
+        session_docs = self.category_docs.get(session_id, {})
+        for category, items in session_docs.items():
+            for item in items:
+                cand_id = str(item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id"))
+                if cand_id == item_id:
+                    return item
+        return {}

@@ -24,7 +24,7 @@ class LoggingSettings(BaseSettings):
     LOG_ROTATION: str = "10 MB"
     LOG_RETENTION: str = "30 days"
     LOG_ELK_ENABLED: bool = False
-    LOG_ELK_JSON_PATH: str = os.path.join(LOG_DIR_PATH, "elk.jsonl")
+    LOG_ELK_JSON_PATH: str = os.path.join(LOG_DIR_PATH, "elk", "elk_{time:YYYY-MM-DD}.jsonl")
     LOG_ELK_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "DEBUG"
     FILTER_LOG_DETAILED_DEBUG: bool = True
     LOG_PLANNER_STATS: bool = False
@@ -48,6 +48,8 @@ class DataSettings(BaseSettings):
 
 class AppConfig(BaseSettings):
     PROJECT_NAME: str = "ClosedLoop"
+    MILVUS_URI: str = "http://milvus:19530"
+    PLAN_SUB_API_URL: str = "http://plan_sub_backend:8001/plan"
 
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)

@@ -1,4 +1,5 @@
 import json
+import httpx
 from typing import Annotated, Literal
 
 from langchain_core.messages import ToolMessage
@@ -11,6 +12,7 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.plan_subgraph.repairer import repair_plan
 from closedloop.contracts.state import Constraints
+from langchain_core.runnables import RunnableConfig
 
 class AdjustPlanItemInput(BaseModel):
     plan_id: str = Field(..., description="要修改的方案 ID")
@@ -24,6 +26,7 @@ def adjust_plan_item(
     new_item_id: str,
     tool_call_id: Annotated[str, InjectedToolCallId],
     state: Annotated[dict, InjectedState],
+    config_runnable: RunnableConfig,
 ) -> Command:
     """
     替换行程中的指定条目，并自动处理引发的时间和预算冲突（5级修复策略）。
@@ -45,7 +48,7 @@ def adjust_plan_item(
             "messages": [ToolMessage(content=json.dumps({"error": "找不到指定的方案 ID"}, ensure_ascii=False), tool_call_id=tool_call_id)]
         })
 
-    # 从 candidates 里找出 new_item_id 的完整数据
+    # 优先从 candidates 里找出 new_item_id 的完整数据
     candidates = state.get("candidates", {})
     new_item_data = None
     for k in ["ranked_breakfast_combos", "ranked_lunch_combos", "ranked_afternoon_tea_combos", "ranked_dinner_combos", "ranked_late_night_combos", "ranked_packages", "ranked_light_packages", "ranked_gifts"]:
@@ -57,74 +60,24 @@ def adjust_plan_item(
         if new_item_data:
             break
             
-    # 如果候选池中找不到，可能是由于 search_candidates 返回的是另外一个 session/category 下的数据
-    # 为了最强健的兜底保障，直接穿透到原始 Mock 数据库文件中全局检索这个 ID
+    # 如果候选池中找不到，请求 plan_sub_backend API 获取完整数据（替换原有的读取本地 json 文件兜底逻辑）
     if not new_item_data:
-        import os
-        # 修正路径：获取项目根目录的最安全方法是从 backend/src/closedloop/core/config.py 的相对位置推算
-        # 或者直接相对当前文件推算：__file__ 在 backend/src/closedloop/graph/tools/adjust_tool.py
-        # 目录层级: tools(1) -> graph(2) -> closedloop(3) -> src(4) -> backend(5) -> ClosedLoop根目录
-        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../../mock_data/base"))
+        session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
+        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan").replace("/plan", f"/item/{new_item_id}")
         
-        # 检查如果不对，尝试另外一个层级
-        if not os.path.exists(base_dir):
-            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../../../mock_data/base"))
-            
-        # 定义需要遍历查找的原始文件与主键/子键映射关系
-        db_files = {
-            "restaurants.json": ["combos"],
-            "activities.json": ["packages"],
-            "add_ons.json": ["gifts"]
-        }
-        
-        for file_name, sub_keys in db_files.items():
-            file_path = os.path.join(base_dir, file_name)
-            if not os.path.exists(file_path):
-                continue
-            try:
-                with open(file_path, "r", encoding="utf-8") as f:
-                    mock_data = json.load(f)
-                    
-                # 遍历顶层对象
-                for parent_item in mock_data:
-                    # 检查父级自身（虽然我们要找的通常是子级的 combo/package，但以防万一）
-                    if str(parent_item.get("id")) == new_item_id:
-                        new_item_data = parent_item
-                        break
-                        
-                    # 检查子级的 combo / package / gift
-                    for sub_key in sub_keys:
-                        for child_item in parent_item.get(sub_key, []):
-                            child_id = str(child_item.get("combo_id") or child_item.get("package_id") or child_item.get("gift_id") or child_item.get("id"))
-                            if child_id == new_item_id:
-                                # 把父级的关键属性也带给子级，就像 rerank 里做的一样
-                                child_item["parent_id"] = parent_item.get("id")
-                                child_item["name"] = parent_item.get("name", "") + " - " + child_item.get("name", "")
-                                child_item["latitude"] = parent_item.get("latitude")
-                                child_item["longitude"] = parent_item.get("longitude")
-                                child_item["address"] = parent_item.get("address")
-                                child_item["district"] = parent_item.get("district")
-                                child_item["suitable_groups"] = parent_item.get("suitable_groups", [])
-                                child_item["child_facility_tags"] = parent_item.get("child_facility_tags", [])
-                                child_item["kid_menu_status"] = parent_item.get("kid_menu_status")
-                                child_item["stroller_friendly_status"] = parent_item.get("stroller_friendly_status")
-                                child_item["gift_type"] = parent_item.get("gift_type")
-                                child_item["delivery_to_restaurant"] = parent_item.get("delivery_to_restaurant")
-                                child_item["age_range"] = parent_item.get("age_range", [])
-                                new_item_data = child_item
-                                break
-                        if new_item_data:
-                            break
-                    if new_item_data:
-                        break
-                if new_item_data:
-                    break
-            except Exception as e:
-                logger.warning(f"phase=adjust_plan_item | msg=mock_db_fallback_search_error | file={file_name} | error={e}")
+        try:
+            with httpx.Client(timeout=10.0, trust_env=False, proxy=None) as client:
+                resp = client.get(api_url, params={"session_id": session_id})
+                resp.raise_for_status()
+                res_data = resp.json()
+                if res_data.get("status") == "success" and res_data.get("item"):
+                    new_item_data = res_data.get("item")
+        except Exception as e:
+            logger.warning(f"phase=adjust_plan_item | msg=api_fallback_search_error | error={e}")
 
     if not new_item_data:
         return Command(update={
-            "messages": [ToolMessage(content=json.dumps({"error": f"在候选池中找不到指定的 new_item_id ({new_item_id})，请检查 ID 是否正确"}, ensure_ascii=False), tool_call_id=tool_call_id)]
+            "messages": [ToolMessage(content=json.dumps({"error": f"找不到指定的新条目 ({new_item_id})，请检查 ID 是否正确"}, ensure_ascii=False), tool_call_id=tool_call_id)]
         })
 
     constraints_dict = state.get("constraints", {})
