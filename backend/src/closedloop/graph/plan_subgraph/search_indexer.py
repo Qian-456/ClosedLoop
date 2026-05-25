@@ -136,7 +136,8 @@ class SearchIndexer:
 
     def __init__(self):
         self.config = get_config()
-        self.milvus_uri = getattr(self.config, "MILVUS_URI", "http://milvus:19530")
+        self.milvus_uri = os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "milvus_data", "milvus.db")
+        self.milvus_uri = os.path.abspath(self.milvus_uri)
         self.dim = 1024
         
         api_key = getattr(self.config.qwen, "API_KEY", os.getenv("DASHSCOPE_API_KEY"))
