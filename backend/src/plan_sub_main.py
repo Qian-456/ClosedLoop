@@ -27,6 +27,7 @@ class PlanRequest(BaseModel):
     itinerary: Optional[Dict[str, Any]] = None
     past_itinerary: Optional[List[Dict[str, Any]]] = None
     top_k: Optional[int] = 1
+    session_id: str = "default"
 
 class SearchRequest(BaseModel):
     category: str
@@ -58,7 +59,8 @@ def run_plan_subgraph(req: PlanRequest):
         subgraph_state["top_k"] = req.top_k
 
     try:
-        subgraph_output = build_subgraph_plan().invoke(subgraph_state)
+        run_config = {"configurable": {"thread_id": req.session_id}}
+        subgraph_output = build_subgraph_plan().invoke(subgraph_state, config=run_config)
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         return {"status": "success", "itinerary": result}
     except Exception as e:

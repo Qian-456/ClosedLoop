@@ -53,15 +53,22 @@ def search_candidates(
         "session_id": session_id
     }
     
-    try:
-        with httpx.Client(timeout=30.0, trust_env=False, proxy=None) as client:
-            resp = client.post(api_url, json=payload)
-            resp.raise_for_status()
-            search_output = resp.json()
-            results = search_output.get("results", [])
-    except Exception as e:
-        logger.error(f"phase=search_candidates | error={e}")
-        results = []
+    results = []
+    import time
+    for attempt in range(3):
+        try:
+            with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
+                resp = client.post(api_url, json=payload)
+                resp.raise_for_status()
+                search_output = resp.json()
+                results = search_output.get("results", [])
+                break
+        except Exception as e:
+            if attempt == 2:
+                logger.error(f"phase=search_candidates | error={e}")
+            else:
+                logger.warning(f"phase=search_candidates | msg=retrying | attempt={attempt+1} | error={e}")
+                time.sleep(2.0)
     
     simplified_results = []
     for item in results:

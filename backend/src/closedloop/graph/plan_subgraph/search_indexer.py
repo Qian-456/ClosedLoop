@@ -84,7 +84,7 @@ class MilvusHybridSearcher:
             data=[query], 
             anns_field=self.sparse_field, 
             param={
-                "metric_type": "IP",
+                "metric_type": "BM25",
                 "params": {"drop_ratio_search": 0.2},
             },
             limit=branch_limit, 
@@ -268,22 +268,38 @@ class SearchIndexer:
             for i in range(0, len(texts), batch_size):
                 batch_texts = texts[i:i + batch_size]
                 batch_ids = item_ids[i:i + batch_size]
-                try:
-                    batch_vecs = self.embed_model.get_text_embedding_batch(batch_texts)
+                
+                batch_vecs = None
+                for attempt in range(3):
+                    try:
+                        batch_vecs = self.embed_model.get_text_embedding_batch(batch_texts)
+                        break
+                    except Exception as e:
+                        if attempt == 2:
+                            logger.warning(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
+                        else:
+                            time.sleep(1.5 ** attempt)
+                            
+                if batch_vecs:
                     dense_vecs.extend(batch_vecs)
-                except Exception as e:
-                    logger.warning(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
+                else:
                     # Fallback to sequential if batch fails
                     for t, tid in zip(batch_texts, batch_ids):
-                        try:
-                            v = self.embed_model.get_text_embedding(t)
-                            if not v:
-                                logger.error(f"phase=search_indexer | msg=single_embedding_returned_empty | id={tid} | text={t[:50]}...")
-                                v = [0.0] * self.dim
-                            dense_vecs.append(v)
-                        except Exception as inner_e:
-                            logger.error(f"phase=search_indexer | msg=single_embedding_failed | id={tid} | error={inner_e}")
-                            dense_vecs.append([0.0] * self.dim) # Fallback empty vector
+                        v = None
+                        for attempt in range(3):
+                            try:
+                                v = self.embed_model.get_text_embedding(t)
+                                break
+                            except Exception as inner_e:
+                                if attempt == 2:
+                                    logger.error(f"phase=search_indexer | msg=single_embedding_failed | id={tid} | error={inner_e}")
+                                else:
+                                    time.sleep(1.5 ** attempt)
+                                    
+                        if not v:
+                            logger.error(f"phase=search_indexer | msg=single_embedding_returned_empty_or_failed | id={tid} | text={t[:50]}...")
+                            v = [0.0] * self.dim
+                        dense_vecs.append(v)
             
             # 防御：避免 embedding 数量和 item 数量不一致 
             if len(dense_vecs) != len(item_ids): 
@@ -316,6 +332,23 @@ class SearchIndexer:
             elapsed = time.time() - start_time
             logger.error(f"phase=search_indexer | msg=milvus_build_failed | error={e} | session_id={session_id} | elapsed_sec={elapsed:.2f}")
 
+    def _safe_embed(self, query: str) -> list[float]:
+        import time
+        for attempt in range(3):
+            try:
+                vec = self.embed_model.get_text_embedding(query)
+                if not vec:
+                    if attempt == 2:
+                        return [0.0] * self.dim
+                    continue
+                return vec
+            except Exception as e:
+                if attempt == 2:
+                    logger.error(f"phase=search_indexer | msg=query_embedding_failed | error={e}")
+                    return [0.0] * self.dim
+                time.sleep(1.5 ** attempt)
+        return [0.0] * self.dim
+
     def search(self, category: str, query: str, top_k: int = 15, offset: int = 0, session_id: str = "default") -> List[Dict[str, Any]]:
         safe_session_id = session_id.replace("-", "_")
         collection_name = f"closedloop_{category}_{safe_session_id}"
@@ -336,7 +369,7 @@ class SearchIndexer:
             searcher = MilvusHybridSearcher(
                 uri=self.milvus_uri,
                 collection_name=collection_name,
-                embed_fn=lambda q: self.embed_model.get_text_embedding(q)
+                embed_fn=self._safe_embed
             )
             
             results = searcher.search_offset(query=query, top_k=top_k, offset=offset)

@@ -1,7 +1,10 @@
-from typing import Optional, Literal, NotRequired, Any
+from typing import Optional, Literal, NotRequired, Any, Annotated
 from typing_extensions import TypedDict, Required, TypeAlias
 from pydantic import BaseModel, Field, model_validator
 from langchain.agents import AgentState
+
+def replace_value(left: Any, right: Any) -> Any:
+    return right if right is not None else left
 
 class RetrievedRestaurant(TypedDict, total=False):
     """召回阶段：餐厅条目（来自 mock_db/restaurants.json 原始数据）。"""
@@ -389,7 +392,7 @@ class PlanState(TypedDict):
     top_k: NotRequired[int]
     itinerary: NotRequired[dict]
     confirmation: NotRequired[dict]
-    current_step: NotRequired[str]
+    current_step: Annotated[Optional[str], replace_value]
     processed_steps: NotRequired[list[str]]
 
 
@@ -406,4 +409,4 @@ class ClosedLoopState(AgentState):
     constraints: NotRequired[Constraints]
     itinerary: NotRequired[list[dict]]
     confirmation: NotRequired[dict]
-    current_step: NotRequired[Literal["plan_trip", "confirm_trip"]]
+    current_step: Annotated[Optional[str], replace_value]

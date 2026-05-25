@@ -8,6 +8,7 @@ from langgraph.types import Command
 from pydantic import BaseModel, Field
 
 import httpx
+from langchain_core.runnables import RunnableConfig
 
 from closedloop.contracts.state import ClosedLoopState, Constraints, PlanState
 from closedloop.core.config import get_config
@@ -87,6 +88,7 @@ def plan_trip(
     time_period: str,
     tool_call_id: Annotated[str, InjectedToolCallId],
     state: Annotated[dict, InjectedState],
+    config_runnable: RunnableConfig,
     dietary_restrictions: list[str] | None = None,
     preferred_distance: Literal["<2km", "2km-5km", ">5km"] = "2km-5km",
     duration_hours: Optional[tuple[float, float]] = None,
@@ -106,8 +108,9 @@ def plan_trip(
     """
     config = get_config()
     LoggerManager.setup(config)
+    session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
 
-    logger.info(f"phase=plan_trip | input=group_type={group_type} budget={budget} time_period={time_period}")
+    logger.info(f"phase=plan_trip | input=group_type={group_type} budget={budget} time_period={time_period} session_id={session_id}")
 
     # 因为 plan_trip 代表全新的约束规划，所以清空历史方案，使 plan_id 重新从 plan_1 开始
     past_itinerary = []
@@ -136,13 +139,23 @@ def plan_trip(
             "constraints": constraints,
             "past_itinerary": past_itinerary,
             "top_k": 1,
+            "session_id": session_id,
         }
         
-        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
-        with httpx.Client(timeout=60.0, trust_env=False, proxy=None) as client:
-            resp = client.post(api_url, json=payload)
-            resp.raise_for_status()
-            subgraph_output = resp.json()
+        import time
+        for attempt in range(3):
+            try:
+                api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
+                with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
+                    resp = client.post(api_url, json=payload)
+                    resp.raise_for_status()
+                    subgraph_output = resp.json()
+                break
+            except Exception as e:
+                if attempt == 2:
+                    raise
+                logger.warning(f"phase=plan_trip | msg=retrying | attempt={attempt+1} | error={e}")
+                time.sleep(2.0)
             
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
@@ -190,6 +203,7 @@ def generate_alternative_plans(
     count: int,
     tool_call_id: Annotated[str, InjectedToolCallId],
     state: Annotated[dict, InjectedState],
+    config_runnable: RunnableConfig,
 ) -> Command:
     """
     基于当前已有的 constraints，生成更多与历史方案不同的备选方案。
@@ -197,8 +211,9 @@ def generate_alternative_plans(
     """
     config = get_config()
     LoggerManager.setup(config)
+    session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
     
-    logger.info(f"phase=generate_alternative_plans | count={count}")
+    logger.info(f"phase=generate_alternative_plans | count={count} | session_id={session_id}")
     
     constraints = state.get("constraints")
     if not constraints:
@@ -220,13 +235,23 @@ def generate_alternative_plans(
             "constraints": constraints,
             "past_itinerary": past_itinerary,
             "top_k": count,
+            "session_id": session_id,
         }
         
-        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
-        with httpx.Client(timeout=60.0, trust_env=False, proxy=None) as client:
-            resp = client.post(api_url, json=payload)
-            resp.raise_for_status()
-            subgraph_output = resp.json()
+        import time
+        for attempt in range(3):
+            try:
+                api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
+                with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
+                    resp = client.post(api_url, json=payload)
+                    resp.raise_for_status()
+                    subgraph_output = resp.json()
+                break
+            except Exception as e:
+                if attempt == 2:
+                    raise
+                logger.warning(f"phase=generate_alternative_plans | msg=retrying | attempt={attempt+1} | error={e}")
+                time.sleep(2.0)
             
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
