@@ -48,6 +48,8 @@ class ItineraryStep(BaseModel):
     order_id: str = Field(..., description="步骤顺序 id，实体活动为 1, 2... 通勤为 C1, C2...")
     item: ItineraryItem = Field(..., description="该步骤选择的候选条目")
     duration_minutes: int = Field(..., description="该步骤建议停留时长（分钟）")
+    start_time: Optional[str] = Field(default=None, description="步骤预计开始时间（HH:MM）")
+    end_time: Optional[str] = Field(default=None, description="步骤预计结束时间（HH:MM）")
 
 
 class ItineraryPlanVariant(BaseModel):

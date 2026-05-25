@@ -462,7 +462,8 @@ def generate_and_score_combinations(
                     delivery_fee = calculate_delivery_fee(delivery_distance_km)
                     gift_price = float(price) if isinstance(price, (int, float)) else 0.0
 
-                    new_total_duration = total_duration_minutes + duration_mins
+                    # 添加礼品店本身的耗时，并在步骤后附加 5 分钟的空余时间缓冲
+                    new_total_duration = total_duration_minutes + duration_mins + 5
 
                     if is_range:
                         if new_total_duration > hard_max_mins:
@@ -519,7 +520,8 @@ def generate_and_score_combinations(
                     dist, commute_preference=commute_preference
                 )
 
-                new_total_duration = total_duration_minutes + duration_mins + int(math.ceil(time_min))
+                # 通勤步骤(1个)和活动/餐饮步骤(1个)，分别在各自结束后加 5 分钟缓冲，共计 10 分钟
+                new_total_duration = total_duration_minutes + duration_mins + int(math.ceil(time_min)) + 10
                 
                 # 剪枝判断，尽早退出
                 if is_range:

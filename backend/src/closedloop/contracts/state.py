@@ -136,7 +136,10 @@ class RankedCombo(TypedDict, total=False):
     latitude: NotRequired[float]
     longitude: NotRequired[float]
     location: NotRequired[dict]
-
+    kid_menu_status: NotRequired[str]
+    stroller_friendly_status: NotRequired[str]
+    child_facility_tags: NotRequired[list]
+    child_friendly_score_derived: NotRequired[dict]
 
 class RankedPackage(TypedDict, total=False):
     """重排序阶段：扁平化的活动套餐条目，包含活动场地上下文。"""

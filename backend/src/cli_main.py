@@ -16,7 +16,7 @@ async def async_main():
     LoggerManager.setup(config)
     
     # 2. 定义运行配置（指定 thread_id 以维持多轮对话状态）
-    run_config = {"configurable": {"thread_id": "support_session_002"}}
+    run_config = {"configurable": {"thread_id": "support_session_003"}}
     
     logger.info("Agent已启动。您可以开始对话。输入 '/exit' 退出。")
 

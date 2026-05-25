@@ -126,6 +126,14 @@ def _select_top_k_diverse_plans(plan_infos: list[dict], top_k: int, past_itinera
 
     return selected
 
+def _float_hours_to_time_str(hours: float) -> str:
+    h = int(hours) % 24
+    m = int(round((hours - int(hours)) * 60))
+    if m == 60:
+        h = (h + 1) % 24
+        m = 0
+    return f"{h:02d}:{m:02d}"
+
 def _rewrite_commutes_for_taxi_preference(commutes: list[dict]) -> list[dict]:
     if not commutes:
         return []
@@ -414,13 +422,21 @@ def planner_node(state: PlanState) -> PlanState:
                             commute_preference="driving" if commute_preference == "driving" else "auto",
                         )
                     )
+                    commute_dur_mins = int(math.ceil(float(commute["time"])))
+                    start_str = _float_hours_to_time_str(current_time)
+                    current_time += (commute_dur_mins / 60.0)
+                    end_str = _float_hours_to_time_str(current_time)
+
                     steps.append(ItineraryStep(
                         order_id=f"C{commute_counter}",
                         item=commute_item,
-                        duration_minutes=int(math.ceil(float(commute["time"])))
+                        duration_minutes=commute_dur_mins,
+                        start_time=start_str,
+                        end_time=end_str
                     ))
                     commute_counter += 1
-                    current_time += (commute["time"] / 60.0)
+                    # 每个步骤后加5分钟缓冲
+                    current_time += (5.0 / 60.0)
                 
                 # 2. 加入实际地点节点
                 # 确定时长
@@ -485,14 +501,22 @@ def planner_node(state: PlanState) -> PlanState:
                     features=selected_item.get("features"),
                 )
 
+                start_str = _float_hours_to_time_str(current_time)
+                current_time += (duration_mins / 60.0)
+                end_str = _float_hours_to_time_str(current_time)
+
                 steps.append(ItineraryStep(
                     order_id=str(step_counter),
                     item=it_item,
-                    duration_minutes=duration_mins
+                    duration_minutes=duration_mins,
+                    start_time=start_str,
+                    end_time=end_str
                 ))
                 step_counter += 1
                 item_ids.append(item_id)
-                current_time += (duration_mins / 60.0)
+                # 每个步骤后加5分钟缓冲（如果是最后一个且没有回家通勤，就不该加？下面会处理最后一部通勤）
+                # 这里统加，不管它是不是最后一个步骤，总耗时计算时我们减去最后一个缓冲或者在外部控制
+                current_time += (5.0 / 60.0)
 
                 if item_type != "gift_shop":
                     last_physical_name = display_name
@@ -521,13 +545,22 @@ def planner_node(state: PlanState) -> PlanState:
                         commute_preference="driving" if commute_preference == "driving" else "auto",
                     )
                 )
+                commute_dur_mins = int(math.ceil(float(final_commute["time"])))
+                start_str = _float_hours_to_time_str(current_time)
+                current_time += (commute_dur_mins / 60.0)
+                end_str = _float_hours_to_time_str(current_time)
+
                 steps.append(ItineraryStep(
                     order_id=f"C{commute_counter}",
                     item=commute_item,
-                    duration_minutes=int(math.ceil(float(final_commute["time"])))
+                    duration_minutes=commute_dur_mins,
+                    start_time=start_str,
+                    end_time=end_str
                 ))
             
-            total_duration_minutes = sum(int(s.duration_minutes) for s in steps)
+            # 根据契约：独立缓冲在计算总耗时和时序时生效，不加入具体step中。每个步骤后加5分钟，除了最后一步。
+            num_buffers = max(0, len(steps) - 1)
+            total_duration_minutes = sum(int(s.duration_minutes) for s in steps) + 5 * num_buffers
             total_cost = sum(float(s.item.cost or 0.0) for s in steps)
 
             plan_variant = ItineraryPlanVariant(

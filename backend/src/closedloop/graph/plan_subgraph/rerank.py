@@ -200,14 +200,20 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
     return int(total_score)
 
 
-def rerank_node(state: PlanState) -> PlanState:
+from langchain_core.runnables import RunnableConfig
+
+def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     """
     对 filter 节点输出的候选列表进行打分并重新排序。
     """
-    config = get_config()
-    LoggerManager.setup(config)
+    app_config = get_config()
+    LoggerManager.setup(app_config)
 
     logger.info("phase=rerank_node | input=start")
+    
+    session_id = "default"
+    if config and "configurable" in config:
+        session_id = config["configurable"].get("thread_id", "default")
 
     constraints = state.get("constraints")
     candidates = _ensure_candidates_dict(state)
@@ -264,6 +270,10 @@ def rerank_node(state: PlanState) -> PlanState:
                 "latitude": rest.get("latitude"),
                 "longitude": rest.get("longitude"),
                 "location": rest.get("location", {}),
+                "kid_menu_status": rest.get("kid_menu_status"),
+                "stroller_friendly_status": rest.get("stroller_friendly_status"),
+                "child_facility_tags": rest.get("child_facility_tags", []),
+                "child_friendly_score_derived": rest.get("child_friendly_score_derived"),
             }
             
             # 分类逻辑：根据套餐自带的时间段标签进行分流
@@ -342,6 +352,9 @@ def rerank_node(state: PlanState) -> PlanState:
                 "latitude": gift_shop.get("latitude"),
                 "longitude": gift_shop.get("longitude"),
                 "location": gift_shop.get("location", {}),
+                "gift_type": gift_shop.get("gift_type"),
+                "delivery_to_restaurant": gift_shop.get("delivery_to_restaurant"),
+                "surprise_score_derived": gift_shop.get("surprise_score_derived"),
             }
             ranked_gifts.append(rg)
 
@@ -383,6 +396,22 @@ def rerank_node(state: PlanState) -> PlanState:
     a_c = len(ranked_afternoon_tea_combos)
     d_c = len(ranked_dinner_combos)
     n_c = len(ranked_late_night_combos)
+
+    import threading
+    from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
+    
+    indexer = SearchIndexer.get_instance()
+    
+    def _build_indices_in_background():
+        try:
+            indexer.build_index("restaurant", ranked_breakfast_combos + ranked_lunch_combos + ranked_afternoon_tea_combos + ranked_dinner_combos + ranked_late_night_combos, session_id=session_id)
+            indexer.build_index("activity", ranked_packages + ranked_light_packages, session_id=session_id)
+            indexer.build_index("gift_shop", ranked_gifts, session_id=session_id)
+            logger.info(f"phase=rerank_node | msg=background_indices_built_successfully | session_id={session_id}")
+        except Exception as e:
+            logger.error(f"phase=rerank_node | error=background_indices_build_failed | details={e} | session_id={session_id}")
+            
+    threading.Thread(target=_build_indices_in_background, daemon=True).start()
 
     logger.info(
         f"phase=rerank_node | output=reranked {b_c} breakfast, {l_c} lunch, {a_c} tea, {d_c} dinner, {n_c} night combos (from {rest_count} restaurants), "
