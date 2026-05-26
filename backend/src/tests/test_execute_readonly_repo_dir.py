@@ -12,8 +12,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from main import app
 
 
-client = TestClient(app)
-
 
 def _write_json(path: str, data) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -28,7 +26,7 @@ def _read_json(path: str):
 
 class TestExecuteReadonlyRepoDir(unittest.TestCase):
     def test_execute_should_fallback_to_rw_dir_when_repo_dir_readonly(self):
-        with tempfile.TemporaryDirectory() as repo_dir, tempfile.TemporaryDirectory() as rw_dir:
+        with TestClient(app) as client, tempfile.TemporaryDirectory() as repo_dir, tempfile.TemporaryDirectory() as rw_dir:
             activities = [
                 {
                     "venue_id": "v1",

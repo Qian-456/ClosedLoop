@@ -9,6 +9,7 @@ class TestSearchIndexer(unittest.TestCase):
         # Setup mocks
         mock_embed_instance = MagicMock()
         mock_embed_instance.get_text_embedding.return_value = [0.1] * 1536
+        mock_embed_instance.get_text_embedding_batch.return_value = [[0.1] * 1536, [0.1] * 1536]
         mock_dashscope.return_value = mock_embed_instance
         
         mock_client_instance = MagicMock()
@@ -41,14 +42,14 @@ class TestSearchIndexer(unittest.TestCase):
         mock_hit_1.id = "1"
         mock_hit_2 = MagicMock()
         mock_hit_2.id = "2"
-        mock_hybrid_searcher.search_page.return_value = [mock_hit_2, mock_hit_1]
-        
+        mock_hybrid_searcher.search.return_value = [mock_hit_2, mock_hit_1]
+
         # Change has_collection to True for search phase
         mock_client_instance.has_collection.return_value = True
-        
+
         with patch('closedloop.graph.plan_subgraph.search_indexer.MilvusHybridSearcher', return_value=mock_hybrid_searcher):
             results = indexer.search("restaurant", "query", top_k=2)
-            
+
             self.assertEqual(len(results), 2)
             self.assertEqual(results[0]["id"], "2")
             self.assertEqual(results[1]["id"], "1")
@@ -71,10 +72,10 @@ class TestSearchIndexer(unittest.TestCase):
         
         # Simulate exception during search to trigger fallback
         mock_hybrid_searcher_instance = MagicMock()
-        mock_hybrid_searcher_instance.search_page.side_effect = Exception("Milvus down")
+        mock_hybrid_searcher_instance.search.side_effect = Exception("Milvus down")
         mock_hybrid_searcher_class.return_value = mock_hybrid_searcher_instance
         
-        results = indexer.search("activity", "query", top_k=2, offset=0)
+        results = indexer.search("activity", "query", top_k=2)
         
         # Should fallback to default slicing
         self.assertEqual(len(results), 2)

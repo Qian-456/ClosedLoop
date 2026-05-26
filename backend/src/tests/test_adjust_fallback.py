@@ -6,7 +6,8 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
 
 # 我们把需要测试的 adjust_tool 中那段提取 new_item_data 的代码摘出来跑一遍
-def test_find_item_in_mock_data(new_item_id: str):
+def test_find_item_in_mock_data():
+    new_item_id = "restaurant_001"
     new_item_data = None
     
     # 模拟 adjust_tool.py 第 66 行左右的路径计算

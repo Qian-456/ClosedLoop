@@ -12,8 +12,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from main import app
 
 
-client = TestClient(app)
-
 
 def _write_json(path: str, data) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -28,7 +26,7 @@ def _read_json(path: str):
 
 class TestExecuteAPI(unittest.TestCase):
     def test_execute_sse_and_persist_decrement(self):
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with TestClient(app) as client, tempfile.TemporaryDirectory() as tmpdir:
             restaurants = [
                 {
                     "restaurant_id": "r1",

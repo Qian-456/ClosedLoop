@@ -20,8 +20,7 @@ class SearchCandidatesInput(BaseModel):
     user_request: str = Field(
         ..., description="用户的自然语言搜索词，例如 '找个便宜点的' 或 '有儿童乐园的'"
     )
-    top_k: int = Field(default=15, description="最多返回的结果数量")
-    offset: int = Field(default=0, description="分页偏移量")
+    top_k: int = Field(default=5, description="最多返回的结果数量")
 
 @tool(args_schema=SearchCandidatesInput)
 def search_candidates(
@@ -30,8 +29,7 @@ def search_candidates(
     tool_call_id: Annotated[str, InjectedToolCallId],
     state: Annotated[dict, InjectedState],
     config: RunnableConfig,
-    top_k: int = 15,
-    offset: int = 0,
+    top_k: int = 5,
 ) -> Command:
     """
     根据用户的自然语言需求，在指定类别（restaurant, activity, gift_shop）的候选池中进行混合检索（语义 + BM25）。
@@ -41,7 +39,7 @@ def search_candidates(
     
     session_id = config.get("configurable", {}).get("thread_id", "default")
 
-    logger.info(f"phase=search_candidates | category={category} | query={user_request} | top_k={top_k} | offset={offset} | session_id={session_id}")
+    logger.info(f"phase=search_candidates | category={category} | query={user_request} | top_k={top_k} | session_id={session_id}")
 
     api_url = getattr(config_app, "PLAN_SUB_API_URL", "http://localhost:8001/plan").replace("/plan", "/search")
     
@@ -49,26 +47,75 @@ def search_candidates(
         "category": category,
         "user_request": user_request,
         "top_k": top_k,
-        "offset": offset,
         "session_id": session_id
     }
     
     results = []
-    import time
-    for attempt in range(3):
+    import httpx
+    
+    # 单次请求2.8s，如果超时则兜底
+    try:
+        with httpx.Client(timeout=2.8, trust_env=False, proxy=None) as client:
+            resp = client.post(api_url, json=payload)
+            resp.raise_for_status()
+            search_output = resp.json()
+            results = search_output.get("results", [])
+    except Exception as e:
+        logger.warning(f"phase=search_candidates | msg=search_api_failed | error={e}")
+        # 兜底：HTTP 超时或彻底失败时，进行基于关键词的纯内存检索
+        logger.error(f"phase=search_candidates | msg=fallback_to_keyword_search")
         try:
-            with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
-                resp = client.post(api_url, json=payload)
-                resp.raise_for_status()
-                search_output = resp.json()
-                results = search_output.get("results", [])
-                break
-        except Exception as e:
-            if attempt == 2:
-                logger.error(f"phase=search_candidates | error={e}")
-            else:
-                logger.warning(f"phase=search_candidates | msg=retrying | attempt={attempt+1} | error={e}")
-                time.sleep(2.0)
+            from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
+            indexer = SearchIndexer.get_instance()
+            # 从缓存的当前 session 的 category 中拉取数据
+            session_docs = indexer.category_docs.get(session_id, {})
+            all_items = session_docs.get(category, [])
+            
+            if all_items:
+                import jieba
+                
+                # 首先使用空格进行直接的 split，这是最直接的用户意图边界
+                split_words = [w.strip() for w in user_request.split() if w.strip()]
+                keywords = []
+                
+                # 如果 split 后仍然是一整句（没有空格），则使用 jieba 分词来拆分
+                if len(split_words) <= 1:
+                    raw_keywords = jieba.lcut_for_search(user_request)
+                    keywords = [k for k in raw_keywords if len(k.strip()) > 0]
+                else:
+                    keywords = split_words
+                
+                if not keywords:
+                    keywords = [user_request]
+                    
+                scored_items = []
+                for item in all_items:
+                    text = indexer._prepare_text(item)
+                    score = sum(1 for k in keywords if k in text)
+                    if score > 0:
+                        scored_items.append((score, item))
+                        
+                # 按得分排序，返回 top_k
+                scored_items.sort(key=lambda x: x[0], reverse=True)
+                results = [item for score, item in scored_items][:top_k]
+            
+        except Exception as fallback_e:
+            logger.error(f"phase=search_candidates | msg=fallback_search_failed | error={fallback_e}")
+            results = []
+
+        logger.error(f"phase=search_candidates | error={e}")
+        # 如果兜底也空了（比如 all_items 原本就为空，或者匹配不到结果），或者兜底代码出错，返回一个提示给 Agent
+        if not results:
+            fail_msg = ToolMessage(
+                content=json.dumps({"error": "没有找到结果", "detail": "查询失败、超时或当前候选池为空，请尝试换一个搜索词或者不使用额外条件重新规划。"}, ensure_ascii=False),
+                tool_call_id=tool_call_id
+            )
+            return Command(
+                update={
+                    "candidates": state.get("candidates", {}),
+                    "messages": [fail_msg]
+                }
+            )
     
     simplified_results = []
     for item in results:
@@ -102,8 +149,7 @@ def search_candidates(
     
     result_data = {
         "results": simplified_results,
-        "total_returned": len(simplified_results),
-        "offset": offset
+        "total_returned": len(simplified_results)
     }
 
     transfer_message = ToolMessage(

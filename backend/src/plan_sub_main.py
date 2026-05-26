@@ -32,8 +32,7 @@ class PlanRequest(BaseModel):
 class SearchRequest(BaseModel):
     category: str
     user_request: str
-    top_k: int = 15
-    offset: int = 0
+    top_k: int = 5
     session_id: str = "default"
 
 @app.get("/health")
@@ -76,7 +75,6 @@ def run_search(req: SearchRequest):
             category=req.category,
             query=req.user_request,
             top_k=req.top_k,
-            offset=req.offset,
             session_id=req.session_id
         )
         return {"status": "success", "results": results}

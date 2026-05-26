@@ -47,25 +47,18 @@ class MilvusHybridSearcher:
 
         self.ranker = WeightedRanker(dense_weight, sparse_weight) 
 
-    def search_offset(
+    def search(
         self, 
         query: str, 
-        top_k: int = 15, 
-        offset: int = 0, 
+        limit: int = 5, 
         expr: str | None = None, 
         output_fields: list[str] | None = None, 
     ) -> list[SearchResultItem]: 
-        assert offset >= 0
-        assert top_k >= 1
-
-        end = offset + top_k
-
         if output_fields is None: 
             output_fields = [self.id_field, self.text_field] 
-
+        
+        # 内部 _safe_embed 已经做好了超时管理，超时会返回 dummy 极小值向量
         query_dense_vector = self.embed_fn(query) 
-
-        branch_limit = max(end * 2, 50) 
 
         dense_req = AnnSearchRequest( 
             data=[query_dense_vector], 
@@ -76,7 +69,7 @@ class MilvusHybridSearcher:
                     "ef": 64, 
                 }, 
             }, 
-            limit=branch_limit, 
+            limit=limit, 
             expr=expr, 
         ) 
 
@@ -87,16 +80,17 @@ class MilvusHybridSearcher:
                 "metric_type": "BM25",
                 "params": {"drop_ratio_search": 0.2},
             },
-            limit=branch_limit, 
+            limit=limit, 
             expr=expr, 
         ) 
         
         try:
+            # 无论 embedding 是否超时，都统一使用 hybrid_search，保证代码纯粹
             raw_results = self.client.hybrid_search( 
                 collection_name=self.collection_name, 
-                reqs=[dense_req, sparse_req], 
+                reqs=[sparse_req, dense_req], 
                 ranker=self.ranker, 
-                limit=end, 
+                limit=limit, 
                 output_fields=output_fields, 
             ) 
         except Exception as e:
@@ -107,10 +101,9 @@ class MilvusHybridSearcher:
             return []
             
         hits = raw_results[0] 
-        page_hits = hits[offset:end]
 
         results: list[SearchResultItem] = [] 
-        for i, hit in enumerate(page_hits, start=offset + 1): 
+        for i, hit in enumerate(hits): 
             if isinstance(hit, dict): 
                 entity = hit.get("entity", {}) or {} 
                 score = hit.get("distance", 0.0) 
@@ -137,12 +130,12 @@ class SearchIndexer:
     def __init__(self):
         self.config = get_config()
         self.milvus_uri = getattr(self.config, "MILVUS_URI", "http://milvus:19530")
-        self.dim = 1024
+        self.dim = 1536
         
-        api_key = getattr(self.config.qwen, "API_KEY", os.getenv("DASHSCOPE_API_KEY"))
+        # 使用 DashScope 的 text-embedding-v2 模型
         self.embed_model = DashScopeEmbedding(
-            model_name="text-embedding-v4",
-            api_key=api_key
+            model_name="text-embedding-v2",
+            api_key=self.config.qwen.API_KEY
         )
         
         self.category_docs = {}
@@ -259,47 +252,46 @@ class SearchIndexer:
                 item_ids.append(item_id)
                 texts.append(text)
                 
-            # Call DashScope batch API to save time!
-            # The DashScope API expects a list of non-empty strings.
-            # If some strings are empty or too long, it might cause Pydantic validation errors inside LlamaIndex.
-            # DashScope API batch size limit is strictly 10.
+            # 对于 DashScope API，批量调用可以加快速度，单次最大支持 25 条
             dense_vecs = []
-            batch_size = 10
+            batch_size = 25 # DashScope text-embedding-v2 batch size
+            
+            import concurrent.futures
+            
+            embedding_start_time = time.time()
             for i in range(0, len(texts), batch_size):
                 batch_texts = texts[i:i + batch_size]
                 batch_ids = item_ids[i:i + batch_size]
                 
-                batch_vecs = None
-                for attempt in range(3):
+                # 全局超时检查：如果整体 embedding 耗时超过 2.0 秒，直接截断后续批次，避免超时
+                if time.time() - embedding_start_time > 2.0:
+                    logger.warning(f"phase=search_indexer | msg=global_embedding_timeout_reached | padding_zeros_for_remaining")
+                    dense_vecs.extend([[0.0] * self.dim for _ in range(len(texts) - i)])
+                    break
+
+                # 修改重试机制：减少重试次数和退避时间，增加单次调用的严格超时（1.5s）
+                max_retries = 1 
+                for attempt in range(max_retries + 1):
                     try:
-                        batch_vecs = self.embed_model.get_text_embedding_batch(batch_texts)
-                        break
+                        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                            future = executor.submit(self.embed_model.get_text_embedding_batch, batch_texts)
+                            batch_vecs = future.result(timeout=1.5)
+                        dense_vecs.extend(batch_vecs)
+                        break  # 成功则跳出重试循环
+                    except concurrent.futures.TimeoutError:
+                        logger.warning(f"phase=search_indexer | msg=batch_embedding_timeout | batch_start={i} | attempt={attempt+1}")
+                        if attempt >= max_retries:
+                            dense_vecs.extend([[0.0] * self.dim for _ in batch_texts])
                     except Exception as e:
-                        if attempt == 2:
-                            logger.warning(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
+                        if attempt < max_retries:
+                            logger.warning(f"phase=search_indexer | msg=batch_embedding_retry | batch_start={i} | attempt={attempt+1} | error={e}")
+                            time.sleep(0.2)  # 退避时间缩短到 0.2 秒
                         else:
-                            time.sleep(1.5 ** attempt)
+                            logger.error(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
+                            # 如果批处理最终失败，用零向量兜底
+                            dense_vecs.extend([[0.0] * self.dim for _ in batch_texts])
                             
-                if batch_vecs:
-                    dense_vecs.extend(batch_vecs)
-                else:
-                    # Fallback to sequential if batch fails
-                    for t, tid in zip(batch_texts, batch_ids):
-                        v = None
-                        for attempt in range(3):
-                            try:
-                                v = self.embed_model.get_text_embedding(t)
-                                break
-                            except Exception as inner_e:
-                                if attempt == 2:
-                                    logger.error(f"phase=search_indexer | msg=single_embedding_failed | id={tid} | error={inner_e}")
-                                else:
-                                    time.sleep(1.5 ** attempt)
-                                    
-                        if not v:
-                            logger.error(f"phase=search_indexer | msg=single_embedding_returned_empty_or_failed | id={tid} | text={t[:50]}...")
-                            v = [0.0] * self.dim
-                        dense_vecs.append(v)
+                time.sleep(0.05) # 微小停顿，避免触发 QPS 限制
             
             # 防御：避免 embedding 数量和 item 数量不一致 
             if len(dense_vecs) != len(item_ids): 
@@ -312,15 +304,20 @@ class SearchIndexer:
                 texts = texts[:min_len] 
                 dense_vecs = dense_vecs[:min_len] 
 
+            valid_data = []
             for item_id, text, dense_vec in zip(item_ids, texts, dense_vecs):
-                data.append({
+                # 如果是 [0.0]*dim，说明该项在 3 次尝试后仍然失败，我们直接剔除它不建立索引
+                if dense_vec == [0.0] * self.dim:
+                    logger.warning(f"phase=search_indexer | msg=skip_failed_embedding | id={item_id}")
+                    continue
+                valid_data.append({
                     "id": item_id,
                     "text": text,
                     "dense_vector": dense_vec,
                 })
                 
-            if data:
-                client.insert(collection_name=collection_name, data=data)
+            if valid_data:
+                client.insert(collection_name=collection_name, data=valid_data)
             
             client.flush(collection_name) 
             client.load_collection(collection_name)
@@ -333,27 +330,25 @@ class SearchIndexer:
             logger.error(f"phase=search_indexer | msg=milvus_build_failed | error={e} | session_id={session_id} | elapsed_sec={elapsed:.2f}")
 
     def _safe_embed(self, query: str) -> list[float]:
-        import time
-        for attempt in range(3):
-            try:
-                vec = self.embed_model.get_text_embedding(query)
-                if not vec:
-                    if attempt == 2:
-                        return [0.0] * self.dim
-                    continue
-                return vec
-            except Exception as e:
-                if attempt == 2:
-                    logger.error(f"phase=search_indexer | msg=query_embedding_failed | error={e}")
-                    return [0.0] * self.dim
-                time.sleep(1.5 ** attempt)
-        return [0.0] * self.dim
+        import concurrent.futures
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(self.embed_model.get_text_embedding, query)
+                vec = future.result(timeout=1.5)  # 严格限制 1.5s 超时
+            if not vec:
+                # 避免纯零向量在 COSINE 距离下抛出零除异常，使用极小值占位
+                return [1e-5] * self.dim
+            return vec
+        except concurrent.futures.TimeoutError:
+            logger.warning(f"phase=search_indexer | msg=query_embedding_timeout | query={query[:20]}")
+            return [1e-5] * self.dim
+        except Exception as e:
+            logger.error(f"phase=search_indexer | msg=query_embedding_failed | error={e}")
+            return [1e-5] * self.dim
 
-    def search(self, category: str, query: str, top_k: int = 15, offset: int = 0, session_id: str = "default") -> List[Dict[str, Any]]:
+    def search(self, category: str, query: str, top_k: int = 5, session_id: str = "default") -> List[Dict[str, Any]]:
         safe_session_id = session_id.replace("-", "_")
         collection_name = f"closedloop_{category}_{safe_session_id}"
-        page = (offset // top_k) + 1
-        page_size = top_k
         
         session_docs = self.category_docs.get(session_id, {})
         
@@ -362,7 +357,7 @@ class SearchIndexer:
             if not client.has_collection(collection_name):
                 logger.warning(f"phase=search_indexer | msg=collection_not_found_fallback | collection={collection_name}")
                 items = session_docs.get(category, [])
-                return items[offset:offset+top_k]
+                return items[:top_k]
                 
             client.load_collection(collection_name)
             
@@ -372,7 +367,7 @@ class SearchIndexer:
                 embed_fn=self._safe_embed
             )
             
-            results = searcher.search_offset(query=query, top_k=top_k, offset=offset)
+            results = searcher.search(query=query, limit=top_k)
             
             # Match with original items
             found_items = []
@@ -391,7 +386,7 @@ class SearchIndexer:
             
         # Fallback default: return top_k from category_docs directly
         items = session_docs.get(category, [])
-        return items[offset:offset+top_k]
+        return items[:top_k]
 
     def get_item(self, item_id: str, session_id: str = "default") -> Dict[str, Any]:
         """从内存缓存中获取完整的 item 数据"""

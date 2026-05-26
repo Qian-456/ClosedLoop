@@ -46,6 +46,7 @@ class LoggerManager:
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level=config.logging.LOG_LEVEL,
+            filter=lambda record: not ("plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"]),
         )
 
         if getattr(config.logging, "LOG_ELK_ENABLED", False):
@@ -77,7 +78,7 @@ class LoggerManager:
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level=config.logging.LOG_LEVEL,
-            filter=lambda record: "planner_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"],
+            filter=lambda record: "plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"],
         )
 
         # 专门针对 planner_subgraph 相关的模块设置单独的错误日志输出
@@ -86,7 +87,7 @@ class LoggerManager:
             rotation=config.logging.LOG_ROTATION,
             retention=config.logging.LOG_RETENTION,
             level="ERROR",
-            filter=lambda record: "planner_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"],
+            filter=lambda record: "plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"],
         )
 
         cls._initialized = True

@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+loguru
+langchain
+langgraph
+langchain-community
+langchain-deepseek
+dashscope
+typing_extensions
+httpx
+jieba
+pymilvus
+llama-index-embeddings-dashscope
