@@ -1,20 +1,19 @@
 import type { InvokeResponse } from '../model/types'
 import { buildApiUrl } from '../../../shared/lib/url'
 
-export async function invoke(userInput: string): Promise<InvokeResponse> {
+export async function invoke(userInput: string, threadId: string): Promise<InvokeResponse> {
   const base = (import.meta.env.VITE_API_BASE as string | undefined) ?? ''
   const url = buildApiUrl('/invoke', base)
-
-  const res = await fetch(url, {
+  
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ user_input: userInput }),
+    body: JSON.stringify({ user_input: userInput, thread_id: threadId }),
   })
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => '')
-    throw new Error(text || `HTTP ${res.status}`)
+  if (!response.ok) {
+    throw new Error('Failed to invoke graph')
   }
 
-  return (await res.json()) as InvokeResponse
+  return response.json()
 }

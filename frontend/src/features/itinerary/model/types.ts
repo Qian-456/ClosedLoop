@@ -81,36 +81,30 @@ export type Constraints = {
   child_ages?: number[]
 }
 
+export type Message = {
+  id?: string
+  type: string // 'human', 'ai', 'system', 'tool'
+  content: string | any
+  [key: string]: any
+}
+
+export type Session = {
+  id: string
+  title: string
+  messages: Message[]
+  updatedAt: number
+}
+
 export type ClosedLoopState = {
   user_input: string
   constraints?: Constraints
   itinerary?: ItineraryPlan
   candidates?: unknown
   confirmation?: Confirmation
+  messages?: Message[]
 }
 
 export type InvokeResponse = {
   status: string
   state: ClosedLoopState
 }
-
-export type ExecuteStep = {
-  item_id: string
-  item_type: ItineraryItemType
-  start_time: string
-  end_time: string
-  commute_mode?: 'walking' | 'taxi' | 'driving' | null
-}
-
-export type ExecuteRequest = {
-  plan_id: string
-  steps: ExecuteStep[]
-}
-
-export type ExecutionStartResponse = {
-  execution_id: string
-}
-
-export type ExecuteEvent =
-  | { type: 'item_update'; data: Record<string, unknown> }
-  | { type: 'done'; data: Record<string, unknown> }

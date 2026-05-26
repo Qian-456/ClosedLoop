@@ -58,6 +58,28 @@ services:
       - "etcd"
       - "minio"
 
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      - LOG_DIR=logs
+      - LOG_ELK_JSON_PATH=logs/elk/elk_{time:YYYY-MM-DD}.jsonl
+      - MILVUS_URI=http://milvus:19530
+      - PLAN_SUB_API_URL=http://plan_sub_backend:8001/plan
+      - TZ=Asia/Shanghai
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mock_data/base:/app/mock_data/base:ro
+      - ./mock_data/runtime:/app/mock_data/runtime
+      - ./backend/src/logs:/app/backend/src/logs
+    depends_on:
+      - milvus
+
   plan_sub_backend:
     build:
       context: .
@@ -78,6 +100,15 @@ services:
       - ./backend/src/logs:/app/backend/src/logs
     depends_on:
       - milvus
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
 
 volumes:
   etcd-data:

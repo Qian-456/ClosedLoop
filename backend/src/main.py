@@ -12,8 +12,6 @@ from pydantic import BaseModel
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.contracts.execution import ExecuteRequest, ExecutionStartResponse
-from closedloop.execution.mock_executor import iter_events, start_execution
 from closedloop.graph.agent import agent as workflow_app
 from closedloop.contracts.state import ClosedLoopState
 
@@ -36,7 +34,7 @@ async def invoke_graph(request: ChatRequest):
     """
     Invoke the ClosedLoop graph with user input.
     """
-    logger.info(f"phase=api_invoke | input={request.user_input}")
+    logger.info(f"phase=api_invoke | input={request.user_input} | thread_id={request.thread_id}")
     
     try:
         config_run = {"configurable": {"thread_id": request.thread_id}}
@@ -44,7 +42,28 @@ async def invoke_graph(request: ChatRequest):
             {"messages": [("user", request.user_input)]}, 
             config=config_run
         )
-        return ChatResponse(status="success", state=final_state)
+        
+        # 将 LangGraph 原生的 Message 对象转换为前端可识别的字典格式
+        serializable_state = dict(final_state)
+        if "messages" in serializable_state:
+            serializable_messages = []
+            for msg in serializable_state["messages"]:
+                msg_type = getattr(msg, "type", "unknown")
+                
+                # 如果是 AI 消息且没有 content 但有 tool_calls，我们可以将 tool_calls 的名称作为占位提示，或者忽略
+                content = getattr(msg, "content", "")
+                if not content and hasattr(msg, "tool_calls") and msg.tool_calls:
+                    tool_names = ", ".join([tc.get("name", "tool") for tc in msg.tool_calls])
+                    content = f"*[正在调用工具: {tool_names}...]*"
+                
+                serializable_messages.append({
+                    "id": getattr(msg, "id", None),
+                    "type": msg_type,
+                    "content": content
+                })
+            serializable_state["messages"] = serializable_messages
+            
+        return ChatResponse(status="success", state=serializable_state)
     except Exception as e:
         logger.error(f"phase=api_invoke | error={e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -52,37 +71,6 @@ async def invoke_graph(request: ChatRequest):
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "project": config.PROJECT_NAME}
-
-
-@app.post("/execute/start", response_model=ExecutionStartResponse)
-async def execute_start(request: ExecuteRequest):
-    logger.info(f"phase=api_execute_start | input=plan_id={request.plan_id} steps={len(request.steps)}")
-    try:
-        execution_id = await start_execution(request)
-        logger.info(f"phase=api_execute_start | output=execution_id={execution_id}")
-        return ExecutionStartResponse(execution_id=execution_id)
-    except Exception as e:
-        logger.error(f"phase=api_execute_start | error={str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/execute/events/{execution_id}")
-async def execute_events(execution_id: str):
-    logger.info(f"phase=api_execute_events | input=execution_id={execution_id}")
-
-    async def _event_stream():
-        async for event in iter_events(execution_id):
-            payload = json.dumps(event, ensure_ascii=False)
-            yield f"data: {payload}\n\n"
-
-    return StreamingResponse(
-        _event_stream(),
-        media_type="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "Connection": "keep-alive",
-        },
-    )
 
 if __name__ == "__main__":
     import uvicorn
