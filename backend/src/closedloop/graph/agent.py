@@ -1,6 +1,9 @@
 from typing import Callable
+import os
+import sqlite3
+import aiosqlite
 from langchain_core.messages import HumanMessage, SystemMessage
-from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain.agents.middleware import wrap_model_call, ModelRequest, ModelResponse
 from langchain.messages import ToolMessage
 from langgraph.types import Command
@@ -129,10 +132,10 @@ async def apply_step_config(
 
 
 
-# 4. Create agent with middleware
-agent = build_agent(
-    tools=[plan_trip, transfer_to_execute, generate_alternative_plans, search_candidates, adjust_plan_item, execute_itinerary],
-    state_schema=ClosedLoopState,
-    middleware=[apply_step_config],
-    checkpointer=InMemorySaver()  # Persist state across turns
-)
+def build_agent_with_async_checkpointer(checkpointer):
+    return build_agent(
+        tools=[plan_trip, transfer_to_execute, generate_alternative_plans, search_candidates, adjust_plan_item, execute_itinerary],
+        state_schema=ClosedLoopState,
+        middleware=[apply_step_config],
+        checkpointer=checkpointer
+    )

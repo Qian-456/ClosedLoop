@@ -14,3 +14,4 @@ httpx
 jieba
 pymilvus
 llama-index-embeddings-dashscope
+langgraph-checkpoint-sqlite

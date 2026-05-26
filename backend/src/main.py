@@ -12,8 +12,13 @@ from pydantic import BaseModel
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.agent import agent as workflow_app
+from closedloop.contracts.execution import ExecuteRequest, ExecutionStartResponse
+from closedloop.execution.mock_executor import iter_events, start_execution
+from closedloop.graph.agent import build_agent_with_async_checkpointer
 from closedloop.contracts.state import ClosedLoopState
+from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+import aiosqlite
+import os
 
 # 初始化配置与日志
 config = get_config()
@@ -38,10 +43,16 @@ async def invoke_graph(request: ChatRequest):
     
     try:
         config_run = {"configurable": {"thread_id": request.thread_id}}
-        final_state = await workflow_app.ainvoke(
-            {"messages": [("user", request.user_input)]}, 
-            config=config_run
-        )
+        
+        db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../mock_data/runtime/sessions.sqlite"))
+        
+        async with AsyncSqliteSaver.from_conn_string(db_path) as checkpointer:
+            workflow_app = build_agent_with_async_checkpointer(checkpointer)
+            
+            final_state = await workflow_app.ainvoke(
+                {"messages": [("user", request.user_input)]}, 
+                config=config_run
+            )
         
         # 将 LangGraph 原生的 Message 对象转换为前端可识别的字典格式
         serializable_state = dict(final_state)
