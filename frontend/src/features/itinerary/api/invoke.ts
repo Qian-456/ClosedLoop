@@ -42,7 +42,14 @@ function parseSseBlock(block: string): InvokeStreamEvent | null {
   }
 
   const data = JSON.parse(dataText) as InvokeStreamEvent['data']
-  if (eventName === 'state' || eventName === 'done' || eventName === 'error') {
+  if (
+    eventName === 'message' ||
+    eventName === 'status' ||
+    eventName === 'process' ||
+    eventName === 'result' ||
+    eventName === 'done' ||
+    eventName === 'error'
+  ) {
     return {
       event: eventName,
       data,

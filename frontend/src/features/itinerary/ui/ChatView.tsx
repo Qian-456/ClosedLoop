@@ -3,6 +3,8 @@ import { SendHorizontal, Bot, User, Plus } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
+import { PlanPanel } from './PlanPanel'
+import { ProcessBubble } from './ProcessBubble'
 
 export function ChatView() {
   const sessions = useItineraryStore((s) => s.sessions)
@@ -10,20 +12,21 @@ export function ChatView() {
   const userInput = useItineraryStore((s) => s.userInput)
   const setUserInput = useItineraryStore((s) => s.setUserInput)
   const invokeStatus = useItineraryStore((s) => s.invokeStatus)
+  const currentProcessBubble = useItineraryStore((s) => s.currentProcessBubble)
+  const errorMessage = useItineraryStore((s) => s.errorMessage)
   
   const addLocalMessage = useItineraryStore((s) => s.addLocalMessage)
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
-  const applyInvokeStreamState = useItineraryStore((s) => s.applyInvokeStreamState)
-  const finishInvokeStream = useItineraryStore((s) => s.finishInvokeStream)
+  const applyInvokeStreamEvent = useItineraryStore((s) => s.applyInvokeStreamEvent)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
+  const toggleProcessBubble = useItineraryStore((s) => s.toggleProcessBubble)
   const resetSession = useItineraryStore((s) => s.reset)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const messages = currentSession?.messages || []
-  const hasVisibleAiMessage = messages.some((msg) => {
-    if (msg.type !== 'ai') return false
-    return Boolean(msg.content && msg.content !== '')
-  })
+  const processHistory = currentSession?.processHistory ?? []
+  const itinerary = currentSession?.itinerary
+  const confirmation = currentSession?.confirmation
 
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -38,24 +41,18 @@ export function ChatView() {
     if (!text || !currentSessionId) return
 
     setUserInput('')
+    const messageId = `msg_${Date.now()}`
     addLocalMessage({
-      id: `msg_${Date.now()}`,
+      id: messageId,
       type: 'human',
       content: text,
     })
-    setInvokeRunning()
+    setInvokeRunning(messageId)
 
     try {
       await invokeStream(text, currentSessionId, {
         onEvent(event) {
-          if (event.event === 'state') {
-            applyInvokeStreamState(event.data.state)
-            return
-          }
-
-          if (event.event === 'done') {
-            finishInvokeStream(event.data.state)
-          }
+          applyInvokeStreamEvent(event)
         },
       })
     } catch (error) {
@@ -77,6 +74,33 @@ export function ChatView() {
       return content.map(c => typeof c === 'string' ? c : JSON.stringify(c)).join(' ')
     }
     return JSON.stringify(content)
+  }
+
+  const renderProcessBubbles = (relatedUserMessageId?: string) => {
+    const historyBubbles = processHistory.filter(
+      (bubble) => bubble.relatedUserMessageId === relatedUserMessageId,
+    )
+    const activeBubble =
+      currentProcessBubble?.relatedUserMessageId === relatedUserMessageId ? currentProcessBubble : null
+
+    return (
+      <>
+        {historyBubbles.map((bubble) => (
+          <ProcessBubble
+            key={bubble.id}
+            bubble={bubble}
+            onToggleExpanded={toggleProcessBubble}
+          />
+        ))}
+        {activeBubble ? (
+          <ProcessBubble
+            key={activeBubble.id}
+            bubble={activeBubble}
+            onToggleExpanded={toggleProcessBubble}
+          />
+        ) : null}
+      </>
+    )
   }
 
   return (
@@ -103,44 +127,36 @@ export function ChatView() {
           if (!hasContent) return null // 忽略空消息（如只包含 tool_calls 的 AI 消息）
 
           return (
-            <div
-              key={msg.id || idx}
-              className={clsx(
-                "flex gap-3 max-w-[85%]",
-                isHuman ? "ml-auto flex-row-reverse" : "mr-auto"
-              )}
-            >
-              <div className={clsx(
-                "w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm",
-                isHuman ? "bg-blue-600 text-white" : "bg-white border border-slate-100 text-blue-600"
-              )}>
-                {isHuman ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+            <div key={msg.id || idx} className="space-y-3">
+              <div
+                className={clsx(
+                  "flex gap-3 max-w-[85%]",
+                  isHuman ? "ml-auto flex-row-reverse" : "mr-auto"
+                )}
+              >
+                <div className={clsx(
+                  "w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm",
+                  isHuman ? "bg-blue-600 text-white" : "bg-white border border-slate-100 text-blue-600"
+                )}>
+                  {isHuman ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+                </div>
+                <div className={clsx(
+                  "px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap break-words",
+                  isHuman 
+                    ? "bg-blue-600 text-white rounded-tr-sm" 
+                    : "bg-white text-slate-800 shadow-sm border border-slate-100/50 rounded-tl-sm"
+                )}>
+                  {renderContent(msg.content)}
+                </div>
               </div>
-              <div className={clsx(
-                "px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap break-words",
-                isHuman 
-                  ? "bg-blue-600 text-white rounded-tr-sm" 
-                  : "bg-white text-slate-800 shadow-sm border border-slate-100/50 rounded-tl-sm"
-              )}>
-                {renderContent(msg.content)}
-              </div>
+
+              {isHuman ? renderProcessBubbles(typeof msg.id === 'string' ? msg.id : undefined) : null}
             </div>
           )
         })}
-
-        {invokeStatus === 'running' && !hasVisibleAiMessage && (
-          <div className="flex gap-3 max-w-[85%] mr-auto">
-            <div className="w-8 h-8 rounded-full bg-white border border-slate-100 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
-              <Bot className="w-5 h-5" />
-            </div>
-            <div className="px-4 py-3 rounded-2xl bg-white text-slate-800 shadow-sm border border-slate-100/50 rounded-tl-sm flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce" />
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce [animation-delay:0.2s]" />
-              <div className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce [animation-delay:0.4s]" />
-            </div>
-          </div>
-        )}
       </div>
+
+      <PlanPanel itinerary={itinerary} confirmation={confirmation} errorMessage={errorMessage} />
 
       <div className="p-4 bg-white border-t border-slate-100">
         <div className="relative flex items-end">

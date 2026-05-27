@@ -3,13 +3,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { invokeStream } from '../invoke'
 import type { InvokeStreamEvent } from '../../model/types'
 
-function expectStatefulEvent(event: InvokeStreamEvent): Extract<InvokeStreamEvent, { event: 'state' | 'done' }> {
-  if (event.event === 'error') {
-    throw new Error('unexpected error event')
-  }
-  return event
-}
-
 function createSseResponse(chunks: string[]): Response {
   const encoder = new TextEncoder()
 
@@ -36,19 +29,23 @@ describe('invokeStream', () => {
     vi.restoreAllMocks()
   })
 
-  it('按顺序解析跨 chunk 的 state 与 done 事件', async () => {
+  it('按顺序解析跨 chunk 的 message、status、process、result 与 done 事件', async () => {
     const events: InvokeStreamEvent[] = []
 
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
         createSseResponse([
-          'event: state\n',
-          'data: {"state":{"messages":[{"type":"human","content":"你好"}]}}\n\n',
-          'event: state\n' +
-            'data: {"state":{"messages":[{"type":"human","content":"你好"},{"type":"ai","content":"正在规划"}]}}\n\n',
+          'event: status\n',
+          'data: {"phase":"understanding","text":"正在理解你的需求"}\n\n',
+          'event: message\n' +
+            'data: {"text":"我先帮你拆解需求"}\n\n',
+          'event: process\n' +
+            'data: {"tool":"plan_trip","status":"success","summary":"已生成 1 套方案","raw":{"tool":"plan_trip","status":"success"}}\n\n',
+          'event: result\n' +
+            'data: {"itinerary":{"status":"ok","plans":[{"plan_id":"plan_1","title":"平衡方案","steps":[],"selected_item_ids":[],"total_duration_minutes":240,"total_cost":220,"average_score":85}]}}\n\n',
           'event: done\n',
-          'data: {"state":{"messages":[{"type":"human","content":"你好"},{"type":"ai","content":"最终结果"}]}}\n\n',
+          'data: {"success":true}\n\n',
         ]),
       ),
     )
@@ -59,12 +56,29 @@ describe('invokeStream', () => {
       },
     })
 
-    expect(events).toHaveLength(3)
-    expect(events[0].event).toBe('state')
-    expect(events[1].event).toBe('state')
-    expect(events[2].event).toBe('done')
-    expect(expectStatefulEvent(events[1]).data.state.messages?.[1].content).toBe('正在规划')
-    expect(expectStatefulEvent(events[2]).data.state.messages?.[1].content).toBe('最终结果')
+    expect(events).toHaveLength(5)
+    expect(events[0].event).toBe('status')
+    expect(events[1].event).toBe('message')
+    expect(events[2].event).toBe('process')
+    expect(events[3].event).toBe('result')
+    expect(events[4].event).toBe('done')
+    if (events[0].event !== 'status') {
+      throw new Error('expected status event')
+    }
+    if (events[1].event !== 'message') {
+      throw new Error('expected message event')
+    }
+    expect(events[0].data.text).toBe('正在理解你的需求')
+    expect(events[1].data.text).toBe('我先帮你拆解需求')
+    if (events[2].event !== 'process') {
+      throw new Error('expected process event')
+    }
+    expect(events[2].data.tool).toBe('plan_trip')
+    expect(events[2].data.summary).toContain('1 套方案')
+    if (events[3].event !== 'result') {
+      throw new Error('expected result event')
+    }
+    expect(events[3].data.itinerary?.plans?.[0]?.title).toBe('平衡方案')
   })
 
   it('遇到 error 事件时抛出服务端错误', async () => {

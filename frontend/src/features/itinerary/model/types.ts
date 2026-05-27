@@ -88,10 +88,35 @@ export type Message = {
   [key: string]: any
 }
 
+export type ProcessBubblePhase =
+  | 'bootstrap'
+  | 'search_candidates'
+  | 'plan_trip'
+  | 'generate_alternative_plans'
+  | 'adjust_plan_item'
+  | 'transfer_to_execute'
+  | 'confirm_trip'
+  | 'done'
+  | 'error'
+
+export type ProcessBubbleRecord = {
+  id: string
+  sessionId: string
+  relatedUserMessageId?: string
+  phase: ProcessBubblePhase
+  text: string
+  expanded: boolean
+  status: 'running' | 'success' | 'failed'
+  processItems: InvokeStreamProcessEvent['data'][]
+}
+
 export type Session = {
   id: string
   title: string
   messages: Message[]
+  itinerary?: ItineraryPlan | null
+  confirmation?: Confirmation | null
+  processHistory?: ProcessBubbleRecord[]
   updatedAt: number
 }
 
@@ -109,17 +134,56 @@ export type InvokeResponse = {
   state: ClosedLoopState
 }
 
-export type InvokeStreamStateEvent = {
-  event: 'state'
+export type StreamStatusPhase =
+  | 'understanding'
+  | 'retrieving'
+  | 'filtering'
+  | 'planning'
+  | 'verifying'
+  | 'finalizing'
+
+export type InvokeStreamMessageEvent = {
+  event: 'message'
   data: {
-    state: ClosedLoopState
+    text: string
+    node?: string
+  }
+}
+
+export type InvokeStreamStatusEvent = {
+  event: 'status'
+  data: {
+    phase: StreamStatusPhase
+    text: string
+    step?: string
+  }
+}
+
+export type InvokeStreamResultEvent = {
+  event: 'result'
+  data: {
+    itinerary?: ItineraryPlan
+    confirmation?: Confirmation
+    constraints?: Constraints
+    current_step?: string
+  }
+}
+
+export type InvokeStreamProcessEvent = {
+  event: 'process'
+  data: {
+    tool: string
+    status: 'success' | 'failed' | 'running'
+    step?: string
+    summary: string
+    raw?: unknown
   }
 }
 
 export type InvokeStreamDoneEvent = {
   event: 'done'
   data: {
-    state: ClosedLoopState
+    success: boolean
   }
 }
 
@@ -127,10 +191,15 @@ export type InvokeStreamErrorEvent = {
   event: 'error'
   data: {
     message: string
+    code?: string
+    recoverable?: boolean
   }
 }
 
 export type InvokeStreamEvent =
-  | InvokeStreamStateEvent
+  | InvokeStreamMessageEvent
+  | InvokeStreamStatusEvent
+  | InvokeStreamProcessEvent
+  | InvokeStreamResultEvent
   | InvokeStreamDoneEvent
   | InvokeStreamErrorEvent

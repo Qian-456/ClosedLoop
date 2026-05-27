@@ -59,8 +59,7 @@ export default function HomePage() {
   const resetSession = useItineraryStore((s) => s.reset)
   
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
-  const applyInvokeStreamState = useItineraryStore((s) => s.applyInvokeStreamState)
-  const finishInvokeStream = useItineraryStore((s) => s.finishInvokeStream)
+  const applyInvokeStreamEvent = useItineraryStore((s) => s.applyInvokeStreamEvent)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
 
   const currentSession = sessions.find(s => s.id === currentSessionId)
@@ -126,14 +125,7 @@ export default function HomePage() {
     try {
       await invokeStream(text, sid, {
         onEvent(event) {
-          if (event.event === 'state') {
-            applyInvokeStreamState(event.data.state)
-            return
-          }
-
-          if (event.event === 'done') {
-            finishInvokeStream(event.data.state)
-          }
+          applyInvokeStreamEvent(event)
         },
       })
     } catch (error) {
