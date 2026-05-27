@@ -37,7 +37,7 @@ describe('invokeStream', () => {
       vi.fn().mockResolvedValue(
         createSseResponse([
           'event: bubble\n',
-          'data: {"phase":"bootstrap","text":"正在理解你的需求","entries":[{"kind":"step","title":"进入流程","summary":"正在理解你的需求"}],"status":"running"}\n\n',
+          'data: {"phase":"bootstrap","text":"正在思考","entries":[{"kind":"step","title":"进入流程","summary":"正在思考"}],"status":"running"}\n\n',
           'event: message\n' +
             'data: {"text":"我先帮你拆解需求"}\n\n',
           'event: bubble\n' +
@@ -68,7 +68,7 @@ describe('invokeStream', () => {
     if (events[1].event !== 'message') {
       throw new Error('expected message event')
     }
-    expect(events[0].data.text).toBe('正在理解你的需求')
+    expect(events[0].data.text).toBe('正在思考')
     expect(events[1].data.text).toBe('我先帮你拆解需求')
     if (events[2].event !== 'bubble') {
       throw new Error('expected bubble event')

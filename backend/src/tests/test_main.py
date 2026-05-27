@@ -233,7 +233,7 @@ class TestMainAPI(unittest.TestCase):
             )
         )
         self.assertEqual(parsed_events[0][1]["phase"], "bootstrap")
-        self.assertEqual(parsed_events[0][1]["text"], "正在理解你的需求")
+        self.assertEqual(parsed_events[0][1]["text"], "正在思考")
 
         bubble_events = [data for event_name, data in parsed_events if event_name == "bubble"]
         self.assertGreaterEqual(len(bubble_events), 2)

@@ -210,7 +210,7 @@ def _resolve_bubble_text(phase: str) -> str:
         "confirm_trip": "正在整理执行结果",
         "done": "已完成规划",
         "error": "处理失败，请稍后重试",
-        "bootstrap": "正在理解你的需求",
+        "bootstrap": "正在思考",
     }
     return mapping.get(phase, mapping["bootstrap"])
 

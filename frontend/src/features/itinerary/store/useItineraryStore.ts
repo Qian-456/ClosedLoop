@@ -127,7 +127,7 @@ function createProcessBubble(
     sessionId,
     relatedUserMessageId,
     phase: 'bootstrap',
-    text: '正在理解用户需求',
+    text: '正在思考',
     expanded: false,
     status: 'running',
     entries: [],
@@ -166,7 +166,7 @@ function mapPhaseText(phase: ProcessBubblePhase): string {
       return '处理失败，请稍后重试'
     case 'bootstrap':
     default:
-      return '正在理解用户需求'
+      return '正在思考'
   }
 }
 

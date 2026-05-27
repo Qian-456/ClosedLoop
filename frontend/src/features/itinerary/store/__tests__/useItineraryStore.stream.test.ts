@@ -51,7 +51,7 @@ describe('useItineraryStore stream actions', () => {
     expect(state.sessions[0].messages[1].type).toBe('ai')
     expect(state.sessions[0].messages[1].content).toBe('正在规划')
     expect(state.invokeStatus).toBe('running')
-    expect(state.currentProcessBubble?.text).toBe('正在理解用户需求')
+    expect(state.currentProcessBubble?.text).toBe('正在思考')
   })
 
   it('result 与 done 事件会保存最终方案并结束流式状态', () => {

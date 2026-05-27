@@ -106,6 +106,10 @@ export function ChatView() {
             return null
           }
 
+          if (!isHuman && !msg.content && (invokeStatus !== 'running' || idx !== messages.length - 1)) {
+            return null
+          }
+
           return (
             <div key={msg.id || idx} className="space-y-3">
               <div
@@ -128,14 +132,14 @@ export function ChatView() {
                 )}>
                   {!isHuman && msg.transientStatus && (
                     <div
-                      className="text-slate-400 italic transition-all duration-1000 overflow-hidden"
+                      className="text-slate-400 italic transition-all duration-1000 overflow-hidden animate-pulse"
                       style={{
                         opacity: (invokeStatus === 'running' && idx === messages.length - 1) ? 1 : 0,
                         maxHeight: (invokeStatus === 'running' && idx === messages.length - 1) ? '24px' : '0px',
                         marginBottom: (invokeStatus === 'running' && idx === messages.length - 1 && msg.content) ? '4px' : '0px'
                       }}
                     >
-                      ({msg.transientStatus})
+                      {msg.transientStatus}
                     </div>
                   )}
                   {renderContent(msg.content)}

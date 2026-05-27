@@ -79,10 +79,10 @@ export function shouldRenderChatMessage(
   }
 
   const content = message.content
-  if (content === '' || content == null) {
+  if ((content === '' || content == null) && !message.transientStatus) {
     return false
   }
-  if (Array.isArray(content) && content.length === 0) {
+  if (Array.isArray(content) && content.length === 0 && !message.transientStatus) {
     return false
   }
 
