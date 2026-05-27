@@ -83,17 +83,19 @@ function updateCurrentSession(
   })
 }
 
-function appendAssistantChunk(messages: Message[], text: string): Message[] {
+function appendAssistantChunk(messages: Message[], text: string, node?: string): Message[] {
   if (!text) {
     return messages
   }
 
   const nextMessages = [...messages]
   const lastMessage = nextMessages[nextMessages.length - 1]
-  if (lastMessage?.type === 'ai') {
+  
+  if (lastMessage?.type === 'ai' && (lastMessage.node === node || !lastMessage.node)) {
     nextMessages[nextMessages.length - 1] = {
       ...lastMessage,
       content: `${typeof lastMessage.content === 'string' ? lastMessage.content : ''}${text}`,
+      node: node || lastMessage.node,
     }
     return nextMessages
   }
@@ -102,6 +104,7 @@ function appendAssistantChunk(messages: Message[], text: string): Message[] {
     id: `ai_stream_${Date.now()}`,
     type: 'ai',
     content: text,
+    node: node,
   })
   return nextMessages
 }
@@ -339,7 +342,7 @@ export const useItineraryStore = create<ItineraryStore>()(
             errorMessage: null,
             sessions: updateCurrentSession(state.sessions, state.currentSessionId, (session) => ({
               ...session,
-              messages: appendAssistantChunk(session.messages, event.data.text),
+              messages: appendAssistantChunk(session.messages, event.data.text, event.data.node),
               updatedAt: Date.now(),
             })),
           }
@@ -350,6 +353,7 @@ export const useItineraryStore = create<ItineraryStore>()(
           const currentBubble =
             state.currentProcessBubble ??
             createProcessBubble(state.currentSessionId, getLatestHumanMessageId(currentSession))
+            
           return {
             invokeStatus: 'running',
             errorMessage: null,
@@ -360,6 +364,39 @@ export const useItineraryStore = create<ItineraryStore>()(
               status: event.data.status ?? currentBubble.status,
               entries: appendBubbleEntries(currentBubble.entries, event.data.entries),
             },
+            sessions: updateCurrentSession(state.sessions, state.currentSessionId, (session) => {
+              const nextMessages = [...session.messages]
+              const lastMessage = nextMessages[nextMessages.length - 1]
+              const nodeOrPhase = event.data.node || event.data.phase
+
+              if (lastMessage?.type === 'ai' && (lastMessage.node === nodeOrPhase || !lastMessage.node)) {
+                nextMessages[nextMessages.length - 1] = {
+                  ...lastMessage,
+                  node: nodeOrPhase,
+                  transientStatus: event.data.text,
+                }
+              } else if (lastMessage?.type === 'ai' && !lastMessage.content) {
+                nextMessages[nextMessages.length - 1] = {
+                  ...lastMessage,
+                  node: nodeOrPhase,
+                  transientStatus: event.data.text,
+                }
+              } else {
+                nextMessages.push({
+                  id: `ai_stream_${Date.now()}_${Math.random()}`,
+                  type: 'ai',
+                  content: '',
+                  node: nodeOrPhase,
+                  transientStatus: event.data.text,
+                })
+              }
+
+              return {
+                ...session,
+                messages: nextMessages,
+                updatedAt: Date.now(),
+              }
+            }),
           }
         }
 

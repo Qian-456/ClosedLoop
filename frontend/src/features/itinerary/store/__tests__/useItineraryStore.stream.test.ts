@@ -114,7 +114,7 @@ describe('useItineraryStore stream actions', () => {
     expect(state.sessions[0].processHistory?.[0].text).toBe('已完成规划')
   })
 
-  it('bubble 事件会写入过程层而不会污染聊天消息', () => {
+  it('bubble 事件会创建带 transientStatus 的 AI 消息', () => {
     const store = useItineraryStore.getState()
 
     store.startSession('thread_004', '第四个问题')
@@ -166,8 +166,10 @@ describe('useItineraryStore stream actions', () => {
     expect(state.currentProcessBubble?.entries[1].tool).toBe('plan_trip')
     expect(state.currentProcessBubble?.phase).toBe('plan_trip')
     expect(state.currentProcessBubble?.text).toBe('正在规划方案')
-    expect(state.sessions[0].messages).toHaveLength(1)
+    expect(state.sessions[0].messages).toHaveLength(2)
     expect(state.sessions[0].messages[0].type).toBe('human')
+    expect(state.sessions[0].messages[1].type).toBe('ai')
+    expect(state.sessions[0].messages[1].transientStatus).toBe('正在规划方案')
   })
 
   it('重复 bubble 条目不会重复追加过程详情', () => {

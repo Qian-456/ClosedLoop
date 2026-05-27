@@ -4,7 +4,6 @@ import { useItineraryStore } from '../store/useItineraryStore'
 import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
 import { PlanPanel } from './PlanPanel'
-import { ProcessBubble } from './ProcessBubble'
 import { shouldRenderChatMessage } from '../model/display'
 
 export function ChatView() {
@@ -13,19 +12,16 @@ export function ChatView() {
   const userInput = useItineraryStore((s) => s.userInput)
   const setUserInput = useItineraryStore((s) => s.setUserInput)
   const invokeStatus = useItineraryStore((s) => s.invokeStatus)
-  const currentProcessBubble = useItineraryStore((s) => s.currentProcessBubble)
   const errorMessage = useItineraryStore((s) => s.errorMessage)
   
   const addLocalMessage = useItineraryStore((s) => s.addLocalMessage)
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
   const applyInvokeStreamEvent = useItineraryStore((s) => s.applyInvokeStreamEvent)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
-  const toggleProcessBubble = useItineraryStore((s) => s.toggleProcessBubble)
   const resetSession = useItineraryStore((s) => s.reset)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const messages = currentSession?.messages || []
-  const processHistory = currentSession?.processHistory ?? []
   const itinerary = currentSession?.itinerary
   const confirmation = currentSession?.confirmation
 
@@ -77,47 +73,6 @@ export function ChatView() {
     return JSON.stringify(content)
   }
 
-  const renderProcessBubbles = (relatedUserMessageId?: string) => {
-    const historyBubbles = processHistory.filter(
-      (bubble) => bubble.relatedUserMessageId === relatedUserMessageId,
-    )
-    const activeBubble =
-      currentProcessBubble?.relatedUserMessageId === relatedUserMessageId ? currentProcessBubble : null
-
-    return (
-      <>
-        {historyBubbles.map((bubble) => (
-          <ProcessBubble
-            key={bubble.id}
-            bubble={bubble}
-            onToggleExpanded={toggleProcessBubble}
-          />
-        ))}
-        {activeBubble ? (
-          <ProcessBubble
-            key={activeBubble.id}
-            bubble={activeBubble}
-            onToggleExpanded={toggleProcessBubble}
-          />
-        ) : null}
-      </>
-    )
-  }
-
-  const findRelatedProcessBubble = (relatedUserMessageId?: string) => {
-    if (!relatedUserMessageId) {
-      return null
-    }
-    if (currentProcessBubble?.relatedUserMessageId === relatedUserMessageId) {
-      return currentProcessBubble
-    }
-    return (
-      [...processHistory]
-        .reverse()
-        .find((bubble) => bubble.relatedUserMessageId === relatedUserMessageId) ?? null
-    )
-  }
-
   return (
     <div className="flex flex-col h-full bg-[#F6F7FB]">
       <div className="absolute top-0 right-0 p-4 z-20">
@@ -134,17 +89,8 @@ export function ChatView() {
         className="flex-1 overflow-y-auto px-4 py-6 space-y-6"
       >
         {(() => {
-          let latestHumanMessageId: string | undefined
-
           return messages.map((msg, idx) => {
           const isHuman = msg.type === 'human'
-          if (isHuman && typeof msg.id === 'string') {
-            latestHumanMessageId = msg.id
-          }
-
-          const relatedProcessBubble = isHuman
-            ? findRelatedProcessBubble(typeof msg.id === 'string' ? msg.id : undefined)
-            : findRelatedProcessBubble(latestHumanMessageId)
 
           if (
             !shouldRenderChatMessage(msg, {
@@ -154,7 +100,7 @@ export function ChatView() {
                 messages: [],
                 updatedAt: 0,
               },
-              relatedProcessBubble,
+              relatedProcessBubble: null,
             })
           ) {
             return null
@@ -180,11 +126,23 @@ export function ChatView() {
                     ? "bg-blue-600 text-white rounded-tr-sm" 
                     : "bg-white text-slate-800 shadow-sm border border-slate-100/50 rounded-tl-sm"
                 )}>
+                  {!isHuman && msg.transientStatus && (
+                    <div
+                      className="text-slate-400 italic transition-all duration-1000 overflow-hidden"
+                      style={{
+                        opacity: (invokeStatus === 'running' && idx === messages.length - 1) ? 1 : 0,
+                        maxHeight: (invokeStatus === 'running' && idx === messages.length - 1) ? '24px' : '0px',
+                        marginBottom: (invokeStatus === 'running' && idx === messages.length - 1 && msg.content) ? '4px' : '0px'
+                      }}
+                    >
+                      ({msg.transientStatus})
+                    </div>
+                  )}
                   {renderContent(msg.content)}
                 </div>
               </div>
 
-              {isHuman ? renderProcessBubbles(typeof msg.id === 'string' ? msg.id : undefined) : null}
+              {/* {isHuman ? renderProcessBubbles(typeof msg.id === 'string' ? msg.id : undefined) : null} */}
             </div>
           )
           })
