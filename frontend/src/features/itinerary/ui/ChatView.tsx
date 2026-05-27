@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { PlanPanel } from './PlanPanel'
 import { shouldRenderChatMessage } from '../model/display'
 import type { Message } from '../model/types'
+import MarkdownText from '../../../shared/ui/MarkdownText'
 
 const EMPTY_MESSAGES: Message[] = []
 
@@ -68,7 +69,7 @@ export function ChatView() {
 
   const renderContent = (content: unknown) => {
     if (typeof content === 'string') {
-      return content
+      return <MarkdownText text={content} />
     }
     if (Array.isArray(content)) {
       return content.map(c => typeof c === 'string' ? c : JSON.stringify(c)).join(' ')

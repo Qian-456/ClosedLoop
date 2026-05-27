@@ -156,6 +156,45 @@ class ClosedLoopState(TypedDict):
 
 ---
 
+# 🔥 Frontend Contract（前后端对齐）
+
+目标：让前端在不读后端内部实现的情况下，也能稳定消费“聊天文本 + 过程状态 + 推荐方案结果”。
+
+## 1) 推荐方案面板数据源（必须）
+
+- 前端“推荐方案”面板的数据源必须对齐后端 state 的 `itinerary` 字段。
+- 后端会尽量保证 `itinerary` 的形状稳定：当内部生成的 `itinerary` 为列表时，会统一包装为：
+  - `{ "plans": [...] }`
+- 兼容策略：仅当缺失 `itinerary` 时，后端才会 fallback 读取 `latest_plan_result` 并包装为 `{ "plans": [...] }`。
+- 前端不要从聊天文本里反解析时间轴/地点列表；聊天区只展示摘要，完整信息由“推荐方案”面板展示。
+
+## 2) `/invoke/stream` 事件协议（必须）
+
+- 后端通过 SSE 推送产品级事件（前端不要直接依赖 LangGraph 原始 stream mode）。
+- 事件类型：
+  - `message`：聊天区文本片段。payload：`{ "text": str, "node": str | null }`
+  - `bubble`：过程状态/工具进度。payload：`{ phase, step, node, text, status, entries }`
+  - `result`：结构化结果增量。payload 可能包含：`itinerary/confirmation/constraints/current_step`
+  - `done`：结束事件。payload：`{ "success": true }`
+  - `error`：错误事件。payload：`{ "message": str, "code": str, "recoverable": bool }`
+- 前端分层消费建议：
+  - 聊天区：只消费 `message`
+  - 状态栏/流程气泡：消费 `bubble`
+  - 推荐方案/约束卡片：消费 `result`
+
+## 3) `thread_id` 会话穿透（必须）
+
+- 前端每次请求必须携带 `thread_id`，并在本地持久化（用于多轮对话、多会话）。
+- 后端以 `thread_id` 作为 LangGraph 的 `thread_id` 注入到 RunnableConfig 中；不传会退化为默认会话，导致多会话串线与状态互相污染风险。
+
+## 4) 与 Agent 文案强绑定的 UI 约定（必须）
+
+- 首次规划完成后，Agent 在聊天区只输出 1–2 行摘要，并提示用户到下方【推荐方案】面板查看详细方案。
+- 在向用户展示方案后，必须等待用户明确确认，不要紧接着追问是否执行（避免“二次确认”式打扰）。
+- 用户明确确认执行后，必须直接进入执行流程，禁止再次风险提示/二次确认。
+
+---
+
 # 🔥 Code Generation Contract（AI必须遵守）
 
 ## 0️⃣ 注释语言（必须）
@@ -326,7 +365,7 @@ backend/
 本项目使用高度拟真的本地生活 Mock 数据（详见 `docs/mock_data_design.md`），AI 在处理检索、过滤和规划时必须遵守以下物理与业务约束：
 
 - POI 顶层字段为扁平结构：`id/name/category/sub_category/district/address/latitude/longitude/business_hours/indoor/review_keywords`（子项 combos/packages/gifts 保留）。
-- 顶层 POI 画像字段为正式契约：`suitable_groups`、`experience_tag`、`romantic_score_derived`、`photo_score_derived`、`onsite_walking_level_estimated`、`noise_level_estimated`；其中 Activity 还必须带 `age_range`。
+- 顶层 POI 画像字段为正式契约：`suitable_groups`、`experience_tag`、`photo_score_derived`、`onsite_walking_level_estimated`、`noise_level_estimated`；其中 Activity 还必须带 `age_range`。
 - Restaurant 亲子字段为正式契约：`kid_menu_status`、`stroller_friendly_status`、`child_facility_tags`、`child_friendly_score_derived`。
 - Gift Shop 特殊字段为正式契约：`gift_type`、`delivery_to_restaurant`、`surprise_score_derived`。
 - POI 固定配额总量 88：Restaurant 32、Activity 40、Gift Shop 16。

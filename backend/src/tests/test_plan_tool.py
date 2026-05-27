@@ -2,6 +2,7 @@ import os
 import sys
 import unittest
 from unittest.mock import patch, MagicMock
+from types import SimpleNamespace
 
 from langgraph.types import Command
 
@@ -24,7 +25,10 @@ class TestPlanTripTool(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client.request.return_value = mock_response
 
-        with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(PLAN_SUB_API_URL="http://localhost:8001/plan"),
+        ), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
@@ -53,7 +57,10 @@ class TestPlanTripTool(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client.request.return_value = mock_response
 
-        with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(PLAN_SUB_API_URL="http://localhost:8001/plan"),
+        ), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
@@ -79,7 +86,10 @@ class TestPlanTripTool(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client.request.return_value = mock_response
 
-        with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(PLAN_SUB_API_URL="http://localhost:8001/plan"),
+        ), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
@@ -107,7 +117,10 @@ class TestPlanTripTool(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client.request.return_value = mock_response
 
-        with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(PLAN_SUB_API_URL="http://localhost:8001/plan"),
+        ), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
@@ -131,7 +144,10 @@ class TestPlanTripTool(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client.request.side_effect = RuntimeError("boom")
 
-        with patch("closedloop.graph.tools.plan_tool.get_config"), patch(
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(PLAN_SUB_API_URL="http://localhost:8001/plan"),
+        ), patch(
             "closedloop.graph.tools.plan_tool.LoggerManager.setup"
         ), patch("httpx.Client", return_value=mock_client):
             out = plan_trip.func(
