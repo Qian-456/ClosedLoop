@@ -20,6 +20,8 @@ type ItineraryStore = {
   addLocalMessage: (message: Message) => void
   setInvokeRunning: () => void
   setInvokeSuccess: (state: ClosedLoopState) => void
+  applyInvokeStreamState: (state: ClosedLoopState) => void
+  finishInvokeStream: (state?: ClosedLoopState) => void
   setInvokeError: (message: string) => void
   updateCommuteMode: (
     planId: string,
@@ -27,6 +29,35 @@ type ItineraryStore = {
     mode: 'walking' | 'taxi' | 'driving',
   ) => void
   reset: () => void
+}
+
+function mergeApiStateIntoSessions(
+  sessions: Session[],
+  currentSessionId: string | null,
+  apiState?: ClosedLoopState,
+): Session[] {
+  if (!currentSessionId) {
+    return sessions
+  }
+
+  return sessions.map((session) => {
+    if (session.id !== currentSessionId) {
+      return session
+    }
+
+    const updatedMessages =
+      apiState?.messages && apiState.messages.length > 0 ? apiState.messages : session.messages
+
+    return {
+      ...session,
+      messages: updatedMessages,
+      updatedAt: Date.now(),
+    }
+  })
+}
+
+function isDefaultEmptySession(session: Session): boolean {
+  return session.title === '新对话' && session.messages.length === 0
 }
 
 export const useItineraryStore = create<ItineraryStore>()(
@@ -42,9 +73,43 @@ export const useItineraryStore = create<ItineraryStore>()(
       setUserInput: (v) => set({ userInput: v }),
       
       startSession: (sessionId, initialMessage) => set((state) => {
+        const nextTitle = initialMessage ? initialMessage.slice(0, 20) : '新对话'
+        const existingSession = state.sessions.find((session) => session.id === sessionId)
+        if (existingSession) {
+          return {
+            sessions: state.sessions.map((session) => {
+              if (session.id !== sessionId) {
+                return session
+              }
+
+              return {
+                ...session,
+                title: nextTitle,
+                updatedAt: Date.now(),
+              }
+            }),
+            currentSessionId: sessionId,
+            userInput: '',
+            invokeStatus: 'idle',
+            errorMessage: null,
+          }
+        }
+
+        if (!initialMessage) {
+          const existingEmptySession = state.sessions.find(isDefaultEmptySession)
+          if (existingEmptySession) {
+            return {
+              currentSessionId: existingEmptySession.id,
+              userInput: '',
+              invokeStatus: 'idle',
+              errorMessage: null,
+            }
+          }
+        }
+
         const newSession: Session = {
           id: sessionId,
-          title: initialMessage ? initialMessage.slice(0, 20) : '新对话',
+          title: nextTitle,
           messages: [],
           updatedAt: Date.now()
         }
@@ -91,28 +156,24 @@ export const useItineraryStore = create<ItineraryStore>()(
       setInvokeRunning: () => set({ invokeStatus: 'running', errorMessage: null }),
       
       setInvokeSuccess: (apiState) => set((state) => {
-        if (!state.currentSessionId) return state
         return {
           invokeStatus: 'success',
           errorMessage: null,
-          sessions: state.sessions.map(s => {
-            if (s.id === state.currentSessionId) {
-              // If backend returned messages, use them, otherwise we just keep local ones.
-              // Wait, LangChain's state.messages might have the full history.
-              // Let's assume if state.messages exists, it's the full history.
-              const updatedMessages = apiState.messages && apiState.messages.length > 0 
-                ? apiState.messages 
-                : s.messages
-              return {
-                ...s,
-                messages: updatedMessages,
-                updatedAt: Date.now()
-              }
-            }
-            return s
-          })
+          sessions: mergeApiStateIntoSessions(state.sessions, state.currentSessionId, apiState),
         }
       }),
+
+      applyInvokeStreamState: (apiState) => set((state) => ({
+        invokeStatus: 'running',
+        errorMessage: null,
+        sessions: mergeApiStateIntoSessions(state.sessions, state.currentSessionId, apiState),
+      })),
+
+      finishInvokeStream: (apiState) => set((state) => ({
+        invokeStatus: 'success',
+        errorMessage: null,
+        sessions: mergeApiStateIntoSessions(state.sessions, state.currentSessionId, apiState),
+      })),
       
       setInvokeError: (message) => set({ invokeStatus: 'error', errorMessage: message }),
       

@@ -68,7 +68,9 @@ def run_plan_subgraph(req: PlanRequest):
 
 @app.post("/search")
 def run_search(req: SearchRequest):
-    logger.info(f"phase=search_api | category={req.category} | query={req.user_request}")
+    logger.info(
+        f"phase=search_api | category={req.category} | query={req.user_request} | top_k={req.top_k} | session_id={req.session_id}"
+    )
     try:
         indexer = SearchIndexer.get_instance()
         results = indexer.search(
@@ -76,6 +78,9 @@ def run_search(req: SearchRequest):
             query=req.user_request,
             top_k=req.top_k,
             session_id=req.session_id
+        )
+        logger.info(
+            f"phase=search_api | result=success | category={req.category} | count={len(results)} | session_id={req.session_id}"
         )
         return {"status": "success", "results": results}
     except Exception as e:
@@ -89,8 +94,10 @@ def get_item(item_id: str, session_id: str = "default"):
         indexer = SearchIndexer.get_instance()
         item = indexer.get_item(item_id, session_id=session_id)
         if item:
+            logger.info(f"phase=get_item_api | result=success | item_id={item_id} | session_id={session_id}")
             return {"status": "success", "item": item}
         else:
+            logger.warning(f"phase=get_item_api | result=not_found | item_id={item_id} | session_id={session_id}")
             return {"status": "not_found", "item": {}}
     except Exception as e:
         logger.error(f"phase=get_item_api | error={e}")

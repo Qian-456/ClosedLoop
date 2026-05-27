@@ -178,6 +178,14 @@ class SearchIndexer:
         parts = [name, intro, features, tags, groups_str, child_facilities_str, age_range_str, kid_menu_str, stroller_str, gift_type]
         return " ".join([p for p in parts if p]).strip()
 
+    def _fallback_dense_vector(self) -> list[float]:
+        """Return a tiny non-zero dense vector for timeout fallback."""
+        return [1e-5] * self.dim
+
+    def _is_zero_dense_vector(self, dense_vec: list[float]) -> bool:
+        """Check whether a dense vector is the all-zero timeout placeholder."""
+        return dense_vec == [0.0] * self.dim
+
     def build_index(self, category: str, items: List[Dict[str, Any]], session_id: str = "default"):
         if not items:
             return
@@ -266,7 +274,7 @@ class SearchIndexer:
                 # 全局超时检查：如果整体 embedding 耗时超过 2.0 秒，直接截断后续批次，避免超时
                 if time.time() - embedding_start_time > 2.0:
                     logger.warning(f"phase=search_indexer | msg=global_embedding_timeout_reached | padding_zeros_for_remaining")
-                    dense_vecs.extend([[0.0] * self.dim for _ in range(len(texts) - i)])
+                    dense_vecs.extend([self._fallback_dense_vector() for _ in range(len(texts) - i)])
                     break
 
                 # 修改重试机制：减少重试次数和退避时间，增加单次调用的严格超时（1.5s）
@@ -281,15 +289,14 @@ class SearchIndexer:
                     except concurrent.futures.TimeoutError:
                         logger.warning(f"phase=search_indexer | msg=batch_embedding_timeout | batch_start={i} | attempt={attempt+1}")
                         if attempt >= max_retries:
-                            dense_vecs.extend([[0.0] * self.dim for _ in batch_texts])
+                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
                     except Exception as e:
                         if attempt < max_retries:
                             logger.warning(f"phase=search_indexer | msg=batch_embedding_retry | batch_start={i} | attempt={attempt+1} | error={e}")
                             time.sleep(0.2)  # 退避时间缩短到 0.2 秒
                         else:
                             logger.error(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
-                            # 如果批处理最终失败，用零向量兜底
-                            dense_vecs.extend([[0.0] * self.dim for _ in batch_texts])
+                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
                             
                 time.sleep(0.05) # 微小停顿，避免触发 QPS 限制
             
@@ -306,10 +313,10 @@ class SearchIndexer:
 
             valid_data = []
             for item_id, text, dense_vec in zip(item_ids, texts, dense_vecs):
-                # 如果是 [0.0]*dim，说明该项在 3 次尝试后仍然失败，我们直接剔除它不建立索引
-                if dense_vec == [0.0] * self.dim:
-                    logger.warning(f"phase=search_indexer | msg=skip_failed_embedding | id={item_id}")
-                    continue
+                if self._is_zero_dense_vector(dense_vec):
+                    dense_vec = self._fallback_dense_vector()
+                if dense_vec == self._fallback_dense_vector():
+                    logger.warning(f"phase=search_indexer | msg=dense_embedding_fallback_used | id={item_id}")
                 valid_data.append({
                     "id": item_id,
                     "text": text,
@@ -337,27 +344,35 @@ class SearchIndexer:
                 vec = future.result(timeout=1.5)  # 严格限制 1.5s 超时
             if not vec:
                 # 避免纯零向量在 COSINE 距离下抛出零除异常，使用极小值占位
-                return [1e-5] * self.dim
+                logger.warning(f"phase=search_indexer | msg=query_sparse_fallback_active | reason=empty_embedding")
+                return self._fallback_dense_vector()
             return vec
         except concurrent.futures.TimeoutError:
             logger.warning(f"phase=search_indexer | msg=query_embedding_timeout | query={query[:20]}")
-            return [1e-5] * self.dim
+            logger.warning("phase=search_indexer | msg=query_sparse_fallback_active | reason=timeout")
+            return self._fallback_dense_vector()
         except Exception as e:
             logger.error(f"phase=search_indexer | msg=query_embedding_failed | error={e}")
-            return [1e-5] * self.dim
+            logger.warning("phase=search_indexer | msg=query_sparse_fallback_active | reason=exception")
+            return self._fallback_dense_vector()
 
     def search(self, category: str, query: str, top_k: int = 5, session_id: str = "default") -> List[Dict[str, Any]]:
         safe_session_id = session_id.replace("-", "_")
         collection_name = f"closedloop_{category}_{safe_session_id}"
         
         session_docs = self.category_docs.get(session_id, {})
+        cached_items = session_docs.get(category, [])
+        logger.info(
+            f"phase=search_indexer | msg=search_started | category={category} | query={query} | top_k={top_k} | session_id={session_id} | collection={collection_name} | cached_count={len(cached_items)}"
+        )
         
         try:
             client = MilvusClient(uri=self.milvus_uri)
             if not client.has_collection(collection_name):
-                logger.warning(f"phase=search_indexer | msg=collection_not_found_fallback | collection={collection_name}")
-                items = session_docs.get(category, [])
-                return items[:top_k]
+                logger.warning(
+                    f"phase=search_indexer | msg=collection_not_found_fallback | collection={collection_name} | session_id={session_id} | cached_count={len(cached_items)}"
+                )
+                return cached_items[:top_k]
                 
             client.load_collection(collection_name)
             
@@ -379,14 +394,21 @@ class SearchIndexer:
                         break
             
             if found_items:
+                logger.info(
+                    f"phase=search_indexer | msg=search_success | category={category} | session_id={session_id} | result_count={len(found_items)}"
+                )
                 return found_items
                 
         except Exception as e:
-            logger.warning(f"phase=search_indexer | msg=hybrid_search_failed_fallback_to_default | error={e}")
+            logger.warning(
+                f"phase=search_indexer | msg=hybrid_search_failed_fallback_to_default | category={category} | session_id={session_id} | error={e}"
+            )
             
         # Fallback default: return top_k from category_docs directly
-        items = session_docs.get(category, [])
-        return items[:top_k]
+        logger.warning(
+            f"phase=search_indexer | msg=search_returning_cached_items | category={category} | session_id={session_id} | cached_count={len(cached_items)}"
+        )
+        return cached_items[:top_k]
 
     def get_item(self, item_id: str, session_id: str = "default") -> Dict[str, Any]:
         """从内存缓存中获取完整的 item 数据"""
@@ -395,5 +417,7 @@ class SearchIndexer:
             for item in items:
                 cand_id = str(item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id"))
                 if cand_id == item_id:
+                    logger.info(f"phase=search_indexer | msg=get_item_hit | item_id={item_id} | session_id={session_id} | category={category}")
                     return item
+        logger.warning(f"phase=search_indexer | msg=get_item_miss | item_id={item_id} | session_id={session_id}")
         return {}

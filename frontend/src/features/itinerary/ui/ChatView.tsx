@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { SendHorizontal, Bot, User, Plus } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
-import { invoke } from '../api/invoke'
+import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
 
 export function ChatView() {
@@ -13,12 +13,17 @@ export function ChatView() {
   
   const addLocalMessage = useItineraryStore((s) => s.addLocalMessage)
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
-  const setInvokeSuccess = useItineraryStore((s) => s.setInvokeSuccess)
+  const applyInvokeStreamState = useItineraryStore((s) => s.applyInvokeStreamState)
+  const finishInvokeStream = useItineraryStore((s) => s.finishInvokeStream)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
   const resetSession = useItineraryStore((s) => s.reset)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const messages = currentSession?.messages || []
+  const hasVisibleAiMessage = messages.some((msg) => {
+    if (msg.type !== 'ai') return false
+    return Boolean(msg.content && msg.content !== '')
+  })
 
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -41,8 +46,18 @@ export function ChatView() {
     setInvokeRunning()
 
     try {
-      const response = await invoke(text, currentSessionId)
-      setInvokeSuccess(response.state)
+      await invokeStream(text, currentSessionId, {
+        onEvent(event) {
+          if (event.event === 'state') {
+            applyInvokeStreamState(event.data.state)
+            return
+          }
+
+          if (event.event === 'done') {
+            finishInvokeStream(event.data.state)
+          }
+        },
+      })
     } catch (error) {
       console.error(error)
       setInvokeError(error instanceof Error ? error.message : '未知错误')
@@ -113,7 +128,7 @@ export function ChatView() {
           )
         })}
 
-        {invokeStatus === 'running' && (
+        {invokeStatus === 'running' && !hasVisibleAiMessage && (
           <div className="flex gap-3 max-w-[85%] mr-auto">
             <div className="w-8 h-8 rounded-full bg-white border border-slate-100 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
               <Bot className="w-5 h-5" />

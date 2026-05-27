@@ -15,7 +15,7 @@ import homeIllustration from '../assets/home-illustration.png'
 import { getGreeting } from '../utils/greeting'
 import { Sidebar } from '../features/itinerary/ui/Sidebar'
 import { ChatView } from '../features/itinerary/ui/ChatView'
-import { invoke } from '../features/itinerary/api/invoke'
+import { invokeStream } from '../features/itinerary/api/invoke'
 
 function randomSessionId(sessionsCount: number): string {
   const paddedCount = String(sessionsCount + 1).padStart(3, '0')
@@ -59,7 +59,8 @@ export default function HomePage() {
   const resetSession = useItineraryStore((s) => s.reset)
   
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
-  const setInvokeSuccess = useItineraryStore((s) => s.setInvokeSuccess)
+  const applyInvokeStreamState = useItineraryStore((s) => s.applyInvokeStreamState)
+  const finishInvokeStream = useItineraryStore((s) => s.finishInvokeStream)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
 
   const currentSession = sessions.find(s => s.id === currentSessionId)
@@ -123,8 +124,18 @@ export default function HomePage() {
     setInvokeRunning()
 
     try {
-      const response = await invoke(text, sid)
-      setInvokeSuccess(response.state)
+      await invokeStream(text, sid, {
+        onEvent(event) {
+          if (event.event === 'state') {
+            applyInvokeStreamState(event.data.state)
+            return
+          }
+
+          if (event.event === 'done') {
+            finishInvokeStream(event.data.state)
+          }
+        },
+      })
     } catch (error) {
       console.error(error)
       setInvokeError(error instanceof Error ? error.message : '未知错误')

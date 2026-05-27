@@ -4,18 +4,21 @@
 
 这份文档回答：前端如何把“输入 → 生成方案 → 展示/选择”串起来，并说明哪些能力属于后续规划（未实现），避免文档与后端真实实现不一致。
 
-当前后端真实接口只有：
+当前后端真实接口为：
 
 - `GET /health`
 - `POST /invoke`
+- `POST /invoke/stream`
 
 后端代码入口见：`backend/src/main.py`。
+
+搜索候选召回依赖独立的 `plan_sub_backend` 服务；若主后端运行在宿主机，`PLAN_SUB_API_URL` 应优先配置为 `http://localhost:8001/plan` 或 `http://127.0.0.1:8001/plan`。若主后端本身也运行在 Docker 网络内，才使用 `http://plan_sub_backend:8001/plan`。当前后端已增加多地址自动回退，用于降低本机 / Docker 混跑时的 DNS 配置错误影响。
 
 ---
 
 ## 当前实现：最小对接方式（推荐先跑通）
 
-### 1) 一次调用拿到完整 state
+### 1) JSON 兼容模式：一次调用拿到完整 state
 
 前端调用：
 
@@ -31,7 +34,29 @@ POST /invoke
 - `state.candidates`：候选与排序结果（可用于 Debug Panel；体积较大，UI 默认不需要全部渲染）
 - `state.itinerary`：规划结果（字段定义见 `backend/src/closedloop/contracts/itinerary.py::ItineraryPlan`）
 
-### 2) 当前 LangGraph 节点流水线（真实）
+### 2) SSE 流式模式：按状态快照持续更新
+
+前端调用：
+
+```text
+POST /invoke/stream
+Content-Type: application/json
+{ "user_input": "...", "thread_id": "..." }
+```
+
+后端返回 `text/event-stream`，事件类型为：
+
+- `state`：中间态快照，`data.state` 是当前完整可序列化 state
+- `done`：最终态快照，`data.state` 是最终完整 state
+- `error`：异常结束，`data.message` 是错误信息
+
+说明：
+
+- 当前流式是 Graph/状态级 SSE，不是 token 级流。
+- 前端推荐使用 `fetch + ReadableStream` 解析 SSE；不使用浏览器原生 `EventSource`，因为请求需要携带 `POST` body。
+- 实时聊天主链路建议优先走 `/invoke/stream`，`/invoke` 作为兼容与调试入口保留。
+
+### 3) 当前 LangGraph 节点流水线（真实）
 
 后端当前 build_graph 实际包含：
 
@@ -57,8 +82,9 @@ extract_constraints → retrieve_candidates_node → filter_node → rerank_node
 ### 0) 输入与生成（当前可落地）
 
 - 用户输入一句话需求
-- 前端调用 `/invoke`
+- 前端优先调用 `/invoke/stream`
 - 前端渲染：
+  - 流式 `messages`（用于聊天气泡）
   - `constraints`（用于确认）
   - `itinerary.plans`（用于三方案与详情）
   - （可选）Debug Panel：展示 `candidates` 的统计信息与 `itinerary.status/missing_types`

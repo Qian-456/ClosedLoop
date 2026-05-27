@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.plan_subgraph.repairer import repair_plan
+from closedloop.graph.tools.plan_sub_api import request_plan_sub_json
 from closedloop.contracts.state import Constraints
 from langchain_core.runnables import RunnableConfig
 
@@ -63,15 +64,18 @@ def adjust_plan_item(
     # 如果候选池中找不到，请求 plan_sub_backend API 获取完整数据（替换原有的读取本地 json 文件兜底逻辑）
     if not new_item_data:
         session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
-        api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan").replace("/plan", f"/item/{new_item_id}")
         
         try:
-            with httpx.Client(timeout=10.0, trust_env=False, proxy=None) as client:
-                resp = client.get(api_url, params={"session_id": session_id})
-                resp.raise_for_status()
-                res_data = resp.json()
-                if res_data.get("status") == "success" and res_data.get("item"):
-                    new_item_data = res_data.get("item")
+            res_data = request_plan_sub_json(
+                method="GET",
+                configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+                target_path=f"/item/{new_item_id}",
+                phase="adjust_plan_item",
+                params={"session_id": session_id},
+                timeout=10.0,
+            )
+            if res_data.get("status") == "success" and res_data.get("item"):
+                new_item_data = res_data.get("item")
         except Exception as e:
             logger.warning(f"phase=adjust_plan_item | msg=api_fallback_search_error | error={e}")
 

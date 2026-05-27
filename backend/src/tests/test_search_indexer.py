@@ -1,5 +1,12 @@
 import unittest
+import concurrent.futures
+import os
+import sys
 from unittest.mock import patch, MagicMock
+
+# Add src to path so we can import backend modules.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer, MilvusHybridSearcher
 
 class TestSearchIndexer(unittest.TestCase):
@@ -53,6 +60,34 @@ class TestSearchIndexer(unittest.TestCase):
             self.assertEqual(len(results), 2)
             self.assertEqual(results[0]["id"], "2")
             self.assertEqual(results[1]["id"], "1")
+
+    @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusClient')
+    @patch('closedloop.graph.plan_subgraph.search_indexer.DashScopeEmbedding')
+    def test_build_index_preserves_items_when_embedding_timeout(self, mock_dashscope, mock_milvus_client):
+        mock_embed_instance = MagicMock()
+        mock_embed_instance.get_text_embedding_batch.side_effect = concurrent.futures.TimeoutError()
+        mock_dashscope.return_value = mock_embed_instance
+
+        mock_client_instance = MagicMock()
+        mock_client_instance.has_collection.return_value = False
+        mock_milvus_client.return_value = mock_client_instance
+        mock_schema = MagicMock()
+        mock_milvus_client.create_schema.return_value = mock_schema
+
+        indexer = SearchIndexer()
+        items = [
+            {"id": "1", "name": "Item 1", "description": "Desc 1", "features": "Feat 1"},
+            {"id": "2", "name": "Item 2", "description": "Desc 2", "features": "Feat 2"},
+        ]
+
+        indexer.build_index("restaurant", items)
+
+        mock_client_instance.insert.assert_called_once()
+        inserted_payload = mock_client_instance.insert.call_args.kwargs["data"]
+        self.assertEqual(len(inserted_payload), 2)
+        self.assertEqual(inserted_payload[0]["id"], "1")
+        self.assertEqual(inserted_payload[1]["id"], "2")
+        self.assertNotEqual(inserted_payload[0]["dense_vector"], [0.0] * indexer.dim)
 
     @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusClient')
     @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusHybridSearcher')

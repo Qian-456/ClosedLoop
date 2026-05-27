@@ -48,8 +48,8 @@ class DataSettings(BaseSettings):
 
 class AppConfig(BaseSettings):
     PROJECT_NAME: str = "ClosedLoop"
-    MILVUS_URI: str = "http://milvus:19530"
-    PLAN_SUB_API_URL: str = "http://plan_sub_backend:8001/plan"
+    MILVUS_URI: str = "http://localhost:19530"
+    PLAN_SUB_API_URL: str = "http://localhost:8001/plan"
 
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)

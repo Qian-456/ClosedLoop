@@ -7,12 +7,12 @@ from langgraph.prebuilt import InjectedState
 from langgraph.types import Command
 from pydantic import BaseModel, Field
 
-import httpx
 from langchain_core.runnables import RunnableConfig
 
 from closedloop.contracts.state import ClosedLoopState, Constraints, PlanState
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
+from closedloop.graph.tools.plan_sub_api import request_plan_sub_json
 
 
 class PlanTripInput(BaseModel):
@@ -145,11 +145,14 @@ def plan_trip(
         import time
         for attempt in range(3):
             try:
-                api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
-                with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
-                    resp = client.post(api_url, json=payload)
-                    resp.raise_for_status()
-                    subgraph_output = resp.json()
+                subgraph_output = request_plan_sub_json(
+                    method="POST",
+                    configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+                    target_path="/plan",
+                    phase="plan_trip",
+                    json=payload,
+                    timeout=3.0,
+                )
                 break
             except Exception as e:
                 if attempt == 2:
@@ -241,11 +244,14 @@ def generate_alternative_plans(
         import time
         for attempt in range(3):
             try:
-                api_url = getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
-                with httpx.Client(timeout=3.0, trust_env=False, proxy=None) as client:
-                    resp = client.post(api_url, json=payload)
-                    resp.raise_for_status()
-                    subgraph_output = resp.json()
+                subgraph_output = request_plan_sub_json(
+                    method="POST",
+                    configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+                    target_path="/plan",
+                    phase="generate_alternative_plans",
+                    json=payload,
+                    timeout=3.0,
+                )
                 break
             except Exception as e:
                 if attempt == 2:

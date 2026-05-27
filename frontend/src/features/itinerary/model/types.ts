@@ -108,3 +108,29 @@ export type InvokeResponse = {
   status: string
   state: ClosedLoopState
 }
+
+export type InvokeStreamStateEvent = {
+  event: 'state'
+  data: {
+    state: ClosedLoopState
+  }
+}
+
+export type InvokeStreamDoneEvent = {
+  event: 'done'
+  data: {
+    state: ClosedLoopState
+  }
+}
+
+export type InvokeStreamErrorEvent = {
+  event: 'error'
+  data: {
+    message: string
+  }
+}
+
+export type InvokeStreamEvent =
+  | InvokeStreamStateEvent
+  | InvokeStreamDoneEvent
+  | InvokeStreamErrorEvent
