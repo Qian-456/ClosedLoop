@@ -1,11 +1,16 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
-import type { InvokeStreamProcessEvent, InvokeStreamStatusEvent } from '../model/types'
+import type { BubbleEntry, ProcessBubblePhase } from '../model/types'
 import { ProcessPanel } from './ProcessPanel'
 
 type Props = {
-  status: InvokeStreamStatusEvent['data'] | null
-  processItems: InvokeStreamProcessEvent['data'][]
+  status:
+    | {
+        phase: ProcessBubblePhase
+        text: string
+      }
+    | null
+  displayItems: BubbleEntry[]
   expanded: boolean
   onToggleExpanded: () => void
   visible: boolean
@@ -14,7 +19,7 @@ type Props = {
 /**
  * Displays the current lightweight streaming status for the active session.
  */
-export function StatusBar({ status, processItems, expanded, onToggleExpanded, visible }: Props) {
+export function StatusBar({ status, displayItems, expanded, onToggleExpanded, visible }: Props) {
   if (!visible || !status) {
     return null
   }
@@ -35,7 +40,7 @@ export function StatusBar({ status, processItems, expanded, onToggleExpanded, vi
 
         {expanded ? (
           <div className="mt-3">
-            <ProcessPanel items={processItems} />
+            <ProcessPanel items={displayItems} />
           </div>
         ) : null}
       </div>

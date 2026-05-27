@@ -1,14 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type {
+  BubbleEntry,
   ClosedLoopState,
   Session,
   Message,
   InvokeStreamEvent,
-  InvokeStreamProcessEvent,
   ProcessBubblePhase,
   ProcessBubbleRecord,
-  InvokeStreamStatusEvent,
 } from '../model/types'
 
 export type InvokeStatus = 'idle' | 'running' | 'success' | 'error'
@@ -20,7 +19,6 @@ type ItineraryStore = {
   userInput: string
   invokeStatus: InvokeStatus
   errorMessage: string | null
-  currentStatus: InvokeStreamStatusEvent['data'] | null
   currentProcessBubble: ProcessBubbleRecord | null
 
   setUserInput: (v: string) => void
@@ -129,19 +127,20 @@ function createProcessBubble(
     text: '正在理解用户需求',
     expanded: false,
     status: 'running',
-    processItems: [],
+    entries: [],
   }
 }
 
-function appendProcessItem(
-  items: InvokeStreamProcessEvent['data'][],
-  nextItem: InvokeStreamProcessEvent['data'],
-): InvokeStreamProcessEvent['data'][] {
-  const nextSignature = JSON.stringify(nextItem)
-  if (items.some((item) => JSON.stringify(item) === nextSignature)) {
-    return items
+function appendBubbleEntries(entries: BubbleEntry[], nextEntries: BubbleEntry[]): BubbleEntry[] {
+  const merged = [...entries]
+  for (const nextEntry of nextEntries) {
+    const nextSignature = JSON.stringify(nextEntry)
+    if (merged.some((item) => JSON.stringify(item) === nextSignature)) {
+      continue
+    }
+    merged.push(nextEntry)
   }
-  return [...items, nextItem]
+  return merged
 }
 
 function mapPhaseText(phase: ProcessBubblePhase): string {
@@ -165,37 +164,6 @@ function mapPhaseText(phase: ProcessBubblePhase): string {
     case 'bootstrap':
     default:
       return '正在理解用户需求'
-  }
-}
-
-function resolveProcessPhase(stepOrTool?: string): ProcessBubblePhase {
-  switch (stepOrTool) {
-    case 'search_candidates':
-    case 'plan_trip':
-    case 'generate_alternative_plans':
-    case 'adjust_plan_item':
-    case 'transfer_to_execute':
-    case 'confirm_trip':
-      return stepOrTool
-    default:
-      return 'bootstrap'
-  }
-}
-
-function resolveStatusPhase(status: InvokeStreamStatusEvent['data']): ProcessBubblePhase {
-  if (status.step) {
-    return resolveProcessPhase(status.step)
-  }
-
-  switch (status.phase) {
-    case 'retrieving':
-      return 'search_candidates'
-    case 'planning':
-      return 'plan_trip'
-    case 'finalizing':
-      return 'confirm_trip'
-    default:
-      return 'bootstrap'
   }
 }
 
@@ -237,7 +205,6 @@ export const useItineraryStore = create<ItineraryStore>()(
       userInput: '',
       invokeStatus: 'idle',
       errorMessage: null,
-      currentStatus: null,
       currentProcessBubble: null,
       
       setUserInput: (v) => set({ userInput: v }),
@@ -263,7 +230,6 @@ export const useItineraryStore = create<ItineraryStore>()(
             userInput: '',
             invokeStatus: 'idle',
             errorMessage: null,
-            currentStatus: null,
             currentProcessBubble: null,
           }
         }
@@ -276,7 +242,6 @@ export const useItineraryStore = create<ItineraryStore>()(
               userInput: '',
               invokeStatus: 'idle',
               errorMessage: null,
-              currentStatus: null,
               currentProcessBubble: null,
             }
           }
@@ -297,7 +262,6 @@ export const useItineraryStore = create<ItineraryStore>()(
           userInput: '',
           invokeStatus: 'idle',
           errorMessage: null,
-          currentStatus: null,
           currentProcessBubble: null,
         }
       }),
@@ -307,7 +271,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         userInput: '',
         invokeStatus: 'idle',
         errorMessage: null,
-        currentStatus: null,
         currentProcessBubble: null,
       }),
 
@@ -341,10 +304,6 @@ export const useItineraryStore = create<ItineraryStore>()(
           return {
             invokeStatus: 'running',
             errorMessage: null,
-            currentStatus: {
-              phase: 'understanding',
-              text: '正在理解你的需求',
-            },
             currentProcessBubble: null,
           }
         }
@@ -353,10 +312,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         return {
           invokeStatus: 'running',
           errorMessage: null,
-          currentStatus: {
-            phase: 'understanding',
-            text: '正在理解你的需求',
-          },
           currentProcessBubble: createProcessBubble(
             sessionId,
             relatedUserMessageId ?? getLatestHumanMessageId(currentSession),
@@ -368,7 +323,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         return {
           invokeStatus: 'success',
           errorMessage: null,
-          currentStatus: null,
           currentProcessBubble: null,
           sessions: mergeApiStateIntoSessions(state.sessions, state.currentSessionId, apiState),
         }
@@ -391,24 +345,7 @@ export const useItineraryStore = create<ItineraryStore>()(
           }
         }
 
-        if (event.event === 'status') {
-          const phase = resolveStatusPhase(event.data)
-          return {
-            invokeStatus: 'running',
-            errorMessage: null,
-            currentStatus: event.data,
-            currentProcessBubble: state.currentProcessBubble
-              ? {
-                  ...state.currentProcessBubble,
-                  phase,
-                  text: mapPhaseText(phase),
-                }
-              : state.currentProcessBubble,
-          }
-        }
-
-        if (event.event === 'process') {
-          const phase = resolveProcessPhase(event.data.step ?? event.data.tool)
+        if (event.event === 'bubble') {
           const currentSession = state.sessions.find((session) => session.id === state.currentSessionId)
           const currentBubble =
             state.currentProcessBubble ??
@@ -418,9 +355,10 @@ export const useItineraryStore = create<ItineraryStore>()(
             errorMessage: null,
             currentProcessBubble: {
               ...currentBubble,
-              phase,
-              text: mapPhaseText(phase),
-              processItems: appendProcessItem(currentBubble.processItems, event.data),
+              phase: event.data.phase,
+              text: event.data.text,
+              status: event.data.status ?? currentBubble.status,
+              entries: appendBubbleEntries(currentBubble.entries, event.data.entries),
             },
           }
         }
@@ -450,7 +388,6 @@ export const useItineraryStore = create<ItineraryStore>()(
           return {
             invokeStatus: event.data.success ? 'success' : 'error',
             errorMessage: event.data.success ? null : state.errorMessage,
-            currentStatus: null,
             currentProcessBubble: null,
             sessions: finishedBubble
               ? archiveProcessBubbleIntoSession(state.sessions, state.currentSessionId, finishedBubble)
@@ -469,7 +406,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         return {
           invokeStatus: 'error',
           errorMessage: event.data.message,
-          currentStatus: null,
           currentProcessBubble: null,
           sessions: failedBubble
             ? archiveProcessBubbleIntoSession(state.sessions, state.currentSessionId, failedBubble)
@@ -490,7 +426,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         return {
           invokeStatus: 'error',
           errorMessage: message,
-          currentStatus: null,
           currentProcessBubble: null,
           sessions: failedBubble
             ? archiveProcessBubbleIntoSession(state.sessions, state.currentSessionId, failedBubble)
@@ -537,7 +472,6 @@ export const useItineraryStore = create<ItineraryStore>()(
         userInput: '',
         invokeStatus: 'idle',
         errorMessage: null,
-        currentStatus: null,
         currentProcessBubble: null,
       }),
     }),

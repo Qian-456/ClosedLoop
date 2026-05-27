@@ -38,7 +38,7 @@ export function ProcessBubble({ bubble, onToggleExpanded }: Props) {
 
         {bubble.expanded ? (
           <div className="mt-3">
-            <ProcessPanel items={bubble.processItems} />
+            <ProcessPanel items={bubble.entries ?? []} />
           </div>
         ) : null}
       </div>

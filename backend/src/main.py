@@ -5,11 +5,11 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import json
-import re
 from typing import Any, AsyncIterator
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+from langchain_core.messages import AIMessageChunk
 from pydantic import BaseModel
 
 from closedloop.core.config import get_config
@@ -74,36 +74,39 @@ def format_sse_event(event_name: str, data: dict[str, Any]) -> str:
     return f"event: {event_name}\ndata: {payload}\n\n"
 
 
-def _extract_text_content(content: Any) -> str:
-    """Extract plain text from streamed LangGraph message chunks."""
-    if isinstance(content, str):
-        return content
-    if isinstance(content, list):
-        parts: list[str] = []
-        for item in content:
-            if isinstance(item, str):
-                parts.append(item)
-            elif isinstance(item, dict) and isinstance(item.get("text"), str):
-                parts.append(item["text"])
-        return "".join(parts)
-    return ""
+def _get_block_type(block: Any) -> str:
+    """Extract the raw content block type from dict or object values."""
+    if isinstance(block, dict):
+        return str(block.get("type") or "other")
+    return str(getattr(block, "type", None) or "other")
 
 
-def _sanitize_message_text(text: str) -> str:
-    """Remove raw tool payloads from user-facing streamed text."""
-    if not text:
-        return ""
+def _get_block_text(block: Any) -> str:
+    """Return streamable text from one content block."""
+    if isinstance(block, dict):
+        if block.get("type") == "text":
+            return str(block.get("text", ""))
+        if block.get("type") == "tool_call_chunk":
+            return str(block.get("args", ""))
+        return str(block.get("text", "") or block.get("args", "") or "")
 
-    sanitized = text
-    sanitized = re.sub(
-        r'\{[\s\S]*?"tool"\s*:\s*"[^"]+"[\s\S]*?"result"\s*:\s*\{[\s\S]*?\}[\s\S]*?\}',
-        "",
-        sanitized,
-    )
-    stripped = sanitized.strip()
-    if stripped.startswith("{") and '"tool"' in stripped and '"status"' in stripped:
-        return ""
-    return sanitized.strip()
+    if getattr(block, "type", None) == "text":
+        return str(getattr(block, "text", ""))
+    if getattr(block, "type", None) == "tool_call_chunk":
+        return str(getattr(block, "args", ""))
+    return str(getattr(block, "text", "") or getattr(block, "args", "") or "")
+
+
+def _extract_message_text_from_chunk(token: AIMessageChunk) -> str:
+    """Extract user-visible text blocks from one AIMessageChunk."""
+    parts: list[str] = []
+    for block in getattr(token, "content_blocks", []):
+        if _get_block_type(block) != "text":
+            continue
+        block_text = _get_block_text(block)
+        if block_text:
+            parts.append(block_text)
+    return "".join(parts)
 
 
 def _extract_tool_payload(message: Any) -> dict[str, Any] | None:
@@ -166,42 +169,125 @@ def _build_process_summary(tool_payload: dict[str, Any]) -> str:
     return f"{tool_name} 处理中"
 
 
-def _step_to_status(step: str | None, node_name: str | None = None) -> dict[str, str]:
-    """Map runtime graph steps to product-facing status copy."""
-    value = step or node_name or ""
+def _map_tool_title(tool_name: str) -> str:
+    """Map internal tool names to user-facing titles."""
     mapping = {
-        "search_candidates": {
-            "phase": "retrieving",
-            "text": "正在召回候选地点",
-        },
-        "plan_trip": {
-            "phase": "planning",
-            "text": "正在生成行程方案",
-        },
-        "generate_alternative_plans": {
-            "phase": "planning",
-            "text": "正在生成行程方案",
-        },
-        "adjust_plan_item": {
-            "phase": "planning",
-            "text": "正在调整当前方案",
-        },
-        "transfer_to_execute": {
-            "phase": "finalizing",
-            "text": "正在整理推荐结果",
-        },
-        "confirm_trip": {
-            "phase": "finalizing",
-            "text": "正在同步执行确认结果",
-        },
+        "plan_trip": "规划方案",
+        "search_candidates": "召回候选地点",
+        "generate_alternative_plans": "生成备选方案",
+        "adjust_plan_item": "调整方案",
+        "transfer_to_execute": "切换执行确认",
+        "confirm_trip": "整理执行结果",
+        "execute_itinerary": "执行行程",
     }
-    return mapping.get(
-        value,
+    return mapping.get(tool_name, tool_name)
+
+
+def _resolve_bubble_phase(step_or_node: str | None) -> str:
+    """Resolve the bubble phase from a runtime step or node."""
+    value = step_or_node or ""
+    supported_phases = {
+        "search_candidates",
+        "plan_trip",
+        "generate_alternative_plans",
+        "adjust_plan_item",
+        "transfer_to_execute",
+        "confirm_trip",
+    }
+    if value in supported_phases:
+        return value
+    return "bootstrap"
+
+
+def _resolve_bubble_text(phase: str) -> str:
+    """Map one bubble phase to user-facing copy."""
+    mapping = {
+        "search_candidates": "正在召回候选地点",
+        "plan_trip": "正在规划方案",
+        "generate_alternative_plans": "正在生成更多方案",
+        "adjust_plan_item": "正在调整方案",
+        "transfer_to_execute": "正在切换到执行确认",
+        "confirm_trip": "正在整理执行结果",
+        "done": "已完成规划",
+        "error": "处理失败，请稍后重试",
+        "bootstrap": "正在理解你的需求",
+    }
+    return mapping.get(phase, mapping["bootstrap"])
+
+
+def _build_tool_meta(tool_payload: dict[str, Any]) -> list[str]:
+    """Build display metadata for one tool entry."""
+    result = tool_payload.get("result")
+    meta: list[str] = []
+
+    if not isinstance(result, dict):
+        return meta
+
+    if tool_payload.get("tool") in {"plan_trip", "generate_alternative_plans"}:
+        plans = result.get("plans")
+        if isinstance(plans, list) and plans:
+            meta.append(f"{len(plans)} 个方案")
+            first_plan = plans[0] if isinstance(plans[0], dict) else {}
+            total_cost = first_plan.get("total_cost")
+            total_duration_minutes = first_plan.get("total_duration_minutes")
+            if isinstance(total_cost, (int, float)):
+                meta.append(f"预算 {total_cost:g} 元")
+            if isinstance(total_duration_minutes, (int, float)):
+                meta.append(f"总时长 {total_duration_minutes:g} 分钟")
+        return meta
+
+    if tool_payload.get("tool") == "search_candidates":
+        items = result.get("items") or result.get("candidates")
+        if isinstance(items, list):
+            meta.append(f"{len(items)} 个候选地点")
+    return meta
+
+
+def _build_bubble_entries(update: dict[str, Any], node_name: str | None) -> list[dict[str, Any]]:
+    """Build grouped bubble entries from one update chunk."""
+    step = update.get("current_step") or node_name or "bootstrap"
+    phase = _resolve_bubble_phase(step)
+    text = _resolve_bubble_text(phase)
+    entries: list[dict[str, Any]] = [
         {
-            "phase": "understanding",
-            "text": "正在理解你的需求",
-        },
-    )
+            "kind": "step",
+            "title": "阶段切换",
+            "summary": text,
+        }
+    ]
+
+    for message in update.get("messages", []) if isinstance(update, dict) else []:
+        tool_payload = _extract_tool_payload(message)
+        if tool_payload is None:
+            continue
+
+        entry: dict[str, Any] = {
+            "kind": "tool",
+            "tool": tool_payload["tool"],
+            "title": _map_tool_title(tool_payload["tool"]),
+            "summary": _build_process_summary(tool_payload),
+            "status": tool_payload["status"],
+            "raw": tool_payload,
+        }
+        meta = _build_tool_meta(tool_payload)
+        if meta:
+            entry["meta"] = meta
+        entries.append(entry)
+    return entries
+
+
+def _build_bubble_payload(node_name: str | None, update: dict[str, Any]) -> dict[str, Any]:
+    """Build one normalized bubble event payload from a LangGraph update."""
+    step = update.get("current_step") or node_name or "bootstrap"
+    phase = _resolve_bubble_phase(step)
+    return {
+        "phase": phase,
+        "step": step,
+        "node": node_name,
+        "text": _resolve_bubble_text(phase),
+        "status": "running",
+        "entries": _build_bubble_entries(update, node_name),
+    }
 
 
 def _iter_update_entries(update_data: Any) -> list[tuple[str | None, dict[str, Any]]]:
@@ -257,16 +343,25 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
     config_run = {"configurable": {"thread_id": request.thread_id}}
 
     try:
-        last_status_payload: str | None = None
+        last_bubble_payload: str | None = None
         last_result_payload: str | None = None
-        emitted_process_signatures: set[str] = set()
+        bootstrap_bubble = {
+            "phase": "bootstrap",
+            "step": "bootstrap",
+            "node": None,
+            "text": _resolve_bubble_text("bootstrap"),
+            "status": "running",
+            "entries": [
+                {
+                    "kind": "step",
+                    "title": "进入流程",
+                    "summary": _resolve_bubble_text("bootstrap"),
+                }
+            ],
+        }
         yield format_sse_event(
-            "status",
-            {
-                "phase": "understanding",
-                "text": "正在理解你的需求",
-                "step": "bootstrap",
-            },
+            "bubble",
+            bootstrap_bubble,
         )
 
         db_path = _get_sessions_db_path()
@@ -284,9 +379,9 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
 
                 if part_type == "messages" and isinstance(part_data, tuple) and len(part_data) == 2:
                     message_chunk, metadata = part_data
-                    content = _sanitize_message_text(
-                        _extract_text_content(getattr(message_chunk, "content", ""))
-                    )
+                    if not isinstance(message_chunk, AIMessageChunk):
+                        continue
+                    content = _extract_message_text_from_chunk(message_chunk).strip()
                     if content:
                         logger.info(
                             f"phase=api_invoke_stream | thread_id={request.thread_id} | event=message"
@@ -302,41 +397,16 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
 
                 if part_type == "updates":
                     for node_name, update in _iter_update_entries(part_data):
-                        status_payload = _step_to_status(
-                            update.get("current_step") if isinstance(update, dict) else None,
-                            node_name=node_name,
+                        bubble_payload = _build_bubble_payload(node_name, update)
+                        bubble_signature = json.dumps(
+                            bubble_payload, ensure_ascii=False, sort_keys=True
                         )
-                        status_payload["step"] = update.get("current_step") or node_name or "unknown"
-                        status_signature = json.dumps(status_payload, ensure_ascii=False, sort_keys=True)
-                        if status_signature != last_status_payload:
-                            last_status_payload = status_signature
+                        if bubble_signature != last_bubble_payload:
+                            last_bubble_payload = bubble_signature
                             logger.info(
-                                f"phase=api_invoke_stream | thread_id={request.thread_id} | event=status | step={status_payload['step']}"
+                                f"phase=api_invoke_stream | thread_id={request.thread_id} | event=bubble | step={bubble_payload['step']}"
                             )
-                            yield format_sse_event("status", status_payload)
-
-                        for message in update.get("messages", []) if isinstance(update, dict) else []:
-                            tool_payload = _extract_tool_payload(message)
-                            if tool_payload is None:
-                                continue
-
-                            process_payload = {
-                                "tool": tool_payload["tool"],
-                                "status": tool_payload["status"],
-                                "step": update.get("current_step") or node_name or "unknown",
-                                "summary": _build_process_summary(tool_payload),
-                                "raw": tool_payload,
-                            }
-                            process_signature = json.dumps(
-                                process_payload, ensure_ascii=False, sort_keys=True
-                            )
-                            if process_signature in emitted_process_signatures:
-                                continue
-                            emitted_process_signatures.add(process_signature)
-                            logger.info(
-                                f"phase=api_invoke_stream | thread_id={request.thread_id} | event=process | tool={process_payload['tool']}"
-                            )
-                            yield format_sse_event("process", process_payload)
+                            yield format_sse_event("bubble", bubble_payload)
 
                         result_payload = _build_result_payload(update)
                         if result_payload is not None:

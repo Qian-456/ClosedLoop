@@ -99,6 +99,16 @@ export type ProcessBubblePhase =
   | 'done'
   | 'error'
 
+export type BubbleEntry = {
+  kind: 'step' | 'tool'
+  title: string
+  summary: string
+  tool?: string
+  status?: 'running' | 'success' | 'failed'
+  meta?: string[]
+  raw?: unknown
+}
+
 export type ProcessBubbleRecord = {
   id: string
   sessionId: string
@@ -107,7 +117,7 @@ export type ProcessBubbleRecord = {
   text: string
   expanded: boolean
   status: 'running' | 'success' | 'failed'
-  processItems: InvokeStreamProcessEvent['data'][]
+  entries: BubbleEntry[]
 }
 
 export type Session = {
@@ -134,14 +144,6 @@ export type InvokeResponse = {
   state: ClosedLoopState
 }
 
-export type StreamStatusPhase =
-  | 'understanding'
-  | 'retrieving'
-  | 'filtering'
-  | 'planning'
-  | 'verifying'
-  | 'finalizing'
-
 export type InvokeStreamMessageEvent = {
   event: 'message'
   data: {
@@ -150,12 +152,15 @@ export type InvokeStreamMessageEvent = {
   }
 }
 
-export type InvokeStreamStatusEvent = {
-  event: 'status'
+export type InvokeStreamBubbleEvent = {
+  event: 'bubble'
   data: {
-    phase: StreamStatusPhase
+    phase: ProcessBubblePhase
     text: string
     step?: string
+    node?: string
+    status?: 'running' | 'success' | 'failed'
+    entries: BubbleEntry[]
   }
 }
 
@@ -166,17 +171,6 @@ export type InvokeStreamResultEvent = {
     confirmation?: Confirmation
     constraints?: Constraints
     current_step?: string
-  }
-}
-
-export type InvokeStreamProcessEvent = {
-  event: 'process'
-  data: {
-    tool: string
-    status: 'success' | 'failed' | 'running'
-    step?: string
-    summary: string
-    raw?: unknown
   }
 }
 
@@ -198,8 +192,7 @@ export type InvokeStreamErrorEvent = {
 
 export type InvokeStreamEvent =
   | InvokeStreamMessageEvent
-  | InvokeStreamStatusEvent
-  | InvokeStreamProcessEvent
+  | InvokeStreamBubbleEvent
   | InvokeStreamResultEvent
   | InvokeStreamDoneEvent
   | InvokeStreamErrorEvent

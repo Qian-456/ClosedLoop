@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from langchain_core.messages import AIMessageChunk
 
 # Add src to path so we can import from core and main
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -54,6 +55,11 @@ def _build_message(message_type: str, content: str, *, message_id: str, tool_cal
     )
 
 
+def _build_ai_chunk(*blocks):
+    """构造用于流式测试的 AIMessageChunk。"""
+    return AIMessageChunk(content_blocks=list(blocks))
+
+
 def _build_stream_part(part_type: str, data):
     """构造 LangGraph v2 风格的流式事件片段。"""
     return {
@@ -86,18 +92,18 @@ class TestMainAPI(unittest.TestCase):
             _build_stream_part(
                 "messages",
                 (
-                    _build_message(
-                        "ai",
-                        '{"tool":"plan_trip","status":"success","result":{"plans":[]}}',
-                        message_id="msg_ai_chunk_ignored",
-                    ),
+                    _build_message("ai", "这条不应进入聊天", message_id="msg_ai_chunk_ignored"),
                     {"langgraph_node": "plan_agent"},
                 ),
             ),
             _build_stream_part(
                 "messages",
                 (
-                    _build_message("ai", "正在帮你规划中", message_id="msg_ai_chunk_1"),
+                    _build_ai_chunk(
+                        {"type": "text", "text": "正在"},
+                        {"type": "tool_call_chunk", "args": '{"tool":"plan_trip"}'},
+                        {"type": "text", "text": "帮你规划中"},
+                    ),
                     {"langgraph_node": "plan_agent"},
                 ),
             ),
@@ -129,6 +135,8 @@ class TestMainAPI(unittest.TestCase):
                                                 {
                                                     "plan_id": "plan_1",
                                                     "title": "亲子轻松版",
+                                                    "total_cost": 320,
+                                                    "total_duration_minutes": 240,
                                                 }
                                             ]
                                         },
@@ -176,7 +184,7 @@ class TestMainAPI(unittest.TestCase):
         self.assertEqual(called_config["configurable"]["thread_id"], "thread_test_001")
 
     def test_invoke_stream_returns_product_events(self):
-        """Test the SSE invoke endpoint emits normalized product events."""
+        """Test the SSE invoke endpoint emits message, bubble, result and done events."""
         fake_agent = _FakeAgent(final_state=self.final_state, stream_events=self.stream_events)
 
         with (
@@ -202,19 +210,47 @@ class TestMainAPI(unittest.TestCase):
                     data = json.loads(line[len("data:") :].strip())
             parsed_events.append((event_name, data))
 
-        self.assertEqual(parsed_events[0][0], "status")
+        self.assertEqual(parsed_events[0][0], "bubble")
         self.assertEqual(parsed_events[1][0], "message")
-        self.assertEqual(parsed_events[2][0], "status")
-        self.assertEqual(parsed_events[3][0], "process")
-        self.assertEqual(parsed_events[4][0], "result")
+        self.assertEqual(parsed_events[2][0], "bubble")
+        self.assertEqual(parsed_events[3][0], "result")
         self.assertEqual(parsed_events[-1][0], "done")
         self.assertEqual(parsed_events[1][1]["text"], "正在帮你规划中")
-        self.assertEqual(parsed_events[2][1]["phase"], "planning")
-        self.assertEqual(parsed_events[3][1]["tool"], "plan_trip")
-        self.assertEqual(parsed_events[3][1]["status"], "success")
-        self.assertEqual(parsed_events[4][1]["itinerary"]["plans"][0]["title"], "亲子轻松版")
+        self.assertEqual(parsed_events[3][1]["itinerary"]["plans"][0]["title"], "亲子轻松版")
         self.assertTrue(parsed_events[-1][1]["success"])
-        self.assertFalse(any(event_name == "message" and data["text"].startswith('{"tool"') for event_name, data in parsed_events if event_name == "message"))
+        self.assertFalse(
+            any(
+                event_name == "message" and data["text"] == "这条不应进入聊天"
+                for event_name, data in parsed_events
+                if event_name == "message"
+            )
+        )
+        self.assertFalse(
+            any(
+                event_name == "message" and '{"tool":"plan_trip"}' in data["text"]
+                for event_name, data in parsed_events
+                if event_name == "message"
+            )
+        )
+        self.assertEqual(parsed_events[0][1]["phase"], "bootstrap")
+        self.assertEqual(parsed_events[0][1]["text"], "正在理解你的需求")
+
+        bubble_events = [data for event_name, data in parsed_events if event_name == "bubble"]
+        self.assertGreaterEqual(len(bubble_events), 2)
+        planning_bubble = next(
+            bubble for bubble in bubble_events if bubble["phase"] == "plan_trip"
+        )
+        self.assertEqual(planning_bubble["step"], "plan_trip")
+        self.assertEqual(planning_bubble["node"], "plan_trip")
+        self.assertEqual(planning_bubble["text"], "正在规划方案")
+        self.assertEqual(planning_bubble["status"], "running")
+        self.assertEqual(planning_bubble["entries"][0]["kind"], "step")
+        self.assertEqual(planning_bubble["entries"][0]["summary"], "正在规划方案")
+        self.assertEqual(planning_bubble["entries"][1]["kind"], "tool")
+        self.assertEqual(planning_bubble["entries"][1]["tool"], "plan_trip")
+        self.assertEqual(planning_bubble["entries"][1]["status"], "success")
+        self.assertIn("预算 320 元", planning_bubble["entries"][1]["meta"])
+        self.assertIn("总时长 240 分钟", planning_bubble["entries"][1]["meta"])
 
         self.assertEqual(len(fake_agent.astream_calls), 1)
         called_payload, called_config, called_stream_mode, called_version = fake_agent.astream_calls[0]
@@ -222,6 +258,28 @@ class TestMainAPI(unittest.TestCase):
         self.assertEqual(called_config["configurable"]["thread_id"], "thread_test_001")
         self.assertEqual(called_stream_mode, ["messages", "updates", "custom"])
         self.assertEqual(called_version, "v2")
+
+    def test_invoke_stream_accepts_ai_chunk_text_from_content(self):
+        """Test the SSE invoke endpoint keeps AIMessageChunk plain content text."""
+        stream_events = [
+            _build_stream_part(
+                "messages",
+                (
+                    AIMessageChunk(content="这是最终推荐说明"),
+                    {"langgraph_node": "plan_trip"},
+                ),
+            ),
+        ]
+        fake_agent = _FakeAgent(final_state=self.final_state, stream_events=stream_events)
+
+        with (
+            patch("main.AsyncSqliteSaver.from_conn_string", return_value=_FakeAsyncContextManager()),
+            patch("main.build_agent_with_async_checkpointer", return_value=fake_agent),
+        ):
+            response = self.client.post("/invoke/stream", json=self.request_payload)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('event: message\ndata: {"text": "这是最终推荐说明"', response.text)
 
     def test_invoke_stream_returns_error_event_on_exception(self):
         """Test the SSE invoke endpoint emits an error event when streaming fails."""

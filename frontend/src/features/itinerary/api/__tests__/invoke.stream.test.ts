@@ -29,19 +29,19 @@ describe('invokeStream', () => {
     vi.restoreAllMocks()
   })
 
-  it('按顺序解析跨 chunk 的 message、status、process、result 与 done 事件', async () => {
+  it('按顺序解析跨 chunk 的 message、bubble、result 与 done 事件', async () => {
     const events: InvokeStreamEvent[] = []
 
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
         createSseResponse([
-          'event: status\n',
-          'data: {"phase":"understanding","text":"正在理解你的需求"}\n\n',
+          'event: bubble\n',
+          'data: {"phase":"bootstrap","text":"正在理解你的需求","entries":[{"kind":"step","title":"进入流程","summary":"正在理解你的需求"}],"status":"running"}\n\n',
           'event: message\n' +
             'data: {"text":"我先帮你拆解需求"}\n\n',
-          'event: process\n' +
-            'data: {"tool":"plan_trip","status":"success","summary":"已生成 1 套方案","raw":{"tool":"plan_trip","status":"success"}}\n\n',
+          'event: bubble\n' +
+            'data: {"phase":"plan_trip","step":"plan_trip","node":"plan_trip","text":"正在规划方案","entries":[{"kind":"step","title":"阶段切换","summary":"正在规划方案"},{"kind":"tool","title":"规划方案","summary":"已生成 1 套方案","tool":"plan_trip","status":"success","meta":["1 个方案"]}]}\n\n',
           'event: result\n' +
             'data: {"itinerary":{"status":"ok","plans":[{"plan_id":"plan_1","title":"平衡方案","steps":[],"selected_item_ids":[],"total_duration_minutes":240,"total_cost":220,"average_score":85}]}}\n\n',
           'event: done\n',
@@ -57,24 +57,25 @@ describe('invokeStream', () => {
     })
 
     expect(events).toHaveLength(5)
-    expect(events[0].event).toBe('status')
+    expect(events[0].event).toBe('bubble')
     expect(events[1].event).toBe('message')
-    expect(events[2].event).toBe('process')
+    expect(events[2].event).toBe('bubble')
     expect(events[3].event).toBe('result')
     expect(events[4].event).toBe('done')
-    if (events[0].event !== 'status') {
-      throw new Error('expected status event')
+    if (events[0].event !== 'bubble') {
+      throw new Error('expected bubble event')
     }
     if (events[1].event !== 'message') {
       throw new Error('expected message event')
     }
     expect(events[0].data.text).toBe('正在理解你的需求')
     expect(events[1].data.text).toBe('我先帮你拆解需求')
-    if (events[2].event !== 'process') {
-      throw new Error('expected process event')
+    if (events[2].event !== 'bubble') {
+      throw new Error('expected bubble event')
     }
-    expect(events[2].data.tool).toBe('plan_trip')
-    expect(events[2].data.summary).toContain('1 套方案')
+    expect(events[2].data.phase).toBe('plan_trip')
+    expect(events[2].data.entries[1].tool).toBe('plan_trip')
+    expect(events[2].data.entries[1].summary).toContain('1 套方案')
     if (events[3].event !== 'result') {
       throw new Error('expected result event')
     }

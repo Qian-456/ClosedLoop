@@ -1,3 +1,6 @@
+import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'lucide-react'
+
 import type { Confirmation, ItineraryPlan } from '../model/types'
 
 type Props = {
@@ -12,6 +15,19 @@ type Props = {
 export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
+  const [expanded, setExpanded] = useState(false)
+  const summaryText = useMemo(() => {
+    if (hasPlans) {
+      return `已生成 ${plans.length} 套可执行方案`
+    }
+    if (confirmation) {
+      return `当前确认状态：${confirmation.status}`
+    }
+    if (errorMessage) {
+      return errorMessage
+    }
+    return '方案生成完成后会展示在这里。'
+  }, [confirmation, errorMessage, hasPlans, plans.length])
 
   if (!itinerary && !confirmation && !errorMessage) {
     return (
@@ -36,48 +52,62 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   return (
     <div className="px-4 pb-4">
       <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="text-sm font-semibold text-slate-900">推荐方案</div>
-        <div className="mt-1 text-xs text-slate-500">
-          {hasPlans ? (itinerary?.status === 'ok' ? '已生成可执行方案' : '当前为降级或兜底结果') : '当前为降级或兜底结果'}
-        </div>
-
-        <div className="mt-4 space-y-3">
-          {!hasPlans ? (
-            <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-500">
-              当前条件下暂时没有生成出合适方案，可以继续调整需求后重试。
-            </div>
-          ) : (
-            plans.map((plan) => (
-              <div key={plan.plan_id} className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-semibold text-slate-900">{plan.title}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      总时长 {plan.total_duration_minutes} 分钟 · 预算 {plan.total_cost} 元
-                    </div>
-                  </div>
-                  <div className="rounded-full bg-white px-3 py-1 text-xs text-slate-600 shadow-sm">
-                    评分 {plan.average_score}
-                  </div>
-                </div>
-
-                <div className="mt-3 space-y-2">
-                  {plan.steps.slice(0, 4).map((step) => (
-                    <div key={step.order_id} className="text-sm text-slate-700">
-                      {step.order_id}. {step.item.display_name || step.item.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {confirmation ? (
-          <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-            当前确认状态：{confirmation.status}
-            {confirmation.reason ? ` · ${confirmation.reason}` : ''}
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          className="flex w-full items-center justify-between gap-3 text-left"
+          aria-label={expanded ? '收起方案面板' : '展开方案面板'}
+        >
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-slate-900">推荐方案</div>
+            <div className="mt-1 text-xs text-slate-500">{summaryText}</div>
           </div>
+          <span className="shrink-0 rounded-full bg-slate-100 p-2 text-slate-500">
+            {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+          </span>
+        </button>
+
+        {expanded ? (
+          <>
+            <div className="mt-4 max-h-[40vh] space-y-3 overflow-y-auto pr-1">
+              {!hasPlans ? (
+                <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-500">
+                  当前条件下暂时没有生成出合适方案，可以继续调整需求后重试。
+                </div>
+              ) : (
+                plans.map((plan) => (
+                  <div key={plan.plan_id} className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="text-sm font-semibold text-slate-900">{plan.title}</div>
+                        <div className="mt-1 text-xs text-slate-500">
+                          总时长 {plan.total_duration_minutes} 分钟 · 预算 {plan.total_cost} 元
+                        </div>
+                      </div>
+                      <div className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-slate-600 shadow-sm">
+                        评分 {plan.average_score}
+                      </div>
+                    </div>
+
+                    <div className="mt-3 space-y-2">
+                      {plan.steps.slice(0, 4).map((step) => (
+                        <div key={step.order_id} className="text-sm text-slate-700">
+                          {step.order_id}. {step.item.display_name || step.item.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {confirmation ? (
+              <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                当前确认状态：{confirmation.status}
+                {confirmation.reason ? ` · ${confirmation.reason}` : ''}
+              </div>
+            ) : null}
+          </>
         ) : null}
       </div>
     </div>

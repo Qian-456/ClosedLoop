@@ -5,6 +5,7 @@ import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
 import { PlanPanel } from './PlanPanel'
 import { ProcessBubble } from './ProcessBubble'
+import { shouldRenderChatMessage } from '../model/display'
 
 export function ChatView() {
   const sessions = useItineraryStore((s) => s.sessions)
@@ -103,6 +104,20 @@ export function ChatView() {
     )
   }
 
+  const findRelatedProcessBubble = (relatedUserMessageId?: string) => {
+    if (!relatedUserMessageId) {
+      return null
+    }
+    if (currentProcessBubble?.relatedUserMessageId === relatedUserMessageId) {
+      return currentProcessBubble
+    }
+    return (
+      [...processHistory]
+        .reverse()
+        .find((bubble) => bubble.relatedUserMessageId === relatedUserMessageId) ?? null
+    )
+  }
+
   return (
     <div className="flex flex-col h-full bg-[#F6F7FB]">
       <div className="absolute top-0 right-0 p-4 z-20">
@@ -118,13 +133,32 @@ export function ChatView() {
         ref={scrollRef}
         className="flex-1 overflow-y-auto px-4 py-6 space-y-6"
       >
-        {messages.map((msg, idx) => {
-          if (msg.type === 'tool' || msg.type === 'system') return null // 隐藏工具和系统消息
-          
+        {(() => {
+          let latestHumanMessageId: string | undefined
+
+          return messages.map((msg, idx) => {
           const isHuman = msg.type === 'human'
-          const hasContent = msg.content && msg.content !== ''
-          
-          if (!hasContent) return null // 忽略空消息（如只包含 tool_calls 的 AI 消息）
+          if (isHuman && typeof msg.id === 'string') {
+            latestHumanMessageId = msg.id
+          }
+
+          const relatedProcessBubble = isHuman
+            ? findRelatedProcessBubble(typeof msg.id === 'string' ? msg.id : undefined)
+            : findRelatedProcessBubble(latestHumanMessageId)
+
+          if (
+            !shouldRenderChatMessage(msg, {
+              session: currentSession ?? {
+                id: '',
+                title: '',
+                messages: [],
+                updatedAt: 0,
+              },
+              relatedProcessBubble,
+            })
+          ) {
+            return null
+          }
 
           return (
             <div key={msg.id || idx} className="space-y-3">
@@ -153,7 +187,8 @@ export function ChatView() {
               {isHuman ? renderProcessBubbles(typeof msg.id === 'string' ? msg.id : undefined) : null}
             </div>
           )
-        })}
+          })
+        })()}
       </div>
 
       <PlanPanel itinerary={itinerary} confirmation={confirmation} errorMessage={errorMessage} />
