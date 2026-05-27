@@ -65,6 +65,23 @@ def serialize_graph_state(state: ClosedLoopState | dict[str, Any]) -> dict[str, 
         serializable_state["messages"] = [
             _serialize_message(message) for message in serializable_state["messages"]
         ]
+    
+    # 保证前端收到的 itinerary 格式为 { "plans": [...] }
+    if "itinerary" in serializable_state:
+        itinerary_val = serializable_state["itinerary"]
+        if isinstance(itinerary_val, list):
+            serializable_state["itinerary"] = {
+                "plans": itinerary_val,
+                "status": "ok"
+            }
+    elif "latest_plan_result" in serializable_state:
+        latest_plans = serializable_state["latest_plan_result"]
+        if isinstance(latest_plans, list):
+            serializable_state["itinerary"] = {
+                "plans": latest_plans,
+                "status": "ok"
+            }
+            
     return serializable_state
 
 
@@ -305,22 +322,24 @@ def _iter_update_entries(update_data: Any) -> list[tuple[str | None, dict[str, A
 def _build_result_payload(update: dict[str, Any]) -> dict[str, Any] | None:
     """Build the frontend result payload from a state update."""
     result: dict[str, Any] = {}
-    if "latest_plan_result" in update and update["latest_plan_result"] is not None:
+    
+    if "itinerary" in update and update["itinerary"] is not None:
+        itinerary_value = update["itinerary"]
+        if isinstance(itinerary_value, dict):
+            result["itinerary"] = itinerary_value
+        elif isinstance(itinerary_value, list):
+            result["itinerary"] = {
+                "plans": itinerary_value,
+                "status": "ok",
+            }
+    elif "latest_plan_result" in update and update["latest_plan_result"] is not None:
         latest_plans = update["latest_plan_result"]
         if isinstance(latest_plans, list):
             result["itinerary"] = {
                 "plans": latest_plans,
                 "status": "ok",
             }
-    if "itinerary" in update and update["itinerary"] is not None:
-        itinerary_value = update["itinerary"]
-        if isinstance(itinerary_value, dict):
-            result["itinerary"] = itinerary_value
-        elif isinstance(itinerary_value, list) and "itinerary" not in result:
-            result["itinerary"] = {
-                "plans": itinerary_value,
-                "status": "ok",
-            }
+
     if "confirmation" in update and update["confirmation"] is not None:
         result["confirmation"] = update["confirmation"]
     if "constraints" in update and update["constraints"] is not None:
