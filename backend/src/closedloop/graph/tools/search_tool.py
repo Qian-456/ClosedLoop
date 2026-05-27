@@ -126,7 +126,8 @@ def search_candidates(
     last_error = None
 
     try:
-        with httpx.Client(timeout=2.8, trust_env=False, proxy=None) as client:
+        # 增加超时时间，因为底层 search_indexer 如果在构建索引或调用 embedding，2.8秒容易超时
+        with httpx.Client(timeout=15.0, trust_env=False, proxy=None) as client:
             for search_url in search_urls:
                 try:
                     logger.info(

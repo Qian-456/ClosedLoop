@@ -202,9 +202,9 @@ def _resolve_bubble_phase(step_or_node: str | None) -> str:
 def _resolve_bubble_text(phase: str) -> str:
     """Map one bubble phase to user-facing copy."""
     mapping = {
-        "search_candidates": "正在召回候选地点",
+        "search_candidates": "正在搜索",
         "plan_trip": "正在规划方案",
-        "generate_alternative_plans": "正在生成更多方案",
+        "generate_alternative_plans": "正在生成更多备选方案",
         "adjust_plan_item": "正在调整方案",
         "transfer_to_execute": "正在切换到执行确认",
         "confirm_trip": "正在整理执行结果",
@@ -383,9 +383,6 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
                         continue
                     content = _extract_message_text_from_chunk(message_chunk).strip()
                     if content:
-                        logger.info(
-                            f"phase=api_invoke_stream | thread_id={request.thread_id} | event=message"
-                        )
                         yield format_sse_event(
                             "message",
                             {

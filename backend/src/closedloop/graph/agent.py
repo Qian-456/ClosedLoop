@@ -1,4 +1,5 @@
 from typing import Callable
+import json
 import os
 import sqlite3
 import aiosqlite
@@ -127,7 +128,18 @@ async def apply_step_config(
         tools=config["tools"]
     )
     # 因为我们在使用异步上下文（astream），必须 await handler 的结果
-    return await handler(request)
+    response = await handler(request)
+    
+    # 提取并统一打印 Tool Calls 的调用日志及其参数，只展示在后端日志中
+    if hasattr(response, "result") and isinstance(response.result, list):
+        for msg in response.result:
+            if hasattr(msg, "tool_calls") and msg.tool_calls:
+                for tc in msg.tool_calls:
+                    tool_name = tc.get("name", "unknown")
+                    tool_args = tc.get("args", {})
+                    logger.info(f"👉 [TOOL CALL] {tool_name} | args={json.dumps(tool_args, ensure_ascii=False)}")
+                    
+    return response
 
 
 

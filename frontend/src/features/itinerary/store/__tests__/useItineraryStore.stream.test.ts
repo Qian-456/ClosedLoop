@@ -12,7 +12,6 @@ describe('useItineraryStore stream actions', () => {
       userInput: '',
       invokeStatus: 'idle',
       errorMessage: null,
-      currentProcessBubble: null,
     })
   })
 
@@ -51,7 +50,6 @@ describe('useItineraryStore stream actions', () => {
     expect(state.sessions[0].messages[1].type).toBe('ai')
     expect(state.sessions[0].messages[1].content).toBe('正在规划')
     expect(state.invokeStatus).toBe('running')
-    expect(state.currentProcessBubble?.text).toBe('正在思考')
   })
 
   it('result 与 done 事件会保存最终方案并结束流式状态', () => {
@@ -108,10 +106,7 @@ describe('useItineraryStore stream actions', () => {
     const state = useItineraryStore.getState()
     expect(state.invokeStatus).toBe('success')
     expect(state.errorMessage).toBeNull()
-    expect(state.currentProcessBubble).toBeNull()
     expect(state.sessions[0].itinerary?.plans[0].title).toBe('方案完成')
-    expect(state.sessions[0].processHistory).toHaveLength(1)
-    expect(state.sessions[0].processHistory?.[0].text).toBe('已完成规划')
   })
 
   it('bubble 事件会创建带 transientStatus 的 AI 消息', () => {
@@ -160,19 +155,13 @@ describe('useItineraryStore stream actions', () => {
     })
 
     const state = useItineraryStore.getState()
-    expect(state.currentProcessBubble?.entries).toHaveLength(2)
-    expect(state.currentProcessBubble?.entries[1].title).toBe('规划方案')
-    expect(state.currentProcessBubble?.entries[1].summary).toContain('已生成 1 套方案')
-    expect(state.currentProcessBubble?.entries[1].tool).toBe('plan_trip')
-    expect(state.currentProcessBubble?.phase).toBe('plan_trip')
-    expect(state.currentProcessBubble?.text).toBe('正在规划方案')
     expect(state.sessions[0].messages).toHaveLength(2)
     expect(state.sessions[0].messages[0].type).toBe('human')
     expect(state.sessions[0].messages[1].type).toBe('ai')
     expect(state.sessions[0].messages[1].transientStatus).toBe('正在规划方案')
   })
 
-  it('重复 bubble 条目不会重复追加过程详情', () => {
+  it('重复 bubble 条目更新同一 AI 消息的 transientStatus', () => {
     const store = useItineraryStore.getState()
 
     store.startSession('thread_005', '第五个问题')
@@ -184,7 +173,7 @@ describe('useItineraryStore stream actions', () => {
     })
     store.setInvokeRunning(userMessageId)
 
-    const bubbleEvent = {
+    const bubbleEvent1 = {
       event: 'bubble' as const,
       data: {
         phase: 'plan_trip' as const,
@@ -192,45 +181,28 @@ describe('useItineraryStore stream actions', () => {
         node: 'plan_trip',
         text: '正在规划方案',
         status: 'running' as const,
-        entries: [
-          {
-            kind: 'step' as const,
-            title: '阶段切换',
-            summary: '正在规划方案',
-          },
-          {
-            kind: 'tool' as const,
-            tool: 'plan_trip',
-            title: '规划方案',
-            status: 'success' as const,
-            summary: '已生成 1 套方案',
-            meta: ['预算 320 元', '总时长 240 分钟'],
-            raw: {
-              tool: 'plan_trip',
-              status: 'success',
-              result: {
-                plans: [
-                  {
-                    plan_id: 'plan_1',
-                    title: '亲子轻松版',
-                    total_cost: 320,
-                    total_duration_minutes: 240,
-                  },
-                ],
-              },
-            },
-          },
-        ],
+        entries: [],
+      },
+    }
+    
+    const bubbleEvent2 = {
+      event: 'bubble' as const,
+      data: {
+        phase: 'plan_trip' as const,
+        step: 'plan_trip',
+        node: 'plan_trip',
+        text: '正在生成更多方案',
+        status: 'running' as const,
+        entries: [],
       },
     }
 
-    useItineraryStore.getState().applyInvokeStreamEvent(bubbleEvent)
-    useItineraryStore.getState().applyInvokeStreamEvent(bubbleEvent)
+    useItineraryStore.getState().applyInvokeStreamEvent(bubbleEvent1)
+    useItineraryStore.getState().applyInvokeStreamEvent(bubbleEvent2)
 
     const state = useItineraryStore.getState()
-    expect(state.currentProcessBubble?.entries).toHaveLength(2)
-    expect(state.currentProcessBubble?.entries[1].meta).toContain('预算 320 元')
-    expect(state.currentProcessBubble?.entries[1].meta).toContain('总时长 240 分钟')
+    expect(state.sessions[0].messages).toHaveLength(2)
+    expect(state.sessions[0].messages[1].transientStatus).toBe('正在生成更多方案')
   })
 
   it('error 事件会写入错误并清空临时状态', () => {
@@ -245,13 +217,13 @@ describe('useItineraryStore stream actions', () => {
         phase: 'search_candidates',
         step: 'search_candidates',
         node: 'search_candidates',
-        text: '正在召回候选地点',
+        text: '正在搜索',
         status: 'running',
         entries: [
           {
             kind: 'step',
             title: '阶段切换',
-            summary: '正在召回候选地点',
+            summary: '正在搜索',
           },
         ],
       },
@@ -267,8 +239,5 @@ describe('useItineraryStore stream actions', () => {
     const state = useItineraryStore.getState()
     expect(state.invokeStatus).toBe('error')
     expect(state.errorMessage).toBe('stream failed')
-    expect(state.currentProcessBubble).toBeNull()
-    expect(state.sessions[0].processHistory?.[0].status).toBe('failed')
-    expect(state.sessions[0].processHistory?.[0].text).toBe('处理失败，请稍后重试')
   })
 })

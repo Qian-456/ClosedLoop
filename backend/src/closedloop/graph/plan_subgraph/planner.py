@@ -254,6 +254,26 @@ def planner_node(state: PlanState) -> PlanState:
 
     preferred_pattern_steps = constraints.get("preferred_pattern_steps")
     if preferred_pattern_steps:
+        # 将 "restaurant" 归一化为具体的餐次，避免在 DFS 阶段找不到对应队列
+        time_of_day = get_time_of_day(start_time)
+        meal_map = {
+            "morning": "breakfast",
+            "noon": "lunch",
+            "afternoon": "afternoon_tea",
+            "evening": "dinner",
+            "night": "late_night"
+        }
+        default_meal = meal_map.get(time_of_day, "dinner")
+        
+        normalized_steps = []
+        for step in preferred_pattern_steps:
+            if step == "restaurant":
+                normalized_steps.append(f"restaurant:{default_meal}")
+            else:
+                normalized_steps.append(step)
+        preferred_pattern_steps = normalized_steps
+        constraints["preferred_pattern_steps"] = preferred_pattern_steps
+
         def is_subsequence(sub, full):
             it = iter(full)
             return all(x in it for x in sub)

@@ -5,6 +5,9 @@ import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
 import { PlanPanel } from './PlanPanel'
 import { shouldRenderChatMessage } from '../model/display'
+import type { Message } from '../model/types'
+
+const EMPTY_MESSAGES: Message[] = []
 
 export function ChatView() {
   const sessions = useItineraryStore((s) => s.sessions)
@@ -21,7 +24,7 @@ export function ChatView() {
   const resetSession = useItineraryStore((s) => s.reset)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
-  const messages = currentSession?.messages || []
+  const messages = currentSession?.messages || EMPTY_MESSAGES
   const itinerary = currentSession?.itinerary
   const confirmation = currentSession?.confirmation
 
@@ -63,7 +66,7 @@ export function ChatView() {
     }
   }
 
-  const renderContent = (content: any) => {
+  const renderContent = (content: unknown) => {
     if (typeof content === 'string') {
       return content
     }
@@ -100,7 +103,6 @@ export function ChatView() {
                 messages: [],
                 updatedAt: 0,
               },
-              relatedProcessBubble: null,
             })
           ) {
             return null

@@ -1,4 +1,4 @@
-import type { ItineraryItem, Message, ProcessBubbleRecord, Session } from './types'
+import type { ItineraryItem, Message, Session } from './types'
 
 export function commuteModeLabel(mode: string | null | undefined): string {
   if (mode === 'walking') return '步行'
@@ -51,19 +51,6 @@ export function resolveItemSubtitle(
 
 type ChatMessageRenderContext = {
   session: Session
-  relatedProcessBubble: ProcessBubbleRecord | null
-}
-
-/**
- * Determines whether an AI message is only describing intermediate progress.
- */
-export function isProcessLikeAiMessage(
-  message: Message,
-  relatedProcessBubble: ProcessBubbleRecord | null,
-): boolean {
-  void message
-  void relatedProcessBubble
-  return false
 }
 
 /**

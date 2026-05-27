@@ -29,8 +29,10 @@ export default function BottomDrawer({
   )
 
   const [expanded, setExpanded] = useState(defaultExpanded)
-  const [translateY, setTranslateY] = useState(defaultExpanded ? 0 : collapsedTranslate)
+  const [dragOffset, setDragOffset] = useState<number | null>(null)
   const [dragging, setDragging] = useState(false)
+  
+  const translateY = dragOffset !== null ? dragOffset : (expanded ? 0 : collapsedTranslate)
   const translateRef = useRef(translateY)
 
   const dragRef = useRef<{
@@ -38,10 +40,6 @@ export default function BottomDrawer({
     startY: number
     startTranslate: number
   }>({ pointerId: null, startY: 0, startTranslate: 0 })
-
-  useEffect(() => {
-    setTranslateY(expanded ? 0 : collapsedTranslate)
-  }, [collapsedTranslate, expanded])
 
   useEffect(() => {
     translateRef.current = translateY
@@ -78,7 +76,7 @@ export default function BottomDrawer({
             if (dragRef.current.pointerId !== e.pointerId) return
             const delta = e.clientY - dragRef.current.startY
             const next = clamp(dragRef.current.startTranslate + delta, 0, collapsedTranslate)
-            setTranslateY(next)
+            setDragOffset(next)
           }}
           onPointerUp={(e) => {
             if (!dragging) return
@@ -87,11 +85,12 @@ export default function BottomDrawer({
             dragRef.current.pointerId = null
             const threshold = collapsedTranslate / 2
             setExpanded(translateRef.current <= threshold)
+            setDragOffset(null)
           }}
           onPointerCancel={() => {
             setDragging(false)
             dragRef.current.pointerId = null
-            setTranslateY(expanded ? 0 : collapsedTranslate)
+            setDragOffset(null)
           }}
         >
           <div className="mx-auto h-1.5 w-10 rounded-full bg-slate-200" />

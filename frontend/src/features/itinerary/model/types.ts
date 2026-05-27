@@ -84,8 +84,10 @@ export type Constraints = {
 export type Message = {
   id?: string
   type: string // 'human', 'ai', 'system', 'tool'
-  content: string | any
-  [key: string]: any
+  content: unknown
+  node?: string
+  transientStatus?: string
+  [key: string]: unknown
 }
 
 export type ProcessBubblePhase =
@@ -109,24 +111,12 @@ export type BubbleEntry = {
   raw?: unknown
 }
 
-export type ProcessBubbleRecord = {
-  id: string
-  sessionId: string
-  relatedUserMessageId?: string
-  phase: ProcessBubblePhase
-  text: string
-  expanded: boolean
-  status: 'running' | 'success' | 'failed'
-  entries: BubbleEntry[]
-}
-
 export type Session = {
   id: string
   title: string
   messages: Message[]
   itinerary?: ItineraryPlan | null
   confirmation?: Confirmation | null
-  processHistory?: ProcessBubbleRecord[]
   updatedAt: number
 }
 

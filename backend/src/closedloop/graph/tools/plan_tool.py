@@ -250,7 +250,7 @@ def generate_alternative_plans(
                     target_path="/plan",
                     phase="generate_alternative_plans",
                     json=payload,
-                    timeout=3.0,
+                    timeout=30.0,
                 )
                 break
             except Exception as e:
