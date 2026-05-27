@@ -15,7 +15,14 @@ class TestSearchTool(unittest.TestCase):
     @patch('closedloop.graph.tools.search_tool.get_config')
     @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
     def test_search_candidates(self, _mock_logger_setup, mock_get_config, mock_client_class):
-        fake_config = type("FakeConfig", (), {"PLAN_SUB_API_URL": "http://localhost:8001/plan"})()
+        fake_config = type(
+            "FakeConfig",
+            (),
+            {
+                "PLAN_SUB_API_URL": "http://localhost:8001/plan",
+                "PLAN_SUB_NETWORK_MODE": "local",
+            },
+        )()
         mock_get_config.return_value = fake_config
 
         mock_client = MagicMock()
@@ -74,7 +81,14 @@ class TestSearchTool(unittest.TestCase):
     @patch('closedloop.graph.tools.search_tool.get_config')
     @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
     def test_search_candidates_retry_next_candidate_url(self, _mock_logger_setup, mock_get_config, mock_client_class):
-        fake_config = type("FakeConfig", (), {"PLAN_SUB_API_URL": "http://plan_sub_backend:8001/plan"})()
+        fake_config = type(
+            "FakeConfig",
+            (),
+            {
+                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
+                "PLAN_SUB_NETWORK_MODE": "docker",
+            },
+        )()
         mock_get_config.return_value = fake_config
 
         mock_client = MagicMock()
@@ -107,8 +121,8 @@ class TestSearchTool(unittest.TestCase):
         self.assertEqual(
             called_urls,
             [
+                "http://search-primary:8001/search",
                 "http://plan_sub_backend:8001/search",
-                "http://localhost:8001/search",
             ],
         )
 
@@ -117,7 +131,14 @@ class TestSearchTool(unittest.TestCase):
     @patch('closedloop.graph.plan_subgraph.search_indexer.SearchIndexer.get_instance')
     @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
     def test_search_candidates_fallback_after_all_candidates_fail(self, _mock_logger_setup, mock_get_indexer, mock_get_config, mock_client_class):
-        fake_config = type("FakeConfig", (), {"PLAN_SUB_API_URL": "http://plan_sub_backend:8001/plan"})()
+        fake_config = type(
+            "FakeConfig",
+            (),
+            {
+                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
+                "PLAN_SUB_NETWORK_MODE": "docker",
+            },
+        )()
         mock_get_config.return_value = fake_config
 
         mock_client = MagicMock()
@@ -150,6 +171,54 @@ class TestSearchTool(unittest.TestCase):
         self.assertEqual(content["result"]["results"][0]["id"], "r1")
         self.assertGreaterEqual(mock_client.post.call_count, 1)
         mock_get_indexer.assert_called_once()
+
+    @patch('closedloop.graph.tools.search_tool.httpx.Client')
+    @patch('closedloop.graph.tools.search_tool.get_config')
+    @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
+    def test_search_candidates_retry_next_candidate_url_in_local_mode(self, _mock_logger_setup, mock_get_config, mock_client_class):
+        fake_config = type(
+            "FakeConfig",
+            (),
+            {
+                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
+                "PLAN_SUB_NETWORK_MODE": "local",
+            },
+        )()
+        mock_get_config.return_value = fake_config
+
+        mock_client = MagicMock()
+        connect_error = socket.gaierror(-2, "Name or service not known")
+        ok_response = MagicMock()
+        ok_response.raise_for_status.return_value = None
+        ok_response.json.return_value = {
+            "status": "success",
+            "results": [{"id": "a2", "name": "Activity 2", "description": "desc"}],
+        }
+        mock_client.post.side_effect = [connect_error, ok_response]
+        mock_client.__enter__.return_value = mock_client
+        mock_client_class.return_value = mock_client
+
+        command = search_candidates.invoke({
+            "category": "activity",
+            "user_request": "朋友",
+            "tool_call_id": "call_456",
+            "state": {},
+            "top_k": 5,
+        })
+
+        messages = command.update.get("messages", [])
+        content = json.loads(messages[0].content)
+        self.assertEqual(content["status"], "success")
+        self.assertEqual(content["result"]["results"][0]["id"], "a2")
+
+        called_urls = [call.args[0] for call in mock_client.post.call_args_list]
+        self.assertEqual(
+            called_urls,
+            [
+                "http://search-primary:8001/search",
+                "http://localhost:8001/search",
+            ],
+        )
 
 if __name__ == '__main__':
     unittest.main()

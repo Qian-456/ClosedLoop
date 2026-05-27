@@ -11,6 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessageChunk
 from pydantic import BaseModel
+from contextlib import asynccontextmanager
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
@@ -24,7 +25,15 @@ from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 config = get_config()
 LoggerManager.setup(config)
 
-app = FastAPI(title=config.PROJECT_NAME)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 构建全局向量缓存
+    from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
+    indexer = SearchIndexer.get_instance()
+    indexer.build_global_vectors(force_rebuild=getattr(config, "FORCE_REBUILD_VECTORS", False))
+    yield
+
+app = FastAPI(title=config.PROJECT_NAME, lifespan=lifespan)
 
 class ChatRequest(BaseModel):
     user_input: str

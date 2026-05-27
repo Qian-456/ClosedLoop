@@ -68,6 +68,7 @@ services:
       - LOG_ELK_JSON_PATH=logs/elk/elk_{time:YYYY-MM-DD}.jsonl
       - MILVUS_URI=http://milvus:19530
       - PLAN_SUB_API_URL=http://plan_sub_backend:8001/plan
+      - PLAN_SUB_NETWORK_MODE=docker
       - TZ=Asia/Shanghai
     env_file:
       - backend/.env
@@ -89,6 +90,7 @@ services:
       - LOG_DIR=logs
       - LOG_ELK_JSON_PATH=logs/elk/elk_{time:YYYY-MM-DD}.jsonl
       - MILVUS_URI=http://milvus:19530
+      - PLAN_SUB_NETWORK_MODE=docker
       - TZ=Asia/Shanghai
     env_file:
       - backend/.env
@@ -106,7 +108,7 @@ services:
       context: .
       dockerfile: docker/frontend/Dockerfile
     ports:
-      - "8080:80"
+      - "8088:80"
     depends_on:
       - backend
 

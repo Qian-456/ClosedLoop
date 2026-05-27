@@ -1,4 +1,6 @@
 import os
+import re
+import threading
 from typing import List, Dict, Any
 from dataclasses import dataclass
 
@@ -126,6 +128,8 @@ class MilvusHybridSearcher:
 
 class SearchIndexer:
     _instance = None
+    _collection_locks: dict[str, threading.RLock] = {}
+    _collection_locks_guard = threading.Lock()
 
     def __init__(self):
         self.config = get_config()
@@ -147,6 +151,98 @@ class SearchIndexer:
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
+
+    @classmethod
+    def _get_collection_lock(cls, collection_name: str) -> threading.RLock:
+        """为单个 collection 提供进程内互斥，避免并发 drop/create/flush 互相踩踏。"""
+        with cls._collection_locks_guard:
+            if collection_name not in cls._collection_locks:
+                cls._collection_locks[collection_name] = threading.RLock()
+            return cls._collection_locks[collection_name]
+
+    def _normalize_collection_suffix(self, value: str) -> str:
+        """将 session_id 归一化为 Milvus collection 名允许的 ASCII 后缀。"""
+        safe_value = re.sub(r"[^A-Za-z0-9_]", "_", str(value or "default")).strip("_")
+        return safe_value or "default"
+
+    def _is_collection_not_found_error(self, error: Exception) -> bool:
+        """识别 Milvus 元数据短暂不一致导致的 collection missing 错误。"""
+        message = str(error).lower()
+        return "collection not found" in message or "not found[collection" in message
+
+    def _flush_collection_best_effort(
+        self,
+        client: MilvusClient,
+        collection_name: str,
+        *,
+        category: str,
+        session_id: str,
+        max_retries: int = 3,
+    ) -> bool:
+        """尽力 flush collection；失败时交给内存候选缓存兜底。"""
+        import time
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                if not client.has_collection(collection_name):
+                    logger.warning(
+                        f"phase=search_indexer | msg=flush_skipped_collection_missing | collection={collection_name} | category={category} | session_id={session_id}"
+                    )
+                    return False
+                client.flush(collection_name)
+                return True
+            except Exception as e:
+                if attempt < max_retries and self._is_collection_not_found_error(e):
+                    logger.warning(
+                        f"phase=search_indexer | msg=flush_retrying_after_collection_not_found | collection={collection_name} | category={category} | session_id={session_id} | attempt={attempt} | error={e}"
+                    )
+                    time.sleep(0.5 * attempt)
+                    continue
+                logger.warning(
+                    f"phase=search_indexer | msg=flush_failed_fallback_cache_active | collection={collection_name} | category={category} | session_id={session_id} | error={e}"
+                )
+                return False
+        return False
+
+    def _load_collection_best_effort(
+        self,
+        client: MilvusClient,
+        collection_name: str,
+        *,
+        category: str,
+        session_id: str,
+        max_retries: int = 3,
+    ) -> bool:
+        """尽力 load collection；失败不阻断主链路，search 会使用缓存兜底。"""
+        import time
+
+        for attempt in range(1, max_retries + 1):
+            try:
+                if not client.has_collection(collection_name):
+                    logger.warning(
+                        f"phase=search_indexer | msg=load_skipped_collection_missing | collection={collection_name} | category={category} | session_id={session_id}"
+                    )
+                    return False
+                try:
+                    client.describe_collection(collection_name)
+                except Exception as e:
+                    logger.warning(
+                        f"phase=search_indexer | msg=describe_collection_failed_ignored | collection={collection_name} | category={category} | session_id={session_id} | error={e}"
+                    )
+                if attempt > 1:
+                    time.sleep(1.0 * attempt)
+                client.load_collection(collection_name)
+                return True
+            except Exception as e:
+                if attempt == max_retries:
+                    logger.warning(
+                        f"phase=search_indexer | msg=load_collection_failed_fallback_cache_active | collection={collection_name} | category={category} | session_id={session_id} | error={e}"
+                    )
+                    return False
+                logger.warning(
+                    f"phase=search_indexer | msg=load_collection_failed_retrying | collection={collection_name} | category={category} | session_id={session_id} | attempt={attempt} | error={e}"
+                )
+        return False
 
     def _prepare_text(self, item: dict) -> str:
         name = item.get("name", "")
@@ -186,6 +282,161 @@ class SearchIndexer:
         """Check whether a dense vector is the all-zero timeout placeholder."""
         return dense_vec == [0.0] * self.dim
 
+    def build_global_vectors(self, force_rebuild: bool = False):
+        """Build the global vector collection for all items from mock db."""
+        import time
+        from closedloop.utils.mock_db import load_mock_data
+
+        collection_name = "closedloop_global_vectors"
+        collection_lock = self._get_collection_lock(collection_name)
+        collection_lock.acquire()
+        try:
+            client = MilvusClient(uri=self.milvus_uri)
+            if client.has_collection(collection_name):
+                if not force_rebuild:
+                    logger.info(f"phase=search_indexer | msg=global_vectors_already_exist | collection={collection_name}")
+                    return
+                logger.info(f"phase=search_indexer | msg=rebuilding_global_vectors | collection={collection_name}")
+                client.drop_collection(collection_name)
+                time.sleep(2.0)  # Wait for proxy cache invalidation
+
+            from pymilvus import DataType
+            schema = MilvusClient.create_schema(auto_id=False, enable_dynamic_field=True)
+            schema.add_field(field_name="id", datatype=DataType.VARCHAR, max_length=256, is_primary=True)
+            schema.add_field(field_name="dense_vector", datatype=DataType.FLOAT_VECTOR, dim=self.dim)
+
+            index_params = client.prepare_index_params()
+            index_params.add_index(field_name="dense_vector", index_type="AUTOINDEX", metric_type="COSINE")
+
+            try:
+                client.create_collection(
+                    collection_name=collection_name,
+                    schema=schema,
+                    index_params=index_params
+                )
+            except Exception as e:
+                logger.error(f"phase=search_indexer | msg=create_global_collection_failed_retrying | error={e}")
+                time.sleep(2.0)
+                client.create_collection(
+                    collection_name=collection_name,
+                    schema=schema,
+                    index_params=index_params
+                )
+
+            # Load all items from Mock DB
+            items = []
+            try:
+                restaurants = load_mock_data("restaurants.json")
+                for r in restaurants:
+                    for c in r.get("combos", []):
+                        items.append(dict(c, **{"suitable_groups": r.get("suitable_groups", []), "child_facility_tags": r.get("child_facility_tags", []), "kid_menu_status": r.get("kid_menu_status"), "stroller_friendly_status": r.get("stroller_friendly_status"), "restaurant_name": r.get("name")}))
+            except Exception as e:
+                logger.error(f"phase=search_indexer | msg=load_restaurants_failed | error={e}")
+
+            try:
+                activities = load_mock_data("activities.json")
+                for a in activities:
+                    for p in a.get("packages", []):
+                        items.append(dict(p, **{"suitable_groups": a.get("suitable_groups", []), "age_range": a.get("age_range", []), "venue_name": a.get("name")}))
+            except Exception as e:
+                logger.error(f"phase=search_indexer | msg=load_activities_failed | error={e}")
+
+            try:
+                add_ons = load_mock_data("add_ons.json")
+                for g in add_ons:
+                    for gift in g.get("gifts", []):
+                        items.append(dict(gift, **{"suitable_groups": g.get("suitable_groups", []), "gift_type": g.get("gift_type"), "shop_name": g.get("name")}))
+            except Exception as e:
+                logger.error(f"phase=search_indexer | msg=load_add_ons_failed | error={e}")
+
+            if not items:
+                logger.warning("phase=search_indexer | msg=no_items_for_global_vectors")
+                return
+
+            texts = []
+            item_ids = []
+            for item in items:
+                item_id = str(item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id"))
+                text = self._prepare_text(item)
+                if not text.strip():
+                    text = item.get("name", "Unknown Item")
+                if item_id not in item_ids:  # Avoid duplicate ids
+                    item_ids.append(item_id)
+                    texts.append(text)
+
+            dense_vecs = []
+            batch_size = 25
+            import concurrent.futures
+
+            embedding_start_time = time.time()
+            for i in range(0, len(texts), batch_size):
+                batch_texts = texts[i:i + batch_size]
+
+                # Global timeout check: For global build, we can allow more time, e.g., 60s
+                if time.time() - embedding_start_time > 60.0:
+                    logger.warning(f"phase=search_indexer | msg=global_build_embedding_timeout_reached | padding_zeros")
+                    dense_vecs.extend([self._fallback_dense_vector() for _ in range(len(texts) - i)])
+                    break
+
+                max_retries = 3
+                for attempt in range(max_retries + 1):
+                    try:
+                        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                            future = executor.submit(self.embed_model.get_text_embedding_batch, batch_texts)
+                            batch_vecs = future.result(timeout=5.0)
+                        dense_vecs.extend(batch_vecs)
+                        break
+                    except concurrent.futures.TimeoutError:
+                        if attempt >= max_retries:
+                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
+                    except Exception as e:
+                        if attempt < max_retries:
+                            time.sleep(1.0)
+                        else:
+                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
+                time.sleep(0.05)
+
+            min_len = min(len(item_ids), len(dense_vecs))
+            item_ids = item_ids[:min_len]
+            dense_vecs = dense_vecs[:min_len]
+
+            valid_data = []
+            for item_id, dense_vec in zip(item_ids, dense_vecs):
+                if self._is_zero_dense_vector(dense_vec):
+                    dense_vec = self._fallback_dense_vector()
+                valid_data.append({
+                    "id": item_id,
+                    "dense_vector": dense_vec,
+                })
+
+            if valid_data:
+                # Insert in batches if too large, Milvus Lite handles it fine usually but better safe
+                insert_batch_size = 1000
+                for i in range(0, len(valid_data), insert_batch_size):
+                    client.insert(collection_name=collection_name, data=valid_data[i:i+insert_batch_size])
+
+            if not self._flush_collection_best_effort(
+                client,
+                collection_name,
+                category="global",
+                session_id="global",
+            ):
+                logger.warning(
+                    f"phase=search_indexer | msg=global_vectors_build_degraded | collection={collection_name} | fallback=per_item_embedding"
+                )
+                return
+            self._load_collection_best_effort(
+                client,
+                collection_name,
+                category="global",
+                session_id="global",
+            )
+            logger.info(f"phase=search_indexer | msg=global_vectors_built | count={len(valid_data)} | elapsed_sec={time.time() - embedding_start_time:.2f}")
+        except Exception as e:
+            logger.error(f"phase=search_indexer | msg=build_global_vectors_failed | error={e}")
+        finally:
+            collection_lock.release()
+
     def build_index(self, category: str, items: List[Dict[str, Any]], session_id: str = "default"):
         if not items:
             return
@@ -200,12 +451,16 @@ class SearchIndexer:
         self.category_docs[session_id][category] = items
         
         # Replace hyphens in session_id to avoid Milvus collection name issues (Milvus only allows [a-zA-Z0-9_])
-        safe_session_id = session_id.replace("-", "_")
+        safe_session_id = self._normalize_collection_suffix(session_id)
         collection_name = f"closedloop_{category}_{safe_session_id}"
+        collection_lock = self._get_collection_lock(collection_name)
+        collection_lock.acquire()
         try:
             client = MilvusClient(uri=self.milvus_uri)
             if client.has_collection(collection_name):
                 client.drop_collection(collection_name)
+                # Adding 2.0s sleep is crucial for Milvus to clear MetaCache before re-creating
+                time.sleep(2.0)
                 
             # Create schema for BM25 and dense
             # Due to a bug in PyMilvus milvus-lite on Windows where os.rename fails, we can't reliably use
@@ -242,11 +497,15 @@ class SearchIndexer:
                     index_params=index_params
                 )
             except Exception as e:
-                logger.error(f"phase=search_indexer | msg=create_collection_failed | collection={collection_name} | error={e}")
-                raise
+                logger.error(f"phase=search_indexer | msg=create_collection_failed_retrying | collection={collection_name} | error={e}")
+                time.sleep(2.0)
+                client.create_collection(
+                    collection_name=collection_name,
+                    schema=schema,
+                    index_params=index_params
+                )
             
-            # Insert data (Use DashScope to get dense embeddings in batches if possible, but here we do it sequentially or via bulk API)
-            # To speed up building, we use get_text_embedding_batch
+            # Fetch dense vectors from global cache
             data = []
             texts = []
             item_ids = []
@@ -254,87 +513,97 @@ class SearchIndexer:
             for item in items:
                 item_id = str(item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id"))
                 text = self._prepare_text(item)
-                # Ensure text is not empty, DashScope embedding might fail or return None for empty strings
                 if not text.strip():
                     text = item.get("name", "Unknown Item")
                 item_ids.append(item_id)
                 texts.append(text)
                 
-            # 对于 DashScope API，批量调用可以加快速度，单次最大支持 25 条
-            dense_vecs = []
-            batch_size = 25 # DashScope text-embedding-v2 batch size
-            
-            import concurrent.futures
-            
-            embedding_start_time = time.time()
-            for i in range(0, len(texts), batch_size):
-                batch_texts = texts[i:i + batch_size]
-                batch_ids = item_ids[i:i + batch_size]
-                
-                # 全局超时检查：如果整体 embedding 耗时超过 2.0 秒，直接截断后续批次，避免超时
-                if time.time() - embedding_start_time > 2.0:
-                    logger.warning(f"phase=search_indexer | msg=global_embedding_timeout_reached | padding_zeros_for_remaining")
-                    dense_vecs.extend([self._fallback_dense_vector() for _ in range(len(texts) - i)])
-                    break
-
-                # 修改重试机制：减少重试次数和退避时间，增加单次调用的严格超时（1.5s）
-                max_retries = 1 
-                for attempt in range(max_retries + 1):
-                    try:
-                        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                            future = executor.submit(self.embed_model.get_text_embedding_batch, batch_texts)
-                            batch_vecs = future.result(timeout=1.5)
-                        dense_vecs.extend(batch_vecs)
-                        break  # 成功则跳出重试循环
-                    except concurrent.futures.TimeoutError:
-                        logger.warning(f"phase=search_indexer | msg=batch_embedding_timeout | batch_start={i} | attempt={attempt+1}")
-                        if attempt >= max_retries:
-                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
-                    except Exception as e:
-                        if attempt < max_retries:
-                            logger.warning(f"phase=search_indexer | msg=batch_embedding_retry | batch_start={i} | attempt={attempt+1} | error={e}")
-                            time.sleep(0.2)  # 退避时间缩短到 0.2 秒
-                        else:
-                            logger.error(f"phase=search_indexer | msg=batch_embedding_failed | batch_start={i} | error={e} | failed_ids={batch_ids}")
-                            dense_vecs.extend([self._fallback_dense_vector() for _ in batch_texts])
-                            
-                time.sleep(0.05) # 微小停顿，避免触发 QPS 限制
-            
-            # 防御：避免 embedding 数量和 item 数量不一致 
-            if len(dense_vecs) != len(item_ids): 
-                logger.error( 
-                    f"phase=search_indexer | msg=embedding_count_mismatch | " 
-                    f"items={len(item_ids)} | embeddings={len(dense_vecs)}" 
-                ) 
-                min_len = min(len(item_ids), len(dense_vecs)) 
-                item_ids = item_ids[:min_len] 
-                texts = texts[:min_len] 
-                dense_vecs = dense_vecs[:min_len] 
+            # Query global vectors
+            global_vectors = {}
+            try:
+                if client.has_collection("closedloop_global_vectors"):
+                    # split item_ids into chunks of 100 to avoid overly long query string
+                    chunk_size = 100
+                    for i in range(0, len(item_ids), chunk_size):
+                        chunk_ids = item_ids[i:i+chunk_size]
+                        ids_str = ", ".join([f"'{str(x)}'" for x in chunk_ids])
+                        res = client.query(
+                            collection_name="closedloop_global_vectors",
+                            filter=f"id in [{ids_str}]",
+                            output_fields=["id", "dense_vector"]
+                        )
+                        for r in res:
+                            global_vectors[r["id"]] = r["dense_vector"]
+            except Exception as e:
+                logger.error(f"phase=search_indexer | msg=query_global_vectors_failed | error={e}")
 
             valid_data = []
-            for item_id, text, dense_vec in zip(item_ids, texts, dense_vecs):
+            for item_id, text in zip(item_ids, texts):
+                dense_vec = global_vectors.get(item_id)
+                if not dense_vec:
+                    # Fallback for missing items
+                    logger.warning(f"phase=search_indexer | msg=global_vector_miss | id={item_id}")
+                    dense_vec = self._safe_embed(text)
+
                 if self._is_zero_dense_vector(dense_vec):
                     dense_vec = self._fallback_dense_vector()
-                if dense_vec == self._fallback_dense_vector():
-                    logger.warning(f"phase=search_indexer | msg=dense_embedding_fallback_used | id={item_id}")
+
                 valid_data.append({
                     "id": item_id,
                     "text": text,
                     "dense_vector": dense_vec,
                 })
-                
+
             if valid_data:
-                client.insert(collection_name=collection_name, data=valid_data)
-            
-            client.flush(collection_name) 
-            client.load_collection(collection_name)
-            
-            elapsed = time.time() - start_time
-            logger.info(f"phase=search_indexer | msg=index_built_successfully | category={category} | count={len(items)} | session_id={session_id} | elapsed_sec={elapsed:.2f}")
-            
+                # Insert in batches if too large, Milvus Lite handles it fine usually but better safe
+                insert_batch_size = 1000
+                for i in range(0, len(valid_data), insert_batch_size):
+                    client.insert(collection_name=collection_name, data=valid_data[i:i+insert_batch_size])
+
+            if not self._flush_collection_best_effort(
+                client,
+                collection_name,
+                category=category,
+                session_id=session_id,
+            ):
+                logger.warning(
+                    f"phase=search_indexer | msg=session_index_build_degraded_cache_only | category={category} | session_id={session_id} | collection={collection_name}"
+                )
+                logger.info(f"phase=search_indexer | msg=index_cached_after_flush_failure | category={category} | count={len(items)} | session_id={session_id} | elapsed_sec={time.time() - start_time:.2f}")
+                return
+
+            # Explicitly create index again to ensure it exists before loading, bypassing some cache issues
+            try:
+                # Need to wait a bit after flush to make sure Milvus is ready
+                import time
+                time.sleep(1.0)
+
+                # In Milvus Lite, calling flush right before create_index on the same connection
+                # sometimes causes the collection to be marked as "not found" in the internal meta.
+                # Let's verify if the collection exists before creating index
+                if not client.has_collection(collection_name):
+                    logger.error(f"phase=search_indexer | msg=collection_vanished_before_create_index | collection={collection_name}")
+                else:
+                    # correct usage of index_params
+                    sparse_index_params = client.prepare_index_params()
+                    sparse_index_params.add_index(field_name="sparse_vector", index_type="SPARSE_INVERTED_INDEX", metric_type="BM25", params={"bm25_cg": "zh"})
+                    client.create_index(collection_name=collection_name, index_params=sparse_index_params)
+            except Exception as e:
+                logger.warning(f"phase=search_indexer | msg=explicit_sparse_index_creation_failed_or_ignored | error={e}")
+
+            self._load_collection_best_effort(
+                client,
+                collection_name,
+                category=category,
+                session_id=session_id,
+            )
+
+            logger.info(f"phase=search_indexer | msg=index_built_successfully | category={category} | count={len(items)} | session_id={session_id} | elapsed_sec={time.time() - start_time:.2f}")
         except Exception as e:
             elapsed = time.time() - start_time
             logger.error(f"phase=search_indexer | msg=milvus_build_failed | error={e} | session_id={session_id} | elapsed_sec={elapsed:.2f}")
+        finally:
+            collection_lock.release()
 
     def _safe_embed(self, query: str) -> list[float]:
         import concurrent.futures
@@ -357,7 +626,7 @@ class SearchIndexer:
             return self._fallback_dense_vector()
 
     def search(self, category: str, query: str, top_k: int = 5, session_id: str = "default") -> List[Dict[str, Any]]:
-        safe_session_id = session_id.replace("-", "_")
+        safe_session_id = self._normalize_collection_suffix(session_id)
         collection_name = f"closedloop_{category}_{safe_session_id}"
         
         session_docs = self.category_docs.get(session_id, {})
@@ -366,6 +635,8 @@ class SearchIndexer:
             f"phase=search_indexer | msg=search_started | category={category} | query={query} | top_k={top_k} | session_id={session_id} | collection={collection_name} | cached_count={len(cached_items)}"
         )
         
+        collection_lock = self._get_collection_lock(collection_name)
+        collection_lock.acquire()
         try:
             client = MilvusClient(uri=self.milvus_uri)
             if not client.has_collection(collection_name):
@@ -374,7 +645,14 @@ class SearchIndexer:
                 )
                 return cached_items[:top_k]
                 
-            client.load_collection(collection_name)
+            if not self._load_collection_best_effort(
+                client,
+                collection_name,
+                category=category,
+                session_id=session_id,
+                max_retries=2,
+            ):
+                return cached_items[:top_k]
             
             searcher = MilvusHybridSearcher(
                 uri=self.milvus_uri,
@@ -403,6 +681,8 @@ class SearchIndexer:
             logger.warning(
                 f"phase=search_indexer | msg=hybrid_search_failed_fallback_to_default | category={category} | session_id={session_id} | error={e}"
             )
+        finally:
+            collection_lock.release()
             
         # Fallback default: return top_k from category_docs directly
         logger.warning(

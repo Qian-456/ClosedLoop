@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
+from contextlib import asynccontextmanager
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
@@ -18,7 +19,14 @@ from closedloop.contracts.state import PlanState
 config = get_config()
 LoggerManager.setup(config)
 
-app = FastAPI(title=f"{config.PROJECT_NAME} - Plan Subgraph API")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 构建全局向量缓存
+    indexer = SearchIndexer.get_instance()
+    indexer.build_global_vectors(force_rebuild=getattr(config, "FORCE_REBUILD_VECTORS", False))
+    yield
+
+app = FastAPI(title=f"{config.PROJECT_NAME} - Plan Subgraph API", lifespan=lifespan)
 
 class PlanRequest(BaseModel):
     user_input: Optional[str] = None

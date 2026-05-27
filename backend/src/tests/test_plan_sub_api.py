@@ -11,23 +11,37 @@ from closedloop.graph.tools.plan_sub_api import build_plan_sub_candidate_urls, r
 
 
 class TestPlanSubApi(unittest.TestCase):
-    def test_build_plan_sub_candidate_urls_for_item(self):
+    def test_build_plan_sub_candidate_urls_for_item_in_local_mode(self):
+        urls = build_plan_sub_candidate_urls(
+            "http://localhost:8001/plan",
+            f"/item/combo_001",
+            network_mode="local",
+        )
+
+        self.assertEqual(
+            urls,
+            [
+                "http://localhost:8001/item/combo_001",
+                "http://127.0.0.1:8001/item/combo_001",
+            ],
+        )
+
+    def test_build_plan_sub_candidate_urls_for_item_in_docker_mode(self):
         urls = build_plan_sub_candidate_urls(
             "http://plan_sub_backend:8001/plan",
             f"/item/combo_001",
+            network_mode="docker",
         )
 
         self.assertEqual(
             urls,
             [
                 "http://plan_sub_backend:8001/item/combo_001",
-                "http://localhost:8001/item/combo_001",
-                "http://127.0.0.1:8001/item/combo_001",
             ],
         )
 
     @patch("closedloop.graph.tools.plan_sub_api.httpx.Client")
-    def test_request_plan_sub_json_retries_next_candidate(self, mock_client_class):
+    def test_request_plan_sub_json_retries_next_candidate_in_docker_mode(self, mock_client_class):
         mock_client = MagicMock()
         mock_response = MagicMock()
         mock_response.raise_for_status.return_value = None
@@ -41,11 +55,12 @@ class TestPlanSubApi(unittest.TestCase):
 
         result = request_plan_sub_json(
             method="GET",
-            configured_url="http://plan_sub_backend:8001/plan",
+            configured_url="http://plan-sub-primary:8001/plan",
             target_path="/item/combo_001",
             phase="adjust_plan_item",
             params={"session_id": "s1"},
             timeout=5.0,
+            network_mode="docker",
         )
 
         self.assertEqual(result, {"status": "success"})
@@ -53,8 +68,8 @@ class TestPlanSubApi(unittest.TestCase):
         self.assertEqual(
             called_urls,
             [
+                "http://plan-sub-primary:8001/item/combo_001",
                 "http://plan_sub_backend:8001/item/combo_001",
-                "http://localhost:8001/item/combo_001",
             ],
         )
 

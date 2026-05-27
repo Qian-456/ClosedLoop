@@ -37,6 +37,20 @@
 
 # 🔥 Infrastructure Contract（基础设施约束）
 
+## 微服务架构与 Subgraph 启动约定 (重要网络排查)
+
+本项目后端分为两个服务：
+1. **Main Agent 服务 (`main.py`)**: 运行在 8000 端口，负责对话状态、总控逻辑。
+2. **Plan Subgraph 服务 (`plan_sub_main.py`)**: 运行在 8001 端口，负责重量级的检索、排序、路线规划。
+
+**常见问题：`Connection refused` 或 `timed out` 错误**
+- **原因 1：服务未启动**：如果在本地开发，必须同时启动 `main.py` 和 `plan_sub_main.py` 两个服务。
+- **原因 2：全局向量构建阻塞**：为了提升查询性能，`plan_sub_main.py` 在 `lifespan` 启动时会受 `.env` 中的 `FORCE_REBUILD_VECTORS` 变量控制。如果将其设置为 `true`，服务启动时会花费 60 多秒调用大模型构建全局向量索引。在这个期间，服务不会接收任何 HTTP 请求（8001 端口未就绪），从而导致主服务调用时报出 `Connection refused` 或 `timed out`。
+- **一劳永逸的解决方法**：全局向量只需要在 Mock DB 发生实质变更时构建**一次**。构建成功后，**必须将 `.env` 中的 `FORCE_REBUILD_VECTORS` 改回 `false`**，这样后续热重载或重启时会直接跳过构建，实现秒级启动，彻底杜绝超时与拒绝连接问题。
+- **环境配置检查**：确保 `.env` 中的 `PLAN_SUB_API_URL` 填写正确（本地启动填 `http://127.0.0.1:8001/plan`，Docker 中填 `http://plan_sub_backend:8001/plan`）。
+
+---
+
 ## Config（必须）
 
 ```python

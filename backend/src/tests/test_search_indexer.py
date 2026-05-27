@@ -65,7 +65,7 @@ class TestSearchIndexer(unittest.TestCase):
     @patch('closedloop.graph.plan_subgraph.search_indexer.DashScopeEmbedding')
     def test_build_index_preserves_items_when_embedding_timeout(self, mock_dashscope, mock_milvus_client):
         mock_embed_instance = MagicMock()
-        mock_embed_instance.get_text_embedding_batch.side_effect = concurrent.futures.TimeoutError()
+        mock_embed_instance.get_text_embedding.side_effect = concurrent.futures.TimeoutError()
         mock_dashscope.return_value = mock_embed_instance
 
         mock_client_instance = MagicMock()
@@ -88,6 +88,52 @@ class TestSearchIndexer(unittest.TestCase):
         self.assertEqual(inserted_payload[0]["id"], "1")
         self.assertEqual(inserted_payload[1]["id"], "2")
         self.assertNotEqual(inserted_payload[0]["dense_vector"], [0.0] * indexer.dim)
+
+    @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusClient')
+    @patch('closedloop.graph.plan_subgraph.search_indexer.DashScopeEmbedding')
+    def test_build_index_degrades_to_cache_when_flush_collection_disappears(self, mock_dashscope, mock_milvus_client):
+        mock_embed_instance = MagicMock()
+        mock_embed_instance.get_text_embedding.return_value = [0.1] * 1536
+        mock_dashscope.return_value = mock_embed_instance
+
+        mock_client_instance = MagicMock()
+        mock_client_instance.has_collection.side_effect = (
+            lambda name: str(name).startswith("closedloop_restaurant_")
+        )
+        mock_client_instance.flush.side_effect = Exception(
+            "collection not found[collection=466585545529300046]"
+        )
+        mock_milvus_client.return_value = mock_client_instance
+        mock_schema = MagicMock()
+        mock_milvus_client.create_schema.return_value = mock_schema
+
+        indexer = SearchIndexer()
+        items = [
+            {"id": "1", "name": "Item 1", "description": "Desc 1", "features": "Feat 1"},
+        ]
+
+        with patch('closedloop.graph.plan_subgraph.search_indexer.logger') as mock_logger:
+            indexer.build_index("restaurant", items, session_id="Jason-session012/fde3")
+
+        self.assertEqual(indexer.category_docs["Jason-session012/fde3"]["restaurant"], items)
+        self.assertEqual(mock_client_instance.flush.call_count, 3)
+        mock_client_instance.create_index.assert_not_called()
+        mock_client_instance.load_collection.assert_not_called()
+
+        error_messages = [
+            str(call.args[0])
+            for call in mock_logger.error.call_args_list
+            if call.args
+        ]
+        self.assertFalse(any("milvus_build_failed" in msg for msg in error_messages))
+        warning_messages = [
+            str(call.args[0])
+            for call in mock_logger.warning.call_args_list
+            if call.args
+        ]
+        self.assertTrue(
+            any("session_index_build_degraded_cache_only" in msg for msg in warning_messages)
+        )
 
     @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusClient')
     @patch('closedloop.graph.plan_subgraph.search_indexer.MilvusHybridSearcher')

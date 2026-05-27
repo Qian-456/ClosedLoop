@@ -152,6 +152,7 @@ def plan_trip(
                     phase="plan_trip",
                     json=payload,
                     timeout=3.0,
+                    network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
                 )
                 break
             except Exception as e:
@@ -251,6 +252,7 @@ def generate_alternative_plans(
                     phase="generate_alternative_plans",
                     json=payload,
                     timeout=30.0,
+                    network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
                 )
                 break
             except Exception as e:

@@ -55,7 +55,7 @@ docker compose up -d --build
 python backend/src/cli_main.py
 ```
 
-> 本地直接运行主后端时，`backend/.env` 中的 `PLAN_SUB_API_URL` 建议配置为 `http://localhost:8001/plan` 或 `http://127.0.0.1:8001/plan`。只有当主后端本身也运行在 Docker 网络中时，才使用 `http://plan_sub_backend:8001/plan`。
+> 本地直接运行主后端时，`backend/.env` 中请设置 `PLAN_SUB_NETWORK_MODE=local`，并将 `PLAN_SUB_API_URL` 配置为 `http://localhost:8001/plan` 或 `http://127.0.0.1:8001/plan`。只有当主后端本身也运行在 Docker 网络中时，才使用 `PLAN_SUB_NETWORK_MODE=docker` 与 `http://plan_sub_backend:8001/plan`。
 
 ### 生产全量部署 (包含 ELK 日志收集)
 
@@ -67,8 +67,8 @@ docker compose -f docker-compose.yml -f docker/elk/docker-compose.elk.yml up -d 
 
 访问：
 
-- 前端：`http://localhost:8080`
-- 健康检查：`http://localhost:8080/health`
+- 前端：`http://localhost:8088`
+- 健康检查：`http://localhost:8088/health`
 - （可选直连后端）`http://localhost:8000/health`
 - （可选）Kibana：`http://localhost:5601`
 
@@ -127,6 +127,17 @@ npm run dev
 
 - `DEEPSEEK_API_KEY`：Primary LLM
 - `DASHSCOPE_API_KEY`：Fallback LLM
+- `PLAN_SUB_API_URL`：规划子服务地址
+- `PLAN_SUB_NETWORK_MODE`：规划子服务网络模式，`local` 对应宿主机本地地址，`docker` 对应 Docker 服务名
+
+规划子服务推荐配置矩阵：
+
+- 宿主机运行主后端：
+  - `PLAN_SUB_NETWORK_MODE=local`
+  - `PLAN_SUB_API_URL=http://localhost:8001/plan`
+- Docker Compose 运行主后端：
+  - `PLAN_SUB_NETWORK_MODE=docker`
+  - `PLAN_SUB_API_URL=http://plan_sub_backend:8001/plan`
 
 日志/调试相关：
 

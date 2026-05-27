@@ -28,8 +28,8 @@ docker compose up --build
 
 启动后访问：
 
-- 前端：`http://localhost:8080`
-- 后端健康检查：`http://localhost:8080/health`（由前端 Nginx 代理到后端）
+- 前端：`http://localhost:8088`
+- 后端健康检查：`http://localhost:8088/health`（由前端 Nginx 代理到后端）
 - （可选直连后端）`http://localhost:8000/health`
 
 ## 4. 说明
@@ -42,7 +42,8 @@ docker compose up --build
 
 ### 5.1 端口被占用
 
-- 修改 `docker-compose.yml` 中的端口映射，例如把 `8080:80` 改成 `8081:80`。
+- 当前默认前端端口为 `8088:80`。
+- 如果仍然冲突，可继续修改 `docker-compose.yml` 中的端口映射，例如把 `8088:80` 改成 `8089:80`。
 
 ### 5.2 后端启动报缺少 API Key
 

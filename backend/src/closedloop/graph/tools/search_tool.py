@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
+from closedloop.graph.tools.plan_sub_api import build_plan_sub_candidate_urls
 
 from langchain_core.runnables import RunnableConfig
 
@@ -22,40 +23,6 @@ class SearchCandidatesInput(BaseModel):
         ..., description="用户的自然语言搜索词，例如 '找个便宜点的' 或 '有儿童乐园的'"
     )
     top_k: int = Field(default=5, description="最多返回的结果数量")
-
-
-def _normalize_search_url(base_url: str) -> str:
-    """Normalize a plan endpoint into the paired search endpoint."""
-    normalized = (base_url or "").strip().rstrip("/")
-    if not normalized:
-        return ""
-    if normalized.endswith("/plan"):
-        return f"{normalized[:-5]}/search"
-    if normalized.endswith("/search"):
-        return normalized
-    return f"{normalized}/search"
-
-
-def _candidate_search_urls(configured_url: str) -> list[str]:
-    """Build ordered candidate search URLs for host and Docker environments."""
-    candidates: list[str] = []
-    seen: set[str] = set()
-
-    raw_candidates = [
-        configured_url,
-        "http://plan_sub_backend:8001/plan",
-        "http://localhost:8001/plan",
-        "http://127.0.0.1:8001/plan",
-    ]
-
-    for raw_url in raw_candidates:
-        search_url = _normalize_search_url(raw_url)
-        if search_url and search_url not in seen:
-            seen.add(search_url)
-            candidates.append(search_url)
-
-    return candidates
-
 
 def _keyword_fallback_search(category: str, user_request: str, session_id: str, top_k: int) -> list[dict]:
     """Run an in-memory keyword fallback search on cached session docs."""
@@ -120,8 +87,10 @@ def search_candidates(
     }
     
     results = []
-    search_urls = _candidate_search_urls(
-        getattr(config_app, "PLAN_SUB_API_URL", "http://localhost:8001/plan")
+    search_urls = build_plan_sub_candidate_urls(
+        getattr(config_app, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+        "/search",
+        network_mode=getattr(config_app, "PLAN_SUB_NETWORK_MODE", "local"),
     )
     last_error = None
 

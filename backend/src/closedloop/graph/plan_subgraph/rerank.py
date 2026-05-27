@@ -397,21 +397,18 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     d_c = len(ranked_dinner_combos)
     n_c = len(ranked_late_night_combos)
 
-    import threading
     from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
-    
     indexer = SearchIndexer.get_instance()
     
-    def _build_indices_in_background():
-        try:
-            indexer.build_index("restaurant", ranked_breakfast_combos + ranked_lunch_combos + ranked_afternoon_tea_combos + ranked_dinner_combos + ranked_late_night_combos, session_id=session_id)
-            indexer.build_index("activity", ranked_packages + ranked_light_packages, session_id=session_id)
-            indexer.build_index("gift_shop", ranked_gifts, session_id=session_id)
-            logger.info(f"phase=rerank_node | msg=background_indices_built_successfully | session_id={session_id}")
-        except Exception as e:
-            logger.error(f"phase=rerank_node | error=background_indices_build_failed | details={e} | session_id={session_id}")
-            
-    threading.Thread(target=_build_indices_in_background, daemon=True).start()
+    # We still build session index, but now it uses global vectors and is extremely fast,
+    # so we don't need a background thread anymore. We can just run it synchronously.
+    try:
+        indexer.build_index("restaurant", ranked_breakfast_combos + ranked_lunch_combos + ranked_afternoon_tea_combos + ranked_dinner_combos + ranked_late_night_combos, session_id=session_id)
+        indexer.build_index("activity", ranked_packages + ranked_light_packages, session_id=session_id)
+        indexer.build_index("gift_shop", ranked_gifts, session_id=session_id)
+        logger.info(f"phase=rerank_node | msg=indices_built_successfully | session_id={session_id}")
+    except Exception as e:
+        logger.error(f"phase=rerank_node | error=indices_build_failed | details={e} | session_id={session_id}")
 
     logger.info(
         f"phase=rerank_node | output=reranked {b_c} breakfast, {l_c} lunch, {a_c} tea, {d_c} dinner, {n_c} night combos (from {rest_count} restaurants), "

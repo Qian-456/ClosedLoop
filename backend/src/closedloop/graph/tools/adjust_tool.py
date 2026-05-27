@@ -73,6 +73,7 @@ def adjust_plan_item(
                 phase="adjust_plan_item",
                 params={"session_id": session_id},
                 timeout=10.0,
+                network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
             )
             if res_data.get("status") == "success" and res_data.get("item"):
                 new_item_data = res_data.get("item")
