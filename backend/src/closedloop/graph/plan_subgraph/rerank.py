@@ -1,4 +1,5 @@
 import re
+import time
 from typing import Any
 
 from closedloop.core.config import get_config
@@ -208,6 +209,7 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     """
     app_config = get_config()
     LoggerManager.setup(app_config)
+    started_at = time.perf_counter()
 
     logger.info("phase=rerank_node | input=start")
     
@@ -397,22 +399,10 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     d_c = len(ranked_dinner_combos)
     n_c = len(ranked_late_night_combos)
 
-    from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
-    indexer = SearchIndexer.get_instance()
-    
-    # We still build session index, but now it uses global vectors and is extremely fast,
-    # so we don't need a background thread anymore. We can just run it synchronously.
-    try:
-        indexer.build_index("restaurant", ranked_breakfast_combos + ranked_lunch_combos + ranked_afternoon_tea_combos + ranked_dinner_combos + ranked_late_night_combos, session_id=session_id)
-        indexer.build_index("activity", ranked_packages + ranked_light_packages, session_id=session_id)
-        indexer.build_index("gift_shop", ranked_gifts, session_id=session_id)
-        logger.info(f"phase=rerank_node | msg=indices_built_successfully | session_id={session_id}")
-    except Exception as e:
-        logger.error(f"phase=rerank_node | error=indices_build_failed | details={e} | session_id={session_id}")
-
+    elapsed_ms = int((time.perf_counter() - started_at) * 1000)
     logger.info(
         f"phase=rerank_node | output=reranked {b_c} breakfast, {l_c} lunch, {a_c} tea, {d_c} dinner, {n_c} night combos (from {rest_count} restaurants), "
         f"{act_pkg_count} packages (from {act_count} activities), {act_light_pkg_count} light packages, "
-        f"{gift_item_count} gifts (from {gift_count} shops)"
+        f"{gift_item_count} gifts (from {gift_count} shops) | elapsed_ms={elapsed_ms} | session_id={session_id}"
     )
     return state

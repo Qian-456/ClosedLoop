@@ -1,6 +1,7 @@
 import re
 import uuid
 import math
+import time
 
 from closedloop.contracts.state import Constraints, PlanState
 from closedloop.core.config import get_config
@@ -644,6 +645,7 @@ def retrieve_candidates_node(state: PlanState) -> PlanState:
     """从 MockDB 粗召回候选，并对餐厅/活动应用 12km 距离上限。"""
     config = get_config()
     LoggerManager.setup(config)
+    started_at = time.perf_counter()
 
     logger.info("phase=retrieve_candidates_node | input=start")
 
@@ -693,7 +695,7 @@ def retrieve_candidates_node(state: PlanState) -> PlanState:
     gift_item_count = sum(len(x.get("gifts", [])) for x in candidates.get("nearby_gifts", []))
 
     logger.info(
-        f"phase=retrieve_candidates_node | output=loaded {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items)"
+        f"phase=retrieve_candidates_node | output=loaded {rest_count} restaurants ({rest_combo_count} combos), {act_count} activities ({act_pkg_count} packages), {gift_count} gifts ({gift_item_count} items) | elapsed_ms={int((time.perf_counter() - started_at) * 1000)}"
     )
     return state
 

@@ -206,6 +206,28 @@ class TestRerankNode(unittest.TestCase):
 
         self.assertEqual(len(ranked_breakfast), 0)
 
+    def test_rerank_node_no_longer_builds_indices_synchronously(self):
+        high_rating = self.restaurant_item.copy()
+        high_rating["id"] = "r_high"
+        high_rating["name"] = "High Rest"
+        high_rating["rating"] = 4.9
+        high_rating["combos"] = [{"combo_id": "c1", "name": "Combo 1", "price": 100, "suitable_time_slots": ["dinner"]}]
+
+        state = ClosedLoopState(
+            user_input="Test input",
+            constraints=self.base_constraints,
+            candidates={
+                "nearby_restaurants": [high_rating],
+                "nearby_activities": [],
+                "nearby_gifts": [],
+                "processed_steps": ["retrieve_candidates_node", "filter_node"],
+            },
+        )
+
+        new_state = rerank_node(state)
+
+        self.assertIn("ranked_dinner_combos", new_state["candidates"])
+
     def test_rerank_node_keeps_features(self):
         rest = self.restaurant_item.copy()
         rest["id"] = "r_feat"

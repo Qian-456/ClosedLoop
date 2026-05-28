@@ -1,5 +1,7 @@
 import json
+import time
 from typing import Annotated, Literal, Optional
+import httpx
 
 from langchain_core.messages import ToolMessage
 from langchain_core.tools import InjectedToolCallId, tool
@@ -13,6 +15,8 @@ from closedloop.contracts.state import ClosedLoopState, Constraints, PlanState
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.tools.plan_sub_api import request_plan_sub_json
+
+PLAN_SUB_RETRYABLE_ERRORS = (httpx.TimeoutException, httpx.NetworkError, httpx.TransportError)
 
 
 class PlanTripInput(BaseModel):
@@ -142,7 +146,6 @@ def plan_trip(
             "session_id": session_id,
         }
         
-        import time
         for attempt in range(3):
             try:
                 subgraph_output = request_plan_sub_json(
@@ -156,9 +159,12 @@ def plan_trip(
                 )
                 break
             except Exception as e:
-                if attempt == 2:
+                is_retryable = isinstance(e, PLAN_SUB_RETRYABLE_ERRORS)
+                if attempt == 2 or not is_retryable:
                     raise
-                logger.warning(f"phase=plan_trip | msg=retrying | attempt={attempt+1} | error={e}")
+                logger.warning(
+                    f"phase=plan_trip | msg=retrying | attempt={attempt+1} | retryable={is_retryable} | error={e}"
+                )
                 time.sleep(2.0)
             
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}

@@ -1,7 +1,10 @@
 import json
 import os
+import copy
 
 from closedloop.core.config import REPO_ROOT_DIR, get_config
+
+_MOCK_DB_CACHE: dict[str, tuple[float, list[dict]]] = {}
 
 def load_mock_data(filename: str) -> list[dict]:
     """
@@ -27,9 +30,15 @@ def load_mock_data(filename: str) -> list[dict]:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Mock DB file not found: {file_path}")
 
+    file_mtime = os.path.getmtime(file_path)
+    cached = _MOCK_DB_CACHE.get(file_path)
+    if cached and cached[0] == file_mtime:
+        return copy.deepcopy(cached[1])
+
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     if not isinstance(data, list):
         raise ValueError(f"Mock DB file must be a list: {file_path}")
-    return data
+    _MOCK_DB_CACHE[file_path] = (file_mtime, data)
+    return copy.deepcopy(data)

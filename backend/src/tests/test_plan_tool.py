@@ -3,6 +3,7 @@ import sys
 import unittest
 from unittest.mock import patch, MagicMock
 from types import SimpleNamespace
+import httpx
 
 from langgraph.types import Command
 
@@ -160,6 +161,41 @@ class TestPlanTripTool(unittest.TestCase):
             )
 
         self.assertIn("规划子图调用失败", str(out.update["messages"][0].content))
+
+    @patch("closedloop.graph.tools.plan_tool.time.sleep")
+    @patch("closedloop.graph.tools.plan_tool.request_plan_sub_json")
+    def test_plan_trip_uses_longer_timeout_and_only_retries_on_transport_error(
+        self,
+        mock_request_plan_sub_json,
+        mock_sleep,
+    ):
+        """规划请求应使用放宽后的 timeout，并且仅在传输类错误下重试。"""
+        mock_request_plan_sub_json.side_effect = [
+            httpx.ConnectTimeout("timeout"),
+            {"itinerary": {"status": "ok", "plans": []}},
+        ]
+
+        with patch(
+            "closedloop.graph.tools.plan_tool.get_config",
+            return_value=SimpleNamespace(
+                PLAN_SUB_API_URL="http://localhost:8001/plan",
+                PLAN_SUB_NETWORK_MODE="local",
+            ),
+        ), patch("closedloop.graph.tools.plan_tool.LoggerManager.setup"):
+            out = plan_trip.func(
+                group_type="friends",
+                budget=300,
+                time_period="14:00",
+                state={"user_input": "朋友聚会"},
+                config_runnable={"configurable": {"thread_id": "test_thread"}},
+                tool_call_id="call_1",
+            )
+
+        self.assertIsInstance(out, Command)
+        self.assertEqual(mock_request_plan_sub_json.call_count, 2)
+        self.assertEqual(mock_request_plan_sub_json.call_args_list[0].kwargs["timeout"], 10.0)
+        self.assertEqual(mock_request_plan_sub_json.call_args_list[1].kwargs["timeout"], 10.0)
+        mock_sleep.assert_called_once()
 
 
 if __name__ == "__main__":

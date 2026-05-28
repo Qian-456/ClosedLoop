@@ -3,6 +3,7 @@ import concurrent.futures
 import os
 import sys
 from unittest.mock import patch, MagicMock
+from types import SimpleNamespace
 
 # Add src to path so we can import backend modules.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -162,6 +163,74 @@ class TestSearchIndexer(unittest.TestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0]["id"], "a1")
         self.assertEqual(results[1]["id"], "a2")
+
+    @patch('closedloop.graph.plan_subgraph.search_indexer.DashScopeEmbedding')
+    def test_schedule_build_index_updates_cache_and_deduplicates_same_signature(self, mock_dashscope):
+        mock_embed_instance = MagicMock()
+        mock_dashscope.return_value = mock_embed_instance
+
+        indexer = SearchIndexer()
+        fake_future = MagicMock()
+        fake_future.done.return_value = False
+        fake_executor = MagicMock()
+        fake_executor.submit.return_value = fake_future
+        indexer._build_executor = fake_executor
+
+        items = [
+            {"combo_id": "c1", "name": "Item 1"},
+            {"combo_id": "c2", "name": "Item 2"},
+        ]
+
+        submitted = []
+        def fake_submit(fn, *args, **kwargs):
+            submitted.append((fn, args, kwargs))
+            return fake_future
+
+        fake_executor.submit.side_effect = fake_submit
+
+        scheduled = indexer.schedule_build_index("restaurant", items, session_id="s1")
+        duplicated = indexer.schedule_build_index("restaurant", list(items), session_id="s1")
+
+        self.assertTrue(scheduled)
+        self.assertFalse(duplicated)
+        self.assertEqual(indexer.category_docs["s1"]["restaurant"], items)
+        self.assertEqual(len(submitted), 1)
+
+    @patch('closedloop.graph.plan_subgraph.search_indexer.DashScopeEmbedding')
+    def test_schedule_plan_indices_uses_ranked_candidates(self, mock_dashscope):
+        mock_embed_instance = MagicMock()
+        mock_dashscope.return_value = mock_embed_instance
+
+        indexer = SearchIndexer()
+        scheduled_calls = []
+
+        def fake_schedule(category, items, session_id):
+            scheduled_calls.append((category, len(items), session_id))
+            return True
+
+        indexer.schedule_build_index = fake_schedule
+
+        candidates = {
+            "ranked_breakfast_combos": [{"combo_id": "b1"}],
+            "ranked_lunch_combos": [{"combo_id": "l1"}],
+            "ranked_afternoon_tea_combos": [],
+            "ranked_dinner_combos": [{"combo_id": "d1"}],
+            "ranked_late_night_combos": [],
+            "ranked_packages": [{"package_id": "p1"}],
+            "ranked_light_packages": [{"package_id": "lp1"}],
+            "ranked_gifts": [{"gift_id": "g1"}],
+        }
+
+        indexer.schedule_plan_indices(candidates, session_id="thread-1")
+
+        self.assertEqual(
+            scheduled_calls,
+            [
+                ("restaurant", 3, "thread-1"),
+                ("activity", 2, "thread-1"),
+                ("gift_shop", 1, "thread-1"),
+            ],
+        )
 
 if __name__ == '__main__':
     unittest.main()

@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from contextlib import asynccontextmanager
+import time
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
@@ -49,7 +50,8 @@ def health_check():
 
 @app.post("/plan")
 def run_plan_subgraph(req: PlanRequest):
-    logger.info(f"phase=plan_sub_api | input_top_k={req.top_k}")
+    started_at = time.perf_counter()
+    logger.info(f"phase=plan_sub_api | input_top_k={req.top_k} | session_id={req.session_id}")
     
     subgraph_state: PlanState = {}
     if req.user_input is not None:
@@ -69,6 +71,18 @@ def run_plan_subgraph(req: PlanRequest):
         run_config = {"configurable": {"thread_id": req.session_id}}
         subgraph_output = build_subgraph_plan().invoke(subgraph_state, config=run_config)
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
+        if isinstance(subgraph_output, dict):
+            candidates = subgraph_output.get("candidates", {}) or {}
+            try:
+                SearchIndexer.get_instance().schedule_plan_indices(candidates, session_id=req.session_id)
+            except Exception as e:
+                logger.error(
+                    f"phase=plan_sub_api | msg=schedule_plan_indices_failed | session_id={req.session_id} | error={e}"
+                )
+        elapsed_ms = int((time.perf_counter() - started_at) * 1000)
+        logger.info(
+            f"phase=plan_sub_api | result=success | session_id={req.session_id} | elapsed_ms={elapsed_ms}"
+        )
         return {"status": "success", "itinerary": result}
     except Exception as e:
         logger.error(f"phase=plan_sub_api | error={e}")

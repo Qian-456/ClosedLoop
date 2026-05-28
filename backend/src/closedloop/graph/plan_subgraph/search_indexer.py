@@ -1,6 +1,8 @@
 import os
 import re
 import threading
+import time
+import concurrent.futures
 from typing import List, Dict, Any
 from dataclasses import dataclass
 
@@ -143,8 +145,14 @@ class SearchIndexer:
         )
         
         self.category_docs = {}
-        # Dictionary to store embedding futures to track background embedding tasks
-        self.embedding_futures = {}
+        self._build_executor = concurrent.futures.ThreadPoolExecutor(
+            max_workers=1,
+            thread_name_prefix="plan_sub_index_build",
+        )
+        self._build_tasks_guard = threading.Lock()
+        self._build_futures: dict[tuple[str, str], concurrent.futures.Future] = {}
+        self._build_signatures: dict[tuple[str, str], str] = {}
+        self._last_built_at: dict[tuple[str, str], float] = {}
 
     @classmethod
     def get_instance(cls):
@@ -281,6 +289,102 @@ class SearchIndexer:
     def _is_zero_dense_vector(self, dense_vec: list[float]) -> bool:
         """Check whether a dense vector is the all-zero timeout placeholder."""
         return dense_vec == [0.0] * self.dim
+
+    def _make_items_signature(self, items: List[Dict[str, Any]]) -> str:
+        """Build a stable signature for a candidate list to deduplicate async index builds."""
+        ids: list[str] = []
+        for item in items:
+            item_id = item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id")
+            if item_id is not None:
+                ids.append(str(item_id))
+        return "|".join(ids)
+
+    def schedule_build_index(self, category: str, items: List[Dict[str, Any]], session_id: str = "default") -> bool:
+        """Schedule session index build asynchronously and deduplicate repeated requests."""
+        if session_id not in self.category_docs:
+            self.category_docs[session_id] = {}
+        self.category_docs[session_id][category] = list(items or [])
+
+        if not items:
+            logger.info(
+                f"phase=search_indexer | msg=schedule_build_index_skipped_empty | category={category} | session_id={session_id}"
+            )
+            return False
+
+        signature = self._make_items_signature(items)
+        build_key = (session_id, category)
+
+        with self._build_tasks_guard:
+            current_future = self._build_futures.get(build_key)
+            current_signature = self._build_signatures.get(build_key)
+            if current_future and not current_future.done() and current_signature == signature:
+                logger.info(
+                    f"phase=search_indexer | msg=schedule_build_index_deduplicated | category={category} | session_id={session_id}"
+                )
+                return False
+
+            self._build_signatures[build_key] = signature
+            future = self._build_executor.submit(
+                self._run_scheduled_build,
+                category,
+                list(items),
+                session_id,
+                signature,
+            )
+            self._build_futures[build_key] = future
+
+        logger.info(
+            f"phase=search_indexer | msg=schedule_build_index_queued | category={category} | session_id={session_id} | count={len(items)}"
+        )
+        return True
+
+    def _run_scheduled_build(
+        self,
+        category: str,
+        items: List[Dict[str, Any]],
+        session_id: str,
+        signature: str,
+    ) -> None:
+        """Run async session index build in background executor."""
+        started_at = time.perf_counter()
+        try:
+            logger.info(
+                f"phase=search_indexer | msg=async_build_index_started | category={category} | session_id={session_id} | count={len(items)}"
+            )
+            self.build_index(category, items, session_id=session_id)
+            elapsed_ms = int((time.perf_counter() - started_at) * 1000)
+            with self._build_tasks_guard:
+                self._last_built_at[(session_id, category)] = time.time()
+            logger.info(
+                f"phase=search_indexer | msg=async_build_index_done | category={category} | session_id={session_id} | elapsed_ms={elapsed_ms}"
+            )
+        except Exception as e:
+            elapsed_ms = int((time.perf_counter() - started_at) * 1000)
+            logger.error(
+                f"phase=search_indexer | msg=async_build_index_failed | category={category} | session_id={session_id} | elapsed_ms={elapsed_ms} | error={e}"
+            )
+        finally:
+            with self._build_tasks_guard:
+                build_key = (session_id, category)
+                current_signature = self._build_signatures.get(build_key)
+                if current_signature == signature:
+                    self._build_futures.pop(build_key, None)
+
+    def schedule_plan_indices(self, candidates: Dict[str, Any], session_id: str = "default") -> None:
+        """Schedule all search indices needed by plan follow-up queries."""
+        restaurant_items = (
+            list(candidates.get("ranked_breakfast_combos", []))
+            + list(candidates.get("ranked_lunch_combos", []))
+            + list(candidates.get("ranked_afternoon_tea_combos", []))
+            + list(candidates.get("ranked_dinner_combos", []))
+            + list(candidates.get("ranked_late_night_combos", []))
+        )
+        activity_items = list(candidates.get("ranked_packages", [])) + list(candidates.get("ranked_light_packages", []))
+        gift_items = list(candidates.get("ranked_gifts", []))
+
+        self.schedule_build_index("restaurant", restaurant_items, session_id=session_id)
+        self.schedule_build_index("activity", activity_items, session_id=session_id)
+        self.schedule_build_index("gift_shop", gift_items, session_id=session_id)
 
     def build_global_vectors(self, force_rebuild: bool = False):
         """Build the global vector collection for all items from mock db."""

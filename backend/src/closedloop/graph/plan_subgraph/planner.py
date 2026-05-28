@@ -1,6 +1,7 @@
 from typing import Any
 import copy
 import math
+import time
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
@@ -184,6 +185,7 @@ def planner_node(state: PlanState) -> PlanState:
     """
     config = get_config()
     LoggerManager.setup(config)
+    started_at = time.perf_counter()
 
     logger.info("phase=planner_node | status=started")
 
@@ -679,7 +681,9 @@ def planner_node(state: PlanState) -> PlanState:
         processed_steps = state.setdefault("processed_steps", [])
         processed_steps.append("planner_node")
         
-        logger.info(f"phase=planner_node | status=failed | missing={missing_types}")
+        logger.info(
+            f"phase=planner_node | status=failed | missing={missing_types} | elapsed_ms={int((time.perf_counter() - started_at) * 1000)}"
+        )
         return state
 
     itinerary_plan = ItineraryPlan(
@@ -694,6 +698,8 @@ def planner_node(state: PlanState) -> PlanState:
     processed_steps = state.setdefault("processed_steps", [])
     processed_steps.append("planner_node")
     
-    logger.info(f"phase=planner_node | status={status} | generated_plans={len(plans)} | missing={missing_types}")
+    logger.info(
+        f"phase=planner_node | status={status} | generated_plans={len(plans)} | missing={missing_types} | elapsed_ms={int((time.perf_counter() - started_at) * 1000)}"
+    )
 
     return state
