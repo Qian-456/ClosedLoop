@@ -1,16 +1,17 @@
 from langgraph.graph import END, START, StateGraph
 from typing_extensions import NotRequired, TypedDict
 
-from closedloop.contracts.state import PlanState
+from closedloop.contracts.state import Candidates, PlanState
 from closedloop.graph.plan_subgraph.planner import planner_node
 from closedloop.graph.plan_subgraph.rerank import rerank_node
 from closedloop.graph.plan_subgraph.retrieve import filter_node, retrieve_candidates_node
 
 
 class PlanSubgraphOutput(TypedDict):
-    """规划子图对外只返回 itinerary。"""
+    """规划子图对外返回 itinerary 与 candidates。"""
 
     itinerary: NotRequired[dict]
+    candidates: NotRequired[Candidates]
 
 
 def build_subgraph_plan():

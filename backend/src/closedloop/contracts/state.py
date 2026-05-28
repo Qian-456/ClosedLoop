@@ -407,6 +407,7 @@ class ClosedLoopState(AgentState):
     latest_plan_result: NotRequired[list[dict]]
     plan_option: NotRequired[dict]
     constraints: NotRequired[Constraints]
+    candidates: NotRequired[Candidates]
     itinerary: NotRequired[list[dict]]
     confirmation: NotRequired[dict]
     current_step: Annotated[Optional[str], replace_value]

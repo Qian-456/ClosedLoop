@@ -1,224 +1,285 @@
-import unittest
 import json
 import os
-import socket
 import sys
-from unittest.mock import patch, MagicMock
+import unittest
+from unittest.mock import MagicMock, patch
 
-# Add src to path so we can import backend modules.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from closedloop.graph.tools.search_tool import search_candidates
+from closedloop.graph.tools.search_tool import SearchCandidatesInput, search_candidates
+
 
 class TestSearchTool(unittest.TestCase):
-    @patch('closedloop.graph.tools.search_tool.httpx.Client')
-    @patch('closedloop.graph.tools.search_tool.get_config')
-    @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
-    def test_search_candidates(self, _mock_logger_setup, mock_get_config, mock_client_class):
-        fake_config = type(
+    @patch("httpx.Client")
+    @patch("closedloop.graph.tools.search_tool.logger")
+    @patch("closedloop.graph.tools.search_tool.get_config")
+    @patch("closedloop.graph.tools.search_tool.LoggerManager.setup")
+    def test_search_candidates_sends_ranked_only_candidates_with_subcatory(
+        self,
+        _mock_logger_setup,
+        mock_get_config,
+        mock_logger,
+        mock_httpx_client,
+    ):
+        mock_get_config.return_value = type(
             "FakeConfig",
             (),
-            {
-                "PLAN_SUB_API_URL": "http://localhost:8001/plan",
-                "PLAN_SUB_NETWORK_MODE": "local",
-            },
+            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
         )()
-        mock_get_config.return_value = fake_config
 
         mock_client = MagicMock()
         mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
         mock_response.json.return_value = {
             "status": "success",
             "results": [
                 {
-                    "combo_id": "c1",
-                    "name": "Combo 1",
-                    "price": 100,
-                    "duration_mins": 60,
-                    "features": "Feat 1",
-                    "description": "Desc 1"
+                    "combo_id": "state_combo",
+                    "name": "亲子儿童乐园套餐",
+                    "description": "适合带娃午餐",
+                    "features": "儿童乐园 宝宝椅",
+                    "price": 128,
+                    "duration_mins": 90,
+                    "suitable_groups": ["family"],
+                    "child_facility_tags": ["儿童乐园", "宝宝椅"],
+                    "distance_km": 1.5,
+                    "subcatory": "lunch",
                 }
-            ]
+            ],
         }
-        mock_response.raise_for_status.return_value = None
         mock_client.post.return_value = mock_response
-        mock_client.__enter__.return_value = mock_client
-        mock_client_class.return_value = mock_client
+        mock_httpx_client.return_value.__enter__.return_value = mock_client
 
-        command = search_candidates.invoke({
-            "category": "restaurant",
-            "user_request": "便宜的",
-            "tool_call_id": "call_123",
-            "state": {},
-            "top_k": 5,
-        })
-        
-        self.assertIsNotNone(command)
-        messages = command.update.get("messages", [])
-        self.assertEqual(len(messages), 1)
-        
-        tool_message = messages[0]
-        self.assertEqual(tool_message.tool_call_id, "call_123")
-        
-        content = json.loads(tool_message.content)
-        self.assertEqual(content["status"], "success")
-        
-        results = content["result"]["results"]
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0]["id"], "c1")
-        self.assertEqual(results[0]["name"], "Combo 1")
-        mock_client.post.assert_called_once_with(
-            "http://localhost:8001/search",
-            json={
+        command = search_candidates.invoke(
+            {
                 "category": "restaurant",
-                "user_request": "便宜的",
+                "user_request": "儿童乐园",
+                "subcatory": "lunch",
+                "tool_call_id": "call_123",
+                "state": {
+                    "constraints": {
+                        "group_type": "family",
+                        "budget": 300,
+                        "preferred_distance": "2km-5km",
+                        "time_period": "12:00",
+                        "duration_hours": [4, 6],
+                        "child_count": 1,
+                        "child_profiles": [["F", 5]],
+                    },
+                    "candidates": {
+                        "ranked_lunch_combos": [
+                            {
+                                "combo_id": "state_combo",
+                                "name": "亲子儿童乐园套餐",
+                                "description": "适合带娃午餐",
+                                "features": "儿童乐园 宝宝椅",
+                                "price": 128,
+                                "duration_mins": 90,
+                                "suitable_groups": ["family"],
+                                "child_facility_tags": ["儿童乐园", "宝宝椅"],
+                                "distance_km": 1.5,
+                            }
+                        ]
+                    },
+                },
                 "top_k": 5,
-                "session_id": "default",
             },
+            config={"configurable": {"thread_id": "thread-1"}},
         )
 
-    @patch('closedloop.graph.tools.search_tool.httpx.Client')
-    @patch('closedloop.graph.tools.search_tool.get_config')
-    @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
-    def test_search_candidates_retry_next_candidate_url(self, _mock_logger_setup, mock_get_config, mock_client_class):
-        fake_config = type(
-            "FakeConfig",
-            (),
-            {
-                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
-                "PLAN_SUB_NETWORK_MODE": "docker",
-            },
-        )()
-        mock_get_config.return_value = fake_config
-
-        mock_client = MagicMock()
-        dns_error = socket.gaierror(-2, "Name or service not known")
-        ok_response = MagicMock()
-        ok_response.raise_for_status.return_value = None
-        ok_response.json.return_value = {
-            "status": "success",
-            "results": [{"id": "a1", "name": "Activity 1", "description": "desc"}],
-        }
-        mock_client.post.side_effect = [dns_error, ok_response]
-        mock_client.__enter__.return_value = mock_client
-        mock_client_class.return_value = mock_client
-
-        command = search_candidates.invoke({
-            "category": "activity",
-            "user_request": "儿童",
-            "tool_call_id": "call_234",
-            "state": {},
-            "top_k": 5,
-        })
+        mock_client.post.assert_called_once()
+        called_url = mock_client.post.call_args.args[0]
+        self.assertEqual(called_url, "http://127.0.0.1:8002/search")
+        payload = mock_client.post.call_args.kwargs.get("json", {})
+        self.assertEqual(payload.get("session_id"), "thread-1")
+        self.assertEqual(payload.get("category"), "restaurant")
+        self.assertEqual(payload.get("user_request"), "儿童乐园")
+        self.assertEqual(payload.get("subcatory"), "lunch")
+        self.assertTrue(payload.get("candidates"))
+        self.assertTrue(all(item.get("subcatory") == "lunch" for item in payload.get("candidates", [])))
 
         messages = command.update.get("messages", [])
         self.assertEqual(len(messages), 1)
         content = json.loads(messages[0].content)
         self.assertEqual(content["status"], "success")
-        self.assertEqual(content["result"]["results"][0]["id"], "a1")
-
-        called_urls = [call.args[0] for call in mock_client.post.call_args_list]
-        self.assertEqual(
-            called_urls,
-            [
-                "http://search-primary:8001/search",
-                "http://plan_sub_backend:8001/search",
-            ],
+        self.assertEqual(content["result"]["results"][0]["id"], "state_combo")
+        self.assertEqual(content["result"]["results"][0]["name"], "亲子儿童乐园套餐")
+        self.assertEqual(content["result"]["results"][0]["subcatory"], "lunch")
+        self.assertTrue(
+            any(
+                "msg=search_sub_request" in str(call.args[0])
+                and "count=1" in str(call.args[0])
+                for call in mock_logger.info.call_args_list
+            )
         )
 
-    @patch('closedloop.graph.tools.search_tool.httpx.Client')
-    @patch('closedloop.graph.tools.search_tool.get_config')
-    @patch('closedloop.graph.plan_subgraph.search_indexer.SearchIndexer.get_instance')
-    @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
-    def test_search_candidates_fallback_after_all_candidates_fail(self, _mock_logger_setup, mock_get_indexer, mock_get_config, mock_client_class):
-        fake_config = type(
+    def test_search_candidates_input_rejects_invalid_subcatory_for_category(self):
+        with self.assertRaises(Exception):
+            SearchCandidatesInput(category="restaurant", user_request="儿童乐园", top_k=5, subcatory="light")
+
+    @patch("httpx.Client")
+    @patch("closedloop.graph.tools.search_tool.logger")
+    @patch("closedloop.graph.tools.search_tool.get_config")
+    @patch("closedloop.graph.tools.search_tool.LoggerManager.setup")
+    def test_search_candidates_sends_empty_candidates_when_no_ranked_candidates(
+        self,
+        _mock_logger_setup,
+        mock_get_config,
+        mock_logger,
+        mock_httpx_client,
+    ):
+        mock_get_config.return_value = type(
             "FakeConfig",
             (),
-            {
-                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
-                "PLAN_SUB_NETWORK_MODE": "docker",
-            },
+            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
         )()
-        mock_get_config.return_value = fake_config
 
         mock_client = MagicMock()
-        mock_client.post.side_effect = socket.gaierror(-2, "Name or service not known")
-        mock_client.__enter__.return_value = mock_client
-        mock_client_class.return_value = mock_client
-
-        mock_indexer_instance = MagicMock()
-        mock_indexer_instance.category_docs = {
-            "default": {
-                "restaurant": [
-                    {"id": "r1", "name": "亲子餐厅", "description": "有儿童设施", "features": "儿童区"},
-                ]
-            }
-        }
-        mock_indexer_instance._prepare_text.return_value = "亲子餐厅 有儿童设施 儿童区"
-        mock_get_indexer.return_value = mock_indexer_instance
-
-        command = search_candidates.invoke({
-            "category": "restaurant",
-            "user_request": "儿童",
-            "tool_call_id": "call_345",
-            "state": {},
-            "top_k": 5,
-        })
-
-        messages = command.update.get("messages", [])
-        content = json.loads(messages[0].content)
-        self.assertEqual(content["status"], "success")
-        self.assertEqual(content["result"]["results"][0]["id"], "r1")
-        self.assertGreaterEqual(mock_client.post.call_count, 1)
-        mock_get_indexer.assert_called_once()
-
-    @patch('closedloop.graph.tools.search_tool.httpx.Client')
-    @patch('closedloop.graph.tools.search_tool.get_config')
-    @patch('closedloop.graph.tools.search_tool.LoggerManager.setup')
-    def test_search_candidates_retry_next_candidate_url_in_local_mode(self, _mock_logger_setup, mock_get_config, mock_client_class):
-        fake_config = type(
-            "FakeConfig",
-            (),
-            {
-                "PLAN_SUB_API_URL": "http://search-primary:8001/plan",
-                "PLAN_SUB_NETWORK_MODE": "local",
-            },
-        )()
-        mock_get_config.return_value = fake_config
-
-        mock_client = MagicMock()
-        connect_error = socket.gaierror(-2, "Name or service not known")
-        ok_response = MagicMock()
-        ok_response.raise_for_status.return_value = None
-        ok_response.json.return_value = {
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
             "status": "success",
-            "results": [{"id": "a2", "name": "Activity 2", "description": "desc"}],
+            "results": [
+                {
+                    "package_id": "pkg_1",
+                    "name": "亲子绘本活动",
+                    "description": "安静互动",
+                    "features": "室内 亲子",
+                    "price": 99,
+                    "duration_mins": 60,
+                    "suitable_groups": ["family"],
+                    "age_range": ["3-6", "7-10"],
+                    "distance_km": 1.0,
+                    "subcatory": "normal",
+                }
+            ],
         }
-        mock_client.post.side_effect = [connect_error, ok_response]
-        mock_client.__enter__.return_value = mock_client
-        mock_client_class.return_value = mock_client
+        mock_client.post.return_value = mock_response
+        mock_httpx_client.return_value.__enter__.return_value = mock_client
 
-        command = search_candidates.invoke({
-            "category": "activity",
-            "user_request": "朋友",
-            "tool_call_id": "call_456",
-            "state": {},
-            "top_k": 5,
-        })
+        command = search_candidates.invoke(
+            {
+                "category": "activity",
+                "user_request": "亲子活动",
+                "subcatory": "normal",
+                "tool_call_id": "call_234",
+                "state": {
+                    "constraints": {
+                        "group_type": "family",
+                        "budget": 300,
+                        "preferred_distance": "2km-5km",
+                        "time_period": "14:00",
+                        "duration_hours": [4, 6],
+                        "child_count": 1,
+                        "child_profiles": [["F", 5]],
+                    },
+                    "candidates": {},
+                },
+                "top_k": 5,
+            },
+            config={"configurable": {"thread_id": "thread-1"}},
+        )
+
+        mock_client.post.assert_called_once()
+        payload = mock_client.post.call_args.kwargs.get("json", {})
+        self.assertEqual(payload.get("session_id"), "thread-1")
+        self.assertEqual(payload.get("subcatory"), "normal")
+        self.assertEqual(payload.get("candidates"), [])
 
         messages = command.update.get("messages", [])
         content = json.loads(messages[0].content)
         self.assertEqual(content["status"], "success")
-        self.assertEqual(content["result"]["results"][0]["id"], "a2")
-
-        called_urls = [call.args[0] for call in mock_client.post.call_args_list]
-        self.assertEqual(
-            called_urls,
-            [
-                "http://search-primary:8001/search",
-                "http://localhost:8001/search",
-            ],
+        self.assertEqual(content["result"]["results"][0]["id"], "pkg_1")
+        self.assertEqual(content["result"]["results"][0]["name"], "亲子绘本活动")
+        self.assertEqual(content["result"]["results"][0]["subcatory"], "normal")
+        self.assertTrue(
+            any(
+                "msg=search_sub_request" in str(call.args[0])
+                and "count=0" in str(call.args[0])
+                for call in mock_logger.info.call_args_list
+            )
+        )
+        self.assertTrue(
+            any(
+                "msg=candidate_pool_empty" in str(call.args[0])
+                for call in mock_logger.warning.call_args_list
+            )
         )
 
-if __name__ == '__main__':
+    @patch("httpx.Client")
+    @patch("closedloop.graph.tools.search_tool.logger")
+    @patch("closedloop.graph.tools.search_tool.get_config")
+    @patch("closedloop.graph.tools.search_tool.LoggerManager.setup")
+    def test_search_candidates_returns_error_when_search_service_returns_empty(
+        self,
+        _mock_logger_setup,
+        mock_get_config,
+        mock_logger,
+        mock_httpx_client,
+    ):
+        mock_get_config.return_value = type(
+            "FakeConfig",
+            (),
+            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
+        )()
+
+        mock_client = MagicMock()
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {"status": "success", "results": []}
+        mock_client.post.return_value = mock_response
+        mock_httpx_client.return_value.__enter__.return_value = mock_client
+
+        command = search_candidates.invoke(
+            {
+                "category": "restaurant",
+                "user_request": "儿童设施",
+                "subcatory": "lunch",
+                "tool_call_id": "call_345",
+                "state": {
+                    "constraints": {
+                        "group_type": "family",
+                        "budget": 300,
+                        "dietary_restrictions": ["辣"],
+                        "preferred_distance": "<2km",
+                        "time_period": "12:00",
+                        "duration_hours": [4, 6],
+                        "child_count": 1,
+                        "child_profiles": [["F", 5]],
+                    },
+                    "candidates": {
+                        "ranked_lunch_combos": [
+                            {
+                                "combo_id": "combo_ok",
+                                "name": "亲子清淡套餐",
+                                "description": "清淡口味，适合家庭",
+                                "features": "儿童乐园 宝宝椅",
+                                "tags": ["清淡"],
+                                "price": 128,
+                                "duration_mins": 90,
+                                "suitable_groups": ["family"],
+                                "child_facility_tags": ["儿童乐园", "宝宝椅"],
+                                "distance_km": 1.2,
+                            },
+                        ]
+                    },
+                },
+                "top_k": 5,
+            }
+        )
+
+        messages = command.update.get("messages", [])
+        self.assertEqual(len(messages), 1)
+        content = json.loads(messages[0].content)
+        self.assertEqual(content["error"], "没有找到结果")
+        self.assertIn("请尝试换一个搜索词", content["detail"])
+        self.assertTrue(
+            any(
+                "msg=query_no_match" in str(call.args[0])
+                for call in mock_logger.info.call_args_list
+            )
+        )
+
+
+if __name__ == "__main__":
     unittest.main()

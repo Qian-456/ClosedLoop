@@ -31,12 +31,14 @@ docker compose up --build
 - 前端：`http://localhost:8088`
 - 后端健康检查：`http://localhost:8088/health`（由前端 Nginx 代理到后端）
 - （可选直连后端）`http://localhost:8000/health`
+- （可选直连子服务）Plan 子图：`http://localhost:8001`，Search 子图：`http://localhost:8002`
 
 ## 4. 说明
 
 - 前端会以同源方式请求 `/invoke`、`/execute/*`，无需额外 CORS 配置。
 - Mock 数据从仓库 `mock_db/` 目录以只读方式挂载到后端容器 `/app/mock_db`。
 - 日志默认写入 `backend/src/logs/`（通过 volume 映射到宿主机，便于查看）。
+- Docker Compose 会同时启动 3 个后端服务：主服务（8000）、Plan 子图服务（8001）、Search 子图服务（8002）。主服务通过容器内域名调用子服务（例如 `http://search_sub_backend:8002/search`）。
 
 ## 5. 常见问题
 

@@ -32,6 +32,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 提取要求：
 - group_type 必须归一化为 family 或 friends；如果无法判断，默认选择 friends。
 - budget 是总预算；如果用户说人均预算，请结合人数换算为总预算。
+- preferred_distance 归一化为 <2km / 2km-5km / >5km：强调“就附近/走路/两公里内/不想太远”选 <2km；强调“别太远/几公里内/打车一会儿”选 2km-5km；强调“远一点/开车也行/不介意远”选 >5km；未提及用默认 2km-5km。
 - time_period 使用目标开始时间，如 14:00、18:00；如果用户给时间段，也可保留 HH:MM-HH:MM。
 - duration_hours 提取为小时范围；未明确时可按 4 到 6 小时。
 - adult_count、child_count、adult_genders、child_profiles 尽量从用户文本推断。child_profiles 的格式必须为二维数组/二元组列表：[[gender, age], ...]（或等价的 (gender, age) 列表），gender 只能是 M/F/U，age 必须是整数；例如：[['F', 5], ['F', -1]]；孕妇用 [['U', 0]]；无小孩用 []。注意字段名必须是 child_profiles，不要写 children_profile/children_profiles。小孩的性别默认女(F)，如果不知道岁数默认-1，年龄为0代表孕妇，性别可以填U。

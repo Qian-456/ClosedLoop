@@ -29,6 +29,28 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title=f"{config.PROJECT_NAME} - Plan Subgraph API", lifespan=lifespan)
 
+
+def _count_plan_candidates(candidates: Dict[str, Any] | None) -> Dict[str, int]:
+    """Summarize ranked candidate counts for plan observability."""
+    candidate_state = candidates or {}
+    return {
+        "restaurant_count": sum(
+            len(candidate_state.get(key, []) or [])
+            for key in (
+                "ranked_breakfast_combos",
+                "ranked_lunch_combos",
+                "ranked_afternoon_tea_combos",
+                "ranked_dinner_combos",
+                "ranked_late_night_combos",
+            )
+        ),
+        "activity_count": sum(
+            len(candidate_state.get(key, []) or [])
+            for key in ("ranked_light_packages", "ranked_packages")
+        ),
+        "gift_count": len(candidate_state.get("ranked_gifts", []) or []),
+    }
+
 class PlanRequest(BaseModel):
     user_input: Optional[str] = None
     constraints: Optional[Dict[str, Any]] = None
@@ -71,8 +93,16 @@ def run_plan_subgraph(req: PlanRequest):
         run_config = {"configurable": {"thread_id": req.session_id}}
         subgraph_output = build_subgraph_plan().invoke(subgraph_state, config=run_config)
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
+        candidates: Dict[str, Any] = {}
         if isinstance(subgraph_output, dict):
             candidates = subgraph_output.get("candidates", {}) or {}
+            candidate_counts = _count_plan_candidates(candidates)
+            logger.info(
+                f"phase=plan_sub_api | msg=plan_candidates_ready | session_id={req.session_id} "
+                f"| restaurant_count={candidate_counts['restaurant_count']} "
+                f"| activity_count={candidate_counts['activity_count']} "
+                f"| gift_count={candidate_counts['gift_count']}"
+            )
             try:
                 SearchIndexer.get_instance().schedule_plan_indices(candidates, session_id=req.session_id)
             except Exception as e:
@@ -83,7 +113,7 @@ def run_plan_subgraph(req: PlanRequest):
         logger.info(
             f"phase=plan_sub_api | result=success | session_id={req.session_id} | elapsed_ms={elapsed_ms}"
         )
-        return {"status": "success", "itinerary": result}
+        return {"status": "success", "itinerary": result, "candidates": candidates}
     except Exception as e:
         logger.error(f"phase=plan_sub_api | error={e}")
         raise HTTPException(status_code=500, detail=str(e))

@@ -68,6 +68,7 @@ services:
       - LOG_ELK_JSON_PATH=logs/elk/elk_{time:YYYY-MM-DD}.jsonl
       - MILVUS_URI=http://milvus:19530
       - PLAN_SUB_API_URL=http://plan_sub_backend:8001/plan
+      - SEARCH_SUB_API_URL=http://search_sub_backend:8002/search
       - PLAN_SUB_NETWORK_MODE=docker
       - TZ=Asia/Shanghai
     env_file:
@@ -102,6 +103,22 @@ services:
       - ./backend/src/logs:/app/backend/src/logs
     depends_on:
       - milvus
+
+  search_sub_backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    command: ["uvicorn", "search_sub_main:app", "--host", "0.0.0.0", "--port", "8002"]
+    environment:
+      - LOG_DIR=logs
+      - LOG_ELK_JSON_PATH=logs/elk/elk_{time:YYYY-MM-DD}.jsonl
+      - TZ=Asia/Shanghai
+    env_file:
+      - backend/.env
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./backend/src/logs:/app/backend/src/logs
 
   frontend:
     build:

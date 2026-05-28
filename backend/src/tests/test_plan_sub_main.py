@@ -9,9 +9,15 @@ from plan_sub_main import PlanRequest, run_plan_subgraph
 
 
 class TestPlanSubMain(unittest.TestCase):
+    @patch("plan_sub_main.logger")
     @patch("plan_sub_main.SearchIndexer")
     @patch("plan_sub_main.build_subgraph_plan")
-    def test_run_plan_subgraph_schedules_indices_after_success(self, mock_build_subgraph_plan, mock_search_indexer):
+    def test_run_plan_subgraph_returns_candidates_and_logs_summary(
+        self,
+        mock_build_subgraph_plan,
+        mock_search_indexer,
+        mock_logger,
+    ):
         mock_graph = MagicMock()
         mock_graph.invoke.return_value = {
             "itinerary": {"status": "ok", "plans": [{"id": "A"}]},
@@ -36,9 +42,19 @@ class TestPlanSubMain(unittest.TestCase):
         )
 
         self.assertEqual(resp["status"], "success")
+        self.assertEqual(resp["itinerary"], mock_graph.invoke.return_value["itinerary"])
+        self.assertEqual(resp["candidates"], mock_graph.invoke.return_value["candidates"])
         mock_indexer.schedule_plan_indices.assert_called_once_with(
             mock_graph.invoke.return_value["candidates"],
             session_id="thread-123",
+        )
+        self.assertTrue(
+            any(
+                "restaurant_count=1" in str(call.args[0])
+                and "activity_count=1" in str(call.args[0])
+                and "gift_count=0" in str(call.args[0])
+                for call in mock_logger.info.call_args_list
+            )
         )
 
 

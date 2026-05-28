@@ -79,6 +79,28 @@ class PlanTripInput(BaseModel):
     )
 
 
+def _count_plan_candidates(candidates: dict | None) -> dict[str, int]:
+    """Summarize ranked candidate counts returned by the plan subgraph."""
+    candidate_state = candidates or {}
+    return {
+        "restaurant_count": sum(
+            len(candidate_state.get(key, []) or [])
+            for key in (
+                "ranked_breakfast_combos",
+                "ranked_lunch_combos",
+                "ranked_afternoon_tea_combos",
+                "ranked_dinner_combos",
+                "ranked_late_night_combos",
+            )
+        ),
+        "activity_count": sum(
+            len(candidate_state.get(key, []) or [])
+            for key in ("ranked_light_packages", "ranked_packages")
+        ),
+        "gift_count": len(candidate_state.get("ranked_gifts", []) or []),
+    }
+
+
 def _normalize_constraints(data: dict) -> dict:
     """复用 Constraints 契约完成默认值与边界归一化。"""
     constraints = Constraints(**data)
@@ -158,20 +180,28 @@ def plan_trip(
                     network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
                 )
                 break
-            except Exception as e:
-                is_retryable = isinstance(e, PLAN_SUB_RETRYABLE_ERRORS)
-                if attempt == 2 or not is_retryable:
+            except PLAN_SUB_RETRYABLE_ERRORS as e:
+                if attempt == 2:
                     raise
                 logger.warning(
-                    f"phase=plan_trip | msg=retrying | attempt={attempt+1} | retryable={is_retryable} | error={e}"
+                    f"phase=plan_trip | msg=retrying | attempt={attempt+1} | retryable=True | error={e}"
                 )
                 time.sleep(2.0)
-            
+
+        candidates = subgraph_output.get("candidates", {}) if isinstance(subgraph_output, dict) else {}
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
+        candidate_counts = _count_plan_candidates(candidates)
+        logger.info(
+            f"phase=plan_trip | msg=persist_candidates_to_state "
+            f"| restaurant_count={candidate_counts['restaurant_count']} "
+            f"| activity_count={candidate_counts['activity_count']} "
+            f"| gift_count={candidate_counts['gift_count']}"
+        )
         logger.info(f"phase=plan_trip | result=success | itinerary_status={result.get('status')}")
     except Exception as e:
         constraints = raw_constraints
+        candidates = {}
         result = {
             "error": "规划子图调用失败",
             "message": str(e),
@@ -191,6 +221,7 @@ def plan_trip(
 
     update = {
         "constraints": constraints,
+        "candidates": candidates,
         "latest_plan_result": result.get("plans", []) if isinstance(result, dict) else [],
         "current_step": "plan_trip",
         "messages": [transfer_message],
