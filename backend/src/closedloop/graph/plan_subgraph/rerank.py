@@ -83,6 +83,7 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
 
     suitable_groups = item.get("suitable_groups", []) or []
     if isinstance(suitable_groups, list):
+        matched_group = False
         if constraints.group_type == "family":
             family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
             if any(
@@ -90,6 +91,7 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
                 for g in suitable_groups
             ):
                 scene_fit_score += 15
+                matched_group = True
         elif constraints.group_type == "friends":
             friends_keywords = ("friends", "朋友", "聚会", "多人", "小聚")
             if any(
@@ -97,6 +99,22 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
                 for g in suitable_groups
             ):
                 scene_fit_score += 15
+                matched_group = True
+
+        if not matched_group:
+            group_text = f"{inner_item.get('name', '')} {inner_item.get('features', '')} {inner_item.get('description', '')}"
+            if constraints.group_type == "family":
+                family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "老少皆宜")
+                if any(k in group_text for k in family_keywords):
+                    scene_fit_score += 15
+            elif constraints.group_type == "friends":
+                effective_people = _get_effective_people(constraints)
+                friends_keywords = ("friends", "朋友", "聚会", "多人", "小聚", "团建", "派对")
+                friends_pair_keywords = ("双人", "2人", "情侣", "约会", "闺蜜", "兄弟", "搭子")
+                if any(k in group_text for k in friends_keywords) or (
+                    effective_people <= 2.1 and any(k in group_text for k in friends_pair_keywords)
+                ):
+                    scene_fit_score += 15
 
     group_mismatch_penalty = _get_group_mismatch_penalty(inner_item, constraints)
     if group_mismatch_penalty:

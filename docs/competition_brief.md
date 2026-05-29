@@ -75,6 +75,10 @@
 - **异常覆盖**：至少处理3类故障（如无座/无票/冲突/无可行方案等）。
   - （核心异常覆盖 1）：行程修改后冲突的 5 级修复策略，deterministic validator 负责合法性判断，Agent 负责解释与协商。
   - （核心异常覆盖 2）：当用户设定的硬性约束（如预算过低、时间过长/过短）导致系统无法匹配生成任何候选方案时，底层过滤和深度组合节点会收集详细的被剪枝数据，并生成一份双阶（初步过滤层+深度组合层）且按占比排序的统计分析报告。Agent 基于该精确的诊断报告引导用户调整对应的冲突约束。
+  - （核心异常覆盖 3）：执行阶段的“预约失败 / 库存不足（Mock）”与自动兜底：
+    - 数据侧触发点：`reservations.json` 的条目按 `target_type=(combo|package)` + `target_id` + `time_slots` 描述可用余量；`activities.json` 的 `packages[].available_stock` 与 `add_ons.json` 的 `gifts[].stock` 描述执行期可扣减库存。
+    - 强制触发“无法预约”的方法（用于稳定演示）：删除 `reservations.json` 中对应 `target_id` 的记录、或清空该记录的 `time_slots`，使执行器找不到可用时段，从而将该 step 标记为预订失败。
+    - 当前执行器处理方式：对餐厅套餐预约失败时，如果 `replacement_policy != strict` 且用户未手改（`user_touched=false`），会尝试从 `backup_candidates` 中静默替换等价项；若备选项带 `requires_confirmation=true`，则会发出 `pending_user_confirmation` 状态等待用户确认后再执行替换。活动/礼物目前仅记录扣减与预订结果，不做自动替换。
 
 ```text
 对，你这 5 层理解 大方向是对的 。不过你这里说的“第一季”应该是我前面说的 Level 1 / 第一级：微调时间，不改变内容 。 

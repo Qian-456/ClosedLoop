@@ -45,6 +45,7 @@ class QwenSettings(BaseSettings):
 class DataSettings(BaseSettings):
     MOCK_DB_REPO_DIR: str = os.path.join(REPO_ROOT_DIR, "backend", "src", "mock_db")
     MOCK_DB_RW_DIR: str = os.path.join(REPO_ROOT_DIR, "mock_data", "runtime")
+    FORCE_OUT_OF_STOCK_IDS: str = ""
 
 class AppConfig(BaseSettings):
     PROJECT_NAME: str = "ClosedLoop"

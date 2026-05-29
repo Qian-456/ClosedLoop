@@ -14,6 +14,7 @@ from typing import Any, AsyncIterator, Literal
 from closedloop.core.config import REPO_ROOT_DIR, get_config
 from closedloop.core.logger import logger
 from closedloop.contracts.execution import ExecuteEvent, ExecuteRequest, ExecuteStep
+from closedloop.utils.forced_out_of_stock import parse_forced_out_of_stock_ids
 
 
 _activities_lock = asyncio.Lock()
@@ -179,6 +180,13 @@ def _pick_time_slot(
     return slots[0]
 
 
+def _forced_out_of_stock_ids() -> set[str]:
+    config = get_config()
+    data = getattr(config, "data", None)
+    raw = getattr(data, "FORCE_OUT_OF_STOCK_IDS", "") if data is not None else ""
+    return parse_forced_out_of_stock_ids(raw or "")
+
+
 def _reserve_capacity(
     reservations: list[dict[str, Any]],
     target_type: Literal["combo", "package"],
@@ -191,13 +199,21 @@ def _reserve_capacity(
             record = r
             break
     if not record:
-        return False, None
+        return False, {"reason": "no_record"}
     slot = _pick_time_slot(record, start_time)
     if not slot:
-        return False, None
+        return False, {"reason": "no_time_slot"}
     if isinstance(slot.get("capacity_remaining"), int):
         before = int(slot["capacity_remaining"])
-        after = max(0, before - 1)
+        if before <= 0:
+            return False, {
+                "reason": "out_of_stock",
+                "slot_start_time": slot.get("start_time"),
+                "slot_end_time": slot.get("end_time"),
+                "capacity_remaining_before": before,
+                "capacity_remaining_after": before,
+            }
+        after = before - 1
         slot["capacity_remaining"] = after
         return True, {
             "slot_start_time": slot.get("start_time"),
@@ -316,6 +332,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
     new_item_id = None
     new_item_name = None
     repo_dir = _resolve_repo_dir()
+    forced_ids = _forced_out_of_stock_ids()
 
     try:
         if step.item_type == "gift_shop":
@@ -323,17 +340,27 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
             async with _add_ons_lock:
                 add_ons = _read_list_json(repo_dir, "add_ons.json")
                 gift, _ = _find_gift(add_ons, step.item_id)
+                modified = False
+                if step.item_id in forced_ids:
+                    reserved = False
+                    reserved_detail = {"forced_out_of_stock": True, "delivery_time": delivery_time}
                 if gift and isinstance(gift.get("stock"), int):
                     before_stock = int(gift["stock"])
-                    after_stock = max(0, before_stock - 1)
-                    gift["stock"] = after_stock
-                    reserved = True
-                    reserved_detail = {
-                        "stock_before": before_stock,
-                        "stock_after": after_stock,
-                        "delivery_time": delivery_time,
-                    }
-                _atomic_write_json(os.path.join(repo_dir, "add_ons.json"), add_ons)
+                    if before_stock <= 0:
+                        reserved = False
+                        reserved_detail = {"stock_before": before_stock, "stock_after": before_stock, "delivery_time": delivery_time}
+                    elif step.item_id not in forced_ids:
+                        after_stock = before_stock - 1
+                        gift["stock"] = after_stock
+                        reserved = True
+                        reserved_detail = {
+                            "stock_before": before_stock,
+                            "stock_after": after_stock,
+                            "delivery_time": delivery_time,
+                        }
+                        modified = True
+                if modified:
+                    _atomic_write_json(os.path.join(repo_dir, "add_ons.json"), add_ons)
             logger.info(
                 f"phase=execute_mock | action=reserve_gift | execution_id={execution_id} | gift_id={step.item_id} | reserved={reserved} | detail={reserved_detail}"
             )
@@ -343,29 +370,53 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                 activities = _read_list_json(repo_dir, "activities.json")
                 pkg, _ = _find_package(activities, step.item_id)
                 modified = False
-                if pkg and isinstance(pkg.get("available_stock"), int):
-                    before_stock = int(pkg["available_stock"])
-                    after_stock = max(0, before_stock - 1)
-                    pkg["available_stock"] = after_stock
-                    reserved = True
-                    reserved_detail = {"available_stock_before": before_stock, "available_stock_after": after_stock}
-                    modified = True
+                requires_booking = bool(pkg.get("requires_booking", False)) if pkg is not None else False
+
+                if step.item_id in forced_ids:
+                    reserved = False
+                    reserved_detail = {"forced_out_of_stock": True}
+                elif requires_booking:
+                    async with _reservations_lock:
+                        reservations = _read_list_json(repo_dir, "reservations.json")
+                        ok, detail = _reserve_capacity(
+                            reservations, "package", step.item_id, step.start_time
+                        )
+                        if not ok:
+                            reserved = False
+                            reserved_detail = detail
+                        else:
+                            before_stock = int(pkg["available_stock"]) if isinstance(pkg.get("available_stock"), int) else -1
+                            if before_stock <= 0:
+                                reserved = False
+                                reserved_detail = {
+                                    **(detail or {}),
+                                    "available_stock_before": before_stock,
+                                    "available_stock_after": before_stock,
+                                }
+                            else:
+                                pkg["available_stock"] = before_stock - 1
+                                reserved = True
+                                reserved_detail = {
+                                    **(detail or {}),
+                                    "available_stock_before": before_stock,
+                                    "available_stock_after": before_stock - 1,
+                                }
+                                modified = True
+                                _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
+                else:
+                    if pkg and isinstance(pkg.get("available_stock"), int):
+                        before_stock = int(pkg["available_stock"])
+                        if before_stock <= 0:
+                            reserved = False
+                            reserved_detail = {"available_stock_before": before_stock, "available_stock_after": before_stock}
+                        else:
+                            pkg["available_stock"] = before_stock - 1
+                            reserved = True
+                            reserved_detail = {"available_stock_before": before_stock, "available_stock_after": before_stock - 1}
+                            modified = True
+
                 if modified:
                     _atomic_write_json(os.path.join(repo_dir, "activities.json"), activities)
-
-            requires_booking = False
-            if pkg is not None:
-                requires_booking = bool(pkg.get("requires_booking", False))
-            if requires_booking:
-                async with _reservations_lock:
-                    reservations = _read_list_json(repo_dir, "reservations.json")
-                    ok, detail = _reserve_capacity(
-                        reservations, "package", step.item_id, step.start_time
-                    )
-                    reserved = ok or reserved
-                    if detail:
-                        reserved_detail = {**(reserved_detail or {}), **detail}
-                    _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
             logger.info(
                 f"phase=execute_mock | action=reserve_package | execution_id={execution_id} | package_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail}"
             )
@@ -377,57 +428,65 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
             if combo is not None:
                 requires_booking = bool(combo.get("requires_booking", False))
 
-            if requires_booking:
+            reservations = None
+            if step.item_id in forced_ids:
+                reserved = False
+                reserved_detail = {"forced_out_of_stock": True}
+            elif requires_booking:
                 async with _reservations_lock:
                     reservations = _read_list_json(repo_dir, "reservations.json")
                     reserved, reserved_detail = _reserve_capacity(
                         reservations, "combo", step.item_id, step.start_time
                     )
-                    
-                    if not reserved and step.replacement_policy != "strict" and not step.user_touched:
-                        logger.debug(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
-                        for backup in (step.backup_candidates or []):
-                            b_requires_confirmation = backup.get("requires_confirmation", False)
-                            logger.debug(f"phase=execute_mock | action=fallback_check | backup_id={backup.get('id')} | requires_confirmation={b_requires_confirmation}")
-                            if b_requires_confirmation:
-                                # Trigger user confirmation event instead of silent replacement
-                                await _emit(ctx, ExecuteEvent(
-                                    type="item_update",
-                                    data={
-                                        "execution_id": execution_id,
-                                        "item_id": step.item_id,
-                                        "item_type": step.item_type,
-                                        "phase": "pending_user_confirmation",
-                                        "message": f"主选餐厅无座，备选餐厅({backup.get('name')})触发提醒: {backup.get('violation_reason')}",
-                                    }
-                                ))
-                                break # Stop silent replacement
-
-                            b_id = backup.get("id")
-                            b_combo = _find_combo(restaurants, b_id)
-                            if not b_combo:
-                                continue
-                            b_req_booking = bool(b_combo.get("requires_booking", False))
-                            if b_req_booking:
-                                b_reserved, b_detail = _reserve_capacity(reservations, "combo", b_id, step.start_time)
-                                if b_reserved:
-                                    reserved = True
-                                    reserved_detail = b_detail
-                                    replaced = True
-                                    new_item_id = b_id
-                                    new_item_name = backup.get("name")
-                                    break
-                            else:
-                                reserved = True
-                                replaced = True
-                                new_item_id = b_id
-                                new_item_name = backup.get("name")
-                                break
-                                
                     if reserved:
                         _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
             else:
                 reserved = True
+
+            if not reserved and step.replacement_policy != "strict" and not step.user_touched:
+                logger.debug(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
+                async with _reservations_lock:
+                    reservations = _read_list_json(repo_dir, "reservations.json")
+                    for backup in (step.backup_candidates or []):
+                        b_requires_confirmation = backup.get("requires_confirmation", False)
+                        logger.debug(f"phase=execute_mock | action=fallback_check | backup_id={backup.get('id')} | requires_confirmation={b_requires_confirmation}")
+                        if b_requires_confirmation:
+                            await _emit(ctx, ExecuteEvent(
+                                type="item_update",
+                                data={
+                                    "execution_id": execution_id,
+                                    "item_id": step.item_id,
+                                    "item_type": step.item_type,
+                                    "phase": "pending_user_confirmation",
+                                    "message": f"主选餐厅无座，备选餐厅({backup.get('name')})触发提醒: {backup.get('violation_reason')}",
+                                }
+                            ))
+                            break
+
+                        b_id = backup.get("id")
+                        if not b_id or str(b_id) in forced_ids:
+                            continue
+
+                        b_combo = _find_combo(restaurants, b_id)
+                        if not b_combo:
+                            continue
+                        b_req_booking = bool(b_combo.get("requires_booking", False))
+                        if b_req_booking:
+                            b_reserved, b_detail = _reserve_capacity(reservations, "combo", str(b_id), step.start_time)
+                            if b_reserved:
+                                reserved = True
+                                reserved_detail = b_detail
+                                replaced = True
+                                new_item_id = str(b_id)
+                                new_item_name = backup.get("name")
+                                _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
+                                break
+                        else:
+                            reserved = True
+                            replaced = True
+                            new_item_id = str(b_id)
+                            new_item_name = backup.get("name")
+                            break
             logger.info(
                 f"phase=execute_mock | action=reserve_combo | execution_id={execution_id} | combo_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail} | replaced={replaced} | new_id={new_item_id}"
             )
