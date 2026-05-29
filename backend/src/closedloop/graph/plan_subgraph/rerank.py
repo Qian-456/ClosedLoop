@@ -82,23 +82,20 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
             scene_fit_score += ratio * 20.0
 
     suitable_groups = item.get("suitable_groups", []) or []
-    item_features = inner_item.get("features", "") or ""
-    
     if isinstance(suitable_groups, list):
         if constraints.group_type == "family":
-            family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
-            # 匹配 suitable_groups 或者 inner_item 的 features
+            family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
             if any(
                 isinstance(g, str) and any(k in g for k in family_keywords)
                 for g in suitable_groups
-            ) or any(k in item_features for k in family_keywords):
+            ):
                 scene_fit_score += 15
         elif constraints.group_type == "friends":
-            friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
+            friends_keywords = ("friends", "朋友", "聚会", "多人", "小聚")
             if any(
                 isinstance(g, str) and any(k in g for k in friends_keywords)
                 for g in suitable_groups
-            ) or any(k in item_features for k in friends_keywords):
+            ):
                 scene_fit_score += 15
 
     group_mismatch_penalty = _get_group_mismatch_penalty(inner_item, constraints)

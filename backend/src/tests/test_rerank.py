@@ -68,6 +68,11 @@ class TestRerankNode(unittest.TestCase):
         self.assertEqual(_get_capacity_from_name("3-4人套票"), 3.5)
         self.assertEqual(_get_capacity_from_name("2~3人套票"), 2.5)
         self.assertEqual(_get_capacity_from_name("2到3人套票"), 2.5)
+        self.assertEqual(_get_capacity_from_name("2大1小轻松体验"), 2.4)
+        self.assertEqual(_get_capacity_from_name("2大2小周末畅玩"), 2.8)
+        self.assertEqual(_get_capacity_from_name("双人搭子体验"), 2.0)
+        self.assertEqual(_get_capacity_from_name("三人小聚体验"), 3.0)
+        self.assertEqual(_get_capacity_from_name("四人畅玩体验"), 4.0)
         
         # 测试通用家庭
         self.assertEqual(_get_capacity_from_name("家庭健康轻食餐"), 2.6)

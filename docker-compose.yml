@@ -16,7 +16,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./mock_data/base:/app/mock_data/base:ro
+      - ./backend/src/mock_db:/app/backend/src/mock_db:ro
       - ./mock_data/runtime:/app/mock_data/runtime
       - ./backend/src/logs:/app/backend/src/logs
 
@@ -35,7 +35,7 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - ./mock_data/base:/app/mock_data/base:ro
+      - ./backend/src/mock_db:/app/backend/src/mock_db:ro
       - ./mock_data/runtime:/app/mock_data/runtime
       - ./backend/src/logs:/app/backend/src/logs
 

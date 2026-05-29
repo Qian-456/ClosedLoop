@@ -75,8 +75,8 @@ def _derive_activity_age_range(*, profile: str, sub_category: str, tags: list[st
 def _derive_experience_tags(*, category: str, sub_category: str, tags: list[str], review_keywords: list[str]) -> list[str]:
     text = " ".join([sub_category] + list(tags or []) + list(review_keywords or []))
     experience_tags: list[str] = []
-    if any(k in text for k in ("浪漫", "约会", "纪念日", "景观", "花艺", "鲜花", "巧克力")):
-        experience_tags.append("浪漫")
+    if any(k in text for k in ("氛围感", "小聚", "纪念日", "景观", "花艺", "鲜花", "巧克力")):
+        experience_tags.append("氛围感")
         experience_tags.append("仪式感")
     if any(k in text for k in ("拍照", "出片", "打卡", "夜景", "复古", "甜品", "盲盒")):
         experience_tags.append("适合拍照")
@@ -424,7 +424,7 @@ def _derive_surprise_score(
     if any(k in exp_text for k in ("惊喜感", "仪式感", "庆生友好")):
         base += 0.2
 
-    matched = _matched_keywords(review_keywords, ("惊喜", "仪式感", "庆生", "约会", "氛围"))
+    matched = _matched_keywords(review_keywords, ("惊喜", "仪式感", "庆生", "小聚", "氛围"))
     confidence = 0.6 + 0.06 * len(matched) + (0.1 if delivery_to_restaurant else 0.0)
     return _build_derived_score(
         score=base,
@@ -502,7 +502,7 @@ def _build_combo(*, sub_category: str, people_expr: str, title_style: str, slots
     title = _ensure_people_expr_in_name(f"{title_style}".strip(), default_people_expr=people_expr)
     if not title.strip() or title.strip() == people_expr:
         title = f"{people_expr}招牌套餐"
-    if is_western and any(k in title_style for k in ("情侣", "纪念日")):
+    if is_western and any(k in title_style for k in ("小聚", "纪念日")):
         title = _ensure_people_expr_in_name(f"{title_style}", default_people_expr=people_expr)
 
     if any(k in sub_category for k in ("火锅", "猪肚鸡")):

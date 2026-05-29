@@ -6,6 +6,68 @@ import re
 import sys
 from typing import List, Dict, Any, Optional
 
+MOCK_TEXT_REPLACEMENTS: tuple[tuple[str, str], ...] = (
+    ("单人/双人", "轻量双人"),
+    ("单人 / 双人", "轻量双人"),
+    ("情侣约会", "朋友小聚"),
+    ("浪漫约会", "仪式感小聚"),
+    ("安静约会", "安静小聚"),
+    ("下午约会", "下午小聚"),
+    ("适合约会", "适合小聚"),
+    ("情侣", "朋友"),
+    ("约会", "小聚"),
+    ("闺蜜", "朋友"),
+    ("兄弟", "朋友"),
+    ("浪漫", "氛围感"),
+    ("适合单人", "适合轻量体验"),
+    ("单人", "轻量"),
+    ("一人食", "轻量餐"),
+    ("一人", "轻量"),
+    ("独处", "低打扰"),
+    ("工作餐", "便捷餐"),
+    ("solo", "friends"),
+    ("couple", "friends"),
+    ("teen", "friends"),
+)
+
+DEMO_FULL_COMBO_IDS = {"combo_024_3"}
+DEMO_BACKUP_COMBO_IDS = {"combo_025_3", "combo_026_3"}
+DEMO_SOLD_OUT_PACKAGE_IDS: set[str] = set()
+
+
+def _sanitize_mock_text(value: str) -> str:
+    """清洗非主线群体词，避免生成数据污染 family/friends 决策。"""
+    out = value
+    for old, new in MOCK_TEXT_REPLACEMENTS:
+        out = out.replace(old, new)
+    return out
+
+
+def _sanitize_mock_list(values: list[str] | None) -> list[str]:
+    """清洗字符串列表并去重。"""
+    out: list[str] = []
+    seen: set[str] = set()
+    for value in values or []:
+        if not isinstance(value, str):
+            continue
+        cleaned = _sanitize_mock_text(value).strip()
+        if not cleaned or cleaned in seen:
+            continue
+        seen.add(cleaned)
+        out.append(cleaned)
+    return out
+
+
+def _sanitize_mock_dict(value: Any) -> Any:
+    """递归清洗 Mock DB 输出对象中的展示文本。"""
+    if isinstance(value, str):
+        return _sanitize_mock_text(value)
+    if isinstance(value, list):
+        return [_sanitize_mock_dict(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _sanitize_mock_dict(v) for k, v in value.items()}
+    return value
+
 def _infer_receive_duration_mins(name: str, tags: list[str] | None) -> tuple[int, float]:
     n = name or ""
     t = " ".join(tags or [])
@@ -254,7 +316,7 @@ def _choose_restaurant_sub_category(tags: list[str]) -> str:
 
 def _choose_gift_shop_sub_category(tags: list[str]) -> str:
     t = " ".join(tags or [])
-    if "鲜花" in t or "浪漫" in t:
+    if "鲜花" in t or "氛围感" in t:
         return "鲜花"
     if "蛋糕" in t or "庆生" in t:
         return "蛋糕"
@@ -273,28 +335,28 @@ def _keywords_for_profile(*, category: str, profile: str, indoor: bool, sub_cate
         if profile == "family_mild":
             base += ["适合亲子", "口味清淡", "可做不辣", "空间宽敞", "饭点人多", "建议预约"]
         elif profile == "couple_photo":
-            base += ["适合约会", "适合拍照", "氛围浪漫", "灯光舒服", "热门打卡", "建议预约"]
+            base += ["适合小聚", "适合拍照", "氛围感", "灯光舒服", "热门打卡", "建议预约"]
         elif profile == "friends_lively":
             base += ["适合朋友聚会", "热闹", "适合多人", "上菜快", "饭点排队", "建议预约"]
         elif profile == "kids_friendly":
             base += ["儿童友好", "适合3-6岁", "口味清淡", "有儿童座椅", "空间宽敞", "周末人多"]
         else:
-            base += ["适合单人", "环境安静", "出餐快", "性价比高", "不用排队", "可做不辣"]
+            base += ["适合轻量体验", "环境安静", "出餐快", "性价比高", "不用排队", "可做不辣"]
 
         if sub_category:
             base.append(sub_category)
 
     elif category == "activity":
         if profile == "solo_quiet":
-            base += ["适合单人", "环境安静", "适合放松", "不拥挤", "适合避开人群", "室内" if indoor else "户外"]
+            base += ["适合轻量体验", "环境安静", "适合放松", "不拥挤", "适合避开人群", "室内" if indoor else "户外"]
         elif profile == "couple_photo":
-            base += ["适合约会", "适合拍照", "出片", "氛围感", "互动性强", "室内" if indoor else "户外"]
+            base += ["适合小聚", "适合拍照", "出片", "氛围感", "互动性强", "室内" if indoor else "户外"]
         elif profile == "family_3_6":
             base += ["适合亲子", "适合3-6岁", "儿童友好", "适合放电", "室内" if indoor else "户外", "周末人多"]
         elif profile == "family_7_10":
             base += ["适合亲子", "适合7-10岁", "寓教于乐", "轻运动", "室内" if indoor else "户外", "建议预约"]
         elif profile == "teen_11_17":
-            base += ["适合青少年", "适合11-17岁", "刺激", "沉浸式体验", "室内" if indoor else "户外", "建议预约"]
+            base += ["适合朋友", "适合11-17岁", "刺激", "沉浸式体验", "室内" if indoor else "户外", "建议预约"]
         elif profile == "friends_lively":
             base += ["适合朋友聚会", "热闹", "互动", "解压", "室内" if indoor else "户外", "建议预约"]
         else:
@@ -305,7 +367,7 @@ def _keywords_for_profile(*, category: str, profile: str, indoor: bool, sub_cate
 
     else:
         if profile == "couple_atmosphere":
-            base += ["适合约会", "氛围感", "惊喜", "高级感", "可同城配送" if delivery_supported else "可自提"]
+            base += ["适合小聚", "氛围感", "惊喜", "高级感", "可同城配送" if delivery_supported else "可自提"]
         elif profile == "birthday_friends":
             base += ["适合朋友聚会", "庆生", "有团购", "出品稳定", "可同城配送" if delivery_supported else "可自提"]
         elif profile == "kids":
@@ -357,8 +419,8 @@ def _infer_default_people_expr_for_combo(*, combo_name: str, restaurant_tags: li
         return "2大1小"
     if any(k in name for k in ("儿童", "亲子", "宝宝")) or any(k in tags_text for k in ("亲子", "儿童", "家庭")):
         return "2大1小"
-    if any(k in name for k in ("单人", "一人", "工作餐", "便当")) or "单人" in tags_text:
-        return "单人"
+    if any(k in name for k in ("轻量", "便捷餐", "便当")) or "轻量" in tags_text:
+        return "双人"
     if any(k in name for k in ("四", "多人", "聚会", "团建", "派对")) or any(k in tags_text for k in ("聚会", "热闹")):
         return "四人"
     return "双人"

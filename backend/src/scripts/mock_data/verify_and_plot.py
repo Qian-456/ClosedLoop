@@ -6,11 +6,18 @@ import math
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from closedloop.core.config import get_config
+from closedloop.core.config import REPO_ROOT_DIR, get_config
+
+
+def _resolve_repo_dir(path_value: str) -> str:
+    """Resolve a repo-relative mock db directory into an absolute path."""
+    if os.path.isabs(path_value):
+        return os.path.abspath(path_value)
+    return os.path.abspath(os.path.join(REPO_ROOT_DIR, path_value))
 
 def verify_and_plot():
     config = get_config()
-    repo_dir = config.data.MOCK_DB_REPO_DIR
+    repo_dir = _resolve_repo_dir(config.data.MOCK_DB_REPO_DIR)
     
     # 解决 matplotlib 中文字体显示问题
     plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS']

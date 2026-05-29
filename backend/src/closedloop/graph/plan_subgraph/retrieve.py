@@ -87,8 +87,8 @@ def _apply_filters_with_events(
     def _match_suitable_groups(target_group: str, suitable_groups: list) -> bool:
         if not isinstance(suitable_groups, list) or not suitable_groups:
             return False
-        family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
-        friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
+        family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
+        friends_keywords = ("friends", "朋友", "聚会", "多人", "小聚")
         kw_map = {
             "family": family_keywords,
             "friends": friends_keywords,
@@ -715,8 +715,8 @@ def hard_filter(item: dict, constraints: Constraints) -> bool:
     def _match_suitable_groups(target_group: str, suitable_groups: list) -> bool:
         if not isinstance(suitable_groups, list) or not suitable_groups:
             return False
-        family_keywords = ("family", "家庭", "亲子", "带娃", "儿童", "三口之家", "宝宝", "老少皆宜")
-        friends_keywords = ("friends", "朋友", "情侣", "约会", "聚会", "同事", "闺蜜", "兄弟", "年轻")
+        family_keywords = ("family", "家庭", "亲子", "带娃", "儿童")
+        friends_keywords = ("friends", "朋友", "聚会", "多人", "小聚")
         kw_map = {
             "family": family_keywords,
             "friends": friends_keywords,

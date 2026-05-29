@@ -6,7 +6,7 @@ from typing import List, Optional, Literal
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
-from closedloop.core.config import get_config
+from closedloop.core.config import REPO_ROOT_DIR, get_config
 from closedloop.utils.mock_db import load_mock_data
 
 # ==========================================
@@ -176,7 +176,10 @@ class ReservationRecord(BaseModel):
 def verify_schema():
     try:
         config = get_config()
-        print(f"使用数据目录: repo={os.path.abspath(config.data.MOCK_DB_REPO_DIR)}")
+        repo_dir = config.data.MOCK_DB_REPO_DIR
+        if not os.path.isabs(repo_dir):
+            repo_dir = os.path.abspath(os.path.join(REPO_ROOT_DIR, repo_dir))
+        print(f"使用数据目录: repo={repo_dir}")
 
         restaurants = load_mock_data("restaurants.json")
         activities = load_mock_data("activities.json")

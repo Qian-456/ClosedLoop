@@ -1,8 +1,11 @@
 import json
 import os
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
 def _write_json(path: str, data) -> None:
@@ -17,6 +20,15 @@ def _read_json(path: str):
 
 
 class TestMockDbRwPersistence(unittest.TestCase):
+    def test_data_settings_default_repo_dir_should_point_to_backend_src_mock_db(self):
+        """Ensure the default authoritative mock db directory points to backend/src/mock_db."""
+        from closedloop.core.config import DataSettings, REPO_ROOT_DIR
+
+        self.assertEqual(
+            DataSettings.model_fields["MOCK_DB_REPO_DIR"].default,
+            os.path.join(REPO_ROOT_DIR, "backend", "src", "mock_db"),
+        )
+
     def test_seed_should_not_overwrite_existing_rw_files(self):
         """Ensure rw dir keeps modified data and won't be reset by seeding."""
         from closedloop.execution import mock_executor
@@ -67,4 +79,3 @@ class TestIsDirWritable(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

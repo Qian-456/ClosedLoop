@@ -1,27 +1,27 @@
 [
   {
     "id": "activity_001",
-    "name": "纸上时光·独立书店(大学城商圈)",
+    "name": "纸上时光·独立书店(老城文化街区)",
     "category": "activity",
     "sub_category": "独立书店",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 662号铺",
-    "latitude": 0.209,
-    "longitude": -9.739,
-    "business_hours": "10:00-21:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场1F 936号铺",
+    "latitude": -1.886,
+    "longitude": 1.682,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "独立书店"
     ],
     "is_free": true,
     "rating": 4.4,
-    "reviews_count": 11956,
+    "reviews_count": 5860,
     "tags": [
       "安静",
       "低预算"
@@ -29,31 +29,31 @@
     "packages": [
       {
         "package_id": "package_001_1",
-        "name": "单人自由入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由入场体验，可随到随逛/随到随玩",
-        "features": "节奏更松弛，适合一个人放空或阅读。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_001_2",
-        "name": "单人安静时段(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "指定安静时段入场，环境更稳定",
-        "features": "更适合独处与低干扰体验。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 60,
-        "duration_std_dev": 15.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "安静",
@@ -63,15 +63,6 @@
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "独立书店",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -82,25 +73,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 1.5,
-      "confidence": 0.7,
+      "score": 2.1,
+      "confidence": 0.86,
       "source": {
         "sub_category": "独立书店",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.0,
-      "confidence": 0.8,
+      "score": 1.2,
+      "confidence": 0.64,
       "source": {
         "sub_category": "独立书店",
-        "matched_review_keywords": [
-          "环境安静",
-          "不拥挤"
-        ],
+        "matched_review_keywords": [],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -114,23 +104,23 @@
     "category": "activity",
     "sub_category": "独立书店",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场4F 350号铺",
-    "latitude": -2.583,
-    "longitude": -1.643,
-    "business_hours": "09:00-22:00",
+    "address": "CBD核心商圈某商场8F 191号铺",
+    "latitude": -0.315,
+    "longitude": -1.602,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "独立书店"
     ],
     "is_free": true,
-    "rating": 4.2,
-    "reviews_count": 4607,
+    "rating": 5.0,
+    "reviews_count": 9585,
     "tags": [
       "安静",
       "低预算"
@@ -138,31 +128,31 @@
     "packages": [
       {
         "package_id": "package_002_1",
-        "name": "单人自由入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由入场体验，可随到随逛/随到随玩",
-        "features": "节奏更松弛，适合一个人放空或阅读。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_002_2",
-        "name": "单人安静时段(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "指定安静时段入场，环境更稳定",
-        "features": "更适合独处与低干扰体验。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 60,
-        "duration_std_dev": 15.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "安静",
@@ -172,15 +162,6 @@
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "独立书店",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -191,25 +172,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 1.5,
-      "confidence": 0.7,
+      "score": 2.1,
+      "confidence": 0.86,
       "source": {
         "sub_category": "独立书店",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.0,
-      "confidence": 0.8,
+      "score": 1.2,
+      "confidence": 0.64,
       "source": {
         "sub_category": "独立书店",
-        "matched_review_keywords": [
-          "环境安静",
-          "不拥挤"
-        ],
+        "matched_review_keywords": [],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -219,27 +199,27 @@
   },
   {
     "id": "activity_003",
-    "name": "静读咖啡书房(老城文化街区)",
+    "name": "静读咖啡书房(CBD核心商圈)",
     "category": "activity",
     "sub_category": "咖啡书房",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场2F 520号铺",
-    "latitude": 2.142,
-    "longitude": 3.985,
-    "business_hours": "10:00-21:30",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 951号铺",
+    "latitude": -0.027,
+    "longitude": -1.509,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "咖啡书房"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 17353,
+    "rating": 4.3,
+    "reviews_count": 17902,
     "tags": [
       "学习",
       "放松"
@@ -247,43 +227,43 @@
     "packages": [
       {
         "package_id": "package_003_1",
-        "name": "单人标准体验",
-        "price": 116.73,
-        "description": "基础体验项目，包含入场与核心项目体验",
-        "features": "更适合一个人慢慢体验，节奏舒适。",
+        "name": "1大1小轻松体验",
+        "price": 107.99,
+        "description": "轻量体验项目，适合临时起意安排一段轻松时光",
+        "features": "节奏舒适，适合不想太折腾的亲子出行。",
         "requires_booking": true,
-        "available_stock": 42,
-        "duration_mins": 60,
+        "available_stock": 37,
+        "duration_mins": 45,
         "duration_std_dev": 30.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_003_2",
-        "name": "单人深度体验",
-        "price": 116.47,
-        "description": "进阶体验项目，包含更完整的内容与更长的体验时长",
-        "features": "更适合独处放松，体验更沉浸。",
+        "name": "2大1小标准体验",
+        "price": 110.67,
+        "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
+        "features": "更适合周末安排，整体节奏稳定。",
         "requires_booking": true,
         "available_stock": 185,
-        "duration_mins": 90,
+        "duration_mins": 60,
         "duration_std_dev": 45.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_003_3",
-        "name": "单人主题夜场",
-        "price": 136.4,
-        "description": "主题时段体验，氛围更稳定，适合晚间放松",
-        "features": "更适合一个人收尾一天的情绪与疲惫。",
+        "name": "2大2小周末畅玩",
+        "price": 150.77,
+        "description": "适合一家人花更长时间慢慢玩的周末方案",
+        "features": "更省心，适合家庭一起消磨半天。",
         "requires_booking": true,
         "available_stock": 122,
-        "duration_mins": 105,
+        "duration_mins": 90,
         "duration_std_dev": 20.0,
         "start_time": null
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "安静",
@@ -291,15 +271,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "咖啡书房",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -310,25 +281,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 0.5,
-      "confidence": 0.7,
+      "score": 1.1,
+      "confidence": 0.86,
       "source": {
         "sub_category": "咖啡书房",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.0,
-      "confidence": 0.8,
+      "score": 1.2,
+      "confidence": 0.64,
       "source": {
         "sub_category": "咖啡书房",
-        "matched_review_keywords": [
-          "环境安静",
-          "不拥挤"
-        ],
+        "matched_review_keywords": [],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -338,27 +308,27 @@
   },
   {
     "id": "activity_004",
-    "name": "小城艺术空间(CBD核心商圈)",
+    "name": "小城艺术空间(高新科技园)",
     "category": "activity",
     "sub_category": "小型展览",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场3F 612号铺",
-    "latitude": -3.581,
-    "longitude": -4.972,
-    "business_hours": "09:00-22:00",
+    "district": "高新科技园",
+    "address": "高新科技园某商场8F 280号铺",
+    "latitude": 3.308,
+    "longitude": -2.674,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "小型展览"
     ],
     "is_free": false,
-    "rating": 4.2,
-    "reviews_count": 6025,
+    "rating": 4.8,
+    "reviews_count": 10935,
     "tags": [
       "轻文化",
       "安静"
@@ -366,43 +336,43 @@
     "packages": [
       {
         "package_id": "package_004_1",
-        "name": "单人标准体验",
-        "price": 92.99,
-        "description": "基础体验项目，包含入场与核心项目体验",
-        "features": "更适合一个人慢慢体验，节奏舒适。",
+        "name": "1大1小轻松体验",
+        "price": 86.93,
+        "description": "轻量体验项目，适合临时起意安排一段轻松时光",
+        "features": "节奏舒适，适合不想太折腾的亲子出行。",
         "requires_booking": true,
-        "available_stock": 367,
-        "duration_mins": 120,
+        "available_stock": 362,
+        "duration_mins": 105,
         "duration_std_dev": 10.0,
         "start_time": "20:00"
       },
       {
         "package_id": "package_004_2",
-        "name": "单人深度体验",
-        "price": 158.32,
-        "description": "进阶体验项目，包含更完整的内容与更长的体验时长",
-        "features": "更适合独处放松，体验更沉浸。",
+        "name": "2大1小标准体验",
+        "price": 157.24,
+        "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
+        "features": "更适合周末安排，整体节奏稳定。",
         "requires_booking": true,
         "available_stock": 301,
-        "duration_mins": 150,
+        "duration_mins": 120,
         "duration_std_dev": 30.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_004_3",
-        "name": "单人主题夜场",
-        "price": 169.58,
-        "description": "主题时段体验，氛围更稳定，适合晚间放松",
-        "features": "更适合一个人收尾一天的情绪与疲惫。",
+        "name": "2大2小周末畅玩",
+        "price": 194.0,
+        "description": "适合一家人花更长时间慢慢玩的周末方案",
+        "features": "更省心，适合家庭一起消磨半天。",
         "requires_booking": true,
-        "available_stock": 117,
-        "duration_mins": 165,
-        "duration_std_dev": 20.0,
-        "start_time": "18:00"
+        "available_stock": 223,
+        "duration_mins": 150,
+        "duration_std_dev": 60.0,
+        "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "安静",
@@ -411,15 +381,6 @@
       "少走路",
       "轻文化"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "小型展览",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 4.0,
       "confidence": 0.65,
@@ -430,25 +391,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 3.0,
-      "confidence": 0.7,
+      "score": 3.6,
+      "confidence": 0.86,
       "source": {
         "sub_category": "小型展览",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.8,
-      "confidence": 0.8,
+      "score": 2.0,
+      "confidence": 0.64,
       "source": {
         "sub_category": "小型展览",
-        "matched_review_keywords": [
-          "环境安静",
-          "不拥挤"
-        ],
+        "matched_review_keywords": [],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -458,27 +418,27 @@
   },
   {
     "id": "activity_005",
-    "name": "城市美术馆(高新科技园)",
+    "name": "城市美术馆(老城文化街区)",
     "category": "activity",
     "sub_category": "美术馆",
-    "district": "高新科技园",
-    "address": "高新科技园某商场8F 45号铺",
-    "latitude": -5.097,
-    "longitude": 2.056,
-    "business_hours": "09:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场3F 15号铺",
+    "latitude": -0.493,
+    "longitude": 0.597,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "美术馆"
     ],
     "is_free": false,
-    "rating": 4.4,
-    "reviews_count": 7883,
+    "rating": 4.3,
+    "reviews_count": 9767,
     "tags": [
       "拍照",
       "放松"
@@ -486,43 +446,43 @@
     "packages": [
       {
         "package_id": "package_005_1",
-        "name": "单人标准体验",
-        "price": 110.21,
-        "description": "基础体验项目，包含入场与核心项目体验",
-        "features": "更适合一个人慢慢体验，节奏舒适。",
+        "name": "1大1小轻松体验",
+        "price": 102.2,
+        "description": "轻量体验项目，适合临时起意安排一段轻松时光",
+        "features": "节奏舒适，适合不想太折腾的亲子出行。",
         "requires_booking": true,
-        "available_stock": 312,
-        "duration_mins": 120,
+        "available_stock": 307,
+        "duration_mins": 105,
         "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_005_2",
-        "name": "单人深度体验",
-        "price": 103.44,
-        "description": "进阶体验项目，包含更完整的内容与更长的体验时长",
-        "features": "更适合独处放松，体验更沉浸。",
+        "name": "2大1小标准体验",
+        "price": 96.19,
+        "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
+        "features": "更适合周末安排，整体节奏稳定。",
         "requires_booking": true,
         "available_stock": 221,
-        "duration_mins": 150,
+        "duration_mins": 120,
         "duration_std_dev": 15.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_005_3",
-        "name": "单人主题夜场",
-        "price": 139.69,
-        "description": "主题时段体验，氛围更稳定，适合晚间放松",
-        "features": "更适合一个人收尾一天的情绪与疲惫。",
+        "name": "2大2小周末畅玩",
+        "price": 155.05,
+        "description": "适合一家人花更长时间慢慢玩的周末方案",
+        "features": "更省心，适合家庭一起消磨半天。",
         "requires_booking": true,
         "available_stock": 102,
-        "duration_mins": 165,
+        "duration_mins": 150,
         "duration_std_dev": 20.0,
         "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "适合拍照",
@@ -532,15 +492,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "美术馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 4.0,
       "confidence": 0.65,
@@ -551,25 +502,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 1.5,
-      "confidence": 0.7,
+      "score": 2.1,
+      "confidence": 0.86,
       "source": {
         "sub_category": "美术馆",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.0,
-      "confidence": 0.8,
+      "score": 1.2,
+      "confidence": 0.64,
       "source": {
         "sub_category": "美术馆",
-        "matched_review_keywords": [
-          "环境安静",
-          "不拥挤"
-        ],
+        "matched_review_keywords": [],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -579,27 +529,27 @@
   },
   {
     "id": "activity_006",
-    "name": "治愈手作工坊(滨江风景区)",
+    "name": "治愈手作工坊(老城文化街区)",
     "category": "activity",
     "sub_category": "安静手作体验",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场8F 240号铺",
-    "latitude": 1.462,
-    "longitude": -4.33,
-    "business_hours": "10:00-21:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场7F 847号铺",
+    "latitude": 0.566,
+    "longitude": 3.79,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "适合放松",
-      "不拥挤",
-      "适合避开人群",
+      "通用兜底",
+      "适合散步",
+      "不踩雷",
       "室内",
+      "交通方便",
+      "随到随玩",
       "安静手作体验"
     ],
     "is_free": false,
-    "rating": 4.2,
-    "reviews_count": 15468,
+    "rating": 4.5,
+    "reviews_count": 2942,
     "tags": [
       "治愈",
       "轻互动"
@@ -607,43 +557,43 @@
     "packages": [
       {
         "package_id": "package_006_1",
-        "name": "单人标准体验",
-        "price": 60.2,
-        "description": "基础体验项目，包含入场与核心项目体验",
-        "features": "更适合一个人慢慢体验，节奏舒适。",
+        "name": "1大1小轻松体验",
+        "price": 57.82,
+        "description": "轻量体验项目，适合临时起意安排一段轻松时光",
+        "features": "节奏舒适，适合不想太折腾的亲子出行。",
         "requires_booking": true,
-        "available_stock": 127,
-        "duration_mins": 60,
+        "available_stock": 122,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_006_2",
-        "name": "单人深度体验",
-        "price": 87.89,
-        "description": "进阶体验项目，包含更完整的内容与更长的体验时长",
-        "features": "更适合独处放松，体验更沉浸。",
+        "name": "2大1小标准体验",
+        "price": 78.89,
+        "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
+        "features": "更适合周末安排，整体节奏稳定。",
         "requires_booking": true,
         "available_stock": 30,
-        "duration_mins": 90,
+        "duration_mins": 60,
         "duration_std_dev": 30.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_006_3",
-        "name": "单人主题夜场",
-        "price": 106.44,
-        "description": "主题时段体验，氛围更稳定，适合晚间放松",
-        "features": "更适合一个人收尾一天的情绪与疲惫。",
+        "name": "2大2小周末畅玩",
+        "price": 111.72,
+        "description": "适合一家人花更长时间慢慢玩的周末方案",
+        "features": "更省心，适合家庭一起消磨半天。",
         "requires_booking": true,
         "available_stock": 136,
-        "duration_mins": 105,
+        "duration_mins": 90,
         "duration_std_dev": 30.0,
         "start_time": "15:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "安静",
@@ -652,15 +602,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "安静手作体验",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -671,24 +612,24 @@
       }
     },
     "onsite_walking_level_estimated": {
-      "score": 1.5,
-      "confidence": 0.7,
+      "score": 2.1,
+      "confidence": 0.86,
       "source": {
         "sub_category": "安静手作体验",
         "matched_review_keywords": [
-          "室内"
+          "适合散步",
+          "室内",
+          "交通方便"
         ],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 0.2,
-      "confidence": 0.88,
+      "score": 1.4,
+      "confidence": 0.72,
       "source": {
         "sub_category": "安静手作体验",
         "matched_review_keywords": [
-          "环境安静",
-          "不拥挤",
           "安静手作体验"
         ],
         "rule": "noise_from_sub_category_and_keywords"
@@ -700,27 +641,27 @@
   },
   {
     "id": "activity_007",
-    "name": "光影沉浸式展(老城文化街区)",
+    "name": "光影沉浸式展(高新科技园)",
     "category": "activity",
     "sub_category": "沉浸式展览",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场8F 473号铺",
-    "latitude": -2.872,
-    "longitude": 5.322,
+    "district": "高新科技园",
+    "address": "高新科技园某商场3F 489号铺",
+    "latitude": 2.586,
+    "longitude": -2.889,
     "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
+      "建议预约",
       "沉浸式展览"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 16579,
+    "rating": 4.9,
+    "reviews_count": 323,
     "tags": [
       "拍照",
       "出片"
@@ -728,73 +669,58 @@
     "packages": [
       {
         "package_id": "package_007_1",
-        "name": "双人互动体验",
-        "price": 109.53,
-        "description": "适合两人一起体验的互动项目，包含基础素材/时长",
-        "features": "互动感更强，更适合作为约会的一站。",
+        "name": "双人搭子体验",
+        "price": 84.4,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 187,
-        "duration_mins": 120,
+        "available_stock": 177,
+        "duration_mins": 105,
         "duration_std_dev": 20.0,
         "start_time": "18:00"
       },
       {
         "package_id": "package_007_2",
-        "name": "双人浪漫升级体验",
-        "price": 152.83,
-        "description": "升级内容与更长时长，适合慢慢玩出仪式感",
-        "features": "氛围更到位，适合纪念日或想认真约一次。",
+        "name": "三人小聚体验",
+        "price": 97.69,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 217,
-        "duration_mins": 150,
+        "available_stock": 221,
+        "duration_mins": 120,
         "duration_std_dev": 45.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_007_3",
-        "name": "双人拍照打卡套餐",
+        "name": "四人欢聚畅玩",
         "price": 215.46,
-        "description": "包含更适合拍照的玩法与路线建议",
-        "features": "更出片，适合把照片当纪念收藏。",
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 141,
-        "duration_mins": 135,
-        "duration_std_dev": 20.0,
+        "available_stock": 131,
+        "duration_mins": 150,
+        "duration_std_dev": 30.0,
         "start_time": null
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
       "适合拍照",
       "出片率高",
       "安静",
-      "轻松"
+      "轻松",
+      "互动感强",
+      "室内兜底"
     ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "沉浸式展览",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "沉浸式展览",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -810,11 +736,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "沉浸式展览",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -824,27 +752,27 @@
   },
   {
     "id": "activity_008",
-    "name": "双人陶艺工坊(高新科技园)",
+    "name": "双人陶艺工坊(大学城商圈)",
     "category": "activity",
     "sub_category": "陶艺手作",
-    "district": "高新科技园",
-    "address": "高新科技园某商场4F 821号铺",
-    "latitude": -6.202,
-    "longitude": 3.333,
-    "business_hours": "10:00-21:30",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场5F 977号铺",
+    "latitude": -1.208,
+    "longitude": -3.948,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
+      "建议预约",
       "陶艺手作"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 8292,
+    "rating": 4.3,
+    "reviews_count": 18872,
     "tags": [
       "互动",
       "纪念感"
@@ -852,73 +780,55 @@
     "packages": [
       {
         "package_id": "package_008_1",
-        "name": "双人互动体验",
-        "price": 96.23,
-        "description": "适合两人一起体验的互动项目，包含基础素材/时长",
-        "features": "互动感更强，更适合作为约会的一站。",
+        "name": "双人搭子体验",
+        "price": 73.34,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 276,
-        "duration_mins": 60,
+        "available_stock": 266,
+        "duration_mins": 45,
         "duration_std_dev": 45.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_008_2",
-        "name": "双人浪漫升级体验",
-        "price": 173.27,
-        "description": "升级内容与更长时长，适合慢慢玩出仪式感",
-        "features": "氛围更到位，适合纪念日或想认真约一次。",
+        "name": "三人小聚体验",
+        "price": 113.71,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 280,
-        "duration_mins": 90,
+        "available_stock": 284,
+        "duration_mins": 60,
         "duration_std_dev": 20.0,
         "start_time": "18:00"
       },
       {
         "package_id": "package_008_3",
-        "name": "双人拍照打卡套餐",
+        "name": "四人欢聚畅玩",
         "price": 193.39,
-        "description": "包含更适合拍照的玩法与路线建议",
-        "features": "更出片，适合把照片当纪念收藏。",
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 335,
-        "duration_mins": 75,
-        "duration_std_dev": 20.0,
-        "start_time": "15:00"
+        "available_stock": 111,
+        "duration_mins": 90,
+        "duration_std_dev": 45.0,
+        "start_time": "19:00"
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高",
       "互动感强",
-      "室内兜底"
+      "室内兜底",
+      "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "陶艺手作",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "陶艺手作",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -934,11 +844,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "陶艺手作",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -952,23 +864,23 @@
     "category": "activity",
     "sub_category": "香薰手作",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场2F 729号铺",
-    "latitude": -3.898,
-    "longitude": -4.73,
+    "address": "CBD核心商圈某商场4F 64号铺",
+    "latitude": -1.389,
+    "longitude": -0.643,
     "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
+      "建议预约",
       "香薰手作"
     ],
     "is_free": false,
-    "rating": 4.9,
-    "reviews_count": 9440,
+    "rating": 4.1,
+    "reviews_count": 10153,
     "tags": [
       "互动",
       "纪念感"
@@ -976,73 +888,55 @@
     "packages": [
       {
         "package_id": "package_009_1",
-        "name": "双人互动体验",
-        "price": 116.93,
-        "description": "适合两人一起体验的互动项目，包含基础素材/时长",
-        "features": "互动感更强，更适合作为约会的一站。",
+        "name": "双人搭子体验",
+        "price": 90.55,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 216,
-        "duration_mins": 60,
+        "available_stock": 206,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": null
       },
       {
         "package_id": "package_009_2",
-        "name": "双人浪漫升级体验",
-        "price": 216.15,
-        "description": "升级内容与更长时长，适合慢慢玩出仪式感",
-        "features": "氛围更到位，适合纪念日或想认真约一次。",
+        "name": "三人小聚体验",
+        "price": 147.34,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 271,
-        "duration_mins": 90,
+        "available_stock": 275,
+        "duration_mins": 60,
         "duration_std_dev": 60.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_009_3",
-        "name": "双人拍照打卡套餐",
+        "name": "四人欢聚畅玩",
         "price": 160.33,
-        "description": "包含更适合拍照的玩法与路线建议",
-        "features": "更出片，适合把照片当纪念收藏。",
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 178,
-        "duration_mins": 75,
-        "duration_std_dev": 20.0,
+        "available_stock": 168,
+        "duration_mins": 90,
+        "duration_std_dev": 30.0,
         "start_time": "15:00"
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高",
       "互动感强",
-      "室内兜底"
+      "室内兜底",
+      "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "香薰手作",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "香薰手作",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1058,11 +952,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "香薰手作",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -1072,27 +968,27 @@
   },
   {
     "id": "activity_010",
-    "name": "小众私人影院(CBD核心商圈)",
+    "name": "小众私人影院(老城文化街区)",
     "category": "activity",
     "sub_category": "私人影院",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场3F 851号铺",
-    "latitude": -1.87,
-    "longitude": -3.555,
-    "business_hours": "09:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场5F 707号铺",
+    "latitude": -1.301,
+    "longitude": 2.694,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
+      "建议预约",
       "私人影院"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 7375,
+    "rating": 4.6,
+    "reviews_count": 9767,
     "tags": [
       "雨天",
       "晚间"
@@ -1100,73 +996,55 @@
     "packages": [
       {
         "package_id": "package_010_1",
-        "name": "双人互动体验",
-        "price": 144.57,
-        "description": "适合两人一起体验的互动项目，包含基础素材/时长",
-        "features": "互动感更强，更适合作为约会的一站。",
+        "name": "双人搭子体验",
+        "price": 113.55,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 181,
-        "duration_mins": 60,
+        "available_stock": 171,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_010_2",
-        "name": "双人浪漫升级体验",
-        "price": 170.73,
-        "description": "升级内容与更长时长，适合慢慢玩出仪式感",
-        "features": "氛围更到位，适合纪念日或想认真约一次。",
+        "name": "三人小聚体验",
+        "price": 111.73,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 127,
-        "duration_mins": 90,
+        "available_stock": 131,
+        "duration_mins": 60,
         "duration_std_dev": 60.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_010_3",
-        "name": "双人拍照打卡套餐",
+        "name": "四人欢聚畅玩",
         "price": 188.78,
-        "description": "包含更适合拍照的玩法与路线建议",
-        "features": "更出片，适合把照片当纪念收藏。",
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 385,
-        "duration_mins": 75,
+        "available_stock": 132,
+        "duration_mins": 90,
         "duration_std_dev": 20.0,
         "start_time": null
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高",
       "互动感强",
-      "室内兜底"
+      "室内兜底",
+      "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "私人影院",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "私人影院",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1182,11 +1060,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "私人影院",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -1196,88 +1076,73 @@
   },
   {
     "id": "activity_011",
-    "name": "城市天台观景点(滨江风景区)",
+    "name": "城市天台观景点(大学城商圈)",
     "category": "activity",
     "sub_category": "夜景观景点",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场7F 55号铺",
-    "latitude": 5.98,
-    "longitude": -5.022,
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场3F 490号铺",
+    "latitude": -0.927,
+    "longitude": -5.139,
     "business_hours": "19:00-24:00",
     "indoor": false,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "户外",
+      "建议预约",
       "夜景观景点"
     ],
     "is_free": true,
-    "rating": 4.2,
-    "reviews_count": 2774,
+    "rating": 4.7,
+    "reviews_count": 19948,
     "tags": [
       "夜景",
-      "浪漫"
+      "氛围感"
     ],
     "packages": [
       {
         "package_id": "package_011_1",
-        "name": "双人散步打卡",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由路线打卡，可随到随拍",
-        "features": "更适合两人轻松聊天与拍照记录。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_011_2",
-        "name": "双人夜景拍照路线(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "推荐视角与拍照点位，适合慢慢走",
-        "features": "氛围更好，出片更稳定。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 75,
-        "duration_std_dev": 25.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
       "适合拍照",
       "出片率高",
       "互动感强"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "夜景观景点",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "夜景观景点",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1291,11 +1156,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "夜景观景点",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -1309,23 +1176,23 @@
     "category": "activity",
     "sub_category": "复古街区",
     "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 860号铺",
-    "latitude": -0.445,
-    "longitude": -6.382,
+    "address": "大学城商圈某商场8F 776号铺",
+    "latitude": -1.488,
+    "longitude": -4.038,
     "business_hours": "10:00-21:30",
     "indoor": false,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "户外",
+      "建议预约",
       "复古街区"
     ],
     "is_free": true,
-    "rating": 4.6,
-    "reviews_count": 4885,
+    "rating": 4.8,
+    "reviews_count": 7256,
     "tags": [
       "散步",
       "拍照"
@@ -1333,60 +1200,43 @@
     "packages": [
       {
         "package_id": "package_012_1",
-        "name": "双人散步打卡",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由路线打卡，可随到随拍",
-        "features": "更适合两人轻松聊天与拍照记录。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_012_2",
-        "name": "双人夜景拍照路线(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "推荐视角与拍照点位，适合慢慢走",
-        "features": "氛围更好，出片更稳定。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 75,
-        "duration_std_dev": 25.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
       "适合拍照",
       "出片率高",
       "互动感强"
     ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "复古街区",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "复古街区",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1400,11 +1250,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "复古街区",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -1418,23 +1270,23 @@
     "category": "activity",
     "sub_category": "花艺体验",
     "district": "老城文化街区",
-    "address": "老城文化街区某商场8F 713号铺",
-    "latitude": 2.835,
-    "longitude": 3.435,
-    "business_hours": "10:00-22:00",
+    "address": "老城文化街区某商场2F 539号铺",
+    "latitude": -0.893,
+    "longitude": 0.813,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "出片",
-      "氛围感",
-      "互动性强",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
+      "建议预约",
       "花艺体验"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 15471,
+    "rating": 4.5,
+    "reviews_count": 11954,
     "tags": [
       "情绪价值",
       "手作"
@@ -1442,73 +1294,57 @@
     "packages": [
       {
         "package_id": "package_013_1",
-        "name": "双人互动体验",
-        "price": 121.28,
-        "description": "适合两人一起体验的互动项目，包含基础素材/时长",
-        "features": "互动感更强，更适合作为约会的一站。",
+        "name": "双人搭子体验",
+        "price": 94.18,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 94,
-        "duration_mins": 60,
+        "available_stock": 84,
+        "duration_mins": 45,
         "duration_std_dev": 45.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_013_2",
-        "name": "双人浪漫升级体验",
-        "price": 224.79,
-        "description": "升级内容与更长时长，适合慢慢玩出仪式感",
-        "features": "氛围更到位，适合纪念日或想认真约一次。",
+        "name": "三人小聚体验",
+        "price": 154.12,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 150,
-        "duration_mins": 90,
+        "available_stock": 154,
+        "duration_mins": 60,
         "duration_std_dev": 60.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_013_3",
-        "name": "双人拍照打卡套餐",
+        "name": "四人欢聚畅玩",
         "price": 219.29,
-        "description": "包含更适合拍照的玩法与路线建议",
-        "features": "更出片，适合把照片当纪念收藏。",
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 263,
-        "duration_mins": 75,
-        "duration_std_dev": 30.0,
+        "available_stock": 253,
+        "duration_mins": 90,
+        "duration_std_dev": 45.0,
         "start_time": "15:00"
       }
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
-      "适合拍照",
-      "出片率高",
       "互动感强",
-      "室内兜底"
+      "室内兜底",
+      "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "花艺体验",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围感"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "花艺体验",
-        "matched_review_keywords": [
-          "适合拍照",
-          "出片"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1524,11 +1360,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "花艺体验",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -1538,14 +1376,14 @@
   },
   {
     "id": "activity_014",
-    "name": "星球室内儿童乐园(滨江风景区)",
+    "name": "星球室内儿童乐园(CBD核心商圈)",
     "category": "activity",
     "sub_category": "室内儿童乐园",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场1F 263号铺",
-    "latitude": 0.946,
-    "longitude": -4.887,
-    "business_hours": "10:00-22:00",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场4F 587号铺",
+    "latitude": -0.897,
+    "longitude": -1.827,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1557,8 +1395,8 @@
       "室内儿童乐园"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 18083,
+    "rating": 4.1,
+    "reviews_count": 10851,
     "tags": [
       "少走路",
       "安全"
@@ -1583,7 +1421,7 @@
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
-        "available_stock": 54,
+        "available_stock": 64,
         "duration_mins": 150,
         "duration_std_dev": 45.0,
         "start_time": "20:00"
@@ -1609,15 +1447,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "室内儿童乐园",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -1660,10 +1489,10 @@
     "category": "activity",
     "sub_category": "室内儿童乐园",
     "district": "高新科技园",
-    "address": "高新科技园某商场5F 244号铺",
-    "latitude": -6.141,
-    "longitude": 2.771,
-    "business_hours": "09:00-22:00",
+    "address": "高新科技园某商场8F 94号铺",
+    "latitude": 3.402,
+    "longitude": -1.878,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1675,8 +1504,8 @@
       "室内儿童乐园"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 7913,
+    "rating": 4.4,
+    "reviews_count": 1923,
     "tags": [
       "少走路",
       "安全"
@@ -1701,7 +1530,7 @@
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
-        "available_stock": 130,
+        "available_stock": 140,
         "duration_mins": 150,
         "duration_std_dev": 30.0,
         "start_time": "20:00"
@@ -1727,15 +1556,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "室内儿童乐园",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -1774,13 +1594,13 @@
   },
   {
     "id": "activity_016",
-    "name": "绘本星球亲子馆(滨江风景区)",
+    "name": "绘本星球亲子馆(高新科技园)",
     "category": "activity",
     "sub_category": "亲子绘本馆",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场2F 114号铺",
-    "latitude": 2.042,
-    "longitude": -4.33,
+    "district": "高新科技园",
+    "address": "高新科技园某商场1F 573号铺",
+    "latitude": 3.597,
+    "longitude": -1.566,
     "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -1793,8 +1613,8 @@
       "亲子绘本馆"
     ],
     "is_free": false,
-    "rating": 4.6,
-    "reviews_count": 638,
+    "rating": 4.7,
+    "reviews_count": 10198,
     "tags": [
       "安静",
       "教育"
@@ -1819,7 +1639,7 @@
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
-        "available_stock": 159,
+        "available_stock": 169,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
         "start_time": "18:00"
@@ -1838,7 +1658,6 @@
       }
     ],
     "suitable_groups": [
-      "solo",
       "family"
     ],
     "experience_tag": [
@@ -1848,15 +1667,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "亲子绘本馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -1894,13 +1704,13 @@
   },
   {
     "id": "activity_017",
-    "name": "小小烘焙师DIY(高新科技园)",
+    "name": "小小烘焙师DIY(CBD核心商圈)",
     "category": "activity",
     "sub_category": "儿童烘焙DIY",
-    "district": "高新科技园",
-    "address": "高新科技园某商场5F 440号铺",
-    "latitude": -7.552,
-    "longitude": 1.812,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场4F 593号铺",
+    "latitude": -2.782,
+    "longitude": -0.465,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -1913,8 +1723,8 @@
       "儿童烘焙DIY"
     ],
     "is_free": false,
-    "rating": 4.6,
-    "reviews_count": 7982,
+    "rating": 4.0,
+    "reviews_count": 11389,
     "tags": [
       "参与感",
       "亲子"
@@ -1939,7 +1749,7 @@
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
-        "available_stock": 172,
+        "available_stock": 182,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
         "start_time": "18:00"
@@ -1966,15 +1776,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "儿童烘焙DIY",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2007,18 +1808,18 @@
       }
     },
     "age_range": [
-      "adult"
+      "3-6"
     ]
   },
   {
     "id": "activity_018",
-    "name": "商场亲子互动区(高新科技园)",
+    "name": "商场亲子互动区(CBD核心商圈)",
     "category": "activity",
     "sub_category": "商场亲子互动区",
-    "district": "高新科技园",
-    "address": "高新科技园某商场2F 537号铺",
-    "latitude": -7.343,
-    "longitude": 4.006,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 957号铺",
+    "latitude": -1.661,
+    "longitude": -1.675,
     "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -2031,8 +1832,8 @@
       "商场亲子互动区"
     ],
     "is_free": true,
-    "rating": 4.1,
-    "reviews_count": 17337,
+    "rating": 4.0,
+    "reviews_count": 13497,
     "tags": [
       "兜底",
       "室内"
@@ -2040,27 +1841,27 @@
     "packages": [
       {
         "package_id": "package_018_1",
-        "name": "2大1小免费入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "家庭友好入场规则，儿童可陪同体验",
-        "features": "更适合亲子一起消磨时间，省心省力。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 25.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_018_2",
-        "name": "亲子轻体验(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "更短更轻量的体验路线，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃兜底。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 45,
-        "duration_std_dev": 20.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
@@ -2072,15 +1873,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "商场亲子互动区",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2113,18 +1905,18 @@
       }
     },
     "age_range": [
-      "adult"
+      "3-6"
     ]
   },
   {
     "id": "activity_019",
-    "name": "木偶剧小剧场(高新科技园)",
+    "name": "木偶剧小剧场(老城文化街区)",
     "category": "activity",
     "sub_category": "儿童剧小剧场",
-    "district": "高新科技园",
-    "address": "高新科技园某商场1F 400号铺",
-    "latitude": -9.894,
-    "longitude": 2.691,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场7F 384号铺",
+    "latitude": -0.12,
+    "longitude": 0.341,
     "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -2137,8 +1929,8 @@
       "儿童剧小剧场"
     ],
     "is_free": false,
-    "rating": 4.0,
-    "reviews_count": 12777,
+    "rating": 4.4,
+    "reviews_count": 12469,
     "tags": [
       "轻体验",
       "亲子"
@@ -2163,7 +1955,7 @@
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
-        "available_stock": 74,
+        "available_stock": 84,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
         "start_time": null
@@ -2189,15 +1981,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "儿童剧小剧场",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2230,19 +2013,19 @@
       }
     },
     "age_range": [
-      "adult"
+      "3-6"
     ]
   },
   {
     "id": "activity_020",
-    "name": "城市科技馆(大学城商圈)",
+    "name": "城市科技馆(高新科技园)",
     "category": "activity",
     "sub_category": "科技馆",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 354号铺",
-    "latitude": -0.661,
-    "longitude": -7.408,
-    "business_hours": "10:00-22:00",
+    "district": "高新科技园",
+    "address": "高新科技园某商场3F 670号铺",
+    "latitude": 5.155,
+    "longitude": -1.084,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -2254,8 +2037,8 @@
       "科技馆"
     ],
     "is_free": false,
-    "rating": 4.7,
-    "reviews_count": 3496,
+    "rating": 4.1,
+    "reviews_count": 17704,
     "tags": [
       "教育",
       "互动"
@@ -2263,10 +2046,10 @@
     "packages": [
       {
         "package_id": "package_020_1",
-        "name": "1大1小亲子轻体验",
-        "price": 105.66,
-        "description": "更轻量更短时的亲子体验，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃不费脑。",
+        "name": "1大1小亲子动手体验",
+        "price": 115.66,
+        "description": "更适合大孩子参与的轻互动体验，动手感更强",
+        "features": "参与感更足，适合亲子一起上手。",
         "requires_booking": true,
         "available_stock": 70,
         "duration_mins": 90,
@@ -2277,7 +2060,7 @@
         "package_id": "package_020_2",
         "name": "2大1小亲子标准体验",
         "price": 98.69,
-        "description": "更完整的亲子项目内容，适合家庭一起参与",
+        "description": "更完整的亲子互动内容，兼顾体验感与节奏",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
         "available_stock": 319,
@@ -2289,7 +2072,7 @@
         "package_id": "package_020_3",
         "name": "2大2小家庭畅玩",
         "price": 136.76,
-        "description": "更适合多孩子家庭的畅玩方案，时长更足",
+        "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
         "requires_booking": true,
         "available_stock": 24,
@@ -2307,15 +2090,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "科技馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2356,10 +2130,10 @@
     "category": "activity",
     "sub_category": "亲子手工DIY",
     "district": "高新科技园",
-    "address": "高新科技园某商场1F 361号铺",
-    "latitude": -5.549,
-    "longitude": 1.554,
-    "business_hours": "10:00-21:30",
+    "address": "高新科技园某商场4F 855号铺",
+    "latitude": 1.31,
+    "longitude": -2.621,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -2371,8 +2145,8 @@
       "亲子手工DIY"
     ],
     "is_free": false,
-    "rating": 4.3,
-    "reviews_count": 5837,
+    "rating": 4.8,
+    "reviews_count": 9876,
     "tags": [
       "动手",
       "亲子"
@@ -2380,10 +2154,10 @@
     "packages": [
       {
         "package_id": "package_021_1",
-        "name": "1大1小亲子轻体验",
-        "price": 90.28,
-        "description": "更轻量更短时的亲子体验，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃不费脑。",
+        "name": "1大1小亲子动手体验",
+        "price": 100.28,
+        "description": "更适合大孩子参与的轻互动体验，动手感更强",
+        "features": "参与感更足，适合亲子一起上手。",
         "requires_booking": true,
         "available_stock": 380,
         "duration_mins": 45,
@@ -2394,7 +2168,7 @@
         "package_id": "package_021_2",
         "name": "2大1小亲子标准体验",
         "price": 168.0,
-        "description": "更完整的亲子项目内容，适合家庭一起参与",
+        "description": "更完整的亲子互动内容，兼顾体验感与节奏",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
         "available_stock": 223,
@@ -2406,7 +2180,7 @@
         "package_id": "package_021_3",
         "name": "2大2小家庭畅玩",
         "price": 148.63,
-        "description": "更适合多孩子家庭的畅玩方案，时长更足",
+        "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
         "requires_booking": true,
         "available_stock": 137,
@@ -2424,15 +2198,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "亲子手工DIY",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2469,13 +2234,13 @@
   },
   {
     "id": "activity_022",
-    "name": "蹦床运动馆(低强度区)(滨江风景区)",
+    "name": "蹦床运动馆(低强度区)(高新科技园)",
     "category": "activity",
     "sub_category": "儿童运动馆",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场3F 831号铺",
-    "latitude": 5.087,
-    "longitude": -2.931,
+    "district": "高新科技园",
+    "address": "高新科技园某商场7F 844号铺",
+    "latitude": 2.317,
+    "longitude": -3.442,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -2488,8 +2253,8 @@
       "儿童运动馆"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 15097,
+    "rating": 4.2,
+    "reviews_count": 11442,
     "tags": [
       "放电",
       "室内"
@@ -2497,10 +2262,10 @@
     "packages": [
       {
         "package_id": "package_022_1",
-        "name": "1大1小亲子轻体验",
-        "price": 103.74,
-        "description": "更轻量更短时的亲子体验，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃不费脑。",
+        "name": "1大1小亲子动手体验",
+        "price": 113.74,
+        "description": "更适合大孩子参与的轻互动体验，动手感更强",
+        "features": "参与感更足，适合亲子一起上手。",
         "requires_booking": true,
         "available_stock": 263,
         "duration_mins": 45,
@@ -2511,7 +2276,7 @@
         "package_id": "package_022_2",
         "name": "2大1小亲子标准体验",
         "price": 118.93,
-        "description": "更完整的亲子项目内容，适合家庭一起参与",
+        "description": "更完整的亲子互动内容，兼顾体验感与节奏",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
         "available_stock": 154,
@@ -2523,7 +2288,7 @@
         "package_id": "package_022_3",
         "name": "2大2小家庭畅玩",
         "price": 190.7,
-        "description": "更适合多孩子家庭的畅玩方案，时长更足",
+        "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
         "requires_booking": true,
         "available_stock": 253,
@@ -2541,15 +2306,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "儿童运动馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2580,19 +2336,20 @@
       }
     },
     "age_range": [
+      "7-10",
       "adult"
     ]
   },
   {
     "id": "activity_023",
-    "name": "拼搭桌游空间(CBD核心商圈)",
+    "name": "拼搭桌游空间(老城文化街区)",
     "category": "activity",
     "sub_category": "益智桌游拼搭空间",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场4F 908号铺",
-    "latitude": -2.09,
-    "longitude": -1.93,
-    "business_hours": "10:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场2F 33号铺",
+    "latitude": -0.7,
+    "longitude": 4.356,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -2604,8 +2361,8 @@
       "益智桌游拼搭空间"
     ],
     "is_free": false,
-    "rating": 4.3,
-    "reviews_count": 10260,
+    "rating": 4.4,
+    "reviews_count": 612,
     "tags": [
       "益智",
       "互动"
@@ -2613,10 +2370,10 @@
     "packages": [
       {
         "package_id": "package_023_1",
-        "name": "1大1小亲子轻体验",
-        "price": 94.77,
-        "description": "更轻量更短时的亲子体验，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃不费脑。",
+        "name": "1大1小亲子动手体验",
+        "price": 104.77,
+        "description": "更适合大孩子参与的轻互动体验，动手感更强",
+        "features": "参与感更足，适合亲子一起上手。",
         "requires_booking": true,
         "available_stock": 113,
         "duration_mins": 45,
@@ -2627,7 +2384,7 @@
         "package_id": "package_023_2",
         "name": "2大1小亲子标准体验",
         "price": 172.42,
-        "description": "更完整的亲子项目内容，适合家庭一起参与",
+        "description": "更完整的亲子互动内容，兼顾体验感与节奏",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
         "available_stock": 123,
@@ -2639,7 +2396,7 @@
         "package_id": "package_023_3",
         "name": "2大2小家庭畅玩",
         "price": 194.2,
-        "description": "更适合多孩子家庭的畅玩方案，时长更足",
+        "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
         "requires_booking": true,
         "available_stock": 94,
@@ -2658,15 +2415,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "益智桌游拼搭空间",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2703,14 +2451,14 @@
   },
   {
     "id": "activity_024",
-    "name": "自然教育小型博物馆(高新科技园)",
+    "name": "自然教育小型博物馆(老城文化街区)",
     "category": "activity",
     "sub_category": "自然教育小馆",
-    "district": "高新科技园",
-    "address": "高新科技园某商场8F 260号铺",
-    "latitude": -7.636,
-    "longitude": 4.543,
-    "business_hours": "10:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场1F 458号铺",
+    "latitude": -0.197,
+    "longitude": 2.476,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -2722,8 +2470,8 @@
       "自然教育小馆"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 6362,
+    "rating": 4.7,
+    "reviews_count": 1695,
     "tags": [
       "周末学习",
       "探索"
@@ -2731,10 +2479,10 @@
     "packages": [
       {
         "package_id": "package_024_1",
-        "name": "1大1小亲子轻体验",
-        "price": 52.65,
-        "description": "更轻量更短时的亲子体验，避免孩子疲惫",
-        "features": "节奏更友好，适合带娃不费脑。",
+        "name": "1大1小亲子动手体验",
+        "price": 62.65,
+        "description": "更适合大孩子参与的轻互动体验，动手感更强",
+        "features": "参与感更足，适合亲子一起上手。",
         "requires_booking": true,
         "available_stock": 39,
         "duration_mins": 45,
@@ -2745,7 +2493,7 @@
         "package_id": "package_024_2",
         "name": "2大1小亲子标准体验",
         "price": 162.35,
-        "description": "更完整的亲子项目内容，适合家庭一起参与",
+        "description": "更完整的亲子互动内容，兼顾体验感与节奏",
         "features": "更适合周末安排，孩子更容易投入。",
         "requires_booking": true,
         "available_stock": 168,
@@ -2757,7 +2505,7 @@
         "package_id": "package_024_3",
         "name": "2大2小家庭畅玩",
         "price": 136.25,
-        "description": "更适合多孩子家庭的畅玩方案，时长更足",
+        "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
         "requires_booking": true,
         "available_stock": 68,
@@ -2775,15 +2523,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "自然教育小馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2820,27 +2559,27 @@
   },
   {
     "id": "activity_025",
-    "name": "星际VR体验馆(大学城商圈)",
+    "name": "星际VR体验馆(老城文化街区)",
     "category": "activity",
     "sub_category": "VR体验馆",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场6F 280号铺",
-    "latitude": -2.282,
-    "longitude": -5.634,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场4F 553号铺",
+    "latitude": -0.383,
+    "longitude": 1.02,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合青少年",
-      "适合11-17岁",
-      "刺激",
-      "沉浸式体验",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
       "建议预约",
       "VR体验馆"
     ],
     "is_free": false,
     "rating": 4.8,
-    "reviews_count": 14418,
+    "reviews_count": 1949,
     "tags": [
       "刺激",
       "朋友"
@@ -2848,58 +2587,49 @@
     "packages": [
       {
         "package_id": "package_025_1",
-        "name": "2-4人标准体验",
-        "price": 110.69,
-        "description": "适合小团体结伴体验，玩法更均衡",
-        "features": "更适合一起上手，体验强度适中。",
+        "name": "双人搭子体验",
+        "price": 105.38,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 112,
         "duration_mins": 45,
-        "duration_std_dev": 30.0,
+        "duration_std_dev": 45.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_025_2",
-        "name": "3-5人进阶挑战",
-        "price": 212.72,
-        "description": "更强调配合与挑战的玩法，适合多人一起玩",
-        "features": "更有参与感，适合把气氛带起来。",
+        "name": "三人小聚体验",
+        "price": 175.09,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 170,
+        "available_stock": 174,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_025_3",
-        "name": "4人联机畅玩",
-        "price": 244.3,
-        "description": "更适合多人联机/合作的玩法内容，时长更充足",
-        "features": "更解压，适合结伴一起爽玩。",
+        "name": "四人欢聚畅玩",
+        "price": 208.77,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 22,
+        "available_stock": 24,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
         "start_time": "16:30"
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
+      "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "VR体验馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2921,11 +2651,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "VR体验馆",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -2936,27 +2668,27 @@
   },
   {
     "id": "activity_026",
-    "name": "沉浸式密室(轻恐/非恐)(滨江风景区)",
+    "name": "沉浸式密室(轻恐/非恐)(老城文化街区)",
     "category": "activity",
     "sub_category": "密室逃脱(轻恐)",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场7F 348号铺",
-    "latitude": 3.254,
-    "longitude": -5.905,
-    "business_hours": "10:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场6F 592号铺",
+    "latitude": -1.148,
+    "longitude": 2.012,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
-      "适合青少年",
-      "适合11-17岁",
-      "刺激",
-      "沉浸式体验",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
       "建议预约",
       "密室逃脱(轻恐)"
     ],
     "is_free": false,
-    "rating": 4.5,
-    "reviews_count": 16402,
+    "rating": 4.8,
+    "reviews_count": 10607,
     "tags": [
       "11+",
       "刺激"
@@ -2964,59 +2696,49 @@
     "packages": [
       {
         "package_id": "package_026_1",
-        "name": "2-4人标准体验",
-        "price": 119.11,
-        "description": "适合小团体结伴体验，玩法更均衡",
-        "features": "更适合一起上手，体验强度适中。",
+        "name": "双人搭子体验",
+        "price": 114.74,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 219,
         "duration_mins": 105,
-        "duration_std_dev": 30.0,
+        "duration_std_dev": 45.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_026_2",
-        "name": "3-5人进阶挑战",
-        "price": 133.42,
-        "description": "更强调配合与挑战的玩法，适合多人一起玩",
-        "features": "更有参与感，适合把气氛带起来。",
+        "name": "三人小聚体验",
+        "price": 108.08,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 34,
+        "available_stock": 38,
         "duration_mins": 120,
-        "duration_std_dev": 15.0,
+        "duration_std_dev": 20.0,
         "start_time": "20:00"
       },
       {
         "package_id": "package_026_3",
-        "name": "4人联机畅玩",
-        "price": 168.58,
-        "description": "更适合多人联机/合作的玩法内容，时长更充足",
-        "features": "更解压，适合结伴一起爽玩。",
+        "name": "四人欢聚畅玩",
+        "price": 147.34,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 118,
+        "available_stock": 216,
         "duration_mins": 150,
         "duration_std_dev": 20.0,
         "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
       "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "密室逃脱(轻恐)",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3038,11 +2760,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "密室逃脱(轻恐)",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -3053,27 +2777,27 @@
   },
   {
     "id": "activity_027",
-    "name": "轻量剧本杀馆(大学城商圈)",
+    "name": "轻量剧本杀馆(老城文化街区)",
     "category": "activity",
     "sub_category": "剧本杀(轻量本)",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 745号铺",
-    "latitude": 0.96,
-    "longitude": -8.51,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场4F 424号铺",
+    "latitude": -0.5,
+    "longitude": 2.56,
     "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合青少年",
-      "适合11-17岁",
-      "刺激",
-      "沉浸式体验",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
       "建议预约",
       "剧本杀(轻量本)"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 19841,
+    "rating": 4.3,
+    "reviews_count": 18342,
     "tags": [
       "13+",
       "沉浸"
@@ -3081,59 +2805,49 @@
     "packages": [
       {
         "package_id": "package_027_1",
-        "name": "2-4人标准体验",
-        "price": 88.44,
-        "description": "适合小团体结伴体验，玩法更均衡",
-        "features": "更适合一起上手，体验强度适中。",
+        "name": "双人搭子体验",
+        "price": 80.62,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 355,
         "duration_mins": 105,
-        "duration_std_dev": 30.0,
+        "duration_std_dev": 45.0,
         "start_time": "20:00"
       },
       {
         "package_id": "package_027_2",
-        "name": "3-5人进阶挑战",
-        "price": 109.34,
-        "description": "更强调配合与挑战的玩法，适合多人一起玩",
-        "features": "更有参与感，适合把气氛带起来。",
+        "name": "三人小聚体验",
+        "price": 87.74,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 50,
+        "available_stock": 54,
         "duration_mins": 120,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_027_3",
-        "name": "4人联机畅玩",
-        "price": 187.06,
-        "description": "更适合多人联机/合作的玩法内容，时长更充足",
-        "features": "更解压，适合结伴一起爽玩。",
+        "name": "四人欢聚畅玩",
+        "price": 162.33,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 185,
+        "available_stock": 109,
         "duration_mins": 150,
-        "duration_std_dev": 30.0,
-        "start_time": "18:00"
+        "duration_std_dev": 20.0,
+        "start_time": null
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
       "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "剧本杀(轻量本)",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3155,11 +2869,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "剧本杀(轻量本)",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -3174,23 +2890,23 @@
     "category": "activity",
     "sub_category": "保龄球/台球/飞镖",
     "district": "老城文化街区",
-    "address": "老城文化街区某商场2F 336号铺",
-    "latitude": -1.685,
-    "longitude": 2.265,
-    "business_hours": "10:00-21:30",
+    "address": "老城文化街区某商场8F 49号铺",
+    "latitude": -1.064,
+    "longitude": 1.282,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合青少年",
-      "适合11-17岁",
-      "刺激",
-      "沉浸式体验",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
       "建议预约",
       "保龄球/台球/飞镖"
     ],
     "is_free": false,
-    "rating": 4.3,
-    "reviews_count": 14711,
+    "rating": 4.9,
+    "reviews_count": 12589,
     "tags": [
       "运动",
       "朋友"
@@ -3198,59 +2914,49 @@
     "packages": [
       {
         "package_id": "package_028_1",
-        "name": "2-4人标准体验",
-        "price": 97.81,
-        "description": "适合小团体结伴体验，玩法更均衡",
-        "features": "更适合一起上手，体验强度适中。",
+        "name": "双人搭子体验",
+        "price": 91.04,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 140,
         "duration_mins": 45,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_028_2",
-        "name": "3-5人进阶挑战",
-        "price": 179.39,
-        "description": "更强调配合与挑战的玩法，适合多人一起玩",
-        "features": "更有参与感，适合把气氛带起来。",
+        "name": "三人小聚体验",
+        "price": 146.93,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 154,
+        "available_stock": 158,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_028_3",
-        "name": "4人联机畅玩",
-        "price": 150.57,
-        "description": "更适合多人联机/合作的玩法内容，时长更充足",
-        "features": "更解压，适合结伴一起爽玩。",
+        "name": "四人欢聚畅玩",
+        "price": 132.72,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 143,
+        "available_stock": 266,
         "duration_mins": 90,
         "duration_std_dev": 45.0,
         "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
       "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "保龄球/台球/飞镖",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3272,11 +2978,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "保龄球/台球/飞镖",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -3286,27 +2994,27 @@
   },
   {
     "id": "activity_029",
-    "name": "电玩城街机厅(高新科技园)",
+    "name": "电玩城街机厅(大学城商圈)",
     "category": "activity",
     "sub_category": "电玩城/街机厅",
-    "district": "高新科技园",
-    "address": "高新科技园某商场8F 360号铺",
-    "latitude": -5.607,
-    "longitude": 2.01,
-    "business_hours": "09:00-22:00",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场5F 386号铺",
+    "latitude": -0.737,
+    "longitude": -5.641,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合青少年",
-      "适合11-17岁",
-      "刺激",
-      "沉浸式体验",
+      "适合朋友聚会",
+      "热闹",
+      "互动",
+      "解压",
       "室内",
       "建议预约",
       "电玩城/街机厅"
     ],
     "is_free": false,
-    "rating": 4.0,
-    "reviews_count": 11652,
+    "rating": 4.8,
+    "reviews_count": 15616,
     "tags": [
       "青少年",
       "解压"
@@ -3314,57 +3022,49 @@
     "packages": [
       {
         "package_id": "package_029_1",
-        "name": "2-4人标准体验",
-        "price": 85.13,
-        "description": "适合小团体结伴体验，玩法更均衡",
-        "features": "更适合一起上手，体验强度适中。",
+        "name": "双人搭子体验",
+        "price": 76.94,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": false,
         "available_stock": 248,
         "duration_mins": 45,
-        "duration_std_dev": 10.0,
+        "duration_std_dev": 15.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_029_2",
-        "name": "3-5人进阶挑战",
-        "price": 206.0,
-        "description": "更强调配合与挑战的玩法，适合多人一起玩",
-        "features": "更有参与感，适合把气氛带起来。",
+        "name": "三人小聚体验",
+        "price": 169.41,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": false,
-        "available_stock": 275,
+        "available_stock": 292,
         "duration_mins": 60,
-        "duration_std_dev": 45.0,
-        "start_time": "14:00"
+        "duration_std_dev": 60.0,
+        "start_time": "19:00"
       },
       {
         "package_id": "package_029_3",
-        "name": "4人联机畅玩",
-        "price": 162.69,
-        "description": "更适合多人联机/合作的玩法内容，时长更充足",
-        "features": "更解压，适合结伴一起爽玩。",
+        "name": "四人欢聚畅玩",
+        "price": 166.29,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": false,
-        "available_stock": 137,
+        "available_stock": 253,
         "duration_mins": 90,
-        "duration_std_dev": 20.0,
-        "start_time": "14:00"
+        "duration_std_dev": 30.0,
+        "start_time": "15:00"
       }
     ],
     "suitable_groups": [
-      "teen"
+      "friends"
     ],
     "experience_tag": [
+      "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "电玩城/街机厅",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3386,11 +3086,13 @@
       }
     },
     "noise_level_estimated": {
-      "score": 4.2,
-      "confidence": 0.64,
+      "score": 4.7,
+      "confidence": 0.72,
       "source": {
         "sub_category": "电玩城/街机厅",
-        "matched_review_keywords": [],
+        "matched_review_keywords": [
+          "热闹"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
       }
     },
@@ -3401,14 +3103,14 @@
   },
   {
     "id": "activity_030",
-    "name": "桌游馆A(高新科技园)",
+    "name": "桌游馆A(老城文化街区)",
     "category": "activity",
     "sub_category": "桌游馆",
-    "district": "高新科技园",
-    "address": "高新科技园某商场1F 77号铺",
-    "latitude": -4.222,
-    "longitude": 2.883,
-    "business_hours": "10:00-21:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场3F 826号铺",
+    "latitude": 0.172,
+    "longitude": 1.346,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -3420,8 +3122,8 @@
       "桌游馆"
     ],
     "is_free": false,
-    "rating": 4.6,
-    "reviews_count": 12004,
+    "rating": 4.9,
+    "reviews_count": 18528,
     "tags": [
       "低排队",
       "可控时长"
@@ -3429,38 +3131,38 @@
     "packages": [
       {
         "package_id": "package_030_1",
-        "name": "三人小聚体验",
-        "price": 128.25,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 118.25,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 187,
-        "duration_mins": 60,
+        "duration_mins": 45,
         "duration_std_dev": 20.0,
         "start_time": "18:00"
       },
       {
         "package_id": "package_030_2",
-        "name": "四人欢聚畅玩",
-        "price": 140.0,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 113.64,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 117,
-        "duration_mins": 90,
+        "available_stock": 121,
+        "duration_mins": 60,
         "duration_std_dev": 20.0,
         "start_time": null
       },
       {
         "package_id": "package_030_3",
-        "name": "六人团建包场",
-        "price": 263.49,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 160.59,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 110,
-        "duration_mins": 120,
-        "duration_std_dev": 75.0,
+        "available_stock": 294,
+        "duration_mins": 90,
+        "duration_std_dev": 60.0,
         "start_time": "19:00"
       }
     ],
@@ -3472,15 +3174,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "桌游馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3522,10 +3215,10 @@
     "category": "activity",
     "sub_category": "桌游馆",
     "district": "高新科技园",
-    "address": "高新科技园某商场1F 147号铺",
-    "latitude": -4.71,
-    "longitude": 0.75,
-    "business_hours": "10:00-21:30",
+    "address": "高新科技园某商场3F 398号铺",
+    "latitude": 4.147,
+    "longitude": -2.587,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -3537,8 +3230,8 @@
       "桌游馆"
     ],
     "is_free": false,
-    "rating": 4.7,
-    "reviews_count": 14458,
+    "rating": 4.3,
+    "reviews_count": 10922,
     "tags": [
       "低排队",
       "可控时长"
@@ -3546,39 +3239,39 @@
     "packages": [
       {
         "package_id": "package_031_1",
-        "name": "三人小聚体验",
-        "price": 103.92,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 93.92,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 287,
-        "duration_mins": 60,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_031_2",
-        "name": "四人欢聚畅玩",
-        "price": 159.03,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 129.72,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 163,
-        "duration_mins": 90,
+        "available_stock": 167,
+        "duration_mins": 60,
         "duration_std_dev": 30.0,
         "start_time": "20:00"
       },
       {
         "package_id": "package_031_3",
-        "name": "六人团建包场",
-        "price": 199.18,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 119.11,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 86,
-        "duration_mins": 120,
-        "duration_std_dev": 45.0,
-        "start_time": null
+        "available_stock": 99,
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "start_time": "15:00"
       }
     ],
     "suitable_groups": [
@@ -3589,15 +3282,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "桌游馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3639,10 +3323,10 @@
     "category": "activity",
     "sub_category": "KTV",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场6F 371号铺",
-    "latitude": -1.196,
-    "longitude": -1.578,
-    "business_hours": "09:00-22:00",
+    "address": "CBD核心商圈某商场2F 549号铺",
+    "latitude": 0.391,
+    "longitude": -2.494,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -3654,8 +3338,8 @@
       "KTV"
     ],
     "is_free": false,
-    "rating": 4.9,
-    "reviews_count": 1161,
+    "rating": 4.8,
+    "reviews_count": 1788,
     "tags": [
       "晚间",
       "热闹"
@@ -3663,38 +3347,38 @@
     "packages": [
       {
         "package_id": "package_032_1",
-        "name": "三人小聚体验",
-        "price": 69.44,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 59.44,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 391,
-        "duration_mins": 180,
+        "duration_mins": 165,
         "duration_std_dev": 45.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_032_2",
-        "name": "四人欢聚畅玩",
-        "price": 119.74,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 96.53,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 231,
-        "duration_mins": 210,
+        "available_stock": 235,
+        "duration_mins": 180,
         "duration_std_dev": 30.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_032_3",
-        "name": "六人团建包场",
-        "price": 182.87,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 108.59,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 22,
-        "duration_mins": 240,
-        "duration_std_dev": 60.0,
+        "available_stock": 71,
+        "duration_mins": 210,
+        "duration_std_dev": 45.0,
         "start_time": "18:00"
       }
     ],
@@ -3706,15 +3390,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "KTV",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3752,14 +3427,14 @@
   },
   {
     "id": "activity_033",
-    "name": "密室逃脱馆(高新科技园)",
+    "name": "密室逃脱馆(大学城商圈)",
     "category": "activity",
     "sub_category": "密室逃脱",
-    "district": "高新科技园",
-    "address": "高新科技园某商场6F 381号铺",
-    "latitude": -4.489,
-    "longitude": 4.244,
-    "business_hours": "09:00-22:00",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场1F 895号铺",
+    "latitude": -1.375,
+    "longitude": -3.724,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -3771,8 +3446,8 @@
       "密室逃脱"
     ],
     "is_free": false,
-    "rating": 4.8,
-    "reviews_count": 18906,
+    "rating": 4.2,
+    "reviews_count": 19353,
     "tags": [
       "刺激",
       "朋友"
@@ -3780,59 +3455,49 @@
     "packages": [
       {
         "package_id": "package_033_1",
-        "name": "三人小聚体验",
-        "price": 123.8,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 113.8,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 145,
-        "duration_mins": 120,
+        "duration_mins": 105,
         "duration_std_dev": 20.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_033_2",
-        "name": "四人欢聚畅玩",
-        "price": 147.05,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 119.6,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 258,
-        "duration_mins": 150,
+        "available_stock": 262,
+        "duration_mins": 120,
         "duration_std_dev": 60.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_033_3",
-        "name": "六人团建包场",
-        "price": 304.94,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 187.33,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 14,
-        "duration_mins": 180,
-        "duration_std_dev": 30.0,
+        "available_stock": 37,
+        "duration_mins": 150,
+        "duration_std_dev": 20.0,
         "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
       "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "密室逃脱",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3874,9 +3539,9 @@
     "category": "activity",
     "sub_category": "剧本杀",
     "district": "老城文化街区",
-    "address": "老城文化街区某商场5F 256号铺",
-    "latitude": -1.904,
-    "longitude": 2.359,
+    "address": "老城文化街区某商场6F 311号铺",
+    "latitude": -2.323,
+    "longitude": 2.293,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -3889,8 +3554,8 @@
       "剧本杀"
     ],
     "is_free": false,
-    "rating": 4.0,
-    "reviews_count": 6196,
+    "rating": 4.2,
+    "reviews_count": 6326,
     "tags": [
       "长时段",
       "聚会"
@@ -3898,59 +3563,49 @@
     "packages": [
       {
         "package_id": "package_034_1",
-        "name": "三人小聚体验",
-        "price": 119.09,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 109.09,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 407,
-        "duration_mins": 120,
+        "duration_mins": 105,
         "duration_std_dev": 15.0,
         "start_time": "20:00"
       },
       {
         "package_id": "package_034_2",
-        "name": "四人欢聚畅玩",
-        "price": 183.97,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 150.79,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 108,
-        "duration_mins": 150,
+        "available_stock": 112,
+        "duration_mins": 120,
         "duration_std_dev": 60.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_034_3",
-        "name": "六人团建包场",
-        "price": 215.89,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 129.89,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 41,
-        "duration_mins": 180,
-        "duration_std_dev": 60.0,
+        "available_stock": 145,
+        "duration_mins": 150,
+        "duration_std_dev": 45.0,
         "start_time": "20:00"
       }
     ],
     "suitable_groups": [
-      "friends",
-      "teen"
+      "friends"
     ],
     "experience_tag": [
       "互动感强",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "剧本杀",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3989,14 +3644,14 @@
   },
   {
     "id": "activity_035",
-    "name": "台球飞镖馆(滨江风景区)",
+    "name": "台球飞镖馆(CBD核心商圈)",
     "category": "activity",
     "sub_category": "保龄球/台球/飞镖",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场2F 269号铺",
-    "latitude": 0.089,
-    "longitude": -3.095,
-    "business_hours": "09:00-22:00",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场4F 713号铺",
+    "latitude": -1.353,
+    "longitude": -3.26,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -4009,7 +3664,7 @@
     ],
     "is_free": false,
     "rating": 4.7,
-    "reviews_count": 7131,
+    "reviews_count": 13096,
     "tags": [
       "活动感",
       "聚会"
@@ -4017,39 +3672,39 @@
     "packages": [
       {
         "package_id": "package_035_1",
-        "name": "三人小聚体验",
-        "price": 145.44,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 135.44,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 335,
-        "duration_mins": 60,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": "14:00"
       },
       {
         "package_id": "package_035_2",
-        "name": "四人欢聚畅玩",
-        "price": 203.64,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 167.41,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 200,
-        "duration_mins": 90,
+        "available_stock": 204,
+        "duration_mins": 60,
         "duration_std_dev": 60.0,
         "start_time": "19:00"
       },
       {
         "package_id": "package_035_3",
-        "name": "六人团建包场",
-        "price": 326.46,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 201.21,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 119,
-        "duration_mins": 120,
-        "duration_std_dev": 75.0,
-        "start_time": null
+        "available_stock": 230,
+        "duration_mins": 90,
+        "duration_std_dev": 20.0,
+        "start_time": "18:00"
       }
     ],
     "suitable_groups": [
@@ -4060,15 +3715,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "保龄球/台球/飞镖",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -4106,14 +3752,14 @@
   },
   {
     "id": "activity_036",
-    "name": "清吧轻音乐Live(高新科技园)",
+    "name": "清吧轻音乐Live(老城文化街区)",
     "category": "activity",
     "sub_category": "Livehouse/清吧",
-    "district": "高新科技园",
-    "address": "高新科技园某商场8F 205号铺",
-    "latitude": -6.165,
-    "longitude": 6.156,
-    "business_hours": "18:00-23:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场7F 478号铺",
+    "latitude": -1.959,
+    "longitude": 1.477,
+    "business_hours": "19:00-24:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -4125,8 +3771,8 @@
       "Livehouse/清吧"
     ],
     "is_free": false,
-    "rating": 4.9,
-    "reviews_count": 14912,
+    "rating": 4.3,
+    "reviews_count": 11884,
     "tags": [
       "晚间",
       "年轻人"
@@ -4134,39 +3780,39 @@
     "packages": [
       {
         "package_id": "package_036_1",
-        "name": "三人小聚体验",
-        "price": 101.22,
-        "description": "适合三人小聚的基础玩法，简单上手",
-        "features": "更适合朋友聚会，互动轻松。",
+        "name": "双人搭子体验",
+        "price": 91.22,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
         "available_stock": 296,
-        "duration_mins": 60,
+        "duration_mins": 45,
         "duration_std_dev": 15.0,
         "start_time": "18:00"
       },
       {
         "package_id": "package_036_2",
-        "name": "四人欢聚畅玩",
-        "price": 224.88,
-        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
-        "features": "更热闹但不费脑，适合组局。",
+        "name": "三人小聚体验",
+        "price": 185.36,
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 218,
-        "duration_mins": 90,
+        "available_stock": 222,
+        "duration_mins": 60,
         "duration_std_dev": 60.0,
         "start_time": null
       },
       {
         "package_id": "package_036_3",
-        "name": "六人团建包场",
-        "price": 280.95,
-        "description": "更适合多人一起玩的包场方案，体验更完整",
-        "features": "更适合团建与朋友大局，氛围拉满。",
+        "name": "四人欢聚畅玩",
+        "price": 171.85,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
-        "available_stock": 94,
-        "duration_mins": 120,
-        "duration_std_dev": 75.0,
-        "start_time": "19:00"
+        "available_stock": 264,
+        "duration_mins": 90,
+        "duration_std_dev": 60.0,
+        "start_time": "15:00"
       }
     ],
     "suitable_groups": [
@@ -4177,15 +3823,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "Livehouse/清吧",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -4223,14 +3860,14 @@
   },
   {
     "id": "activity_037",
-    "name": "大型商场综合体(老城文化街区)",
+    "name": "大型商场综合体(高新科技园)",
     "category": "activity",
     "sub_category": "商场综合体",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场2F 830号铺",
-    "latitude": 0.891,
-    "longitude": 1.669,
-    "business_hours": "10:00-21:30",
+    "district": "高新科技园",
+    "address": "高新科技园某商场8F 780号铺",
+    "latitude": 1.135,
+    "longitude": -1.948,
+    "business_hours": "09:00-22:00",
     "indoor": true,
     "review_keywords": [
       "通用兜底",
@@ -4242,8 +3879,8 @@
       "商场综合体"
     ],
     "is_free": true,
-    "rating": 5.0,
-    "reviews_count": 10572,
+    "rating": 4.9,
+    "reviews_count": 12247,
     "tags": [
       "雨天",
       "室内"
@@ -4251,45 +3888,36 @@
     "packages": [
       {
         "package_id": "package_037_1",
-        "name": "1-4人自由入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由入场体验，可随到随玩/随到随逛",
-        "features": "低决策成本，临时起意也很合适。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_037_2",
-        "name": "2-4人主题路线(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "推荐主题路线与玩法点位，按需选择",
-        "features": "更容易不踩雷，适合兜底安排。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 60,
-        "duration_std_dev": 20.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "商场综合体",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -4331,10 +3959,10 @@
     "category": "activity",
     "sub_category": "城市公园/湖边步道",
     "district": "大学城商圈",
-    "address": "大学城商圈某商场5F 913号铺",
-    "latitude": -1.131,
-    "longitude": -9.514,
-    "business_hours": "09:00-22:00",
+    "address": "大学城商圈某商场4F 760号铺",
+    "latitude": -1.501,
+    "longitude": -4.013,
+    "business_hours": "10:00-22:00",
     "indoor": false,
     "review_keywords": [
       "通用兜底",
@@ -4346,8 +3974,8 @@
       "城市公园/湖边步道"
     ],
     "is_free": true,
-    "rating": 4.9,
-    "reviews_count": 5804,
+    "rating": 4.0,
+    "reviews_count": 18230,
     "tags": [
       "低预算",
       "天气好"
@@ -4355,45 +3983,36 @@
     "packages": [
       {
         "package_id": "package_038_1",
-        "name": "1-4人自由入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由入场体验，可随到随玩/随到随逛",
-        "features": "低决策成本，临时起意也很合适。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 150,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_038_2",
-        "name": "2-4人主题路线(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "推荐主题路线与玩法点位，按需选择",
-        "features": "更容易不踩雷，适合兜底安排。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 135,
-        "duration_std_dev": 20.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 120,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "城市公园/湖边步道",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -4430,14 +4049,14 @@
   },
   {
     "id": "activity_039",
-    "name": "大型书城/商场书店(大学城商圈)",
+    "name": "大型书城/商场书店(高新科技园)",
     "category": "activity",
     "sub_category": "大型书城",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场4F 812号铺",
-    "latitude": -1.416,
-    "longitude": -7.721,
-    "business_hours": "10:00-22:00",
+    "district": "高新科技园",
+    "address": "高新科技园某商场4F 389号铺",
+    "latitude": 2.711,
+    "longitude": -1.696,
+    "business_hours": "10:00-21:30",
     "indoor": true,
     "review_keywords": [
       "通用兜底",
@@ -4449,57 +4068,48 @@
       "大型书城"
     ],
     "is_free": true,
-    "rating": 4.2,
-    "reviews_count": 16288,
+    "rating": 4.8,
+    "reviews_count": 16461,
     "tags": [
-      "单人",
+      "轻量",
       "亲子",
-      "情侣"
+      "朋友"
     ],
     "packages": [
       {
         "package_id": "package_039_1",
-        "name": "1-4人自由入场",
+        "name": "自由入场体验",
         "price": 0.0,
-        "description": "自由入场体验，可随到随玩/随到随逛",
-        "features": "低决策成本，临时起意也很合适。",
+        "description": "免费开放，随时可进",
+        "features": "无需预约，灵活度高。",
         "requires_booking": false,
         "available_stock": 9999,
         "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "duration_std_dev": 30.0,
         "start_time": null
       },
       {
         "package_id": "package_039_2",
-        "name": "2-4人主题路线(免票)",
+        "name": "周末定时讲解/互动(免费)",
         "price": 0.0,
-        "description": "推荐主题路线与玩法点位，按需选择",
-        "features": "更容易不踩雷，适合兜底安排。",
-        "requires_booking": false,
-        "available_stock": 9999,
-        "duration_mins": 60,
-        "duration_std_dev": 20.0,
-        "start_time": null
+        "description": "场馆/公园内定时的免费互动活动",
+        "features": "有引导员带领，适合家庭/朋友参与。",
+        "requires_booking": true,
+        "available_stock": 20,
+        "duration_mins": 30,
+        "duration_std_dev": 10.0,
+        "start_time": "14:00"
       }
     ],
     "suitable_groups": [
-      "solo",
-      "family"
+      "family",
+      "friends"
     ],
     "experience_tag": [
       "亲子友好",
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "大型书城",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -4537,14 +4147,14 @@
   },
   {
     "id": "activity_040",
-    "name": "综合娱乐中心(CBD核心商圈)",
+    "name": "综合娱乐中心(大学城商圈)",
     "category": "activity",
     "sub_category": "综合娱乐中心",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场8F 823号铺",
-    "latitude": -3.223,
-    "longitude": -0.863,
-    "business_hours": "10:00-21:30",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场8F 472号铺",
+    "latitude": -0.484,
+    "longitude": -2.82,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "通用兜底",
@@ -4556,8 +4166,8 @@
       "综合娱乐中心"
     ],
     "is_free": false,
-    "rating": 4.1,
-    "reviews_count": 2925,
+    "rating": 4.7,
+    "reviews_count": 11640,
     "tags": [
       "多选项",
       "兜底"
@@ -4565,34 +4175,34 @@
     "packages": [
       {
         "package_id": "package_040_1",
-        "name": "单人/双人随享",
-        "price": 102.53,
-        "description": "低决策成本的通用体验，适合临时加一站",
-        "features": "更灵活，不需要做太多功课。",
+        "name": "双人轻体验",
+        "price": 129.67,
+        "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
+        "features": "更适合朋友朋友搭子局，轻松不尴尬。",
         "requires_booking": true,
-        "available_stock": 388,
+        "available_stock": 204,
         "duration_mins": 45,
-        "duration_std_dev": 30.0,
+        "duration_std_dev": 45.0,
         "start_time": "15:00"
       },
       {
         "package_id": "package_040_2",
-        "name": "2-4人通用票",
+        "name": "三人小聚体验",
         "price": 145.05,
-        "description": "更适合小团体的通用方案，玩法更完整",
-        "features": "更稳更不踩雷，适合兜底安排。",
+        "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
+        "features": "更容易成局，适合朋友临时约一场。",
         "requires_booking": true,
-        "available_stock": 258,
+        "available_stock": 252,
         "duration_mins": 60,
-        "duration_std_dev": 45.0,
+        "duration_std_dev": 60.0,
         "start_time": "16:30"
       },
       {
         "package_id": "package_040_3",
-        "name": "3-5人小团体票",
-        "price": 111.02,
-        "description": "更适合多人一起玩的玩法组合，体验更丰富",
-        "features": "更热闹，适合把气氛带起来。",
+        "name": "四人畅玩体验",
+        "price": 108.17,
+        "description": "更适合四人一起玩的畅玩方案，内容更丰富",
+        "features": "更热闹但不费脑，适合组局。",
         "requires_booking": true,
         "available_stock": 276,
         "duration_mins": 90,
@@ -4601,21 +4211,12 @@
       }
     ],
     "suitable_groups": [
-      "solo"
+      "friends"
     ],
     "experience_tag": [
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "综合娱乐中心",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,

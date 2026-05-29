@@ -1,13 +1,13 @@
 [
   {
     "id": "restaurant_001",
-    "name": "点都德(老城文化街区)",
+    "name": "点都德(高新科技园)",
     "category": "restaurant",
     "sub_category": "粤菜",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场4F 734号铺",
-    "latitude": -0.197,
-    "longitude": 4.661,
+    "district": "高新科技园",
+    "address": "高新科技园某商场4F 518号铺",
+    "latitude": 3.331,
+    "longitude": -2.242,
     "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
@@ -19,16 +19,16 @@
       "建议预约",
       "粤菜"
     ],
-    "rating": 4.4,
+    "rating": 4.7,
     "combos": [
       {
         "combo_id": "combo_001_1",
-        "name": "单人工作日便饭",
-        "price": 55.18,
-        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：土豆丝、凉拌木耳；汤品：紫菜蛋花汤；主食：炒饭；饮品：酸梅汤",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 60,
-        "duration_std_dev": 20.0,
+        "name": "双人清淡分享餐",
+        "price": 75.39,
+        "description": "主菜：红烧肉、清蒸鱼；配菜：烤蔬菜、凉拌木耳；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 50,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -37,10 +37,10 @@
       },
       {
         "combo_id": "combo_001_2",
-        "name": "双人清淡分享餐",
-        "price": 66.38,
-        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：酸梅汤",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "name": "2大1小家庭套餐",
+        "price": 86.0,
+        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：土豆丝、烤蔬菜；汤品：冬瓜排骨汤；主食：米饭；饮品：酸梅汤",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
         "duration_mins": 72,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
@@ -51,27 +51,41 @@
       },
       {
         "combo_id": "combo_001_3",
-        "name": "2大1小家庭套餐",
-        "price": 89.95,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：凉拌木耳、时蔬拼盘；汤品：紫菜蛋花汤；主食：炒饭；饮品：果汁",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 95,
-        "duration_std_dev": 10.0,
+        "name": "四人家庭聚餐",
+        "price": 133.39,
+        "description": "主菜：红烧肉、黑椒牛柳；配菜：烤蔬菜、时蔬拼盘；汤品：冬瓜排骨汤；主食：米饭；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 89,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_001_4",
+        "name": "2-4人家常共享餐",
+        "price": 124.4,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：土豆丝、拍黄瓜；汤品：番茄蛋花汤；主食：面食；饮品：酸梅汤",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 79,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
-        "combo_id": "combo_001_4",
-        "name": "四人家庭聚餐",
-        "price": 125.87,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 73,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_001_5",
+        "name": "2大2小家庭聚餐",
+        "price": 43.27,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：面食；饮品：柠檬水",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 74,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -88,15 +102,6 @@
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -125,18 +130,35 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
     "id": "restaurant_002",
-    "name": "莲香茶餐厅(大学城商圈)",
+    "name": "莲香茶餐厅(老城文化街区)",
     "category": "restaurant",
     "sub_category": "茶餐厅",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 624号铺",
-    "latitude": -1.333,
-    "longitude": -9.851,
-    "business_hours": "09:30-21:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场1F 235号铺",
+    "latitude": -1.091,
+    "longitude": 0.269,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -147,29 +169,15 @@
       "建议预约",
       "茶餐厅"
     ],
-    "rating": 4.7,
+    "rating": 4.8,
     "combos": [
       {
         "combo_id": "combo_002_1",
-        "name": "单人工作日便饭",
-        "price": 53.69,
-        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：土豆丝、凉拌木耳；汤品：冬瓜排骨汤；主食：白饭；饮品：柠檬水",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_002_2",
         "name": "双人清淡分享餐",
-        "price": 63.45,
-        "description": "主菜：红烧肉、宫保鸡丁；配菜：凉拌木耳、拍黄瓜；汤品：番茄蛋花汤；主食：叉烧包；饮品：果汁",
+        "price": 72.31,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：白饭；饮品：柠檬水",
         "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 81,
+        "duration_mins": 75,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
@@ -178,28 +186,56 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_002_3",
+        "combo_id": "combo_002_2",
         "name": "2大1小家庭套餐",
-        "price": 96.36,
-        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：拍黄瓜、土豆丝；汤品：番茄蛋花汤；主食：白饭；饮品：热茶",
+        "price": 85.64,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：烤蔬菜、拍黄瓜；汤品：紫菜蛋花汤；主食：云吞面；饮品：热茶",
         "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 75,
-        "duration_std_dev": 15.0,
+        "duration_mins": 58,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_002_3",
+        "name": "四人家庭聚餐",
+        "price": 124.5,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：土豆丝、烤蔬菜；汤品：紫菜蛋花汤；主食：云吞面；饮品：酸梅汤",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 88,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
       },
       {
         "combo_id": "combo_002_4",
-        "name": "四人家庭聚餐",
-        "price": 132.64,
-        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：时蔬拼盘、烤蔬菜；汤品：番茄蛋花汤；主食：叉烧包；饮品：柠檬水",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 77,
-        "duration_std_dev": 10.0,
+        "name": "2-4人家常共享餐",
+        "price": 122.67,
+        "description": "主菜：香辣小龙虾、红烧肉；配菜：时蔬拼盘、拍黄瓜；汤品：紫菜蛋花汤；主食：白饭；饮品：酸梅汤",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 60,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_002_5",
+        "name": "2大2小家庭聚餐",
+        "price": 43.06,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：烤蔬菜、时蔬拼盘；汤品：紫菜蛋花汤；主食：白饭；饮品：柠檬水",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 98,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -208,24 +244,14 @@
     "tags": [
       "少辣",
       "家庭",
-      "单人"
+      "轻量"
     ],
     "suitable_groups": [
-      "solo",
       "family"
     ],
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "茶餐厅",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -254,18 +280,35 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "茶餐厅",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
     "id": "restaurant_003",
-    "name": "翠华茶餐厅(滨江风景区)",
+    "name": "翠华茶餐厅(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "粤菜",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场1F 697号铺",
-    "latitude": -0.539,
-    "longitude": -3.452,
-    "business_hours": "09:30-21:30",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 952号铺",
+    "latitude": -2.262,
+    "longitude": -2.259,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -276,16 +319,16 @@
       "建议预约",
       "粤菜"
     ],
-    "rating": 4.9,
+    "rating": 4.5,
     "combos": [
       {
         "combo_id": "combo_003_1",
-        "name": "单人工作日便饭",
-        "price": 49.07,
-        "description": "主菜：红烧肉、宫保鸡丁；配菜：拍黄瓜、时蔬拼盘；汤品：冬瓜排骨汤；主食：馒头；饮品：柠檬水",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 96,
-        "duration_std_dev": 15.0,
+        "name": "双人清淡分享餐",
+        "price": 73.84,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：时蔬拼盘、土豆丝；汤品：紫菜蛋花汤；主食：米饭；饮品：酸梅汤",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 54,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -294,12 +337,12 @@
       },
       {
         "combo_id": "combo_003_2",
-        "name": "双人清淡分享餐",
-        "price": 69.99,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、土豆丝；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
-        "duration_std_dev": 10.0,
+        "name": "2大1小家庭套餐",
+        "price": 86.38,
+        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：拍黄瓜、凉拌木耳；汤品：番茄蛋花汤；主食：面食；饮品：果汁",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 92,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -308,27 +351,41 @@
       },
       {
         "combo_id": "combo_003_3",
-        "name": "2大1小家庭套餐",
-        "price": 83.22,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：时蔬拼盘、拍黄瓜；汤品：冬瓜排骨汤；主食：面食；饮品：酸梅汤",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 86,
-        "duration_std_dev": 10.0,
+        "name": "四人家庭聚餐",
+        "price": 117.22,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 85,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_003_4",
+        "name": "2-4人家常共享餐",
+        "price": 118.22,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 65,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
-        "combo_id": "combo_003_4",
-        "name": "四人家庭聚餐",
-        "price": 122.1,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：烤蔬菜、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：柠檬水",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 88,
+        "combo_id": "combo_003_5",
+        "name": "2大2小家庭聚餐",
+        "price": 43.81,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：番茄蛋花汤；主食：馒头；饮品：热茶",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -345,15 +402,6 @@
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "粤菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -382,18 +430,35 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "粤菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
     "id": "restaurant_004",
-    "name": "外婆家(老城文化街区)",
+    "name": "外婆家(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "江浙菜",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场6F 449号铺",
-    "latitude": -0.767,
-    "longitude": 1.164,
-    "business_hours": "09:30-21:30",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 63号铺",
+    "latitude": -2.654,
+    "longitude": -4.136,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -408,25 +473,25 @@
     "combos": [
       {
         "combo_id": "combo_004_1",
-        "name": "单人工作日便饭",
-        "price": 51.77,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：土豆丝、烤蔬菜；汤品：腌笃鲜；主食：炒饭；饮品：酸梅汤",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 64,
-        "duration_std_dev": 12.0,
+        "name": "双人清淡分享餐",
+        "price": 67.64,
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、烤蔬菜；汤品：腌笃鲜；主食：馒头；饮品：柠檬水",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 67,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_004_2",
-        "name": "双人清淡分享餐",
-        "price": 64.77,
-        "description": "主菜：红烧肉、清蒸鱼；配菜：时蔬拼盘、烤蔬菜；汤品：老鸭汤；主食：米饭；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 81,
+        "name": "2大1小家庭套餐",
+        "price": 96.93,
+        "description": "主菜：红烧肉、黑椒牛柳；配菜：烤蔬菜、时蔬拼盘；汤品：腌笃鲜；主食：米饭；饮品：酸梅汤",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 65,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
@@ -436,12 +501,25 @@
       },
       {
         "combo_id": "combo_004_3",
-        "name": "2大1小家庭套餐",
-        "price": 80.34,
-        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：土豆丝、凉拌木耳；汤品：老鸭汤；主食：面食；饮品：酸梅汤",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 77,
-        "duration_std_dev": 15.0,
+        "name": "四人家庭聚餐",
+        "price": 136.51,
+        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：凉拌木耳、时蔬拼盘；汤品：腌笃鲜；主食：馒头；饮品：酸梅汤",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 66,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_004_4",
+        "name": "2-4人家常共享餐",
+        "price": 128.38,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：土豆丝、烤蔬菜；汤品：老鸭汤；主食：面食；饮品：酸梅汤",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 84,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -449,17 +527,18 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_004_4",
-        "name": "四人家庭聚餐",
-        "price": 121.77,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：时蔬拼盘、烤蔬菜；汤品：老鸭汤；主食：炒饭；饮品：酸梅汤",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 62,
-        "duration_std_dev": 20.0,
+        "combo_id": "combo_004_5",
+        "name": "2大2小家庭聚餐",
+        "price": 59.22,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：菌菇汤；主食：面食；饮品：酸梅汤",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 55,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
-        "requires_booking": false
+        "requires_booking": true
       }
     ],
     "tags": [
@@ -468,7 +547,6 @@
       "安静"
     ],
     "suitable_groups": [
-      "solo",
       "family"
     ],
     "experience_tag": [
@@ -476,15 +554,6 @@
       "轻松",
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -513,17 +582,34 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
     "id": "restaurant_005",
-    "name": "老上海本帮菜馆(滨江风景区)",
+    "name": "老上海本帮菜馆(老城文化街区)",
     "category": "restaurant",
     "sub_category": "本帮菜",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场8F 828号铺",
-    "latitude": 3.392,
-    "longitude": 0.674,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场4F 593号铺",
+    "latitude": -2.283,
+    "longitude": 3.387,
     "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
@@ -535,15 +621,15 @@
       "建议预约",
       "本帮菜"
     ],
-    "rating": 4.2,
+    "rating": 4.9,
     "combos": [
       {
         "combo_id": "combo_005_1",
-        "name": "单人工作日便饭",
-        "price": 48.13,
-        "description": "主菜：红烧肉、香辣小龙虾；配菜：烤蔬菜、时蔬拼盘；汤品：腌笃鲜；主食：面食；饮品：柠檬水",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
+        "name": "双人清淡分享餐",
+        "price": 63.97,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：凉拌木耳、拍黄瓜；汤品：老鸭汤；主食：面食；饮品：果汁",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 75,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
@@ -553,12 +639,12 @@
       },
       {
         "combo_id": "combo_005_2",
-        "name": "双人清淡分享餐",
-        "price": 64.9,
-        "description": "主菜：红烧肉、清蒸鱼；配菜：凉拌木耳、时蔬拼盘；汤品：老鸭汤；主食：炒饭；饮品：热茶",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 94,
-        "duration_std_dev": 20.0,
+        "name": "2大1小家庭套餐",
+        "price": 79.87,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：拍黄瓜、时蔬拼盘；汤品：腌笃鲜；主食：馒头；饮品：酸梅汤",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 63,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -567,27 +653,41 @@
       },
       {
         "combo_id": "combo_005_3",
-        "name": "2大1小家庭套餐",
-        "price": 79.4,
-        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：时蔬拼盘、烤蔬菜；汤品：菌菇汤；主食：炒饭；饮品：酸梅汤",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
+        "name": "四人家庭聚餐",
+        "price": 133.47,
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、拍黄瓜；汤品：老鸭汤；主食：面食；饮品：热茶",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 95,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_005_4",
+        "name": "2-4人家常共享餐",
+        "price": 122.09,
+        "description": "主菜：香辣小龙虾、红烧肉；配菜：烤蔬菜、拍黄瓜；汤品：菌菇汤；主食：米饭；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
-        "combo_id": "combo_005_4",
-        "name": "四人家庭聚餐",
-        "price": 124.88,
-        "description": "主菜：香辣小龙虾、红烧肉；配菜：土豆丝、时蔬拼盘；汤品：菌菇汤；主食：米饭；饮品：柠檬水",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 86,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_005_5",
+        "name": "2大2小家庭聚餐",
+        "price": 45.02,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、土豆丝；汤品：菌菇汤；主食：炒饭；饮品：热茶",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 53,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -596,30 +696,18 @@
     "tags": [
       "少辣",
       "家庭",
-      "安静约会"
+      "安静小聚"
     ],
     "suitable_groups": [
-      "solo",
-      "couple",
-      "family",
-      "business"
+      "family"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
       "安静",
       "轻松",
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "本帮菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -648,6 +736,23 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "本帮菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
@@ -656,10 +761,10 @@
     "category": "restaurant",
     "sub_category": "江浙菜",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场6F 958号铺",
-    "latitude": -3.704,
-    "longitude": -1.397,
-    "business_hours": "11:00-22:30",
+    "address": "CBD核心商圈某商场5F 166号铺",
+    "latitude": 0.396,
+    "longitude": -1.546,
+    "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -670,30 +775,30 @@
       "建议预约",
       "江浙菜"
     ],
-    "rating": 4.4,
+    "rating": 4.6,
     "combos": [
       {
         "combo_id": "combo_006_1",
-        "name": "单人工作日便饭",
-        "price": 49.14,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：土豆丝、拍黄瓜；汤品：老鸭汤；主食：面食；饮品：果汁",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 98,
-        "duration_std_dev": 10.0,
+        "name": "双人清淡分享餐",
+        "price": 70.11,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：烤蔬菜、时蔬拼盘；汤品：腌笃鲜；主食：米饭；饮品：柠檬水",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 73,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_006_2",
-        "name": "双人清淡分享餐",
-        "price": 77.87,
-        "description": "主菜：香辣小龙虾、红烧肉；配菜：时蔬拼盘、土豆丝；汤品：菌菇汤；主食：炒饭；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 54,
-        "duration_std_dev": 12.0,
+        "name": "2大1小家庭套餐",
+        "price": 91.74,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：拍黄瓜、时蔬拼盘；汤品：老鸭汤；主食：面食；饮品：柠檬水",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 72,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -702,12 +807,25 @@
       },
       {
         "combo_id": "combo_006_3",
-        "name": "2大1小家庭套餐",
-        "price": 97.04,
-        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：烤蔬菜、拍黄瓜；汤品：菌菇汤；主食：米饭；饮品：果汁",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 56,
-        "duration_std_dev": 12.0,
+        "name": "四人家庭聚餐",
+        "price": 131.53,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：土豆丝、烤蔬菜；汤品：老鸭汤；主食：米饭；饮品：柠檬水",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 71,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_006_4",
+        "name": "2-4人家常共享餐",
+        "price": 121.25,
+        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：土豆丝、时蔬拼盘；汤品：老鸭汤；主食：米饭；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 79,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -715,14 +833,15 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_006_4",
-        "name": "四人家庭聚餐",
-        "price": 120.87,
-        "description": "主菜：红烧肉、清蒸鱼；配菜：拍黄瓜、烤蔬菜；汤品：菌菇汤；主食：面食；饮品：果汁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 90,
+        "combo_id": "combo_006_5",
+        "name": "2大2小家庭聚餐",
+        "price": 57.29,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：时蔬拼盘、土豆丝；汤品：老鸭汤；主食：炒饭；饮品：果汁",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 99,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -734,7 +853,6 @@
       "安静"
     ],
     "suitable_groups": [
-      "solo",
       "family"
     ],
     "experience_tag": [
@@ -742,15 +860,6 @@
       "轻松",
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "江浙菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -779,18 +888,35 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "江浙菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
     "id": "restaurant_007",
-    "name": "社区家常小馆(CBD核心商圈)",
+    "name": "社区家常小馆(大学城商圈)",
     "category": "restaurant",
     "sub_category": "家常菜",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场5F 46号铺",
-    "latitude": -0.652,
-    "longitude": -1.5,
-    "business_hours": "10:00-22:00",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场5F 183号铺",
+    "latitude": 0.061,
+    "longitude": -4.859,
+    "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -805,169 +931,10 @@
     "combos": [
       {
         "combo_id": "combo_007_1",
-        "name": "单人工作日便饭",
-        "price": 51.22,
-        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：拍黄瓜、土豆丝；汤品：紫菜蛋花汤；主食：馒头；饮品：热茶",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 57,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_007_2",
         "name": "双人清淡分享餐",
-        "price": 65.37,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、土豆丝；汤品：冬瓜排骨汤；主食：面食；饮品：酸梅汤",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 100,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_007_3",
-        "name": "2大1小家庭套餐",
-        "price": 96.92,
-        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：时蔬拼盘、拍黄瓜；汤品：紫菜蛋花汤；主食：馒头；饮品：柠檬水",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 65,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_007_4",
-        "name": "四人家庭聚餐",
-        "price": 132.84,
-        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：紫菜蛋花汤；主食：炒饭；饮品：热茶",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 97,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      }
-    ],
-    "tags": [
-      "低预算",
-      "家庭",
-      "单人"
-    ],
-    "suitable_groups": [
-      "solo",
-      "family"
-    ],
-    "experience_tag": [
-      "亲子友好",
-      "高性价比",
-      "低决策成本"
-    ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.5,
-      "confidence": 0.72,
-      "source": {
-        "sub_category": "家常菜",
-        "matched_review_keywords": [
-          "饭点人多"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    }
-  },
-  {
-    "id": "restaurant_008",
-    "name": "巷口小馆(CBD核心商圈)",
-    "category": "restaurant",
-    "sub_category": "社区小馆",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场8F 228号铺",
-    "latitude": -2.281,
-    "longitude": -2.079,
-    "business_hours": "10:00-22:00",
-    "indoor": true,
-    "review_keywords": [
-      "适合亲子",
-      "口味清淡",
-      "可做不辣",
-      "空间宽敞",
-      "饭点人多",
-      "建议预约",
-      "社区小馆"
-    ],
-    "rating": 4.3,
-    "combos": [
-      {
-        "combo_id": "combo_008_1",
-        "name": "单人工作日便饭",
-        "price": 47.97,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：拍黄瓜、土豆丝；汤品：番茄蛋花汤；主食：米饭；饮品：柠檬水",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 67,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_008_2",
-        "name": "双人清淡分享餐",
-        "price": 61.51,
-        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：紫菜蛋花汤；主食：炒饭；饮品：酸梅汤",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 66,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_008_3",
-        "name": "2大1小家庭套餐",
-        "price": 90.52,
+        "price": 71.32,
         "description": "主菜：宫保鸡丁、红烧肉；配菜：时蔬拼盘、凉拌木耳；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
         "duration_mins": 82,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
@@ -977,14 +944,56 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_008_4",
-        "name": "四人家庭聚餐",
-        "price": 127.2,
+        "combo_id": "combo_007_2",
+        "name": "2大1小家庭套餐",
+        "price": 88.8,
         "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：馒头；饮品：酸梅汤",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
         "duration_mins": 84,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_007_3",
+        "name": "四人家庭聚餐",
+        "price": 126.94,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：烤蔬菜、拍黄瓜；汤品：紫菜蛋花汤；主食：米饭；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 92,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_007_4",
+        "name": "2-4人家常共享餐",
+        "price": 129.11,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：土豆丝、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 69,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_007_5",
+        "name": "2大2小家庭聚餐",
+        "price": 48.84,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：拍黄瓜、土豆丝；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 93,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -993,10 +1002,9 @@
     "tags": [
       "低预算",
       "家庭",
-      "单人"
+      "轻量"
     ],
     "suitable_groups": [
-      "solo",
       "family"
     ],
     "experience_tag": [
@@ -1004,20 +1012,11 @@
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "社区小馆",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
       "source": {
-        "sub_category": "社区小馆",
+        "sub_category": "家常菜",
         "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
@@ -1026,7 +1025,7 @@
       "score": 2.0,
       "confidence": 0.62,
       "source": {
-        "sub_category": "社区小馆",
+        "sub_category": "家常菜",
         "matched_review_keywords": [],
         "rule": "walking_from_sub_category_and_keywords"
       }
@@ -1035,24 +1034,41 @@
       "score": 2.5,
       "confidence": 0.72,
       "source": {
-        "sub_category": "社区小馆",
+        "sub_category": "家常菜",
         "matched_review_keywords": [
           "饭点人多"
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "家常菜",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_009",
-    "name": "和府捞面·家庭简餐(大学城商圈)",
+    "id": "restaurant_008",
+    "name": "和府捞面·家庭简餐(老城文化街区)",
     "category": "restaurant",
     "sub_category": "连锁简餐",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 738号铺",
-    "latitude": -2.238,
-    "longitude": -9.226,
-    "business_hours": "11:00-22:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场6F 96号铺",
+    "latitude": -0.765,
+    "longitude": 1.346,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1063,59 +1079,73 @@
       "建议预约",
       "连锁简餐"
     ],
-    "rating": 4.9,
+    "rating": 4.3,
     "combos": [
       {
-        "combo_id": "combo_009_1",
-        "name": "单人工作日便饭",
-        "price": 43.84,
-        "description": "主菜：香辣小龙虾、宫保鸡丁；配菜：凉拌木耳、拍黄瓜；汤品：冬瓜排骨汤；主食：炒饭；饮品：柠檬水",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 92,
-        "duration_std_dev": 20.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_009_2",
+        "combo_id": "combo_008_1",
         "name": "双人清淡分享餐",
-        "price": 67.8,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：凉拌木耳、时蔬拼盘；汤品：冬瓜排骨汤；主食：炒饭；饮品：柠檬水",
+        "price": 78.88,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：土豆丝、烤蔬菜；汤品：番茄蛋花汤；主食：米饭；饮品：柠檬水",
         "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 87,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_009_3",
-        "name": "2大1小家庭套餐",
-        "price": 84.08,
-        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：烤蔬菜、凉拌木耳；汤品：紫菜蛋花汤；主食：面食；饮品：酸梅汤",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 92,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": true
-      },
-      {
-        "combo_id": "combo_009_4",
-        "name": "四人家庭聚餐",
-        "price": 121.7,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：土豆丝、烤蔬菜；汤品：番茄蛋花汤；主食：米饭；饮品：酸梅汤",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
+        "duration_mins": 89,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_008_2",
+        "name": "2大1小家庭套餐",
+        "price": 91.52,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：凉拌木耳、烤蔬菜；汤品：冬瓜排骨汤；主食：面食；饮品：柠檬水",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 50,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_008_3",
+        "name": "四人家庭聚餐",
+        "price": 125.93,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：番茄蛋花汤；主食：面食；饮品：酸梅汤",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 79,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_008_4",
+        "name": "2-4人家常共享餐",
+        "price": 121.98,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：番茄蛋花汤；主食：馒头；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 65,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_008_5",
+        "name": "2大2小家庭聚餐",
+        "price": 44.69,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：土豆丝、拍黄瓜；汤品：冬瓜排骨汤；主食：米饭；饮品：果汁",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 71,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
           "dinner"
         ],
         "requires_booking": false
@@ -1134,15 +1164,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "连锁简餐",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -1171,18 +1192,35 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "likely",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.98,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "连锁简餐",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_010",
-    "name": "商场家庭餐厅·轻简餐(高新科技园)",
+    "id": "restaurant_009",
+    "name": "商场家庭餐厅·轻简餐(老城文化街区)",
     "category": "restaurant",
     "sub_category": "商场家庭餐厅",
-    "district": "高新科技园",
-    "address": "高新科技园某商场8F 410号铺",
-    "latitude": -4.632,
-    "longitude": 5.073,
-    "business_hours": "10:00-22:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场4F 66号铺",
+    "latitude": -0.142,
+    "longitude": 3.561,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1193,15 +1231,15 @@
       "建议预约",
       "商场家庭餐厅"
     ],
-    "rating": 4.5,
+    "rating": 4.6,
     "combos": [
       {
-        "combo_id": "combo_010_1",
-        "name": "单人工作日便饭",
-        "price": 41.0,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：时蔬拼盘、凉拌木耳；汤品：番茄蛋花汤；主食：面食；饮品：热茶",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 65,
+        "combo_id": "combo_009_1",
+        "name": "双人清淡分享餐",
+        "price": 75.86,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：烤蔬菜、凉拌木耳；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 74,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
@@ -1210,13 +1248,13 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_010_2",
-        "name": "双人清淡分享餐",
-        "price": 74.07,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：凉拌木耳、烤蔬菜；汤品：紫菜蛋花汤；主食：馒头；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
-        "duration_std_dev": 20.0,
+        "combo_id": "combo_009_2",
+        "name": "2大1小家庭套餐",
+        "price": 95.47,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：凉拌木耳、时蔬拼盘；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 76,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -1224,31 +1262,45 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_010_3",
-        "name": "2大1小家庭套餐",
-        "price": 87.2,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：烤蔬菜、凉拌木耳；汤品：紫菜蛋花汤；主食：面食；饮品：果汁",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 95,
+        "combo_id": "combo_009_3",
+        "name": "四人家庭聚餐",
+        "price": 131.28,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：凉拌木耳、时蔬拼盘；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 79,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_009_4",
+        "name": "2-4人家常共享餐",
+        "price": 134.14,
+        "description": "主菜：香辣小龙虾、红烧肉；配菜：凉拌木耳、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 61,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_009_5",
+        "name": "2大2小家庭聚餐",
+        "price": 55.04,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：凉拌木耳、拍黄瓜；汤品：冬瓜排骨汤；主食：馒头；饮品：果汁",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 76,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
         "requires_booking": false
-      },
-      {
-        "combo_id": "combo_010_4",
-        "name": "四人家庭聚餐",
-        "price": 124.46,
-        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：烤蔬菜、时蔬拼盘；汤品：番茄蛋花汤；主食：面食；饮品：柠檬水",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 59,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": true
       }
     ],
     "tags": [
@@ -1264,15 +1316,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "商场家庭餐厅",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -1301,123 +1344,141 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "likely",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "商场内",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.48,
+      "confidence": 0.79,
+      "source": {
+        "sub_category": "商场家庭餐厅",
+        "matched_review_keywords": [
+          "适合亲子",
+          "商场家庭餐厅"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_011",
-    "name": "王品牛排(高新科技园)",
+    "id": "restaurant_010",
+    "name": "王品牛排(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "西餐",
-    "district": "高新科技园",
-    "address": "高新科技园某商场7F 399号铺",
-    "latitude": -5.949,
-    "longitude": 3.011,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 800号铺",
+    "latitude": -0.392,
+    "longitude": -1.585,
     "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
       "建议预约",
       "西餐"
     ],
-    "rating": 4.9,
+    "rating": 4.4,
     "combos": [
       {
-        "combo_id": "combo_011_1",
-        "name": "情侣浪漫双人餐",
-        "price": 242.27,
-        "description": "主菜：红烧肉、黑椒牛柳；配菜：凉拌木耳、时蔬拼盘；饮品：果汁；甜品：提拉米苏",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 76,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_010_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 433.57,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：土豆丝、烤蔬菜；饮品：酸梅汤；甜品：布丁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 80,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
       },
       {
-        "combo_id": "combo_011_2",
-        "name": "工作日双人约会餐",
-        "price": 240.58,
-        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：凉拌木耳、时蔬拼盘；饮品：热茶；甜品：提拉米苏",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 75,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_010_2",
+        "name": "四人高性价比聚会餐",
+        "price": 444.36,
+        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：拍黄瓜、烤蔬菜；饮品：柠檬水；甜品：巴斯克蛋糕",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 60,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_011_3",
-        "name": "单人轻松小食",
-        "price": 162.71,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：凉拌木耳、时蔬拼盘；饮品：酸梅汤；甜品：冰粉",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 79,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
         ],
         "requires_booking": true
       },
       {
-        "combo_id": "combo_011_4",
-        "name": "四人庆生分享餐",
-        "price": 444.02,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、凉拌木耳；饮品：果汁；甜品：提拉米苏",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 74,
+        "combo_id": "combo_010_3",
+        "name": "六人热闹派对餐",
+        "price": 598.32,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：烤蔬菜、凉拌木耳；饮品：热茶；甜品：布丁",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 94,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_010_4",
+        "name": "2-4人共享餐",
+        "price": 442.03,
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：烤蔬菜、时蔬拼盘；饮品：果汁；甜品：冰粉",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 54,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_010_5",
+        "name": "3-5人平价便饭",
+        "price": 56.96,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：时蔬拼盘、凉拌木耳；饮品：果汁；甜品：冰粉",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 77,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
         ],
         "requires_booking": false
       }
     ],
     "tags": [
       "纪念日",
-      "情侣",
+      "朋友",
       "安静"
     ],
     "suitable_groups": [
-      "solo",
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
-      "适合拍照",
-      "出片率高",
       "安静",
       "轻松"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "西餐",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1431,58 +1492,225 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
       "source": {
         "sub_category": "西餐",
         "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
-    "id": "restaurant_012",
-    "name": "蓝蛙西餐厅(大学城商圈)",
+    "id": "restaurant_011",
+    "name": "蓝蛙西餐厅(高新科技园)",
     "category": "restaurant",
     "sub_category": "西餐",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场1F 975号铺",
-    "latitude": 0.206,
-    "longitude": -9.135,
-    "business_hours": "11:00-22:30",
+    "district": "高新科技园",
+    "address": "高新科技园某商场5F 331号铺",
+    "latitude": 1.072,
+    "longitude": -1.921,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
       "建议预约",
       "西餐"
     ],
-    "rating": 4.7,
+    "rating": 4.8,
     "combos": [
       {
-        "combo_id": "combo_012_1",
-        "name": "情侣浪漫双人餐",
-        "price": 243.98,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：时蔬拼盘、烤蔬菜；饮品：柠檬水；甜品：布丁",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 89,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_011_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 435.53,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：凉拌木耳、土豆丝；饮品：热茶；甜品：冰粉",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 81,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
       },
       {
-        "combo_id": "combo_012_2",
-        "name": "工作日双人约会餐",
-        "price": 242.54,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：烤蔬菜、土豆丝；饮品：热茶；甜品：提拉米苏",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 60,
+        "combo_id": "combo_011_2",
+        "name": "四人高性价比聚会餐",
+        "price": 439.92,
+        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：拍黄瓜、烤蔬菜；饮品：果汁；甜品：提拉米苏",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 83,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_011_3",
+        "name": "六人热闹派对餐",
+        "price": 605.76,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：烤蔬菜、土豆丝；饮品：热茶；甜品：冰粉",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 51,
         "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_011_4",
+        "name": "2-4人共享餐",
+        "price": 437.31,
+        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：拍黄瓜、烤蔬菜；饮品：热茶；甜品：提拉米苏",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 97,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_011_5",
+        "name": "3-5人平价便饭",
+        "price": 56.53,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：拍黄瓜、烤蔬菜；饮品：柠檬水；甜品：巴斯克蛋糕",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 70,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      }
+    ],
+    "tags": [
+      "意面",
+      "牛排",
+      "小聚"
+    ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "氛围感",
+      "仪式感"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "西餐",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "restaurant_012",
+    "name": "Brunch Lab(老城文化街区)",
+    "category": "restaurant",
+    "sub_category": "Brunch",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场5F 103号铺",
+    "latitude": -0.081,
+    "longitude": 3.158,
+    "business_hours": "10:00-22:00",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
+      "建议预约",
+      "Brunch"
+    ],
+    "rating": 4.4,
+    "combos": [
+      {
+        "combo_id": "combo_012_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 130.96,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：拍黄瓜、土豆丝；饮品：气泡水；甜品：巴斯克蛋糕",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 58,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_012_2",
+        "name": "四人高性价比聚会餐",
+        "price": 128.28,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：土豆丝、凉拌木耳；饮品：拿铁；甜品：巴斯克蛋糕",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 80,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -1491,202 +1719,68 @@
       },
       {
         "combo_id": "combo_012_3",
-        "name": "单人轻松小食",
-        "price": 167.93,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：时蔬拼盘、烤蔬菜；饮品：果汁；甜品：冰粉",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 95,
-        "duration_std_dev": 12.0,
+        "name": "六人热闹派对餐",
+        "price": 172.81,
+        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、凉拌木耳；饮品：拿铁；甜品：巴斯克蛋糕",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 54,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
+          "dinner",
+          "late_night"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_012_4",
-        "name": "四人庆生分享餐",
-        "price": 439.45,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、时蔬拼盘；饮品：酸梅汤；甜品：提拉米苏",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 92,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": true
-      }
-    ],
-    "tags": [
-      "意面",
-      "牛排",
-      "约会"
-    ],
-    "suitable_groups": [
-      "couple"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高"
-    ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "西餐",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    }
-  },
-  {
-    "id": "restaurant_013",
-    "name": "Brunch Lab(CBD核心商圈)",
-    "category": "restaurant",
-    "sub_category": "Brunch",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场2F 444号铺",
-    "latitude": -0.336,
-    "longitude": -4.623,
-    "business_hours": "11:00-22:30",
-    "indoor": true,
-    "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
-      "建议预约",
-      "Brunch"
-    ],
-    "rating": 4.7,
-    "combos": [
-      {
-        "combo_id": "combo_013_1",
-        "name": "情侣浪漫双人餐",
-        "price": 68.5,
-        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：凉拌木耳、土豆丝；饮品：气泡水；甜品：冰粉",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 96,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_013_2",
-        "name": "工作日双人约会餐",
-        "price": 70.6,
-        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、凉拌木耳；饮品：美式；甜品：冰粉",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 92,
-        "duration_std_dev": 20.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_013_3",
-        "name": "单人轻松小食",
-        "price": 55.96,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、凉拌木耳；饮品：美式；甜品：提拉米苏",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 71,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_013_4",
-        "name": "四人庆生分享餐",
-        "price": 131.2,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：烤蔬菜、土豆丝；饮品：拿铁；甜品：布丁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 81,
+        "name": "2-4人共享餐",
+        "price": 128.93,
+        "description": "主菜：香辣小龙虾、宫保鸡丁；配菜：时蔬拼盘、土豆丝；饮品：拿铁；甜品：冰粉",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 100,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_012_5",
+        "name": "3-5人平价便饭",
+        "price": 34.23,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：凉拌木耳、拍黄瓜；饮品：柠檬茶；甜品：提拉米苏",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 53,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
         ],
         "requires_booking": false
       }
     ],
     "tags": [
       "轻食",
-      "下午约会",
+      "下午小聚",
       "拍照"
     ],
     "suitable_groups": [
-      "solo",
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
       "适合拍照",
       "出片率高"
     ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "Brunch",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "Brunch",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1700,127 +1794,145 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "Brunch",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
       "source": {
         "sub_category": "Brunch",
         "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
-    "id": "restaurant_014",
-    "name": "云顶露台景观餐厅(滨江风景区)",
+    "id": "restaurant_013",
+    "name": "云顶露台景观餐厅(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "景观餐厅",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场5F 227号铺",
-    "latitude": 3.123,
-    "longitude": -2.636,
-    "business_hours": "11:00-22:30",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场2F 161号铺",
+    "latitude": -0.98,
+    "longitude": -1.069,
+    "business_hours": "10:00-22:00",
     "indoor": false,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
       "建议预约",
       "景观餐厅"
     ],
-    "rating": 4.2,
+    "rating": 4.3,
     "combos": [
       {
-        "combo_id": "combo_014_1",
-        "name": "情侣浪漫双人餐",
-        "price": 79.13,
-        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：烤蔬菜、拍黄瓜；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 85,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_014_2",
-        "name": "工作日双人约会餐",
-        "price": 65.51,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：拍黄瓜、烤蔬菜；汤品：番茄蛋花汤；主食：米饭；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 97,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_014_3",
-        "name": "单人轻松小食",
-        "price": 44.55,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：烤蔬菜、拍黄瓜；汤品：番茄蛋花汤；主食：面食；饮品：果汁",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 61,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
-        ],
-        "requires_booking": true
-      },
-      {
-        "combo_id": "combo_014_4",
-        "name": "四人庆生分享餐",
-        "price": 129.56,
-        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
+        "combo_id": "combo_013_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 122.56,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 98,
+        "duration_mins": 68,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": true
+      },
+      {
+        "combo_id": "combo_013_2",
+        "name": "四人高性价比聚会餐",
+        "price": 129.75,
+        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：烤蔬菜、土豆丝；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 67,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_013_3",
+        "name": "六人热闹派对餐",
+        "price": 178.57,
+        "description": "主菜：清蒸鱼、宫保鸡丁；配菜：烤蔬菜、拍黄瓜；汤品：冬瓜排骨汤；主食：米饭；饮品：热茶",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 94,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_013_4",
+        "name": "2-4人共享餐",
+        "price": 131.49,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：凉拌木耳、时蔬拼盘；汤品：紫菜蛋花汤；主食：米饭；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 88,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_013_5",
+        "name": "3-5人平价便饭",
+        "price": 42.75,
+        "description": "主菜：清蒸鱼、红烧肉；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：热茶",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 61,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
       }
     ],
     "tags": [
       "拍照",
       "夜景",
-      "浪漫"
+      "氛围感"
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
+      "氛围感",
       "仪式感",
       "适合拍照",
       "出片率高"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "景观餐厅",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "景观餐厅",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1834,88 +1946,119 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "景观餐厅",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [],
+    "child_friendly_score_derived": {
+      "score": 2.5,
+      "confidence": 0.55,
       "source": {
         "sub_category": "景观餐厅",
         "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
-    "id": "restaurant_015",
+    "id": "restaurant_014",
     "name": "甜里·下午茶(大学城商圈)",
     "category": "restaurant",
     "sub_category": "甜品下午茶",
     "district": "大学城商圈",
-    "address": "大学城商圈某商场3F 989号铺",
-    "latitude": -2.241,
-    "longitude": -7.37,
+    "address": "大学城商圈某商场2F 879号铺",
+    "latitude": -1.136,
+    "longitude": -4.196,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
       "建议预约",
       "甜品下午茶"
     ],
-    "rating": 4.6,
+    "rating": 4.4,
     "combos": [
       {
-        "combo_id": "combo_015_1",
-        "name": "情侣浪漫双人餐",
-        "price": 83.03,
-        "description": "饮品：气泡水；甜品：冰粉、巴斯克蛋糕；小食：小油条、薯条",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 44,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_015_2",
-        "name": "工作日双人约会餐",
-        "price": 88.49,
-        "description": "饮品：气泡水；甜品：巴斯克蛋糕、冰粉；小食：小油条、鸡翅",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 64,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_015_3",
-        "name": "单人轻松小食",
-        "price": 61.37,
-        "description": "饮品：柠檬茶；甜品：提拉米苏、冰粉；小食：沙拉杯、薯条",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 70,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_015_4",
-        "name": "四人庆生分享餐",
-        "price": 153.84,
-        "description": "饮品：气泡水；甜品：巴斯克蛋糕、冰粉；小食：薯条、小油条",
+        "combo_id": "combo_014_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 156.05,
+        "description": "饮品：气泡水；甜品：冰粉、提拉米苏；小食：沙拉杯、薯条",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 53,
-        "duration_std_dev": 15.0,
+        "duration_mins": 54,
+        "duration_std_dev": 8.0,
         "suitable_time_slots": [
           "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_014_2",
+        "name": "四人高性价比聚会餐",
+        "price": 160.19,
+        "description": "饮品：气泡水；甜品：巴斯克蛋糕、布丁；小食：小油条、鸡翅",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 41,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_014_3",
+        "name": "六人热闹派对餐",
+        "price": 211.78,
+        "description": "饮品：柠檬茶；甜品：冰粉、巴斯克蛋糕；小食：薯条、沙拉杯",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 68,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_014_4",
+        "name": "2-4人共享餐",
+        "price": 150.96,
+        "description": "饮品：美式；甜品：布丁、冰粉；小食：小油条、鸡翅",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 54,
+        "duration_std_dev": 8.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_014_5",
+        "name": "3-5人平价便饭",
+        "price": 32.34,
+        "description": "饮品：美式；甜品：冰粉、提拉米苏；小食：鸡翅、沙拉杯",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 55,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
         ],
         "requires_booking": false
       }
@@ -1926,35 +2069,18 @@
       "甜品"
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
       "适合拍照",
       "出片率高"
     ],
-    "romantic_score_derived": {
-      "score": 4.9,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "甜品下午茶",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 4.7,
-      "confidence": 0.81,
+      "score": 4.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "甜品下午茶",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -1968,45 +2094,214 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "甜品下午茶",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
       "source": {
         "sub_category": "甜品下午茶",
         "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "restaurant_015",
+    "name": "和风寿喜锅定食(老城文化街区)",
+    "category": "restaurant",
+    "sub_category": "日式定食",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场7F 349号铺",
+    "latitude": 0.206,
+    "longitude": 1.426,
+    "business_hours": "09:30-21:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
+      "建议预约",
+      "日式定食"
+    ],
+    "rating": 4.5,
+    "combos": [
+      {
+        "combo_id": "combo_015_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 133.55,
+        "description": "主食：炒饭；小菜：温泉蛋、海带芽；汤品：紫菜蛋花汤；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 87,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_015_2",
+        "name": "四人高性价比聚会餐",
+        "price": 125.91,
+        "description": "主食：馒头；小菜：泡菜、海带芽；汤品：冬瓜排骨汤；饮品：热茶",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 70,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_015_3",
+        "name": "六人热闹派对餐",
+        "price": 171.16,
+        "description": "主食：面食；小菜：泡菜、温泉蛋；汤品：冬瓜排骨汤；饮品：酸梅汤",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 80,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_015_4",
+        "name": "2-4人共享餐",
+        "price": 134.19,
+        "description": "主食：面食；小菜：泡菜、温泉蛋；汤品：番茄蛋花汤；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 78,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_015_5",
+        "name": "3-5人平价便饭",
+        "price": 57.08,
+        "description": "主食：馒头；小菜：温泉蛋、毛豆；汤品：番茄蛋花汤；饮品：热茶",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 59,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      }
+    ],
+    "tags": [
+      "少辣",
+      "安静",
+      "小聚"
+    ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "氛围感",
+      "仪式感",
+      "安静",
+      "轻松"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "日式定食",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
     "id": "restaurant_016",
-    "name": "和风寿喜锅定食(CBD核心商圈)",
+    "name": "融·精致融合菜(高新科技园)",
     "category": "restaurant",
-    "sub_category": "日式定食",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场8F 73号铺",
-    "latitude": -1.696,
-    "longitude": -0.028,
-    "business_hours": "09:30-21:30",
+    "sub_category": "融合菜",
+    "district": "高新科技园",
+    "address": "高新科技园某商场7F 978号铺",
+    "latitude": 1.746,
+    "longitude": -3.91,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
       "建议预约",
-      "日式定食"
+      "融合菜"
     ],
-    "rating": 4.7,
+    "rating": 4.4,
     "combos": [
       {
         "combo_id": "combo_016_1",
-        "name": "情侣浪漫双人餐",
-        "price": 67.7,
-        "description": "主食：面食；小菜：毛豆、泡菜；汤品：紫菜蛋花汤；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 84,
-        "duration_std_dev": 12.0,
+        "name": "四人欢聚畅吃餐",
+        "price": 495.74,
+        "description": "主菜：黑椒牛柳、红烧肉；配菜：烤蔬菜、时蔬拼盘；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 77,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner"
         ],
@@ -2014,11 +2309,11 @@
       },
       {
         "combo_id": "combo_016_2",
-        "name": "工作日双人约会餐",
-        "price": 75.05,
-        "description": "主食：炒饭；小菜：海带芽、温泉蛋；汤品：番茄蛋花汤；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 88,
+        "name": "四人高性价比聚会餐",
+        "price": 496.72,
+        "description": "主菜：红烧肉、黑椒牛柳；配菜：土豆丝、拍黄瓜；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 68,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
@@ -2028,134 +2323,25 @@
       },
       {
         "combo_id": "combo_016_3",
-        "name": "单人轻松小食",
-        "price": 50.01,
-        "description": "主食：馒头；小菜：毛豆、泡菜；汤品：冬瓜排骨汤；饮品：果汁",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 81,
+        "name": "六人热闹派对餐",
+        "price": 672.3,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：紫菜蛋花汤；主食：面食；饮品：柠檬水",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 89,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
+          "dinner",
+          "late_night"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_016_4",
-        "name": "四人庆生分享餐",
-        "price": 117.32,
-        "description": "主食：米饭；小菜：泡菜、毛豆；汤品：冬瓜排骨汤；饮品：果汁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 64,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      }
-    ],
-    "tags": [
-      "少辣",
-      "安静",
-      "约会"
-    ],
-    "suitable_groups": [
-      "solo",
-      "couple"
-    ],
-    "experience_tag": [
-      "浪漫",
-      "仪式感",
-      "适合拍照",
-      "出片率高",
-      "安静",
-      "轻松"
-    ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
-    "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
-      "source": {
-        "sub_category": "日式定食",
-        "matched_review_keywords": [],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    }
-  },
-  {
-    "id": "restaurant_017",
-    "name": "融·精致融合菜(大学城商圈)",
-    "category": "restaurant",
-    "sub_category": "融合菜",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场3F 482号铺",
-    "latitude": -2.913,
-    "longitude": -8.852,
-    "business_hours": "09:30-21:30",
-    "indoor": true,
-    "review_keywords": [
-      "适合约会",
-      "适合拍照",
-      "氛围浪漫",
-      "灯光舒服",
-      "热门打卡",
-      "建议预约",
-      "融合菜"
-    ],
-    "rating": 5.0,
-    "combos": [
-      {
-        "combo_id": "combo_017_1",
-        "name": "情侣浪漫双人餐",
-        "price": 264.6,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：酸梅汤",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 76,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_017_2",
-        "name": "工作日双人约会餐",
-        "price": 268.45,
-        "description": "主菜：红烧肉、清蒸鱼；配菜：拍黄瓜、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：果汁",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 75,
+        "name": "2-4人共享餐",
+        "price": 489.99,
+        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：烤蔬菜、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 92,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
@@ -2164,29 +2350,17 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_017_3",
-        "name": "单人轻松小食",
-        "price": 188.26,
-        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：拍黄瓜、时蔬拼盘；汤品：冬瓜排骨汤；主食：米饭；饮品：热茶",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 62,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_017_4",
-        "name": "四人庆生分享餐",
-        "price": 489.56,
-        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：时蔬拼盘、土豆丝；汤品：冬瓜排骨汤；主食：面食；饮品：果汁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 94,
+        "combo_id": "combo_016_5",
+        "name": "3-5人平价便饭",
+        "price": 41.71,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：烤蔬菜、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 69,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
-          "dinner"
+          "lunch",
+          "dinner",
+          "late_night"
         ],
         "requires_booking": false
       }
@@ -2197,35 +2371,18 @@
       "预约"
     ],
     "suitable_groups": [
-      "couple"
+      "friends"
     ],
     "experience_tag": [
-      "浪漫",
-      "仪式感",
       "适合拍照",
       "出片率高"
     ],
-    "romantic_score_derived": {
-      "score": 1.7,
-      "confidence": 0.82,
-      "source": {
-        "sub_category": "融合菜",
-        "matched_review_keywords": [
-          "适合约会",
-          "氛围浪漫"
-        ],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
-      "score": 1.7,
-      "confidence": 0.81,
+      "score": 1.0,
+      "confidence": 0.65,
       "source": {
         "sub_category": "融合菜",
-        "matched_review_keywords": [
-          "适合拍照",
-          "热门打卡"
-        ],
+        "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
     },
@@ -2239,25 +2396,192 @@
       }
     },
     "noise_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.64,
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "融合菜",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
       "source": {
         "sub_category": "融合菜",
         "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "restaurant_017",
+    "name": "老四季东北菜(高新科技园)",
+    "category": "restaurant",
+    "sub_category": "东北菜",
+    "district": "高新科技园",
+    "address": "高新科技园某商场7F 586号铺",
+    "latitude": 3.184,
+    "longitude": -2.708,
+    "business_hours": "11:00-22:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合朋友聚会",
+      "热闹",
+      "适合多人",
+      "上菜快",
+      "饭点排队",
+      "建议预约",
+      "东北菜"
+    ],
+    "rating": 4.4,
+    "combos": [
+      {
+        "combo_id": "combo_017_1",
+        "name": "四人欢聚畅吃餐",
+        "price": 246.96,
+        "description": "主菜：香辣小龙虾、宫保鸡丁；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：馒头；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 93,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_017_2",
+        "name": "四人高性价比聚会餐",
+        "price": 260.36,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、拍黄瓜；汤品：番茄蛋花汤；主食：面食；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 96,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_017_3",
+        "name": "六人热闹派对餐",
+        "price": 346.6,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：凉拌木耳、时蔬拼盘；汤品：紫菜蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 68,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_017_4",
+        "name": "2-4人共享餐",
+        "price": 251.94,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：土豆丝、拍黄瓜；汤品：紫菜蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 80,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_017_5",
+        "name": "3-5人平价便饭",
+        "price": 39.84,
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：凉拌木耳、时蔬拼盘；汤品：番茄蛋花汤；主食：面食；饮品：热茶",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 85,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": true
+      }
+    ],
+    "tags": [
+      "多人",
+      "高性价比",
+      "热闹"
+    ],
+    "suitable_groups": [
+      "friends"
+    ],
+    "experience_tag": [
+      "高性价比",
+      "低决策成本"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 3.0,
+      "confidence": 0.8,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [
+          "热闹",
+          "饭点排队"
+        ],
         "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
     "id": "restaurant_018",
-    "name": "老四季东北菜(高新科技园)",
+    "name": "东北大板·家常东北菜(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "东北菜",
-    "district": "高新科技园",
-    "address": "高新科技园某商场5F 565号铺",
-    "latitude": -4.704,
-    "longitude": 0.65,
-    "business_hours": "10:00-22:00",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场5F 599号铺",
+    "latitude": -2.755,
+    "longitude": -1.165,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -2274,9 +2598,9 @@
         "combo_id": "combo_018_1",
         "name": "四人欢聚畅吃餐",
         "price": 259.75,
-        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：酸梅汤",
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、凉拌木耳；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 59,
+        "duration_mins": 90,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "dinner"
@@ -2286,11 +2610,11 @@
       {
         "combo_id": "combo_018_2",
         "name": "四人高性价比聚会餐",
-        "price": 257.83,
-        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：凉拌木耳、烤蔬菜；汤品：冬瓜排骨汤；主食：面食；饮品：热茶",
+        "price": 266.72,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 74,
-        "duration_std_dev": 12.0,
+        "duration_mins": 57,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -2300,132 +2624,45 @@
       {
         "combo_id": "combo_018_3",
         "name": "六人热闹派对餐",
-        "price": 361.21,
-        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：时蔬拼盘、拍黄瓜；汤品：冬瓜排骨汤；主食：炒饭；饮品：果汁",
+        "price": 362.51,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：凉拌木耳、烤蔬菜；汤品：冬瓜排骨汤；主食：馒头；饮品：柠檬水",
         "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 68,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "dinner",
-          "late_night"
-        ],
-        "requires_booking": false
-      }
-    ],
-    "tags": [
-      "多人",
-      "高性价比",
-      "热闹"
-    ],
-    "suitable_groups": [
-      "friends"
-    ],
-    "experience_tag": [
-      "高性价比",
-      "低决策成本"
-    ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 3.0,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [
-          "热闹",
-          "饭点排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    }
-  },
-  {
-    "id": "restaurant_019",
-    "name": "东北大板·家常东北菜(滨江风景区)",
-    "category": "restaurant",
-    "sub_category": "东北菜",
-    "district": "滨江风景区",
-    "address": "滨江风景区某商场8F 354号铺",
-    "latitude": 4.469,
-    "longitude": -3.947,
-    "business_hours": "11:00-22:30",
-    "indoor": true,
-    "review_keywords": [
-      "适合朋友聚会",
-      "热闹",
-      "适合多人",
-      "上菜快",
-      "饭点排队",
-      "建议预约",
-      "东北菜"
-    ],
-    "rating": 5.0,
-    "combos": [
-      {
-        "combo_id": "combo_019_1",
-        "name": "四人欢聚畅吃餐",
-        "price": 251.47,
-        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：凉拌木耳、拍黄瓜；汤品：番茄蛋花汤；主食：面食；饮品：热茶",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
-        "duration_std_dev": 20.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": true
-      },
-      {
-        "combo_id": "combo_019_2",
-        "name": "四人高性价比聚会餐",
-        "price": 256.85,
-        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：凉拌木耳、土豆丝；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 87,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_019_3",
-        "name": "六人热闹派对餐",
-        "price": 362.22,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：烤蔬菜、凉拌木耳；汤品：番茄蛋花汤；主食：面食；饮品：热茶",
-        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 59,
+        "duration_mins": 91,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner",
           "late_night"
         ],
         "requires_booking": false
+      },
+      {
+        "combo_id": "combo_018_4",
+        "name": "2-4人共享餐",
+        "price": 255.67,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 65,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_018_5",
+        "name": "3-5人平价便饭",
+        "price": 47.25,
+        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：时蔬拼盘、凉拌木耳；汤品：冬瓜排骨汤；主食：面食；饮品：酸梅汤",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 79,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
       }
     ],
     "tags": [
@@ -2440,15 +2677,6 @@
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "东北菜",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2478,18 +2706,32 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "东北菜",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_020",
-    "name": "韩宫烤肉(大学城商圈)",
+    "id": "restaurant_019",
+    "name": "韩宫烤肉(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "韩餐烤肉",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 873号铺",
-    "latitude": -1.734,
-    "longitude": -8.735,
-    "business_hours": "11:00-22:30",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场3F 806号铺",
+    "latitude": -0.465,
+    "longitude": -1.303,
+    "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -2500,28 +2742,56 @@
       "建议预约",
       "韩餐烤肉"
     ],
-    "rating": 4.4,
+    "rating": 4.7,
     "combos": [
       {
-        "combo_id": "combo_020_1",
+        "combo_id": "combo_019_1",
         "name": "四人欢聚畅吃餐",
-        "price": 363.42,
-        "description": "主菜：芝士年糕、牛肋条；配菜：凉拌木耳、时蔬拼盘；汤品：紫菜蛋花汤；主食：米饭；饮品：柠檬水",
+        "price": 357.37,
+        "description": "主菜：牛肋条、五花肉；配菜：烤蔬菜、土豆丝；汤品：紫菜蛋花汤；主食：面食；饮品：柠檬水",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 68,
-        "duration_std_dev": 12.0,
+        "duration_mins": 59,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
       },
       {
-        "combo_id": "combo_020_2",
+        "combo_id": "combo_019_2",
         "name": "四人高性价比聚会餐",
-        "price": 351.72,
-        "description": "主菜：芝士年糕、五花肉；配菜：时蔬拼盘、凉拌木耳；汤品：番茄蛋花汤；主食：炒饭；饮品：酸梅汤",
+        "price": 353.44,
+        "description": "主菜：牛肋条、五花肉；配菜：烤蔬菜、拍黄瓜；汤品：番茄蛋花汤；主食：米饭；饮品：酸梅汤",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 100,
+        "duration_mins": 72,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_019_3",
+        "name": "六人热闹派对餐",
+        "price": 503.71,
+        "description": "主菜：五花肉、芝士年糕；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：酸梅汤",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 80,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_019_4",
+        "name": "2-4人共享餐",
+        "price": 359.96,
+        "description": "主菜：五花肉、牛肋条；配菜：烤蔬菜、土豆丝；汤品：紫菜蛋花汤；主食：米饭；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 51,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
@@ -2530,18 +2800,19 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_020_3",
-        "name": "六人热闹派对餐",
-        "price": 492.2,
-        "description": "主菜：辣白菜、牛肋条；配菜：土豆丝、烤蔬菜；汤品：紫菜蛋花汤；主食：馒头；饮品：柠檬水",
-        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 55,
-        "duration_std_dev": 20.0,
+        "combo_id": "combo_019_5",
+        "name": "3-5人平价便饭",
+        "price": 36.25,
+        "description": "主菜：芝士年糕、牛肋条；配菜：时蔬拼盘、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：酸梅汤",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 70,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner",
           "late_night"
         ],
-        "requires_booking": false
+        "requires_booking": true
       }
     ],
     "tags": [
@@ -2553,15 +2824,6 @@
       "friends"
     ],
     "experience_tag": [],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "韩餐烤肉",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2591,18 +2853,32 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "韩餐烤肉",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_021",
-    "name": "炸鸡汉堡社(高新科技园)",
+    "id": "restaurant_020",
+    "name": "炸鸡汉堡社(大学城商圈)",
     "category": "restaurant",
     "sub_category": "披萨炸鸡",
-    "district": "高新科技园",
-    "address": "高新科技园某商场5F 471号铺",
-    "latitude": -4.386,
-    "longitude": 4.203,
-    "business_hours": "11:00-22:30",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场5F 465号铺",
+    "latitude": -1.387,
+    "longitude": -3.757,
+    "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -2613,15 +2889,15 @@
       "建议预约",
       "披萨炸鸡"
     ],
-    "rating": 4.5,
+    "rating": 4.8,
     "combos": [
       {
-        "combo_id": "combo_021_1",
+        "combo_id": "combo_020_1",
         "name": "四人欢聚畅吃餐",
-        "price": 136.55,
-        "description": "主菜：红烧肉、黑椒牛柳；配菜：拍黄瓜、土豆丝；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "price": 125.83,
+        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：时蔬拼盘、烤蔬菜；汤品：紫菜蛋花汤；主食：面食；饮品：热茶",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 69,
+        "duration_mins": 64,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "dinner"
@@ -2629,12 +2905,40 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_021_2",
+        "combo_id": "combo_020_2",
         "name": "四人高性价比聚会餐",
-        "price": 124.43,
-        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、凉拌木耳；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
+        "price": 130.1,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：凉拌木耳、时蔬拼盘；汤品：冬瓜排骨汤；主食：馒头；饮品：果汁",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 72,
+        "duration_mins": 73,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_020_3",
+        "name": "六人热闹派对餐",
+        "price": 179.69,
+        "description": "主菜：黑椒牛柳、红烧肉；配菜：时蔬拼盘、烤蔬菜；汤品：番茄蛋花汤；主食：馒头；饮品：酸梅汤",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 73,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_020_4",
+        "name": "2-4人共享餐",
+        "price": 136.17,
+        "description": "主菜：香辣小龙虾、宫保鸡丁；配菜：时蔬拼盘、凉拌木耳；汤品：冬瓜排骨汤；主食：馒头；饮品：酸梅汤",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 88,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
@@ -2643,14 +2947,15 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_021_3",
-        "name": "六人热闹派对餐",
-        "price": 181.46,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：凉拌木耳、拍黄瓜；汤品：番茄蛋花汤；主食：米饭；饮品：热茶",
-        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 68,
-        "duration_std_dev": 12.0,
+        "combo_id": "combo_020_5",
+        "name": "3-5人平价便饭",
+        "price": 45.22,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：土豆丝、凉拌木耳；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 73,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner",
           "late_night"
         ],
@@ -2669,15 +2974,6 @@
       "高性价比",
       "低决策成本"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "披萨炸鸡",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2707,17 +3003,31 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "披萨炸鸡",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_022",
-    "name": "串串小馆·清汤可选(老城文化街区)",
+    "id": "restaurant_021",
+    "name": "串串小馆·清汤可选(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "火锅",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场3F 644号铺",
-    "latitude": -2.055,
-    "longitude": 1.082,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场5F 30号铺",
+    "latitude": -2.455,
+    "longitude": -2.511,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -2729,29 +3039,29 @@
       "建议预约",
       "火锅"
     ],
-    "rating": 4.3,
+    "rating": 4.4,
     "combos": [
       {
-        "combo_id": "combo_022_1",
+        "combo_id": "combo_021_1",
         "name": "四人欢聚畅吃餐",
-        "price": 342.99,
-        "description": "锅底：番茄锅；荤菜：毛肚、午餐肉、肥牛；素菜：烤蔬菜、拍黄瓜；主食：面食；饮品：酸梅汤",
+        "price": 326.19,
+        "description": "锅底：清汤锅；荤菜：毛肚、鱼片、虾滑；素菜：时蔬拼盘、土豆丝；主食：面食；饮品：热茶",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 70,
-        "duration_std_dev": 20.0,
+        "duration_mins": 97,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": false
+        "requires_booking": true
       },
       {
-        "combo_id": "combo_022_2",
+        "combo_id": "combo_021_2",
         "name": "四人高性价比聚会餐",
-        "price": 343.08,
-        "description": "锅底：菌汤锅；荤菜：鱼片、毛肚、午餐肉；素菜：烤蔬菜、拍黄瓜；主食：面食；饮品：果汁",
+        "price": 331.03,
+        "description": "锅底：猪肚鸡汤底；荤菜：虾滑、午餐肉、鱼片；素菜：凉拌木耳、拍黄瓜；主食：面食；饮品：果汁",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
-        "duration_std_dev": 15.0,
+        "duration_mins": 70,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -2759,14 +3069,43 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_022_3",
+        "combo_id": "combo_021_3",
         "name": "六人热闹派对餐",
-        "price": 454.61,
-        "description": "锅底：清汤锅；荤菜：肥牛、午餐肉、鱼片；素菜：土豆丝、烤蔬菜；主食：馒头；饮品：果汁",
+        "price": 462.51,
+        "description": "锅底：菌汤锅；荤菜：虾滑、肥牛、毛肚；素菜：时蔬拼盘、拍黄瓜；主食：馒头；饮品：热茶",
         "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 78,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_021_4",
+        "name": "2-4人共享餐",
+        "price": 325.71,
+        "description": "锅底：猪肚鸡汤底；荤菜：肥牛、毛肚、虾滑；素菜：时蔬拼盘、拍黄瓜；主食：馒头；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
         "duration_mins": 75,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_021_5",
+        "name": "3-5人平价便饭",
+        "price": 43.98,
+        "description": "锅底：清汤锅；荤菜：虾滑、鱼片、午餐肉；素菜：拍黄瓜、烤蔬菜；主食：米饭；饮品：酸梅汤",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 77,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
           "dinner",
           "late_night"
         ],
@@ -2782,15 +3121,6 @@
       "friends"
     ],
     "experience_tag": [],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "火锅",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2820,18 +3150,32 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.48,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "火锅",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_023",
+    "id": "restaurant_022",
     "name": "夜猫子烤鱼(大学城商圈)",
     "category": "restaurant",
     "sub_category": "烤鱼",
     "district": "大学城商圈",
-    "address": "大学城商圈某商场7F 843号铺",
-    "latitude": -1.699,
-    "longitude": -9.661,
-    "business_hours": "09:30-21:30",
+    "address": "大学城商圈某商场1F 447号铺",
+    "latitude": 1.391,
+    "longitude": -3.804,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -2842,28 +3186,28 @@
       "建议预约",
       "烤鱼"
     ],
-    "rating": 4.7,
+    "rating": 4.4,
     "combos": [
       {
-        "combo_id": "combo_023_1",
+        "combo_id": "combo_022_1",
         "name": "四人欢聚畅吃餐",
-        "price": 129.75,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、凉拌木耳；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
+        "price": 122.59,
+        "description": "主菜：黑椒牛柳、红烧肉；配菜：拍黄瓜、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：热茶",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 90,
-        "duration_std_dev": 20.0,
+        "duration_mins": 75,
+        "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
       },
       {
-        "combo_id": "combo_023_2",
+        "combo_id": "combo_022_2",
         "name": "四人高性价比聚会餐",
-        "price": 136.72,
-        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：米饭；饮品：果汁",
+        "price": 125.51,
+        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：拍黄瓜、时蔬拼盘；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 57,
+        "duration_mins": 75,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
@@ -2872,14 +3216,43 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_023_3",
+        "combo_id": "combo_022_3",
         "name": "六人热闹派对餐",
-        "price": 182.51,
-        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：凉拌木耳、烤蔬菜；汤品：冬瓜排骨汤；主食：馒头；饮品：柠檬水",
+        "price": 175.41,
+        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：土豆丝、拍黄瓜；汤品：番茄蛋花汤；主食：米饭；饮品：酸梅汤",
         "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 91,
+        "duration_mins": 62,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_022_4",
+        "name": "2-4人共享餐",
+        "price": 128.85,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：时蔬拼盘、土豆丝；汤品：冬瓜排骨汤；主食：面食；饮品：柠檬水",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 98,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_022_5",
+        "name": "3-5人平价便饭",
+        "price": 37.08,
+        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：烤蔬菜、凉拌木耳；汤品：紫菜蛋花汤；主食：炒饭；饮品：果汁",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 54,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "lunch",
           "dinner",
           "late_night"
         ],
@@ -2895,15 +3268,6 @@
       "friends"
     ],
     "experience_tag": [],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "烤鱼",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -2933,17 +3297,31 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "烤鱼",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_024",
-    "name": "粤式打边炉·猪肚鸡(大学城商圈)",
+    "id": "restaurant_023",
+    "name": "粤式打边炉·猪肚鸡(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "猪肚鸡",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场8F 456号铺",
-    "latitude": 0.759,
-    "longitude": -7.384,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场8F 463号铺",
+    "latitude": -1.555,
+    "longitude": -1.27,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -2955,28 +3333,56 @@
       "建议预约",
       "猪肚鸡"
     ],
-    "rating": 4.2,
+    "rating": 4.9,
     "combos": [
       {
-        "combo_id": "combo_024_1",
+        "combo_id": "combo_023_1",
         "name": "四人欢聚畅吃餐",
-        "price": 328.6,
-        "description": "锅底：清汤锅；荤菜：肥牛、毛肚、午餐肉；素菜：拍黄瓜、时蔬拼盘；主食：馒头；饮品：果汁",
+        "price": 333.79,
+        "description": "锅底：番茄锅；荤菜：毛肚、鱼片、肥牛；素菜：时蔬拼盘、凉拌木耳；主食：馒头；饮品：酸梅汤",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 57,
-        "duration_std_dev": 20.0,
+        "duration_mins": 86,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
-        "combo_id": "combo_024_2",
+        "combo_id": "combo_023_2",
         "name": "四人高性价比聚会餐",
-        "price": 326.17,
-        "description": "锅底：菌汤锅；荤菜：鱼片、肥牛、午餐肉；素菜：拍黄瓜、土豆丝；主食：面食；饮品：柠檬水",
+        "price": 334.89,
+        "description": "锅底：微辣牛油锅；荤菜：鱼片、虾滑、肥牛；素菜：凉拌木耳、时蔬拼盘；主食：炒饭；饮品：酸梅汤",
         "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 98,
+        "duration_mins": 61,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_023_3",
+        "name": "六人热闹派对餐",
+        "price": 468.29,
+        "description": "锅底：微辣牛油锅；荤菜：午餐肉、虾滑、鱼片；素菜：拍黄瓜、烤蔬菜；主食：馒头；饮品：热茶",
+        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 93,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "dinner",
+          "late_night"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_023_4",
+        "name": "2-4人共享餐",
+        "price": 339.27,
+        "description": "锅底：清汤锅；荤菜：肥牛、毛肚、鱼片；素菜：烤蔬菜、凉拌木耳；主食：炒饭；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 92,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
@@ -2985,14 +3391,15 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_024_3",
-        "name": "六人热闹派对餐",
-        "price": 463.6,
-        "description": "锅底：菌汤锅；荤菜：毛肚、虾滑、鱼片；素菜：时蔬拼盘、拍黄瓜；主食：面食；饮品：柠檬水",
-        "features": "六人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 61,
-        "duration_std_dev": 10.0,
+        "combo_id": "combo_023_5",
+        "name": "3-5人平价便饭",
+        "price": 48.1,
+        "description": "锅底：猪肚鸡汤底；荤菜：虾滑、毛肚、鱼片；素菜：凉拌木耳、土豆丝；主食：米饭；饮品：果汁",
+        "features": "3-5人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 71,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
+          "lunch",
           "dinner",
           "late_night"
         ],
@@ -3008,15 +3415,6 @@
       "friends"
     ],
     "experience_tag": [],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "猪肚鸡",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3046,18 +3444,32 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "unknown",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 2.88,
+      "confidence": 0.55,
+      "source": {
+        "sub_category": "猪肚鸡",
+        "matched_review_keywords": [],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_025",
+    "id": "restaurant_024",
     "name": "小象亲子餐厅(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "亲子餐厅",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场6F 17号铺",
-    "latitude": -3.631,
-    "longitude": -0.307,
-    "business_hours": "10:00-22:00",
+    "address": "CBD核心商圈某商场6F 19号铺",
+    "latitude": -1.958,
+    "longitude": -2.418,
+    "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
       "儿童友好",
@@ -3068,16 +3480,55 @@
       "周末人多",
       "亲子餐厅"
     ],
-    "rating": 4.4,
+    "rating": 4.3,
     "combos": [
       {
-        "combo_id": "combo_025_1",
-        "name": "1大1小儿童友好套餐",
-        "price": 49.52,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、凉拌木耳；汤品：紫菜蛋花汤；主食：米饭；饮品：酸梅汤",
+        "combo_id": "combo_024_1",
+        "name": "1大1小下午茶亲子点心",
+        "price": 56.33,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：烤蔬菜、土豆丝；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
         "features": "1大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
+        "duration_mins": 72,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_024_2",
+        "name": "2大1小下午茶亲子点心",
+        "price": 78.96,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、凉拌木耳；汤品：番茄蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
         "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_024_3",
+        "name": "四人亲友分享餐",
+        "price": 121.48,
+        "description": "主菜：红烧肉、黑椒牛柳；配菜：拍黄瓜、土豆丝；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 65,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_024_4",
+        "name": "2-4人家庭共享餐",
+        "price": 126.86,
+        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：拍黄瓜、凉拌木耳；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 76,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -3085,31 +3536,18 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_025_2",
-        "name": "2大1小亲子家庭餐",
-        "price": 87.56,
-        "description": "主菜：红烧肉、黑椒牛柳；配菜：烤蔬菜、土豆丝；汤品：紫菜蛋花汤；主食：米饭；饮品：果汁",
+        "combo_id": "combo_024_5",
+        "name": "2大1小家常便饭",
+        "price": 50.89,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：馒头；饮品：果汁",
         "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 51,
+        "duration_mins": 56,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
         ],
         "requires_booking": false
-      },
-      {
-        "combo_id": "combo_025_3",
-        "name": "四人亲友分享餐",
-        "price": 134.79,
-        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：时蔬拼盘、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：酸梅汤",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 70,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "dinner"
-        ],
-        "requires_booking": true
       }
     ],
     "tags": [
@@ -3123,15 +3561,6 @@
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "亲子餐厅",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3160,17 +3589,37 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.88,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "亲子餐厅",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "亲子餐厅"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_026",
-    "name": "儿童套餐友好餐厅(高新科技园)",
+    "id": "restaurant_025",
+    "name": "儿童套餐友好餐厅(大学城商圈)",
     "category": "restaurant",
     "sub_category": "儿童套餐友好",
-    "district": "高新科技园",
-    "address": "高新科技园某商场5F 465号铺",
-    "latitude": -6.693,
-    "longitude": 2.499,
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场3F 778号铺",
+    "latitude": 0.584,
+    "longitude": -5.236,
     "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
@@ -3182,15 +3631,54 @@
       "周末人多",
       "儿童套餐友好"
     ],
-    "rating": 4.7,
+    "rating": 4.8,
     "combos": [
       {
-        "combo_id": "combo_026_1",
-        "name": "1大1小儿童友好套餐",
-        "price": 49.03,
-        "description": "主菜：香辣小龙虾、黑椒牛柳；配菜：时蔬拼盘、烤蔬菜；汤品：紫菜蛋花汤；主食：面食；饮品：热茶",
+        "combo_id": "combo_025_1",
+        "name": "1大1小下午茶亲子点心",
+        "price": 41.26,
+        "description": "主菜：宫保鸡丁、清蒸鱼；配菜：凉拌木耳、烤蔬菜；汤品：紫菜蛋花汤；主食：面食；饮品：柠檬水",
         "features": "1大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 64,
+        "duration_mins": 99,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_025_2",
+        "name": "2大1小下午茶亲子点心",
+        "price": 98.18,
+        "description": "主菜：清蒸鱼、红烧肉；配菜：土豆丝、时蔬拼盘；汤品：冬瓜排骨汤；主食：炒饭；饮品：热茶",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 84,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_025_3",
+        "name": "四人亲友分享餐",
+        "price": 125.38,
+        "description": "主菜：黑椒牛柳、红烧肉；配菜：烤蔬菜、土豆丝；汤品：紫菜蛋花汤；主食：面食；饮品：果汁",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 89,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_025_4",
+        "name": "2-4人家庭共享餐",
+        "price": 134.27,
+        "description": "主菜：黑椒牛柳、清蒸鱼；配菜：时蔬拼盘、拍黄瓜；汤品：番茄蛋花汤；主食：米饭；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 52,
         "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
@@ -3199,28 +3687,15 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_026_2",
-        "name": "2大1小亲子家庭餐",
-        "price": 91.7,
-        "description": "主菜：黑椒牛柳、香辣小龙虾；配菜：凉拌木耳、时蔬拼盘；汤品：冬瓜排骨汤；主食：馒头；饮品：果汁",
+        "combo_id": "combo_025_5",
+        "name": "2大1小家常便饭",
+        "price": 38.57,
+        "description": "主菜：宫保鸡丁、红烧肉；配菜：拍黄瓜、时蔬拼盘；汤品：冬瓜排骨汤；主食：面食；饮品：酸梅汤",
         "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 73,
-        "duration_std_dev": 12.0,
+        "duration_mins": 77,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_026_3",
-        "name": "四人亲友分享餐",
-        "price": 131.69,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：时蔬拼盘、烤蔬菜；汤品：番茄蛋花汤；主食：馒头；饮品：酸梅汤",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 73,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
@@ -3237,15 +3712,6 @@
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "儿童套餐友好",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3274,17 +3740,36 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.62,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "儿童套餐友好",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "儿童套餐友好"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_027",
-    "name": "商场儿童友好餐厅(高新科技园)",
+    "id": "restaurant_026",
+    "name": "商场儿童友好餐厅(老城文化街区)",
     "category": "restaurant",
     "sub_category": "商场儿童友好",
-    "district": "高新科技园",
-    "address": "高新科技园某商场7F 363号铺",
-    "latitude": -7.492,
-    "longitude": 2.053,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场1F 887号铺",
+    "latitude": -0.77,
+    "longitude": 3.972,
     "business_hours": "09:30-21:30",
     "indoor": true,
     "review_keywords": [
@@ -3296,15 +3781,54 @@
       "周末人多",
       "商场儿童友好"
     ],
-    "rating": 4.5,
+    "rating": 4.7,
     "combos": [
       {
-        "combo_id": "combo_027_1",
-        "name": "1大1小儿童友好套餐",
-        "price": 43.09,
-        "description": "主菜：黑椒牛柳、红烧肉；配菜：拍黄瓜、烤蔬菜；汤品：冬瓜排骨汤；主食：米饭；饮品：柠檬水",
+        "combo_id": "combo_026_1",
+        "name": "1大1小下午茶亲子点心",
+        "price": 47.96,
+        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：凉拌木耳、时蔬拼盘；汤品：紫菜蛋花汤；主食：面食；饮品：果汁",
         "features": "1大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 80,
+        "duration_mins": 91,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_026_2",
+        "name": "2大1小下午茶亲子点心",
+        "price": 83.64,
+        "description": "主菜：红烧肉、香辣小龙虾；配菜：土豆丝、凉拌木耳；汤品：紫菜蛋花汤；主食：馒头；饮品：酸梅汤",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 66,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_026_3",
+        "name": "四人亲友分享餐",
+        "price": 130.6,
+        "description": "主菜：红烧肉、宫保鸡丁；配菜：拍黄瓜、烤蔬菜；汤品：冬瓜排骨汤；主食：馒头；饮品：柠檬水",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 72,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_026_4",
+        "name": "2-4人家庭共享餐",
+        "price": 127.06,
+        "description": "主菜：宫保鸡丁、黑椒牛柳；配菜：拍黄瓜、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 97,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
@@ -3313,28 +3837,15 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_027_2",
-        "name": "2大1小亲子家庭餐",
-        "price": 95.3,
-        "description": "主菜：宫保鸡丁、香辣小龙虾；配菜：时蔬拼盘、拍黄瓜；汤品：紫菜蛋花汤；主食：面食；饮品：热茶",
+        "combo_id": "combo_026_5",
+        "name": "2大1小家常便饭",
+        "price": 48.37,
+        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：时蔬拼盘、土豆丝；汤品：番茄蛋花汤；主食：面食；饮品：果汁",
         "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
+        "duration_mins": 86,
         "duration_std_dev": 10.0,
         "suitable_time_slots": [
           "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_027_3",
-        "name": "四人亲友分享餐",
-        "price": 123.82,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：土豆丝、拍黄瓜；汤品：紫菜蛋花汤；主食：炒饭；饮品：果汁",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 61,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
           "dinner"
         ],
         "requires_booking": false
@@ -3353,15 +3864,6 @@
       "室内兜底",
       "少走路"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "商场儿童友好",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3390,18 +3892,40 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "yes",
+    "child_facility_tags": [
+      "儿童座椅",
+      "亲子卫生间",
+      "商场内",
+      "室内",
+      "少走路"
+    ],
+    "child_friendly_score_derived": {
+      "score": 5.0,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "商场儿童友好",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "商场儿童友好"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_028",
-    "name": "烘焙轻食亲子餐厅(老城文化街区)",
+    "id": "restaurant_027",
+    "name": "烘焙轻食亲子餐厅(高新科技园)",
     "category": "restaurant",
     "sub_category": "烘焙轻食亲子",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场2F 765号铺",
-    "latitude": -0.645,
-    "longitude": -1.364,
-    "business_hours": "09:30-21:30",
+    "district": "高新科技园",
+    "address": "高新科技园某商场2F 463号铺",
+    "latitude": 3.063,
+    "longitude": -1.816,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "儿童友好",
@@ -3412,48 +3936,74 @@
       "周末人多",
       "烘焙轻食亲子"
     ],
-    "rating": 4.5,
+    "rating": 4.2,
     "combos": [
       {
-        "combo_id": "combo_028_1",
-        "name": "1大1小儿童友好套餐",
-        "price": 53.15,
-        "description": "饮品：柠檬水；甜品：冰粉、布丁；小食：沙拉杯、薯条",
+        "combo_id": "combo_027_1",
+        "name": "1大1小下午茶亲子点心",
+        "price": 69.13,
+        "description": "饮品：果汁；甜品：巴斯克蛋糕、布丁；小食：薯条、鸡翅",
         "features": "1大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 64,
-        "duration_std_dev": 8.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_028_2",
-        "name": "2大1小亲子家庭餐",
-        "price": 98.03,
-        "description": "饮品：柠檬水；甜品：布丁、提拉米苏；小食：小油条、鸡翅",
-        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 55,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_028_3",
-        "name": "四人亲友分享餐",
-        "price": 148.46,
-        "description": "饮品：柠檬水；甜品：巴斯克蛋糕、布丁；小食：沙拉杯、小油条",
-        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 56,
+        "duration_mins": 60,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_027_2",
+        "name": "2大1小下午茶亲子点心",
+        "price": 109.57,
+        "description": "饮品：酸梅汤；甜品：布丁、提拉米苏；小食：薯条、小油条",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 66,
+        "duration_std_dev": 8.0,
+        "suitable_time_slots": [
+          "afternoon_tea"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_027_3",
+        "name": "四人亲友分享餐",
+        "price": 160.48,
+        "description": "饮品：果汁；甜品：冰粉、提拉米苏；小食：薯条、鸡翅",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 52,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_027_4",
+        "name": "2-4人家庭共享餐",
+        "price": 144.28,
+        "description": "饮品：热茶；甜品：巴斯克蛋糕、冰粉；小食：鸡翅、沙拉杯",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 44,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_027_5",
+        "name": "2大1小家常便饭",
+        "price": 34.76,
+        "description": "饮品：柠檬水；甜品：冰粉、提拉米苏；小食：小油条、沙拉杯",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 45,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
       }
     ],
     "tags": [
@@ -3462,22 +4012,11 @@
       "亲子"
     ],
     "suitable_groups": [
-      "solo",
-      "couple",
       "family"
     ],
     "experience_tag": [
       "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "烘焙轻食亲子",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3506,53 +4045,57 @@
         ],
         "rule": "noise_from_sub_category_and_keywords"
       }
+    },
+    "kid_menu_status": "explicit",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.62,
+      "confidence": 0.93,
+      "source": {
+        "sub_category": "烘焙轻食亲子",
+        "matched_review_keywords": [
+          "儿童友好",
+          "有儿童座椅",
+          "烘焙轻食亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
     }
   },
   {
-    "id": "restaurant_029",
-    "name": "漫咖啡·简餐(高新科技园)",
+    "id": "restaurant_028",
+    "name": "漫咖啡·简餐(CBD核心商圈)",
     "category": "restaurant",
     "sub_category": "咖啡简餐",
-    "district": "高新科技园",
-    "address": "高新科技园某商场4F 786号铺",
-    "latitude": -4.469,
-    "longitude": 3.239,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场5F 667号铺",
+    "latitude": 0.308,
+    "longitude": -2.13,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "出餐快",
-      "性价比高",
-      "不用排队",
+      "适合亲子",
+      "口味清淡",
       "可做不辣",
+      "空间宽敞",
+      "饭点人多",
+      "建议预约",
       "咖啡简餐"
     ],
-    "rating": 4.9,
+    "rating": 4.6,
     "combos": [
       {
-        "combo_id": "combo_029_1",
-        "name": "单人快速轻餐",
-        "price": 59.95,
-        "description": "饮品：气泡水；甜品：提拉米苏、布丁；小食：小油条、沙拉杯",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 44,
-        "duration_std_dev": 15.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner",
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_029_2",
-        "name": "双人随享套餐",
-        "price": 74.05,
-        "description": "饮品：美式；甜品：提拉米苏、巴斯克蛋糕；小食：沙拉杯、鸡翅",
+        "combo_id": "combo_028_1",
+        "name": "双人清淡分享餐",
+        "price": 92.33,
+        "description": "饮品：柠檬茶；甜品：巴斯克蛋糕、布丁；小食：鸡翅、沙拉杯",
         "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 69,
-        "duration_std_dev": 8.0,
+        "duration_mins": 65,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -3560,40 +4103,74 @@
         "requires_booking": false
       },
       {
-        "combo_id": "combo_029_3",
-        "name": "双人下午轻食",
-        "price": 75.5,
-        "description": "饮品：柠檬茶；甜品：冰粉、提拉米苏；小食：沙拉杯、薯条",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 45,
+        "combo_id": "combo_028_2",
+        "name": "2大1小家庭套餐",
+        "price": 106.09,
+        "description": "饮品：拿铁；甜品：巴斯克蛋糕、冰粉；小食：沙拉杯、薯条",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 59,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_028_3",
+        "name": "四人家庭聚餐",
+        "price": 153.1,
+        "description": "饮品：气泡水；甜品：提拉米苏、布丁；小食：薯条、沙拉杯",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 47,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
-          "afternoon_tea"
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_028_4",
+        "name": "2-4人家常共享餐",
+        "price": 148.6,
+        "description": "饮品：柠檬茶；甜品：布丁、巴斯克蛋糕；小食：小油条、沙拉杯",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 47,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_028_5",
+        "name": "2大2小家庭聚餐",
+        "price": 59.34,
+        "description": "饮品：气泡水；甜品：布丁、巴斯克蛋糕；小食：沙拉杯、鸡翅",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 40,
+        "duration_std_dev": 8.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
         ],
         "requires_booking": false
       }
     ],
     "tags": [
-      "单人",
+      "轻量",
       "放松",
       "安静"
     ],
     "suitable_groups": [
-      "solo"
+      "family"
     ],
     "experience_tag": [
       "安静",
-      "轻松"
+      "轻松",
+      "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "咖啡简餐",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3613,62 +4190,228 @@
       }
     },
     "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "咖啡简餐",
         "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
+          "饭点人多"
         ],
         "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "yes",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内",
+      "少走路"
+    ],
+    "child_friendly_score_derived": {
+      "score": 4.67,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "咖啡简餐",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
+      }
+    }
+  },
+  {
+    "id": "restaurant_029",
+    "name": "一乐拉面·乌冬(老城文化街区)",
+    "category": "restaurant",
+    "sub_category": "日式拉面乌冬",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场1F 289号铺",
+    "latitude": -0.12,
+    "longitude": 2.943,
+    "business_hours": "11:00-22:30",
+    "indoor": true,
+    "review_keywords": [
+      "适合亲子",
+      "口味清淡",
+      "可做不辣",
+      "空间宽敞",
+      "饭点人多",
+      "建议预约",
+      "日式拉面乌冬"
+    ],
+    "rating": 4.7,
+    "combos": [
+      {
+        "combo_id": "combo_029_1",
+        "name": "双人清淡分享餐",
+        "price": 67.82,
+        "description": "主食：溏心蛋；小菜：毛豆、泡菜；汤品：番茄蛋花汤；饮品：酸梅汤",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 66,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_029_2",
+        "name": "2大1小家庭套餐",
+        "price": 85.65,
+        "description": "主食：米饭；小菜：温泉蛋、海带芽；汤品：番茄蛋花汤；饮品：柠檬水",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 68,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_029_3",
+        "name": "四人家庭聚餐",
+        "price": 119.37,
+        "description": "主食：溏心蛋；小菜：毛豆、泡菜；汤品：紫菜蛋花汤；饮品：酸梅汤",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
+        "duration_std_dev": 20.0,
+        "suitable_time_slots": [
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_029_4",
+        "name": "2-4人家常共享餐",
+        "price": 126.8,
+        "description": "主食：米饭；小菜：毛豆、温泉蛋；汤品：番茄蛋花汤；饮品：热茶",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 52,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_029_5",
+        "name": "2大2小家庭聚餐",
+        "price": 52.13,
+        "description": "主食：米饭；小菜：泡菜、毛豆；汤品：冬瓜排骨汤；饮品：柠檬水",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 82,
+        "duration_std_dev": 12.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      }
+    ],
+    "tags": [
+      "轻量",
+      "快速",
+      "少辣"
+    ],
+    "suitable_groups": [
+      "family"
+    ],
+    "experience_tag": [
+      "亲子友好"
+    ],
+    "photo_score_derived": {
+      "score": 1.0,
+      "confidence": 0.65,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [],
+        "rule": "photo_from_sub_category_and_keywords"
+      }
+    },
+    "onsite_walking_level_estimated": {
+      "score": 2.0,
+      "confidence": 0.62,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [],
+        "rule": "walking_from_sub_category_and_keywords"
+      }
+    },
+    "noise_level_estimated": {
+      "score": 2.5,
+      "confidence": 0.72,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [
+          "饭点人多"
+        ],
+        "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "日式拉面乌冬",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
     "id": "restaurant_030",
-    "name": "一乐拉面·乌冬(CBD核心商圈)",
+    "name": "面包研究所·烘焙简餐(老城文化街区)",
     "category": "restaurant",
-    "sub_category": "日式拉面乌冬",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场7F 604号铺",
-    "latitude": -2.623,
-    "longitude": -2.087,
+    "sub_category": "面包烘焙简餐",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场5F 608号铺",
+    "latitude": -1.405,
+    "longitude": 2.895,
     "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "出餐快",
-      "性价比高",
-      "不用排队",
+      "适合亲子",
+      "口味清淡",
       "可做不辣",
-      "日式拉面乌冬"
+      "空间宽敞",
+      "饭点人多",
+      "建议预约",
+      "面包烘焙简餐"
     ],
-    "rating": 4.9,
+    "rating": 4.4,
     "combos": [
       {
         "combo_id": "combo_030_1",
-        "name": "单人快速轻餐",
-        "price": 44.43,
-        "description": "主食：拉面；小菜：泡菜、海带芽；汤品：紫菜蛋花汤；饮品：果汁",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 99,
+        "name": "双人清淡分享餐",
+        "price": 79.82,
+        "description": "饮品：热茶；甜品：提拉米苏、布丁；小食：小油条、薯条",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 58,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
           "lunch",
-          "dinner",
-          "afternoon_tea"
+          "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_030_2",
-        "name": "双人随享套餐",
-        "price": 63.93,
-        "description": "主食：拉面；小菜：海带芽、泡菜；汤品：冬瓜排骨汤；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 59,
+        "name": "2大1小家庭套餐",
+        "price": 97.43,
+        "description": "饮品：酸梅汤；甜品：冰粉、布丁；小食：薯条、鸡翅",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
         "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
@@ -3678,44 +4421,62 @@
       },
       {
         "combo_id": "combo_030_3",
-        "name": "双人下午轻食",
-        "price": 68.48,
-        "description": "主食：乌冬；小菜：温泉蛋、泡菜；汤品：紫菜蛋花汤；饮品：热茶",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 86,
-        "duration_std_dev": 20.0,
+        "name": "四人家庭聚餐",
+        "price": 143.18,
+        "description": "饮品：柠檬水；甜品：巴斯克蛋糕、提拉米苏；小食：小油条、沙拉杯",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 44,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
-          "afternoon_tea"
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_030_4",
+        "name": "2-4人家常共享餐",
+        "price": 145.56,
+        "description": "饮品：热茶；甜品：冰粉、提拉米苏；小食：小油条、鸡翅",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 61,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": false
+      },
+      {
+        "combo_id": "combo_030_5",
+        "name": "2大2小家庭聚餐",
+        "price": 57.09,
+        "description": "饮品：果汁；甜品：布丁、冰粉；小食：鸡翅、沙拉杯",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 59,
+        "duration_std_dev": 15.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
         ],
         "requires_booking": false
       }
     ],
     "tags": [
-      "单人",
-      "快速",
-      "少辣"
+      "下午轻食",
+      "轻量",
+      "烘焙"
     ],
     "suitable_groups": [
-      "solo"
+      "family"
     ],
     "experience_tag": [
-      "安静",
-      "轻松"
+      "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "日式拉面乌冬",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
       "source": {
-        "sub_category": "日式拉面乌冬",
+        "sub_category": "面包烘焙简餐",
         "matched_review_keywords": [],
         "rule": "photo_from_sub_category_and_keywords"
       }
@@ -3724,69 +4485,84 @@
       "score": 2.0,
       "confidence": 0.62,
       "source": {
-        "sub_category": "日式拉面乌冬",
+        "sub_category": "面包烘焙简餐",
         "matched_review_keywords": [],
         "rule": "walking_from_sub_category_and_keywords"
       }
     },
     "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
-        "sub_category": "日式拉面乌冬",
+        "sub_category": "面包烘焙简餐",
         "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
+          "饭点人多"
         ],
         "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "面包烘焙简餐",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   },
   {
     "id": "restaurant_031",
-    "name": "面包研究所·烘焙简餐(高新科技园)",
+    "name": "粉面小铺(大学城商圈)",
     "category": "restaurant",
-    "sub_category": "面包烘焙简餐",
-    "district": "高新科技园",
-    "address": "高新科技园某商场6F 155号铺",
-    "latitude": -7.195,
-    "longitude": 6.473,
+    "sub_category": "粉面饭轻餐",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场5F 790号铺",
+    "latitude": 0.024,
+    "longitude": -2.022,
     "business_hours": "11:00-22:30",
     "indoor": true,
     "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "出餐快",
-      "性价比高",
-      "不用排队",
+      "适合亲子",
+      "口味清淡",
       "可做不辣",
-      "面包烘焙简餐"
+      "空间宽敞",
+      "饭点人多",
+      "建议预约",
+      "粉面饭轻餐"
     ],
     "rating": 4.3,
     "combos": [
       {
         "combo_id": "combo_031_1",
-        "name": "单人快速轻餐",
-        "price": 61.83,
-        "description": "饮品：酸梅汤；甜品：冰粉、布丁；小食：鸡翅、薯条",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 49,
-        "duration_std_dev": 15.0,
+        "name": "双人清淡分享餐",
+        "price": 61.64,
+        "description": "主菜：清蒸鱼、黑椒牛柳；配菜：拍黄瓜、凉拌木耳；汤品：冬瓜排骨汤；主食：炒饭；饮品：果汁",
+        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 93,
+        "duration_std_dev": 20.0,
         "suitable_time_slots": [
           "lunch",
-          "dinner",
-          "afternoon_tea"
+          "dinner"
         ],
         "requires_booking": false
       },
       {
         "combo_id": "combo_031_2",
-        "name": "双人随享套餐",
-        "price": 90.49,
-        "description": "饮品：酸梅汤；甜品：提拉米苏、布丁；小食：小油条、鸡翅",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 54,
-        "duration_std_dev": 8.0,
+        "name": "2大1小家庭套餐",
+        "price": 85.33,
+        "description": "主菜：黑椒牛柳、宫保鸡丁；配菜：土豆丝、拍黄瓜；汤品：番茄蛋花汤；主食：炒饭；饮品：酸梅汤",
+        "features": "2大1小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 78,
+        "duration_std_dev": 15.0,
         "suitable_time_slots": [
           "lunch",
           "dinner"
@@ -3795,131 +4571,42 @@
       },
       {
         "combo_id": "combo_031_3",
-        "name": "双人下午轻食",
-        "price": 76.22,
-        "description": "饮品：柠檬水；甜品：提拉米苏、冰粉；小食：沙拉杯、鸡翅",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 43,
+        "name": "四人家庭聚餐",
+        "price": 118.98,
+        "description": "主菜：清蒸鱼、香辣小龙虾；配菜：烤蔬菜、拍黄瓜；汤品：紫菜蛋花汤；主食：炒饭；饮品：柠檬水",
+        "features": "四人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 97,
         "duration_std_dev": 12.0,
         "suitable_time_slots": [
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      }
-    ],
-    "tags": [
-      "下午轻食",
-      "单人",
-      "烘焙"
-    ],
-    "suitable_groups": [
-      "solo"
-    ],
-    "experience_tag": [
-      "安静",
-      "轻松"
-    ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
-    "photo_score_derived": {
-      "score": 1.0,
-      "confidence": 0.65,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "photo_from_sub_category_and_keywords"
-      }
-    },
-    "onsite_walking_level_estimated": {
-      "score": 2.0,
-      "confidence": 0.62,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [],
-        "rule": "walking_from_sub_category_and_keywords"
-      }
-    },
-    "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
-      "source": {
-        "sub_category": "面包烘焙简餐",
-        "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
-        ],
-        "rule": "noise_from_sub_category_and_keywords"
-      }
-    }
-  },
-  {
-    "id": "restaurant_032",
-    "name": "粉面小铺(老城文化街区)",
-    "category": "restaurant",
-    "sub_category": "粉面饭轻餐",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场8F 537号铺",
-    "latitude": 1.863,
-    "longitude": 3.209,
-    "business_hours": "09:30-21:30",
-    "indoor": true,
-    "review_keywords": [
-      "适合单人",
-      "环境安静",
-      "出餐快",
-      "性价比高",
-      "不用排队",
-      "可做不辣",
-      "粉面饭轻餐"
-    ],
-    "rating": 4.7,
-    "combos": [
-      {
-        "combo_id": "combo_032_1",
-        "name": "单人快速轻餐",
-        "price": 55.49,
-        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、烤蔬菜；汤品：冬瓜排骨汤；主食：馒头；饮品：热茶",
-        "features": "单人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 93,
-        "duration_std_dev": 10.0,
-        "suitable_time_slots": [
-          "lunch",
-          "dinner",
-          "afternoon_tea"
-        ],
-        "requires_booking": false
-      },
-      {
-        "combo_id": "combo_032_2",
-        "name": "双人随享套餐",
-        "price": 64.24,
-        "description": "主菜：宫保鸡丁、红烧肉；配菜：拍黄瓜、时蔬拼盘；汤品：紫菜蛋花汤；主食：馒头；饮品：果汁",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 92,
-        "duration_std_dev": 12.0,
-        "suitable_time_slots": [
-          "lunch",
           "dinner"
         ],
         "requires_booking": false
       },
       {
-        "combo_id": "combo_032_3",
-        "name": "双人下午轻食",
-        "price": 71.1,
-        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：拍黄瓜、烤蔬菜；汤品：紫菜蛋花汤；主食：馒头；饮品：柠檬水",
-        "features": "双人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
-        "duration_mins": 55,
-        "duration_std_dev": 15.0,
+        "combo_id": "combo_031_4",
+        "name": "2-4人家常共享餐",
+        "price": 131.15,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：土豆丝、时蔬拼盘；汤品：番茄蛋花汤；主食：馒头；饮品：果汁",
+        "features": "2-4人吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 56,
+        "duration_std_dev": 12.0,
         "suitable_time_slots": [
-          "afternoon_tea"
+          "lunch",
+          "dinner"
+        ],
+        "requires_booking": true
+      },
+      {
+        "combo_id": "combo_031_5",
+        "name": "2大2小家庭聚餐",
+        "price": 46.42,
+        "description": "主菜：香辣小龙虾、清蒸鱼；配菜：凉拌木耳、烤蔬菜；汤品：冬瓜排骨汤；主食：面食；饮品：果汁",
+        "features": "2大2小吃得更舒服，搭配更均衡，适合轻松不踩雷。",
+        "duration_mins": 91,
+        "duration_std_dev": 10.0,
+        "suitable_time_slots": [
+          "lunch",
+          "dinner"
         ],
         "requires_booking": false
       }
@@ -3927,24 +4614,14 @@
     "tags": [
       "预算低",
       "时间短",
-      "单人"
+      "轻量"
     ],
     "suitable_groups": [
-      "solo"
+      "family"
     ],
     "experience_tag": [
-      "安静",
-      "轻松"
+      "亲子友好"
     ],
-    "romantic_score_derived": {
-      "score": 1.0,
-      "confidence": 0.68,
-      "source": {
-        "sub_category": "粉面饭轻餐",
-        "matched_review_keywords": [],
-        "rule": "romantic_from_sub_category_and_keywords"
-      }
-    },
     "photo_score_derived": {
       "score": 1.0,
       "confidence": 0.65,
@@ -3964,15 +4641,31 @@
       }
     },
     "noise_level_estimated": {
-      "score": 1.9,
-      "confidence": 0.8,
+      "score": 2.5,
+      "confidence": 0.72,
       "source": {
         "sub_category": "粉面饭轻餐",
         "matched_review_keywords": [
-          "环境安静",
-          "不用排队"
+          "饭点人多"
         ],
         "rule": "noise_from_sub_category_and_keywords"
+      }
+    },
+    "kid_menu_status": "possible",
+    "stroller_friendly_status": "unknown",
+    "child_facility_tags": [
+      "儿童座椅",
+      "室内"
+    ],
+    "child_friendly_score_derived": {
+      "score": 3.83,
+      "confidence": 0.71,
+      "source": {
+        "sub_category": "粉面饭轻餐",
+        "matched_review_keywords": [
+          "适合亲子"
+        ],
+        "rule": "child_friendly_from_facilities_and_keywords"
       }
     }
   }

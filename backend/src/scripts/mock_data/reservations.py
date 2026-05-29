@@ -6,6 +6,13 @@ import re
 import sys
 from typing import List, Dict, Any, Optional
 
+from scripts.mock_data.constants import DEMO_BACKUP_COMBO_IDS, DEMO_FULL_COMBO_IDS, DEMO_SOLD_OUT_PACKAGE_IDS
+
+PACKAGE_RANDOM_SOLD_OUT_RATE = 0.03
+PACKAGE_RANDOM_QUEUE_RATE = 0.03
+COMBO_RANDOM_FULL_RATE = 0.04
+COMBO_RANDOM_QUEUE_RATE = 0.03
+
 def _parse_hhmm_to_minutes(v: str) -> int:
     if not v or ":" not in v:
         return 0
@@ -144,10 +151,12 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
             time_slots: list[dict] = []
             for s in raw_slots:
                 remaining = random.randint(0, capacity_total)
-                if random.random() < 0.15:
+                if random.random() < PACKAGE_RANDOM_SOLD_OUT_RATE:
+                    remaining = 0
+                if target_id in DEMO_SOLD_OUT_PACKAGE_IDS:
                     remaining = 0
                 fullness = 1.0 - (remaining / max(1, capacity_total))
-                queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.08)
+                queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < PACKAGE_RANDOM_QUEUE_RATE)
                 wait_minutes = 0
                 if queue_required:
                     wait_minutes = int(round(10 + 80 * fullness))
@@ -184,10 +193,17 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
             time_slots: list[dict] = []
             for s in raw_slots:
                 remaining = random.randint(0, capacity_total)
-                if random.random() < 0.18:
+                if random.random() < COMBO_RANDOM_FULL_RATE:
                     remaining = 0
+                
+                # 演示锚点：主选固定无座，备选固定可承接自动替换。
+                if target_id in DEMO_FULL_COMBO_IDS:
+                    remaining = 0
+                elif target_id in DEMO_BACKUP_COMBO_IDS:
+                    remaining = max(2, remaining)
+                    
                 fullness = 1.0 - (remaining / max(1, capacity_total))
-                queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.06)
+                queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < COMBO_RANDOM_QUEUE_RATE)
                 wait_minutes = 0
                 if queue_required:
                     wait_minutes = int(round(5 + 60 * fullness))

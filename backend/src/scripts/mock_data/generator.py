@@ -9,7 +9,12 @@ from typing import List, Dict, Any, Optional
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from scripts.mock_data.constants import *
-from scripts.mock_data.constants import _keywords_for_profile, _infer_receive_duration_mins
+from scripts.mock_data.constants import (
+    _infer_receive_duration_mins,
+    _keywords_for_profile,
+    _sanitize_mock_dict,
+    _sanitize_mock_list,
+)
 from scripts.mock_data.derivers import *
 from scripts.mock_data.derivers import _ensure_profile_fields, _ensure_restaurant_child_fields, _ensure_gift_shop_special_fields, _build_combo
 from scripts.mock_data.reservations import generate_reservations_from_mock_db
@@ -32,16 +37,15 @@ def generate_mock_db() -> dict[str, Any]:
             {"sub_category": "本帮菜", "name": "老上海本帮菜馆", "profile": "family_mild", "tags": ["少辣", "家庭", "安静约会"]},
             {"sub_category": "江浙菜", "name": "苏浙小馆", "profile": "family_mild", "tags": ["少辣", "家庭", "安静"]},
             {"sub_category": "家常菜", "name": "社区家常小馆", "profile": "family_mild", "tags": ["低预算", "家庭", "单人"]},
-            {"sub_category": "社区小馆", "name": "巷口小馆", "profile": "family_mild", "tags": ["低预算", "家庭", "单人"]},
             {"sub_category": "连锁简餐", "name": "和府捞面·家庭简餐", "profile": "family_mild", "tags": ["亲子", "少走路", "兜底"]},
             {"sub_category": "商场家庭餐厅", "name": "商场家庭餐厅·轻简餐", "profile": "family_mild", "tags": ["亲子", "少走路", "室内"]},
-            {"sub_category": "西餐", "name": "王品牛排", "profile": "couple_photo", "tags": ["纪念日", "情侣", "安静"]},
-            {"sub_category": "西餐", "name": "蓝蛙西餐厅", "profile": "couple_photo", "tags": ["意面", "牛排", "约会"]},
-            {"sub_category": "Brunch", "name": "Brunch Lab", "profile": "couple_photo", "tags": ["轻食", "下午约会", "拍照"]},
-            {"sub_category": "景观餐厅", "name": "云顶露台景观餐厅", "profile": "couple_photo", "tags": ["拍照", "夜景", "浪漫"]},
-            {"sub_category": "甜品下午茶", "name": "甜里·下午茶", "profile": "couple_photo", "tags": ["女生友好", "拍照", "甜品"]},
-            {"sub_category": "日式定食", "name": "和风寿喜锅定食", "profile": "couple_photo", "tags": ["少辣", "安静", "约会"]},
-            {"sub_category": "融合菜", "name": "融·精致融合菜", "profile": "couple_photo", "tags": ["高体验", "出片", "预约"]},
+            {"sub_category": "西餐", "name": "王品牛排", "profile": "friends_lively", "tags": ["纪念日", "情侣", "安静"]},
+            {"sub_category": "西餐", "name": "蓝蛙西餐厅", "profile": "friends_lively", "tags": ["意面", "牛排", "约会"]},
+            {"sub_category": "Brunch", "name": "Brunch Lab", "profile": "friends_lively", "tags": ["轻食", "下午约会", "拍照"]},
+            {"sub_category": "景观餐厅", "name": "云顶露台景观餐厅", "profile": "friends_lively", "tags": ["拍照", "夜景", "浪漫"]},
+            {"sub_category": "甜品下午茶", "name": "甜里·下午茶", "profile": "friends_lively", "tags": ["女生友好", "拍照", "甜品"]},
+            {"sub_category": "日式定食", "name": "和风寿喜锅定食", "profile": "friends_lively", "tags": ["少辣", "安静", "约会"]},
+            {"sub_category": "融合菜", "name": "融·精致融合菜", "profile": "friends_lively", "tags": ["高体验", "出片", "预约"]},
             {"sub_category": "东北菜", "name": "老四季东北菜", "profile": "friends_lively", "tags": ["多人", "高性价比", "热闹"]},
             {"sub_category": "东北菜", "name": "东北大板·家常东北菜", "profile": "friends_lively", "tags": ["多人", "高性价比", "热闹"]},
             {"sub_category": "韩餐烤肉", "name": "韩宫烤肉", "profile": "friends_lively", "tags": ["朋友", "热闹", "烤肉"]},
@@ -53,10 +57,10 @@ def generate_mock_db() -> dict[str, Any]:
             {"sub_category": "儿童套餐友好", "name": "儿童套餐友好餐厅", "profile": "kids_friendly", "tags": ["3-10岁", "亲子", "清淡"]},
             {"sub_category": "商场儿童友好", "name": "商场儿童友好餐厅", "profile": "kids_friendly", "tags": ["少走路", "室内", "亲子"]},
             {"sub_category": "烘焙轻食亲子", "name": "烘焙轻食亲子餐厅", "profile": "kids_friendly", "tags": ["下午茶", "轻食", "亲子"]},
-            {"sub_category": "咖啡简餐", "name": "漫咖啡·简餐", "profile": "solo_light", "tags": ["单人", "放松", "安静"]},
-            {"sub_category": "日式拉面乌冬", "name": "一乐拉面·乌冬", "profile": "solo_light", "tags": ["单人", "快速", "少辣"]},
-            {"sub_category": "面包烘焙简餐", "name": "面包研究所·烘焙简餐", "profile": "solo_light", "tags": ["下午轻食", "单人", "烘焙"]},
-            {"sub_category": "粉面饭轻餐", "name": "粉面小铺", "profile": "solo_light", "tags": ["预算低", "时间短", "单人"]},
+            {"sub_category": "咖啡简餐", "name": "漫咖啡·简餐", "profile": "family_mild", "tags": ["轻量", "放松", "安静"]},
+            {"sub_category": "日式拉面乌冬", "name": "一乐拉面·乌冬", "profile": "family_mild", "tags": ["单人", "快速", "少辣"]},
+            {"sub_category": "面包烘焙简餐", "name": "面包研究所·烘焙简餐", "profile": "family_mild", "tags": ["下午轻食", "单人", "烘焙"]},
+            {"sub_category": "粉面饭轻餐", "name": "粉面小铺", "profile": "family_mild", "tags": ["预算低", "时间短", "单人"]},
         ]
     )
 
@@ -67,14 +71,14 @@ def generate_mock_db() -> dict[str, Any]:
         loc = generate_location_near_hub(hub_x, hub_y, district)
         business_hours = random.choice(["10:00-22:00", "11:00-22:30", "09:30-21:30"])
         indoor = False if sub_category in ("景观餐厅",) else True
-        tags = list(plan.get("tags") or [])
-        review_keywords = _keywords_for_profile(
+        tags = _sanitize_mock_list(list(plan.get("tags") or []))
+        review_keywords = _sanitize_mock_list(_keywords_for_profile(
             category="restaurant",
             profile=str(plan["profile"]),
             indoor=bool(indoor),
             sub_category=sub_category,
             delivery_supported=False,
-        )
+        ))
         combos: list[dict] = []
         is_western = sub_category == "西餐"
 
@@ -93,23 +97,24 @@ def generate_mock_db() -> dict[str, Any]:
 
         if plan["profile"] == "family_mild":
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="单人", title_style="单人工作日便饭", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人清淡分享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="2大1小家庭套餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人家庭聚餐", slots=["dinner"], is_western=is_western),
             ]
             combos += [
                 _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人家常共享餐", slots=["lunch", "dinner"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="2大2小", title_style="2大2小家庭聚餐", slots=["lunch", "dinner"], is_western=is_western),
             ]
-        elif plan["profile"] == "couple_photo":
+        elif plan["profile"] == "couple_photo" or plan["profile"] == "solo_light":
+            # These are legacy profiles, now mapped to family or friends in tags
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="双人", title_style="情侣浪漫双人餐", slots=["dinner"], is_western=is_western),
-                _build_combo(sub_category=sub_category, people_expr="双人", title_style="工作日双人约会餐", slots=["lunch", "dinner"], is_western=is_western),
-                _build_combo(sub_category=sub_category, people_expr="单人", title_style="单人轻松小食", slots=["lunch", "afternoon_tea"], is_western=is_western),
-                _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人庆生分享餐", slots=["dinner"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人推荐餐", slots=["dinner"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人分享餐", slots=["lunch", "dinner"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="六人", title_style="六人聚会餐", slots=["lunch", "afternoon_tea"], is_western=is_western),
             ]
             combos += [
                 _build_low_price_combo(people_expr="2-4人", title_style="2-4人小份共享", slots=["afternoon_tea", "dinner"]),
+                _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="家庭套餐", slots=["dinner"], is_western=is_western),
             ]
         elif plan["profile"] == "friends_lively":
             combos += [
@@ -136,13 +141,13 @@ def generate_mock_db() -> dict[str, Any]:
                 combos[1] = _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="2大1小下午茶亲子点心", slots=["afternoon_tea"], is_western=is_western)
         else:
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="单人", title_style="单人快速轻餐", slots=["lunch", "dinner", "afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人分享餐", slots=["lunch", "dinner", "afternoon_tea"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人随享套餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人下午轻食", slots=["afternoon_tea"], is_western=is_western),
             ]
             combos += [
                 _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人共享餐", slots=["lunch", "dinner"], is_western=is_western),
-                _build_low_price_combo(people_expr="单人", title_style="单人平价便当", slots=["lunch", "dinner"]),
+                _build_low_price_combo(people_expr="3-5人", title_style="3-5人平价便饭", slots=["lunch", "dinner"]),
             ]
 
         if len(combos) != 5:
@@ -177,6 +182,9 @@ def generate_mock_db() -> dict[str, Any]:
             ],
             "tags": tags,
         }
+        for combo in restaurant["combos"]:
+            if combo.get("combo_id") in DEMO_FULL_COMBO_IDS or combo.get("combo_id") in DEMO_BACKUP_COMBO_IDS:
+                combo["requires_booking"] = True
         restaurant = _ensure_profile_fields(
             item=restaurant,
             category="restaurant",
@@ -193,23 +201,23 @@ def generate_mock_db() -> dict[str, Any]:
             review_keywords=review_keywords,
             indoor=bool(indoor),
         )
-        mock_db["restaurants"].append(restaurant)
+        mock_db["restaurants"].append(_sanitize_mock_dict(restaurant))
         
     activity_plan: list[dict] = (
         [
-            {"sub_category": "独立书店", "name": "纸上时光·独立书店", "profile": "solo_quiet", "indoor": True, "is_free": True, "tags": ["安静", "低预算"]},
-            {"sub_category": "独立书店", "name": "巷口书店", "profile": "solo_quiet", "indoor": True, "is_free": True, "tags": ["安静", "低预算"]},
-            {"sub_category": "咖啡书房", "name": "静读咖啡书房", "profile": "solo_quiet", "indoor": True, "is_free": False, "tags": ["学习", "放松"]},
-            {"sub_category": "小型展览", "name": "小城艺术空间", "profile": "solo_quiet", "indoor": True, "is_free": False, "tags": ["轻文化", "安静"]},
-            {"sub_category": "美术馆", "name": "城市美术馆", "profile": "solo_quiet", "indoor": True, "is_free": False, "tags": ["拍照", "放松"]},
-            {"sub_category": "安静手作体验", "name": "治愈手作工坊", "profile": "solo_quiet", "indoor": True, "is_free": False, "tags": ["治愈", "轻互动"]},
-            {"sub_category": "沉浸式展览", "name": "光影沉浸式展", "profile": "couple_photo", "indoor": True, "is_free": False, "tags": ["拍照", "出片"]},
-            {"sub_category": "陶艺手作", "name": "双人陶艺工坊", "profile": "couple_photo", "indoor": True, "is_free": False, "tags": ["互动", "纪念感"]},
-            {"sub_category": "香薰手作", "name": "香气研究所·香薰DIY", "profile": "couple_photo", "indoor": True, "is_free": False, "tags": ["互动", "纪念感"]},
-            {"sub_category": "私人影院", "name": "小众私人影院", "profile": "couple_photo", "indoor": True, "is_free": False, "tags": ["雨天", "晚间"]},
-            {"sub_category": "夜景观景点", "name": "城市天台观景点", "profile": "couple_photo", "indoor": False, "is_free": True, "tags": ["夜景", "浪漫"]},
-            {"sub_category": "复古街区", "name": "复古创意街区", "profile": "couple_photo", "indoor": False, "is_free": True, "tags": ["散步", "拍照"]},
-            {"sub_category": "花艺体验", "name": "花艺手作体验馆", "profile": "couple_photo", "indoor": True, "is_free": False, "tags": ["情绪价值", "手作"]},
+            {"sub_category": "独立书店", "name": "纸上时光·独立书店", "profile": "family_mild", "indoor": True, "is_free": True, "tags": ["安静", "低预算"]},
+            {"sub_category": "独立书店", "name": "巷口书店", "profile": "family_mild", "indoor": True, "is_free": True, "tags": ["安静", "低预算"]},
+            {"sub_category": "咖啡书房", "name": "静读咖啡书房", "profile": "family_mild", "indoor": True, "is_free": False, "tags": ["学习", "放松"]},
+            {"sub_category": "小型展览", "name": "小城艺术空间", "profile": "family_mild", "indoor": True, "is_free": False, "tags": ["轻文化", "安静"]},
+            {"sub_category": "美术馆", "name": "城市美术馆", "profile": "family_mild", "indoor": True, "is_free": False, "tags": ["拍照", "放松"]},
+            {"sub_category": "安静手作体验", "name": "治愈手作工坊", "profile": "family_mild", "indoor": True, "is_free": False, "tags": ["治愈", "轻互动"]},
+            {"sub_category": "沉浸式展览", "name": "光影沉浸式展", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["拍照", "出片"]},
+            {"sub_category": "陶艺手作", "name": "双人陶艺工坊", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["互动", "纪念感"]},
+            {"sub_category": "香薰手作", "name": "香气研究所·香薰DIY", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["互动", "纪念感"]},
+            {"sub_category": "私人影院", "name": "小众私人影院", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["雨天", "晚间"]},
+            {"sub_category": "夜景观景点", "name": "城市天台观景点", "profile": "friends_lively", "indoor": False, "is_free": True, "tags": ["夜景", "浪漫"]},
+            {"sub_category": "复古街区", "name": "复古创意街区", "profile": "friends_lively", "indoor": False, "is_free": True, "tags": ["散步", "拍照"]},
+            {"sub_category": "花艺体验", "name": "花艺手作体验馆", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["情绪价值", "手作"]},
             {"sub_category": "室内儿童乐园", "name": "星球室内儿童乐园", "profile": "family_3_6", "indoor": True, "is_free": False, "tags": ["少走路", "安全"]},
             {"sub_category": "室内儿童乐园", "name": "小熊室内儿童乐园", "profile": "family_3_6", "indoor": True, "is_free": False, "tags": ["少走路", "安全"]},
             {"sub_category": "亲子绘本馆", "name": "绘本星球亲子馆", "profile": "family_3_6", "indoor": True, "is_free": False, "tags": ["安静", "教育"]},
@@ -221,11 +229,11 @@ def generate_mock_db() -> dict[str, Any]:
             {"sub_category": "儿童运动馆", "name": "蹦床运动馆(低强度区)", "profile": "family_7_10", "indoor": True, "is_free": False, "tags": ["放电", "室内"]},
             {"sub_category": "益智桌游拼搭空间", "name": "拼搭桌游空间", "profile": "family_7_10", "indoor": True, "is_free": False, "tags": ["益智", "互动"]},
             {"sub_category": "自然教育小馆", "name": "自然教育小型博物馆", "profile": "family_7_10", "indoor": True, "is_free": False, "tags": ["周末学习", "探索"]},
-            {"sub_category": "VR体验馆", "name": "星际VR体验馆", "profile": "teen_11_17", "indoor": True, "is_free": False, "tags": ["刺激", "朋友"]},
-            {"sub_category": "密室逃脱(轻恐)", "name": "沉浸式密室(轻恐/非恐)", "profile": "teen_11_17", "indoor": True, "is_free": False, "tags": ["11+", "刺激"]},
-            {"sub_category": "剧本杀(轻量本)", "name": "轻量剧本杀馆", "profile": "teen_11_17", "indoor": True, "is_free": False, "tags": ["13+", "沉浸"]},
-            {"sub_category": "保龄球/台球/飞镖", "name": "保龄球台球飞镖馆", "profile": "teen_11_17", "indoor": True, "is_free": False, "tags": ["运动", "朋友"]},
-            {"sub_category": "电玩城/街机厅", "name": "电玩城街机厅", "profile": "teen_11_17", "indoor": True, "is_free": False, "tags": ["青少年", "解压"]},
+            {"sub_category": "VR体验馆", "name": "星际VR体验馆", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["刺激", "朋友"]},
+            {"sub_category": "密室逃脱(轻恐)", "name": "沉浸式密室(轻恐/非恐)", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["11+", "刺激"]},
+            {"sub_category": "剧本杀(轻量本)", "name": "轻量剧本杀馆", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["13+", "沉浸"]},
+            {"sub_category": "保龄球/台球/飞镖", "name": "保龄球台球飞镖馆", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["运动", "朋友"]},
+            {"sub_category": "电玩城/街机厅", "name": "电玩城街机厅", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["青少年", "解压"]},
             {"sub_category": "桌游馆", "name": "桌游馆A", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["低排队", "可控时长"]},
             {"sub_category": "桌游馆", "name": "桌游馆B", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["低排队", "可控时长"]},
             {"sub_category": "KTV", "name": "周末KTV", "profile": "friends_lively", "indoor": True, "is_free": False, "tags": ["晚间", "热闹"]},
@@ -285,170 +293,30 @@ def generate_mock_db() -> dict[str, Any]:
         requires_booking_base = sub_category not in ("电玩城/街机厅", "商场亲子互动区")
 
         if is_free:
-            if profile == "solo_quiet":
-                return [
-                    _mk(
-                        k=1,
-                        name="单人自由入场",
-                        price=0.0,
-                        description="自由入场体验，可随到随逛/随到随玩",
-                        features="节奏更松弛，适合一个人放空或阅读。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration),
-                        duration_std_dev=20.0,
-                        start_time=None,
-                    ),
-                    _mk(
-                        k=2,
-                        name="单人安静时段(免票)",
-                        price=0.0,
-                        description="指定安静时段入场，环境更稳定",
-                        features="更适合独处与低干扰体验。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration - 15),
-                        duration_std_dev=15.0,
-                        start_time=None,
-                    ),
-                ]
-
-            if profile == "couple_photo":
-                return [
-                    _mk(
-                        k=1,
-                        name="双人散步打卡",
-                        price=0.0,
-                        description="自由路线打卡，可随到随拍",
-                        features="更适合两人轻松聊天与拍照记录。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration),
-                        duration_std_dev=20.0,
-                        start_time=None,
-                    ),
-                    _mk(
-                        k=2,
-                        name="双人夜景拍照路线(免票)",
-                        price=0.0,
-                        description="推荐视角与拍照点位，适合慢慢走",
-                        features="氛围更好，出片更稳定。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration + 15),
-                        duration_std_dev=25.0,
-                        start_time=None,
-                    ),
-                ]
-
-            if profile in ("family_3_6", "family_7_10"):
-                return [
-                    _mk(
-                        k=1,
-                        name="2大1小免费入场",
-                        price=0.0,
-                        description="家庭友好入场规则，儿童可陪同体验",
-                        features="更适合亲子一起消磨时间，省心省力。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration),
-                        duration_std_dev=25.0,
-                        start_time=None,
-                    ),
-                    _mk(
-                        k=2,
-                        name="亲子轻体验(免票)",
-                        price=0.0,
-                        description="更短更轻量的体验路线，避免孩子疲惫",
-                        features="节奏更友好，适合带娃兜底。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(45, base_duration - 30),
-                        duration_std_dev=20.0,
-                        start_time=None,
-                    ),
-                ]
-
-            if profile == "teen_11_17":
-                return [
-                    _mk(
-                        k=1,
-                        name="2-4人体验票",
-                        price=0.0,
-                        description="支持小团体一起体验，更适合结伴",
-                        features="节奏更紧凑，适合短时间上手。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(45, base_duration - 15),
-                        duration_std_dev=15.0,
-                        start_time=None,
-                    ),
-                    _mk(
-                        k=2,
-                        name="3-5人挑战票(免票)",
-                        price=0.0,
-                        description="适合多人一起完成挑战的玩法路线",
-                        features="更强调配合与互动，氛围更热烈。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration),
-                        duration_std_dev=20.0,
-                        start_time=None,
-                    ),
-                ]
-
-            if profile == "friends_lively":
-                return [
-                    _mk(
-                        k=1,
-                        name="3-5人自由入场",
-                        price=0.0,
-                        description="无需预约，适合临时组局",
-                        features="更适合朋友聚会，随到随玩。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration),
-                        duration_std_dev=25.0,
-                        start_time=None,
-                    ),
-                    _mk(
-                        k=2,
-                        name="4人小游戏挑战(免票)",
-                        price=0.0,
-                        description="推荐多人小游戏路线，简单上手",
-                        features="互动更强，热闹但不费脑。",
-                        requires_booking=False,
-                        available_stock=9999,
-                        duration_mins=max(60, base_duration - 15),
-                        duration_std_dev=20.0,
-                        start_time=None,
-                    ),
-                ]
-
             return [
                 _mk(
                     k=1,
-                    name="1-4人自由入场",
+                    name="自由入场体验",
                     price=0.0,
-                    description="自由入场体验，可随到随玩/随到随逛",
-                    features="低决策成本，临时起意也很合适。",
+                    description="免费开放，随时可进",
+                    features="无需预约，灵活度高。",
                     requires_booking=False,
                     available_stock=9999,
-                    duration_mins=max(60, base_duration),
-                    duration_std_dev=20.0,
+                    duration_mins=base_duration,
+                    duration_std_dev=30.0,
                     start_time=None,
                 ),
                 _mk(
                     k=2,
-                    name="2-4人主题路线(免票)",
+                    name="周末定时讲解/互动(免费)",
                     price=0.0,
-                    description="推荐主题路线与玩法点位，按需选择",
-                    features="更容易不踩雷，适合兜底安排。",
-                    requires_booking=False,
-                    available_stock=9999,
-                    duration_mins=max(60, base_duration - 15),
-                    duration_std_dev=20.0,
-                    start_time=None,
+                    description="场馆/公园内定时的免费互动活动",
+                    features="有引导员带领，适合家庭/朋友参与。",
+                    requires_booking=True,
+                    available_stock=20,
+                    duration_mins=max(30, base_duration - 30),
+                    duration_std_dev=10.0,
+                    start_time="14:00",
                 ),
             ]
 
@@ -466,41 +334,41 @@ def generate_mock_db() -> dict[str, Any]:
         def _start_time() -> str | None:
             return rng.choice(start_times)
 
-        if profile == "solo_quiet":
+        if profile in ("family_3_6", "kids_friendly"):
             return [
                 _mk(
                     k=1,
-                    name="单人标准体验",
+                    name="1大1小亲子轻体验",
                     price=_price(39.0, 128.0),
-                    description="基础体验项目，包含入场与核心项目体验",
-                    features="更适合一个人慢慢体验，节奏舒适。",
+                    description="更轻量更短时的亲子体验，避免孩子疲惫",
+                    features="节奏更友好，适合带娃不费脑。",
                     requires_booking=requires_booking_base,
-                    available_stock=_stock(40, 500),
-                    duration_mins=base_duration,
+                    available_stock=_stock(30, 420),
+                    duration_mins=max(45, base_duration - 30),
                     duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
                     start_time=_start_time(),
                 ),
                 _mk(
                     k=2,
-                    name="单人深度体验",
-                    price=_price(79.0, 168.0),
-                    description="进阶体验项目，包含更完整的内容与更长的体验时长",
-                    features="更适合独处放松，体验更沉浸。",
+                    name="2大1小亲子标准体验",
+                    price=_price(79.0, 188.0),
+                    description="更完整的亲子项目内容，适合家庭一起参与",
+                    features="更适合周末安排，孩子更容易投入。",
                     requires_booking=requires_booking_base,
                     available_stock=_stock(30, 320),
-                    duration_mins=base_duration + 30,
+                    duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
                     start_time=_start_time(),
                 ),
                 _mk(
                     k=3,
-                    name="单人主题夜场",
-                    price=_price(89.0, 188.0),
-                    description="主题时段体验，氛围更稳定，适合晚间放松",
-                    features="更适合一个人收尾一天的情绪与疲惫。",
+                    name="2大2小家庭畅玩",
+                    price=_price(99.0, 238.0),
+                    description="更适合多孩子家庭的畅玩方案，时长更足",
+                    features="更省心，适合把孩子电量放空。",
                     requires_booking=requires_booking_base,
-                    available_stock=_stock(20, 220),
-                    duration_mins=base_duration + 45,
+                    available_stock=_stock(20, 260),
+                    duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
                     start_time=_start_time(),
                 ),
@@ -546,14 +414,14 @@ def generate_mock_db() -> dict[str, Any]:
                 ),
             ]
 
-        if profile in ("family_3_6", "family_7_10"):
+        if profile == "family_7_10":
             return [
                 _mk(
                     k=1,
-                    name="1大1小亲子轻体验",
-                    price=_price(39.0, 128.0),
-                    description="更轻量更短时的亲子体验，避免孩子疲惫",
-                    features="节奏更友好，适合带娃不费脑。",
+                    name="1大1小亲子动手体验",
+                    price=_price(49.0, 138.0),
+                    description="更适合大孩子参与的轻互动体验，动手感更强",
+                    features="参与感更足，适合亲子一起上手。",
                     requires_booking=requires_booking_base,
                     available_stock=_stock(30, 420),
                     duration_mins=max(45, base_duration - 30),
@@ -564,7 +432,7 @@ def generate_mock_db() -> dict[str, Any]:
                     k=2,
                     name="2大1小亲子标准体验",
                     price=_price(79.0, 188.0),
-                    description="更完整的亲子项目内容，适合家庭一起参与",
+                    description="更完整的亲子互动内容，兼顾体验感与节奏",
                     features="更适合周末安排，孩子更容易投入。",
                     requires_booking=requires_booking_base,
                     available_stock=_stock(20, 320),
@@ -576,8 +444,48 @@ def generate_mock_db() -> dict[str, Any]:
                     k=3,
                     name="2大2小家庭畅玩",
                     price=_price(99.0, 238.0),
-                    description="更适合多孩子家庭的畅玩方案，时长更足",
+                    description="更适合家庭一起投入更长时间体验的畅玩方案",
                     features="更省心，适合把孩子电量放空。",
+                    requires_booking=requires_booking_base,
+                    available_stock=_stock(20, 260),
+                    duration_mins=base_duration + 30,
+                    duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
+                    start_time=_start_time(),
+                ),
+            ]
+
+        if profile == "family_mild":
+            return [
+                _mk(
+                    k=1,
+                    name="1大1小轻松体验",
+                    price=_price(39.0, 118.0),
+                    description="轻量体验项目，适合临时起意安排一段轻松时光",
+                    features="节奏舒适，适合不想太折腾的亲子出行。",
+                    requires_booking=requires_booking_base,
+                    available_stock=_stock(35, 460),
+                    duration_mins=max(45, base_duration - 15),
+                    duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
+                    start_time=_start_time(),
+                ),
+                _mk(
+                    k=2,
+                    name="2大1小标准体验",
+                    price=_price(69.0, 168.0),
+                    description="更完整的家庭向体验内容，兼顾轻松和参与感",
+                    features="更适合周末安排，整体节奏稳定。",
+                    requires_booking=requires_booking_base,
+                    available_stock=_stock(30, 360),
+                    duration_mins=base_duration,
+                    duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
+                    start_time=_start_time(),
+                ),
+                _mk(
+                    k=3,
+                    name="2大2小周末畅玩",
+                    price=_price(89.0, 218.0),
+                    description="适合一家人花更长时间慢慢玩的周末方案",
+                    features="更省心，适合家庭一起消磨半天。",
                     requires_booking=requires_booking_base,
                     available_stock=_stock(20, 260),
                     duration_mins=base_duration + 30,
@@ -626,23 +534,35 @@ def generate_mock_db() -> dict[str, Any]:
                 ),
             ]
 
-        if profile == "friends_lively":
+        if profile == "friends_lively" or profile == "universal":
             return [
                 _mk(
                     k=1,
-                    name="三人小聚体验",
-                    price=_price(69.0, 168.0),
-                    description="适合三人小聚的基础玩法，简单上手",
-                    features="更适合朋友聚会，互动轻松。",
+                    name="双人搭子体验" if profile == "friends_lively" else "双人轻体验",
+                    price=_price(59.0, 158.0),
+                    description="适合两个人结伴体验的轻量方案，进入门槛更低",
+                    features="更适合兄弟闺蜜搭子局，轻松不尴尬。",
                     requires_booking=requires_booking_base,
                     available_stock=_stock(30, 460),
-                    duration_mins=base_duration,
+                    duration_mins=max(45, base_duration - 15),
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
                     start_time=_start_time(),
                 ),
                 _mk(
                     k=2,
-                    name="四人欢聚畅玩",
+                    name="三人小聚体验" if profile == "friends_lively" else "三人小聚体验",
+                    price=_price(79.0, 188.0),
+                    description="适合小团体结伴体验，氛围更自然，互动更轻松",
+                    features="更容易成局，适合朋友临时约一场。",
+                    requires_booking=requires_booking_base,
+                    available_stock=_stock(24, 360),
+                    duration_mins=base_duration,
+                    duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
+                    start_time=_start_time(),
+                ),
+                _mk(
+                    k=3,
+                    name="四人欢聚畅玩" if profile == "friends_lively" else "四人畅玩体验",
                     price=_price(99.0, 228.0),
                     description="更适合四人一起玩的畅玩方案，内容更丰富",
                     features="更热闹但不费脑，适合组局。",
@@ -652,58 +572,7 @@ def generate_mock_db() -> dict[str, Any]:
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
                     start_time=_start_time(),
                 ),
-                _mk(
-                    k=3,
-                    name="六人团建包场",
-                    price=_price(168.0, 368.0),
-                    description="更适合多人一起玩的包场方案，体验更完整",
-                    features="更适合团建与朋友大局，氛围拉满。",
-                    requires_booking=True,
-                    available_stock=_stock(10, 120),
-                    duration_mins=base_duration + 60,
-                    duration_std_dev=_std([30.0, 45.0, 60.0, 75.0]),
-                    start_time=_start_time(),
-                ),
             ]
-
-        return [
-            _mk(
-                k=1,
-                name="单人/双人随享",
-                price=_price(39.0, 128.0),
-                description="低决策成本的通用体验，适合临时加一站",
-                features="更灵活，不需要做太多功课。",
-                requires_booking=requires_booking_base,
-                available_stock=_stock(40, 620),
-                duration_mins=max(45, base_duration - 15),
-                duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
-                start_time=_start_time(),
-            ),
-            _mk(
-                k=2,
-                name="2-4人通用票",
-                price=_price(79.0, 188.0),
-                description="更适合小团体的通用方案，玩法更完整",
-                features="更稳更不踩雷，适合兜底安排。",
-                requires_booking=requires_booking_base,
-                available_stock=_stock(30, 460),
-                duration_mins=base_duration,
-                duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                start_time=_start_time(),
-            ),
-            _mk(
-                k=3,
-                name="3-5人小团体票",
-                price=_price(99.0, 268.0),
-                description="更适合多人一起玩的玩法组合，体验更丰富",
-                features="更热闹，适合把气氛带起来。",
-                requires_booking=requires_booking_base,
-                available_stock=_stock(20, 320),
-                duration_mins=base_duration + 30,
-                duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                start_time=_start_time(),
-            ),
-        ]
 
     for i, plan in enumerate(activity_plan):
         district = random.choice(hub_names)
@@ -713,17 +582,17 @@ def generate_mock_db() -> dict[str, Any]:
         profile = plan["profile"]
         indoor = bool(plan["indoor"])
         is_free = bool(plan["is_free"])
-        tags = list(plan.get("tags") or [])
+        tags = _sanitize_mock_list(list(plan.get("tags") or []))
         business_hours = random.choice(["10:00-22:00", "09:00-22:00", "10:00-21:30"])
         if any(k in sub_category for k in ("夜景", "Livehouse", "清吧")):
             business_hours = random.choice(["18:00-23:30", "19:00-24:00"])
-        review_keywords = _keywords_for_profile(
+        review_keywords = _sanitize_mock_list(_keywords_for_profile(
             category="activity",
             profile=profile,
             indoor=indoor,
             sub_category=sub_category,
             delivery_supported=False,
-        )
+        ))
 
         venue = {
             "id": f"activity_{i+1:03d}",
@@ -752,7 +621,7 @@ def generate_mock_db() -> dict[str, Any]:
             review_keywords=review_keywords,
             indoor=indoor,
         )
-        mock_db["activity_venues"].append(venue)
+        mock_db["activity_venues"].append(_sanitize_mock_dict(venue))
         
     # 3. 礼品店
     gift_plan: list[dict] = (
@@ -897,22 +766,23 @@ def generate_mock_db() -> dict[str, Any]:
         delivery_time_std = float(random.choice([5.0, 8.0, 10.0, 15.0])) if delivery_supported else None
         business_hours = random.choice(["10:00-21:00", "10:00-22:00", "11:00-20:30"])
         indoor = True
-        review_keywords = _keywords_for_profile(
+        plan_tags = _sanitize_mock_list(list(plan.get("tags") or []))
+        review_keywords = _sanitize_mock_list(_keywords_for_profile(
             category="gift_shop",
             profile=str(plan["profile"]),
             indoor=indoor,
             sub_category=sub_category,
             delivery_supported=delivery_supported,
-        )
+        ))
 
         gifts_raw = _build_gifts(
             sub_category=sub_category,
             profile=str(plan["profile"]),
-            tags=list(plan.get("tags") or []),
+            tags=plan_tags,
         )
         gifts = []
         for j, g in enumerate(gifts_raw):
-            recv_mins, recv_std = _infer_receive_duration_mins(g["name"], list(plan.get("tags") or []))
+            recv_mins, recv_std = _infer_receive_duration_mins(g["name"], plan_tags)
             gifts.append(
                 {
                     "gift_id": f"gift_{i+1:03d}_{j+1}",
@@ -939,7 +809,7 @@ def generate_mock_db() -> dict[str, Any]:
             "indoor": indoor,
             "review_keywords": review_keywords,
             "rating": float(round(random.uniform(4.5, 5.0), 1)),
-            "tags": list(plan.get("tags") or []),
+            "tags": plan_tags,
             "gifts": gifts,
             "delivery_time_mins": delivery_time_mins,
             "delivery_time_std_dev": delivery_time_std,
@@ -950,17 +820,17 @@ def generate_mock_db() -> dict[str, Any]:
             category="gift_shop",
             profile=str(plan["profile"]),
             sub_category=sub_category,
-            tags=list(plan.get("tags") or []),
+            tags=plan_tags,
             review_keywords=review_keywords,
             indoor=indoor,
         )
         shop = _ensure_gift_shop_special_fields(
             item=shop,
             sub_category=sub_category,
-            tags=list(plan.get("tags") or []),
+            tags=plan_tags,
             review_keywords=review_keywords,
         )
-        mock_db["gift_shops"].append(shop)
+        mock_db["gift_shops"].append(_sanitize_mock_dict(shop))
         
     return mock_db
 

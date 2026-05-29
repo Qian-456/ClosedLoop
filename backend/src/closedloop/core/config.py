@@ -43,7 +43,7 @@ class QwenSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="DASHSCOPE_")
 
 class DataSettings(BaseSettings):
-    MOCK_DB_REPO_DIR: str = os.path.join(REPO_ROOT_DIR, "mock_data", "base")
+    MOCK_DB_REPO_DIR: str = os.path.join(REPO_ROOT_DIR, "backend", "src", "mock_db")
     MOCK_DB_RW_DIR: str = os.path.join(REPO_ROOT_DIR, "mock_data", "runtime")
 
 class AppConfig(BaseSettings):
