@@ -18,6 +18,8 @@ from closedloop.graph.search_subgraph.ranker import _extract_negative_terms, _ex
 config = get_config()
 LoggerManager.setup(config)
 
+_SESSION_ITEM_CACHE: dict[str, dict[str, dict[str, Any]]] = {}
+
 
 class SearchRequest(BaseModel):
     session_id: str = "default"
@@ -33,6 +35,27 @@ def _truncate_text(text: str, max_len: int = 120) -> str:
     if len(content) <= max_len:
         return content
     return content[:max_len] + "..."
+
+def _extract_item_id(item: dict[str, Any]) -> str | None:
+    item_id = item.get("combo_id") or item.get("package_id") or item.get("gift_id") or item.get("id")
+    if not item_id:
+        return None
+    return str(item_id)
+
+def _cache_session_candidates(session_id: str, candidates: list[dict[str, Any]]) -> None:
+    if not session_id:
+        return
+    if not isinstance(candidates, list) or not candidates:
+        return
+
+    session_cache = _SESSION_ITEM_CACHE.setdefault(session_id, {})
+    for item in candidates:
+        if not isinstance(item, dict):
+            continue
+        item_id = _extract_item_id(item)
+        if not item_id:
+            continue
+        session_cache[item_id] = item
 
 
 @asynccontextmanager
@@ -51,6 +74,7 @@ def health_check():
 @app.post("/search")
 def run_search(req: SearchRequest):
     started_at = time.perf_counter()
+    _cache_session_candidates(req.session_id, req.candidates)
     keywords_preview = _extract_raw_keywords(req.user_request)[:8]
     negative_terms = _extract_negative_terms(req.user_request)
     logger.info(
@@ -78,6 +102,17 @@ def run_search(req: SearchRequest):
     except Exception as e:
         logger.error(f"phase=search_sub_api | error={e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/item/{item_id}")
+def get_item(item_id: str, session_id: str = "default"):
+    logger.info(f"phase=search_sub_item_api | item_id={item_id} | session_id={session_id}")
+    session_cache = _SESSION_ITEM_CACHE.get(session_id, {})
+    item = session_cache.get(str(item_id))
+    if isinstance(item, dict) and item:
+        logger.info(f"phase=search_sub_item_api | result=success | item_id={item_id} | session_id={session_id}")
+        return {"status": "success", "item": item}
+    logger.warning(f"phase=search_sub_item_api | result=not_found | item_id={item_id} | session_id={session_id}")
+    return {"status": "not_found", "item": {}}
 
 
 if __name__ == "__main__":

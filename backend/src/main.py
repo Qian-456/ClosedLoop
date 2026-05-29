@@ -27,10 +27,6 @@ LoggerManager.setup(config)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 构建全局向量缓存
-    from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
-    indexer = SearchIndexer.get_instance()
-    indexer.build_global_vectors(force_rebuild=getattr(config, "FORCE_REBUILD_VECTORS", False))
     yield
 
 app = FastAPI(title=config.PROJECT_NAME, lifespan=lifespan)
@@ -487,6 +483,27 @@ async def invoke_graph_stream(request: ChatRequest):
     """Stream invoke state snapshots via SSE."""
     return StreamingResponse(
         _stream_invoke_events(request),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+@app.post("/execute/start", response_model=ExecutionStartResponse)
+async def execute_start(request: ExecuteRequest):
+    execution_id = await start_execution(request)
+    return ExecutionStartResponse(execution_id=execution_id)
+
+@app.get("/execute/events/{execution_id}")
+async def execute_events(execution_id: str):
+    async def _iter_sse() -> AsyncIterator[str]:
+        async for event in iter_events(execution_id):
+            yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+
+    return StreamingResponse(
+        _iter_sse(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

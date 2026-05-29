@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY backend/requirements.txt /app/backend/requirements.txt
 
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN apt-get update && apt-get install -y gcc build-essential && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir --default-timeout=100 -r /app/backend/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 COPY backend/src /app/backend/src
 

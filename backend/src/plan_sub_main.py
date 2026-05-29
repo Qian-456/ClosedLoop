@@ -9,11 +9,13 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 from contextlib import asynccontextmanager
 import time
+from urllib.parse import urlencode, urlsplit, urlunsplit
+
+import httpx
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.plan_subgraph.builder import build_subgraph_plan
-from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
 from closedloop.contracts.state import PlanState
 
 # 初始化配置与日志
@@ -22,9 +24,6 @@ LoggerManager.setup(config)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 构建全局向量缓存
-    indexer = SearchIndexer.get_instance()
-    indexer.build_global_vectors(force_rebuild=getattr(config, "FORCE_REBUILD_VECTORS", False))
     yield
 
 app = FastAPI(title=f"{config.PROJECT_NAME} - Plan Subgraph API", lifespan=lifespan)
@@ -51,6 +50,24 @@ def _count_plan_candidates(candidates: Dict[str, Any] | None) -> Dict[str, int]:
         "gift_count": len(candidate_state.get("ranked_gifts", []) or []),
     }
 
+def _build_search_sub_item_url(item_id: str, session_id: str) -> str:
+    config_app = get_config()
+    configured_url = getattr(config_app, "SEARCH_SUB_API_URL", "http://127.0.0.1:8002/search")
+    parsed = urlsplit((configured_url or "").strip())
+    path = parsed.path or ""
+
+    if path.endswith("/search"):
+        path = f"/item/{item_id}"
+    elif path.endswith("/"):
+        path = f"{path}item/{item_id}"
+    elif path:
+        path = f"{path}/item/{item_id}"
+    else:
+        path = f"/item/{item_id}"
+
+    query = urlencode({"session_id": session_id or "default"})
+    return urlunsplit((parsed.scheme, parsed.netloc, path, query, parsed.fragment))
+
 class PlanRequest(BaseModel):
     user_input: Optional[str] = None
     constraints: Optional[Dict[str, Any]] = None
@@ -58,12 +75,6 @@ class PlanRequest(BaseModel):
     itinerary: Optional[Dict[str, Any]] = None
     past_itinerary: Optional[List[Dict[str, Any]]] = None
     top_k: Optional[int] = 1
-    session_id: str = "default"
-
-class SearchRequest(BaseModel):
-    category: str
-    user_request: str
-    top_k: int = 5
     session_id: str = "default"
 
 @app.get("/health")
@@ -103,12 +114,6 @@ def run_plan_subgraph(req: PlanRequest):
                 f"| activity_count={candidate_counts['activity_count']} "
                 f"| gift_count={candidate_counts['gift_count']}"
             )
-            try:
-                SearchIndexer.get_instance().schedule_plan_indices(candidates, session_id=req.session_id)
-            except Exception as e:
-                logger.error(
-                    f"phase=plan_sub_api | msg=schedule_plan_indices_failed | session_id={req.session_id} | error={e}"
-                )
         elapsed_ms = int((time.perf_counter() - started_at) * 1000)
         logger.info(
             f"phase=plan_sub_api | result=success | session_id={req.session_id} | elapsed_ms={elapsed_ms}"
@@ -118,39 +123,17 @@ def run_plan_subgraph(req: PlanRequest):
         logger.error(f"phase=plan_sub_api | error={e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/search")
-def run_search(req: SearchRequest):
-    logger.info(
-        f"phase=search_api | category={req.category} | query={req.user_request} | top_k={req.top_k} | session_id={req.session_id}"
-    )
-    try:
-        indexer = SearchIndexer.get_instance()
-        results = indexer.search(
-            category=req.category,
-            query=req.user_request,
-            top_k=req.top_k,
-            session_id=req.session_id
-        )
-        logger.info(
-            f"phase=search_api | result=success | category={req.category} | count={len(results)} | session_id={req.session_id}"
-        )
-        return {"status": "success", "results": results}
-    except Exception as e:
-        logger.error(f"phase=search_api | error={e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
 @app.get("/item/{item_id}")
 def get_item(item_id: str, session_id: str = "default"):
     logger.info(f"phase=get_item_api | item_id={item_id} | session_id={session_id}")
     try:
-        indexer = SearchIndexer.get_instance()
-        item = indexer.get_item(item_id, session_id=session_id)
-        if item:
-            logger.info(f"phase=get_item_api | result=success | item_id={item_id} | session_id={session_id}")
-            return {"status": "success", "item": item}
-        else:
-            logger.warning(f"phase=get_item_api | result=not_found | item_id={item_id} | session_id={session_id}")
-            return {"status": "not_found", "item": {}}
+        url = _build_search_sub_item_url(item_id=str(item_id), session_id=session_id)
+        with httpx.Client(timeout=5.0, trust_env=False, proxy=None) as client:
+            response = client.get(url)
+            response.raise_for_status()
+            payload = response.json()
+        logger.info(f"phase=get_item_api | result=success | item_id={item_id} | session_id={session_id}")
+        return payload
     except Exception as e:
         logger.error(f"phase=get_item_api | error={e}")
         raise HTTPException(status_code=500, detail=str(e))

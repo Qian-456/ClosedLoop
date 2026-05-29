@@ -13,7 +13,6 @@ from pydantic import BaseModel, Field, model_validator
 from closedloop.contracts.state import Constraints
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
-from closedloop.graph.plan_subgraph.search_indexer import SearchIndexer
 
 
 DIETARY_RESTRICTION_KEYWORDS = {
@@ -139,6 +138,48 @@ def _get_age_bucket(age: int) -> str | None:
     if age <= 17:
         return "11-17"
     return None
+
+def _prepare_text(item: dict) -> str:
+    name = item.get("name", "")
+    intro = item.get("description", "") or item.get("intro", "")
+
+    features = item.get("features", "")
+    if isinstance(features, list):
+        features = " ".join(features)
+
+    tags = item.get("experience_tag", "")
+    if isinstance(tags, list):
+        tags = " ".join(tags)
+
+    groups = item.get("suitable_groups", [])
+    groups_str = " ".join(groups) if isinstance(groups, list) else str(groups)
+
+    child_facilities = item.get("child_facility_tags", [])
+    child_facilities_str = (
+        " ".join(child_facilities) if isinstance(child_facilities, list) else str(child_facilities)
+    )
+
+    age_range = item.get("age_range", [])
+    age_range_str = "适合年龄: " + " ".join(age_range) if isinstance(age_range, list) and age_range else ""
+
+    kid_menu_str = "提供儿童餐" if item.get("kid_menu_status") in ("explicit", "possible") else ""
+    stroller_str = "婴儿推车友好" if item.get("stroller_friendly_status") in ("yes", "likely") else ""
+
+    gift_type = item.get("gift_type", "")
+
+    parts = [
+        name,
+        intro,
+        features,
+        tags,
+        groups_str,
+        child_facilities_str,
+        age_range_str,
+        kid_menu_str,
+        stroller_str,
+        gift_type,
+    ]
+    return " ".join([part for part in parts if part]).strip()
 
 
 def _expand_keyword(keyword: str) -> list[str]:
@@ -563,7 +604,6 @@ def _search_from_source(
     constraints: Constraints | None,
     source_items: list[dict],
     top_k: int,
-    indexer: SearchIndexer,
 ) -> list[dict]:
     """Run keyword plus rule-based search over an in-memory candidate list."""
     explicit_keywords, inherited_keywords, negative_keywords, negative_terms = _build_search_keywords(
@@ -572,7 +612,7 @@ def _search_from_source(
     scored_items: list[tuple[float, dict]] = []
 
     for item in source_items:
-        prepared_text = indexer._prepare_text(item)
+        prepared_text = _prepare_text(item)
         if not prepared_text:
             prepared_text = " ".join(
                 [

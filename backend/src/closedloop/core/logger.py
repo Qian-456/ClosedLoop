@@ -41,6 +41,21 @@ class LoggerManager:
             level=config.logging.LOG_LEVEL,
         )
 
+        if log_dir:
+            logger.add(
+                os.path.join(log_dir, "app.log"),
+                rotation=config.logging.LOG_ROTATION,
+                retention=config.logging.LOG_RETENTION,
+                level=config.logging.LOG_LEVEL,
+            )
+
+            logger.add(
+                os.path.join(log_dir, "error.log"),
+                rotation=config.logging.LOG_ROTATION,
+                retention=config.logging.LOG_RETENTION,
+                level="ERROR",
+            )
+
         logger.add(
             os.path.join(log_dir, "app", "app_{time:YYYY-MM-DD}.log"),
             rotation=config.logging.LOG_ROTATION,

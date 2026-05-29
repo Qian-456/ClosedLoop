@@ -10,12 +10,10 @@ from plan_sub_main import PlanRequest, run_plan_subgraph
 
 class TestPlanSubMain(unittest.TestCase):
     @patch("plan_sub_main.logger")
-    @patch("plan_sub_main.SearchIndexer")
     @patch("plan_sub_main.build_subgraph_plan")
-    def test_run_plan_subgraph_returns_candidates_and_logs_summary(
+    def test_run_plan_subgraph_returns_itinerary_and_logs_summary(
         self,
         mock_build_subgraph_plan,
-        mock_search_indexer,
         mock_logger,
     ):
         mock_graph = MagicMock()
@@ -30,9 +28,6 @@ class TestPlanSubMain(unittest.TestCase):
         }
         mock_build_subgraph_plan.return_value = mock_graph
 
-        mock_indexer = MagicMock()
-        mock_search_indexer.get_instance.return_value = mock_indexer
-
         resp = run_plan_subgraph(
             PlanRequest(
                 constraints={"group_type": "friends", "budget": 200, "time_period": "18:00"},
@@ -43,18 +38,9 @@ class TestPlanSubMain(unittest.TestCase):
 
         self.assertEqual(resp["status"], "success")
         self.assertEqual(resp["itinerary"], mock_graph.invoke.return_value["itinerary"])
-        self.assertEqual(resp["candidates"], mock_graph.invoke.return_value["candidates"])
-        mock_indexer.schedule_plan_indices.assert_called_once_with(
-            mock_graph.invoke.return_value["candidates"],
-            session_id="thread-123",
-        )
+        mock_graph.invoke.assert_called_once()
         self.assertTrue(
-            any(
-                "restaurant_count=1" in str(call.args[0])
-                and "activity_count=1" in str(call.args[0])
-                and "gift_count=0" in str(call.args[0])
-                for call in mock_logger.info.call_args_list
-            )
+            any("phase=plan_sub_api" in str(call.args[0]) for call in mock_logger.info.call_args_list)
         )
 
 

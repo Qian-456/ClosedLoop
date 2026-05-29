@@ -48,11 +48,9 @@ class DataSettings(BaseSettings):
 
 class AppConfig(BaseSettings):
     PROJECT_NAME: str = "ClosedLoop"
-    MILVUS_URI: str = "http://localhost:19530"
     PLAN_SUB_API_URL: str = "http://localhost:8001/plan"
     SEARCH_SUB_API_URL: str = "http://127.0.0.1:8002/search"
     PLAN_SUB_NETWORK_MODE: Literal["local", "docker"] = "local"
-    FORCE_REBUILD_VECTORS: bool = False
 
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)

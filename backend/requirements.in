@@ -12,6 +12,4 @@ dashscope
 typing_extensions
 httpx
 jieba
-pymilvus
-llama-index-embeddings-dashscope
 langgraph-checkpoint-sqlite
