@@ -312,6 +312,9 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
     delivery_time = None
     reserved = False
     reserved_detail: dict[str, Any] | None = None
+    replaced = False
+    new_item_id = None
+    new_item_name = None
     repo_dir = _resolve_repo_dir()
 
     try:
@@ -380,11 +383,53 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                     reserved, reserved_detail = _reserve_capacity(
                         reservations, "combo", step.item_id, step.start_time
                     )
-                    _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
+                    
+                    if not reserved and step.replacement_policy != "strict" and not step.user_touched:
+                        logger.debug(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
+                        for backup in (step.backup_candidates or []):
+                            b_requires_confirmation = backup.get("requires_confirmation", False)
+                            logger.debug(f"phase=execute_mock | action=fallback_check | backup_id={backup.get('id')} | requires_confirmation={b_requires_confirmation}")
+                            if b_requires_confirmation:
+                                # Trigger user confirmation event instead of silent replacement
+                                await _emit(ctx, ExecuteEvent(
+                                    type="item_update",
+                                    data={
+                                        "execution_id": execution_id,
+                                        "item_id": step.item_id,
+                                        "item_type": step.item_type,
+                                        "phase": "pending_user_confirmation",
+                                        "message": f"主选餐厅无座，备选餐厅({backup.get('name')})触发提醒: {backup.get('violation_reason')}",
+                                    }
+                                ))
+                                break # Stop silent replacement
+
+                            b_id = backup.get("id")
+                            b_combo = _find_combo(restaurants, b_id)
+                            if not b_combo:
+                                continue
+                            b_req_booking = bool(b_combo.get("requires_booking", False))
+                            if b_req_booking:
+                                b_reserved, b_detail = _reserve_capacity(reservations, "combo", b_id, step.start_time)
+                                if b_reserved:
+                                    reserved = True
+                                    reserved_detail = b_detail
+                                    replaced = True
+                                    new_item_id = b_id
+                                    new_item_name = backup.get("name")
+                                    break
+                            else:
+                                reserved = True
+                                replaced = True
+                                new_item_id = b_id
+                                new_item_name = backup.get("name")
+                                break
+                                
+                    if reserved:
+                        _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
             else:
                 reserved = True
             logger.info(
-                f"phase=execute_mock | action=reserve_combo | execution_id={execution_id} | combo_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail}"
+                f"phase=execute_mock | action=reserve_combo | execution_id={execution_id} | combo_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail} | replaced={replaced} | new_id={new_item_id}"
             )
     except Exception as e:
         logger.error(f"phase=execute_mock | execution_id={execution_id} | item_id={step.item_id} | error={e}")
@@ -402,6 +447,9 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                 "reserved_ms": reserved_ms,
                 "reserved": bool(reserved),
                 "delivery_time": delivery_time,
+                "replaced": replaced,
+                "new_item_id": new_item_id,
+                "new_item_name": new_item_name,
             },
         ),
     )

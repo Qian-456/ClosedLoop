@@ -585,6 +585,69 @@ def planner_node(state: PlanState) -> PlanState:
             total_duration_minutes = sum(int(s.duration_minutes) for s in steps) + 5 * num_buffers
             total_cost = sum(float(s.item.cost or 0.0) for s in steps)
 
+            # 预埋备选队列并计算越界判定
+            max_duration = required_duration_range_mins[1]
+            non_commute_steps = [s for s in steps if s.item.type != "commute"]
+            for i, selected_item in enumerate(combo):
+                step = non_commute_steps[i]
+                step_type = selected_item["_step_type"]
+                item_id = step.item.id
+                
+                cand_list = []
+                if step_type.startswith("restaurant:"):
+                    meal_type = step_type.split(":")[1] if ":" in step_type else "dinner"
+                    cand_list = candidates.get(f"ranked_{meal_type}_combos", [])
+                elif step_type == "activity":
+                    cand_list = candidates.get("ranked_packages", [])
+                elif step_type == "activity_light":
+                    cand_list = candidates.get("ranked_light_packages", [])
+                elif step_type == "gift_shop":
+                    cand_list = candidates.get("ranked_gifts", [])
+                
+                backup_candidates = []
+                old_cost = float(step.item.cost or 0.0)
+                old_duration = int(step.duration_minutes)
+                
+                for cand in cand_list:
+                    cand_id = str(cand.get("combo_id") or cand.get("package_id") or cand.get("gift_id") or cand.get("id"))
+                    if cand_id and cand_id != item_id and cand_id not in item_ids:
+                        new_cost = float(cand.get("cost", 0.0) or cand.get("combo_price", 0.0) or cand.get("price", 0.0))
+                        new_duration = int(cand.get("duration_mins", 60))
+                        
+                        new_total_cost = total_cost - old_cost + new_cost
+                        new_total_duration = total_duration_minutes - old_duration + new_duration
+                        
+                        hard_cost_exceeded = (budget < float('inf')) and (new_total_cost > budget)
+                        hard_time_exceeded = new_total_duration > max_duration
+                        
+                        old_suitable = set(selected_item.get("suitable_groups", []))
+                        new_suitable = set(cand.get("suitable_groups", []))
+                        soft_violated = not old_suitable.issubset(new_suitable)
+                        
+                        requires_confirmation = False
+                        if hard_cost_exceeded or hard_time_exceeded or soft_violated:
+                            requires_confirmation = True
+                            
+                        backup_candidates.append({
+                            "id": cand_id,
+                            "name": cand.get("name") or cand.get("restaurant_name") or cand.get("venue_name") or cand.get("shop_name"),
+                            "requires_confirmation": requires_confirmation,
+                            "violation_reason": "超出预算或时间" if (hard_cost_exceeded or hard_time_exceeded) else "偏好可能受损"
+                        })
+                        if len(backup_candidates) >= 2:
+                            break
+                
+                step.item.backup_candidates = backup_candidates
+                step.item.replacement_policy = "equivalent_only"
+                step.item.user_touched = False
+                
+                # Debug 级别的日志打印预埋备选信息
+                if backup_candidates:
+                    logger.debug(
+                        f"phase=planner_node | action=assign_backup | step_id={step.item.id} | "
+                        f"step_name={step.item.name} | backups={[(b.get('id'), b.get('name'), b.get('requires_confirmation')) for b in backup_candidates]}"
+                    )
+
             plan_variant = ItineraryPlanVariant(
                 plan_id=f"plan_{_get_letter_id(plan_index)}",
                 title=f"{pattern['desc']}行程方案 {_get_letter_id(plan_index)}",

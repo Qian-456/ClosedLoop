@@ -79,7 +79,9 @@ def _build_itinerary_item(raw_item: dict, step_type: str) -> ItineraryItem:
         display_name=display_name,
         sub_name=sub_name,
         intro=raw_item.get("description"),
-        features=raw_item.get("features")
+        features=raw_item.get("features"),
+        user_touched=True,
+        replacement_policy="strict"
     )
 
 def _float_hours_to_time_str(hours: float) -> str:

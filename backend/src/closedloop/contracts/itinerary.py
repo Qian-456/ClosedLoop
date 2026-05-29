@@ -41,6 +41,16 @@ class ItineraryItem(BaseModel):
         default=None, description="通勤：可选交通方式列表"
     )
 
+    backup_candidates: Optional[list[dict]] = Field(
+        default=None, description="系统内部备选队列，用于执行失败时自动替换"
+    )
+    replacement_policy: Optional[Literal["strict", "equivalent_only", "completion_first"]] = Field(
+        default="equivalent_only", description="自动替换策略"
+    )
+    user_touched: Optional[bool] = Field(
+        default=False, description="用户是否主动修改过此项"
+    )
+
 
 class ItineraryStep(BaseModel):
     """行程中的一个步骤。"""

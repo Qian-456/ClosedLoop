@@ -170,7 +170,10 @@ async def execute_itinerary(
                 )
                 execute_steps.append(ExecuteStep(
                     item_id=item_id, item_type=item_type,
-                    start_time=start_time, end_time=end_time, commute_mode=None
+                    start_time=start_time, end_time=end_time, commute_mode=None,
+                    backup_candidates=item.get("backup_candidates"),
+                    replacement_policy=item.get("replacement_policy", "equivalent_only"),
+                    user_touched=item.get("user_touched", False)
                 ))
 
         # 调用后端核心逻辑启动执行

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -16,6 +16,15 @@ class ExecuteStep(BaseModel):
     end_time: str = Field(..., description="结束时间（HH:MM）")
     commute_mode: Literal["walking", "taxi", "driving"] | None = Field(
         default=None, description="通勤交通方式（仅 commute）"
+    )
+    backup_candidates: Optional[list[dict]] = Field(
+        default=None, description="系统内部备选队列"
+    )
+    replacement_policy: Optional[str] = Field(
+        default="equivalent_only", description="自动替换策略"
+    )
+    user_touched: Optional[bool] = Field(
+        default=False, description="用户是否主动修改过此项"
     )
 
 
