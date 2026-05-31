@@ -13,10 +13,10 @@ export default function MarkdownText({ text, className }: Props) {
       remarkPlugins={[remarkGfm]}
       className={className}
       components={{
-        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-        ul: ({ children }) => <ul className="my-2 list-disc space-y-1 pl-5">{children}</ul>,
-        ol: ({ children }) => <ol className="my-2 list-decimal space-y-1 pl-5">{children}</ol>,
-        li: ({ children }) => <li className="marker:text-slate-400">{children}</li>,
+        p: ({ children }) => <p className="mb-1.5 leading-[1.5] last:mb-0">{children}</p>,
+        ul: ({ children }) => <ul className="mb-2 list-outside list-disc space-y-0.5 pl-4">{children}</ul>,
+        ol: ({ children }) => <ol className="mb-2 list-outside list-decimal space-y-0.5 pl-4">{children}</ol>,
+        li: ({ children }) => <li className="leading-[1.5] marker:text-slate-400">{children}</li>,
         strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
         em: ({ children }) => <em className="italic">{children}</em>,
         a: ({ children, href, ...rest }: ComponentProps<'a'>) => (

@@ -124,13 +124,14 @@ def _get_block_text(block: Any) -> str:
 
 def _extract_message_text_from_chunk(token: AIMessageChunk) -> str:
     """Extract user-visible text blocks from one AIMessageChunk."""
+    if isinstance(token.content, str):
+        return token.content
+
     parts: list[str] = []
-    for block in getattr(token, "content_blocks", []):
-        if _get_block_type(block) != "text":
-            continue
-        block_text = _get_block_text(block)
-        if block_text:
-            parts.append(block_text)
+    if isinstance(token.content, list):
+        for block in token.content:
+            if isinstance(block, dict) and block.get("type") == "text":
+                parts.append(block.get("text", ""))
     return "".join(parts)
 
 
@@ -527,7 +528,7 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
                     message_chunk, metadata = part_data
                     if not isinstance(message_chunk, AIMessageChunk):
                         continue
-                    content = _extract_message_text_from_chunk(message_chunk).strip()
+                    content = _extract_message_text_from_chunk(message_chunk)
                     if content:
                         yield format_sse_event(
                             "message",
