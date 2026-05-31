@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 
 import type { Confirmation, ItineraryPlan } from '../model/types'
-import { invokeStreamResume } from '../api/invoke'
-import { useItineraryStore } from '../store/useItineraryStore'
-import PrimaryButton from '../../../shared/ui/PrimaryButton'
 
 type Props = {
   itinerary?: ItineraryPlan | null
@@ -19,13 +16,6 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
   const [expanded, setExpanded] = useState(false)
-  const [decisionLoading, setDecisionLoading] = useState(false)
-  const [dismissedDecisionKey, setDismissedDecisionKey] = useState<string | null>(null)
-
-  const currentSessionId = useItineraryStore((s) => s.currentSessionId)
-  const applyInvokeStreamEvent = useItineraryStore((s) => s.applyInvokeStreamEvent)
-  const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
-  const setInvokeError = useItineraryStore((s) => s.setInvokeError)
   const summaryText = useMemo(() => {
     if (hasPlans) {
       return `已生成 ${plans.length} 套可执行方案`
@@ -39,89 +29,17 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
     return '方案生成完成后会展示在这里。'
   }, [confirmation, errorMessage, hasPlans, plans.length])
 
-  const interruptPayload = (confirmation?.interrupt as any) ?? null
-  const actionRequests =
-    interruptPayload?.action_requests ??
-    interruptPayload?.actionRequests ??
-    interruptPayload?.action_requests ??
-    null
-
-  const firstAction = Array.isArray(actionRequests) && actionRequests.length > 0 ? actionRequests[0] : null
-  const firstDescription = firstAction?.description ?? firstAction?.descriptionPrefix ?? null
-
-  const args = (firstAction?.arguments as any) ?? null
-  const itemId = typeof args?.item_id === 'string' ? args.item_id : null
-  const executionId = typeof args?.execution_id === 'string' ? args.execution_id : null
-  const backupId = typeof args?.backup_id === 'string' ? args.backup_id : null
-  const currentDecisionKey =
-    executionId && itemId && backupId ? `${executionId}:${itemId}:${backupId}` : null
+  const fixupPayload = (confirmation as any)?.fixup ?? null
+  const backupCandidates = Array.isArray(fixupPayload?.backup_candidates)
+    ? (fixupPayload.backup_candidates as any[])
+    : []
+  const topCandidates = backupCandidates.slice(0, 2)
 
   const executionSummary =
     (confirmation as any)?.execution_summary ?? (confirmation as any)?.executionSummary ?? null
   const replacements = Array.isArray(executionSummary?.replacements) ? executionSummary.replacements : []
   const failures = Array.isArray(executionSummary?.failures) ? executionSummary.failures : []
 
-  const handleDecision = async (type: 'approve' | 'reject') => {
-    if (!currentSessionId || decisionLoading || !firstAction) {
-      return
-    }
-    
-    setDecisionLoading(true)
-    if (currentDecisionKey) {
-      setDismissedDecisionKey(currentDecisionKey)
-    }
-    setInvokeRunning()
-    try {
-      await invokeStreamResume(
-        currentSessionId,
-        {
-          decisions: [
-            {
-              type,
-              item_id: itemId,
-              execution_id: executionId,
-              backup_id: backupId,
-            },
-          ],
-        },
-        {
-          onEvent(event) {
-            applyInvokeStreamEvent(event)
-          },
-        },
-      )
-    } catch (error) {
-      console.error(error)
-      setInvokeError('系统故障会进行重试')
-      setDismissedDecisionKey(null)
-    } finally {
-      setDecisionLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (confirmation?.status !== 'needs_review') {
-      setDismissedDecisionKey(null)
-      return
-    }
-    if (dismissedDecisionKey && currentDecisionKey && dismissedDecisionKey !== currentDecisionKey) {
-      setDismissedDecisionKey(null)
-    }
-  }, [confirmation?.status, currentDecisionKey, dismissedDecisionKey])
-
-  useEffect(() => {
-    if (decisionLoading) {
-      return
-    }
-    if (
-      dismissedDecisionKey &&
-      confirmation?.status === 'needs_review' &&
-      currentDecisionKey &&
-      dismissedDecisionKey === currentDecisionKey
-    ) {
-      setDismissedDecisionKey(null)
-    }
-  }, [confirmation?.status, currentDecisionKey, decisionLoading, dismissedDecisionKey])
 
   if (!itinerary && !confirmation && !errorMessage) {
     return (
@@ -146,41 +64,28 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   return (
     <div className="px-4 pb-4">
       <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-        {confirmation?.status === 'needs_review' &&
-        firstAction &&
-        !(dismissedDecisionKey && currentDecisionKey && dismissedDecisionKey === currentDecisionKey) ? (
+        {confirmation?.status === 'needs_fixup' ? (
           <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
             <div className="font-semibold">需要你确认</div>
             <div className="mt-1 text-xs text-amber-800">
-              {typeof firstDescription === 'string' ? firstDescription : '执行遇到备选替换，是否同意更改？'}
+              执行遇到备选替换。请在输入框回复：选1 / 选2 / 搜索 关键词
             </div>
-            <div className="mt-3 flex gap-2">
-              <div className="flex-1">
-                <PrimaryButton
-                  label="同意替换"
-                  disabled={decisionLoading}
-                  onClick={() => handleDecision('approve')}
-                  className="h-10 text-sm"
-                />
+            {topCandidates.length > 0 ? (
+              <div className="mt-3 space-y-2 text-xs text-amber-900">
+                {topCandidates.map((candidate, index) => (
+                  <div key={String(candidate?.id ?? index)} className="rounded-xl bg-white/60 px-3 py-2">
+                    <div className="font-semibold">
+                      候选{index + 1}：{String(candidate?.name ?? candidate?.id ?? '')}
+                    </div>
+                    {candidate?.violation_reason ? (
+                      <div className="mt-1 text-amber-800">原因：{String(candidate.violation_reason)}</div>
+                    ) : null}
+                  </div>
+                ))}
               </div>
-              <button
-                type="button"
-                disabled={decisionLoading}
-                onClick={() => handleDecision('reject')}
-                className="h-10 flex-1 rounded-full border border-amber-300 bg-white text-sm font-semibold text-amber-900 disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                拒绝替换
-              </button>
-            </div>
-            {decisionLoading ? (
-              <div className="mt-2 text-xs text-amber-800">已收到确认，正在继续执行…</div>
-            ) : null}
-          </div>
-        ) : null}
-        {dismissedDecisionKey && currentDecisionKey && dismissedDecisionKey === currentDecisionKey ? (
-          <div className="mb-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-            <div className="font-semibold">已确认</div>
-            <div className="mt-1 text-xs text-slate-600">继续执行中…</div>
+            ) : (
+              <div className="mt-3 text-xs text-amber-800">当前没有可用的候选备选，请直接回复：搜索 关键词</div>
+            )}
           </div>
         ) : null}
 

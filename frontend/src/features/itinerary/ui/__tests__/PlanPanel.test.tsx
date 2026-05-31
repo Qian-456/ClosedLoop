@@ -1,25 +1,7 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
 
 import { PlanPanel } from '../PlanPanel'
-
-vi.mock('../../api/invoke', () => ({
-  invokeStreamResume: vi.fn(() => new Promise(() => {})),
-}))
-
-const applyInvokeStreamEvent = vi.fn()
-const setInvokeRunning = vi.fn()
-const setInvokeError = vi.fn()
-
-vi.mock('../../store/useItineraryStore', () => ({
-  useItineraryStore: (selector: any) =>
-    selector({
-      currentSessionId: 'thread_test_1',
-      applyInvokeStreamEvent,
-      setInvokeRunning,
-      setInvokeError,
-    }),
-}))
 
 describe('PlanPanel', () => {
   it('有结果时默认折叠，只展示摘要', () => {
@@ -104,21 +86,15 @@ describe('PlanPanel', () => {
     expect(screen.queryByText('午餐 + 玩 + 惊喜行程方案 A')).not.toBeInTheDocument()
   })
 
-  it('当需要人工确认时展示同意/拒绝按钮', () => {
+  it('当需要补齐时展示候选提示', () => {
     render(
       <PlanPanel
         confirmation={{
-          status: 'needs_review',
-          interrupt: {
-            action_requests: [
-              {
-                name: 'execute_itinerary_replacement',
-                arguments: { execution_id: 'exe_1', item_id: 'combo_1', backup_id: 'combo_2' },
-                description: '主选无座，是否同意替换？',
-              },
-            ],
-            review_configs: [
-              { action_name: 'execute_itinerary_replacement', allowed_decisions: ['approve', 'reject'] },
+          status: 'needs_fixup',
+          fixup: {
+            backup_candidates: [
+              { id: 'combo_2', name: '备选餐厅A', violation_reason: '超出预算或时间' },
+              { id: 'combo_3', name: '备选餐厅B', violation_reason: '距离略远' },
             ],
           },
         }}
@@ -126,34 +102,8 @@ describe('PlanPanel', () => {
     )
 
     expect(screen.getByText('需要你确认')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '拒绝替换' })).toBeInTheDocument()
-  })
-
-  it('点击同意后进入提交中状态', () => {
-    render(
-      <PlanPanel
-        confirmation={{
-          status: 'needs_review',
-          interrupt: {
-            action_requests: [
-              {
-                name: 'execute_itinerary_replacement',
-                arguments: { execution_id: 'exe_1', item_id: 'combo_1', backup_id: 'combo_2' },
-                description: '主选无座，是否同意替换？',
-              },
-            ],
-            review_configs: [
-              { action_name: 'execute_itinerary_replacement', allowed_decisions: ['approve', 'reject'] },
-            ],
-          },
-        }}
-      />,
-    )
-
-    fireEvent.click(screen.getByRole('button', { name: '同意替换' }))
-    expect(screen.getByText('已确认')).toBeInTheDocument()
-    expect(screen.getByText('继续执行中…')).toBeInTheDocument()
-    expect(screen.queryByText('需要你确认')).not.toBeInTheDocument()
+    expect(screen.getByText('候选1：备选餐厅A')).toBeInTheDocument()
+    expect(screen.getByText('候选2：备选餐厅B')).toBeInTheDocument()
   })
 
   it('执行完成后在面板内展示执行结果', () => {
@@ -207,34 +157,5 @@ describe('PlanPanel', () => {
     expect(screen.getByText('活动门票')).toBeInTheDocument()
   })
 
-  it('确认请求失败时提示系统将重试', async () => {
-    const { invokeStreamResume } = await import('../../api/invoke')
-    ;(invokeStreamResume as any).mockRejectedValueOnce(new Error('boom'))
-
-    render(
-      <PlanPanel
-        confirmation={{
-          status: 'needs_review',
-          interrupt: {
-            action_requests: [
-              {
-                name: 'execute_itinerary_replacement',
-                arguments: { execution_id: 'exe_1', item_id: 'combo_1', backup_id: 'combo_2' },
-                description: '主选无座，是否同意替换？',
-              },
-            ],
-            review_configs: [
-              { action_name: 'execute_itinerary_replacement', allowed_decisions: ['approve', 'reject'] },
-            ],
-          },
-        }}
-      />,
-    )
-
-    fireEvent.click(screen.getByRole('button', { name: '同意替换' }))
-
-    await waitFor(() => {
-      expect(setInvokeError).toHaveBeenCalledWith('系统故障会进行重试')
-    })
-  })
+  
 })

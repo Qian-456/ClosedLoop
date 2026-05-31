@@ -15,7 +15,7 @@ from closedloop.core.llm import build_agent
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.tools.plan_tool import plan_trip, transfer_to_execute, generate_alternative_plans
 from closedloop.graph.tools.search_tool import search_candidates
-from closedloop.graph.tools.adjust_tool import adjust_plan_item
+from closedloop.graph.tools.adjust_tool import adjust_plan_item, adjust_and_execute_plan_item
 from closedloop.graph.tools.execute_tool import execute_itinerary
 
 
@@ -76,6 +76,11 @@ EXECUTE_AGENT_SYSTEM_PROMPT = """
 {plan_option_data}
 
 在执行或向用户确认时，请遵循以下规则：
+0. 【补齐分支（最高优先级）】：如果你看到 execute_itinerary 的 ToolMessage 返回 status=needs_fixup（或系统提示进入 needs_fixup），代表执行阶段遇到需要用户选择的备选：
+   - 你必须让用户明确回复：选1 / 选2 / 搜索 关键词
+   - 禁止你自行默认选择候选1或候选2
+   - 在用户完成选择前，禁止继续调用 execute_itinerary
+   - 你只需要提示用户如何选择，并等待用户输入
 1. 请先向用户确认现有的方案详情（即包含哪些餐厅、活动,各地的通勤方案等）。
 2. 【核心预订保障】：请务必向用户明确说明，无论下面关于交通的选项怎么选，方案里的所有核心项目（如餐厅套餐、活动门票、礼品配送等）系统都会为您自动一次性预订好，请用户放心。
 3. 关于交通预约与风险提示（一次性说完）：
@@ -94,10 +99,63 @@ EXECUTE_AGENT_SYSTEM_PROMPT = """
    - execution_summary.failures：失败项列表
    不允许编造任何明细；如果缺字段就诚实说“暂时未拿到”。
 8. 【自动重试策略】：当 status=timeout 时，在不需要用户额外输入的前提下，你应当自动再调用一次 execute_itinerary（同 plan_id 与 book_commutes_policy），尝试拿到最终结果；重试最多 1 次。
+9. 【一致性校验失败自动重试】：当 ToolMessage.result.code=EXECUTION_INCONSISTENT_NEEDS_RETRY 或 confirmation.code=EXECUTION_INCONSISTENT_NEEDS_RETRY 时，代表系统已回滚本次执行并需要自动重试一次。你必须自动立刻再调用一次 execute_itinerary（同 plan_id 与 book_commutes_policy），重试最多 1 次。对用户不要说“已成功”，只在最终 success 后再汇报成功。
 
 在用户做出选择后，请立即调用 execute_itinerary 工具，工具参数 plan_id 请使用上述方案中的 plan_id。如果用户选择全部预约（选项B），请传入 book_commutes_policy='all'，否则传入 'first_only'。
 """.strip()
 
+FIXUP_AGENT_SYSTEM_PROMPT = """
+你现在是 ClosedLoop 的补齐 Agent。
+
+你的任务：当执行阶段遇到“需要用户选择备选替换”时，帮助用户从候选1/候选2中做选择，或者发起搜索找到更合适的备选，然后替换并继续执行。
+
+【当前确认信息（可能包含备选列表）】：
+{current_confirmation}
+
+规则：
+1. 如果 confirmation.status != needs_fixup，说明当前不在补齐流程，请简短告知用户当前状态并引导回到正常对话。
+2. 如果 confirmation.status == needs_fixup：
+   - 读取 confirmation.fixup.backup_candidates，优先展示前 2 个作为“候选1/候选2”，并提示用户可输入：
+     - “选1 / 候选1”
+     - “选2 / 候选2”
+     - “搜索 关键词”（例如“搜索 清淡 亲子 有包间”）
+   - 即使你认为候选1更合适，也必须等待用户明确选择，禁止默认替换
+3. 用户选择候选1/2时：
+   - 调用 adjust_and_execute_plan_item(plan_id, target_item_id, new_item_id=<候选id>) 完成替换和执行。
+   - 中途禁止再问用户确认（包括交通选项/风险提示等），直接推进到执行工具。
+4. 用户选择搜索时：
+   - 调用 search_candidates(query=...)，把结果列出来让用户明确选一个 new_item_id
+   - 用户选定后再调用 adjust_and_execute_plan_item。
+5. 【百分百诚实】：只有 adjust_and_execute_plan_item 返回 status=success 才能说“预约成功”；timeout/failed 必须如实说明，并告知下一步（例如自动重试或继续搜索）。
+6. 【备选用尽/都不满意】：必须向用户说明“当前备选无法满足”，请用户选择：
+   - 放宽条件（预算/时间/距离/是否必须亲子等）
+   - 或继续搜索更多候选
+   - 或取消执行
+""".strip()
+
+
+
+# 3. Middleware applies dynamic configuration based on active_agent
+def resolve_active_agent(state: dict) -> str:
+    """根据状态解析本轮应使用的 Agent 类型。"""
+    confirmation = state.get("confirmation", {})
+    if isinstance(confirmation, dict) and confirmation.get("status") == "needs_fixup":
+        fixup = confirmation.get("fixup") if isinstance(confirmation.get("fixup"), dict) else {}
+        plan_id = fixup.get("plan_id")
+        target_item_id = fixup.get("target_item_id")
+        backups = fixup.get("backup_candidates") if isinstance(fixup.get("backup_candidates"), list) else []
+        reason = fixup.get("reason") or ""
+        reason_text = str(reason)[:120] if reason is not None else ""
+        logger.info(
+            "phase=resolve_active_agent | action=route_to_fixup_agent "
+            f"| plan_id={plan_id} | target_item_id={target_item_id} | backups={len(backups)} | reason={reason_text}"
+        )
+        return "fixup_agent"
+
+    active_agent = state.get("active_agent", "plan_agent")
+    if active_agent in ("plan_agent", "execute_agent", "fixup_agent"):
+        return str(active_agent)
+    return "plan_agent"
 
 
 # 3. Middleware applies dynamic configuration based on active_agent
@@ -107,7 +165,7 @@ async def apply_step_config(
     handler: Callable[[ModelRequest], ModelResponse]
 ) -> ModelResponse:
     """Configure agent behavior based on active_agent."""
-    active_agent = request.state.get("active_agent", "plan_agent")
+    active_agent = resolve_active_agent(request.state)
 
     # Map steps to their configurations
     configs = {
@@ -118,6 +176,10 @@ async def apply_step_config(
         "execute_agent": {
             "prompt": EXECUTE_AGENT_SYSTEM_PROMPT,
             "tools": [execute_itinerary]
+        },
+        "fixup_agent": {
+            "prompt": FIXUP_AGENT_SYSTEM_PROMPT,
+            "tools": [search_candidates, adjust_and_execute_plan_item]
         }
     }
 
@@ -133,6 +195,9 @@ async def apply_step_config(
     elif active_agent == "plan_agent":
         current_constraints = request.state.get("constraints", {})
         prompt = prompt.replace("{current_constraints}", str(current_constraints) if current_constraints else "{}")
+    elif active_agent == "fixup_agent":
+        current_confirmation = request.state.get("confirmation", {})
+        prompt = prompt.replace("{current_confirmation}", str(current_confirmation) if current_confirmation else "{}")
 
     request = request.override(
         system_prompt=prompt,
@@ -157,7 +222,7 @@ async def apply_step_config(
 
 def build_agent_with_async_checkpointer(checkpointer):
     return build_agent(
-        tools=[plan_trip, transfer_to_execute, generate_alternative_plans, search_candidates, adjust_plan_item, execute_itinerary],
+        tools=[plan_trip, transfer_to_execute, generate_alternative_plans, search_candidates, adjust_plan_item, execute_itinerary, adjust_and_execute_plan_item],
         state_schema=ClosedLoopState,
         middleware=[apply_step_config],
         checkpointer=checkpointer

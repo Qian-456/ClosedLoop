@@ -154,7 +154,17 @@ def repair_plan(
         return {"status": "need_user_choice", "report": {"reason": f"在方案中找不到要替换的条目: {target_item_id}"}}
 
     # 2. 替换目标条目
-    new_item_type = new_item.get("type", "activity")
+    new_item_type = new_item.get("type")
+    if not new_item_type:
+        if "gift_id" in new_item:
+            new_item_type = "gift_shop"
+        elif "combo_id" in new_item:
+            new_item_type = "restaurant"
+        elif "package_id" in new_item:
+            new_item_type = "activity"
+        else:
+            new_item_type = "activity"
+            
     new_it_item = _build_itinerary_item(new_item, new_item_type)
     new_dur = int(new_item.get("duration_mins") or new_item.get("receive_duration_mins") or 60)
     

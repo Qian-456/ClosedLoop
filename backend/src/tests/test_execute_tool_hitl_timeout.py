@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 
 class TestExecuteToolHITLTimeout(unittest.TestCase):
-    def test_resume_timeout_should_return_timeout_confirmation(self):
+    def test_pending_confirmation_should_return_needs_fixup_immediately(self):
         from closedloop.graph.tools.execute_tool import execute_itinerary
 
         async def _run():
@@ -64,13 +64,17 @@ class TestExecuteToolHITLTimeout(unittest.TestCase):
                         "item_id": "combo_main",
                         "backup_id": "combo_backup",
                         "message": "主选无座，是否同意替换？",
-                        "allowed_decisions": ["approve", "reject"],
+                        "backup_candidates": [
+                            {
+                                "id": "combo_backup",
+                                "name": "备选餐厅",
+                                "requires_confirmation": True,
+                                "violation_reason": "超出预算或时间",
+                            }
+                        ],
                     },
                 }
                 await hang_event.wait()
-
-            async def fake_submit_decision(**_kwargs):
-                return True
 
             with patch(
                 "closedloop.graph.tools.execute_tool.get_config", return_value=fake_config
@@ -84,26 +88,20 @@ class TestExecuteToolHITLTimeout(unittest.TestCase):
                             "closedloop.graph.tools.execute_tool.iter_events",
                             side_effect=fake_iter_events,
                         ):
-                            with patch(
-                                "closedloop.graph.tools.execute_tool.submit_decision",
-                                side_effect=fake_submit_decision,
-                            ):
-                                with patch(
-                                    "closedloop.graph.tools.execute_tool.interrupt",
-                                    return_value={"decisions": [{"type": "approve"}]},
-                                ):
-                                    cmd = await execute_itinerary.coroutine(
-                                        plan_id="plan_A",
-                                        tool_call_id="tool_call_1",
-                                        state=state,
-                                        book_commutes_policy="first_only",
-                                    )
+                            cmd = await execute_itinerary.coroutine(
+                                plan_id="plan_A",
+                                tool_call_id="tool_call_1",
+                                state=state,
+                                book_commutes_policy="first_only",
+                            )
 
             update = getattr(cmd, "update", None) or {}
             confirmation = update.get("confirmation") or {}
-            self.assertEqual(confirmation.get("status"), "timeout")
+            self.assertEqual(confirmation.get("status"), "needs_fixup")
+            self.assertEqual(update.get("active_agent"), "fixup_agent")
+            self.assertEqual(update.get("current_step"), "needs_fixup")
             execution_report = update.get("execution_report") or {}
-            self.assertEqual(execution_report.get("status"), "timeout")
+            self.assertEqual(execution_report.get("status"), "needs_fixup")
             self.assertIsInstance(execution_report.get("execution_summary"), dict)
 
         asyncio.run(_run())

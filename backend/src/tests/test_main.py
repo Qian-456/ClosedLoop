@@ -8,7 +8,6 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessageChunk
-from langgraph.types import Command
 
 # Add src to path so we can import from core and main
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -46,12 +45,6 @@ class _FakeAgent:
             raise self.stream_error
         for event in self.stream_events:
             yield event
-
-
-class _FakeGraphOutput:
-    def __init__(self, value, interrupts):
-        self.value = value
-        self.interrupts = interrupts
 
 
 def _build_message(message_type: str, content: str, *, message_id: str, tool_calls=None):
@@ -307,117 +300,7 @@ class TestMainAPI(unittest.TestCase):
         self.assertIn("event: error", response.text)
         self.assertIn("stream failed", response.text)
 
-    def test_invoke_graph_returns_interrupted_when_graphoutput_contains_interrupts(self):
-        fake_interrupt = SimpleNamespace(
-            value={
-                "action_requests": [
-                    {
-                        "name": "execute_itinerary_replacement",
-                        "arguments": {"execution_id": "exe_1", "item_id": "combo_1", "backup_id": "combo_2"},
-                        "description": "主选无座，是否同意替换？",
-                    }
-                ],
-                "review_configs": [
-                    {
-                        "action_name": "execute_itinerary_replacement",
-                        "allowed_decisions": ["approve", "reject"],
-                    }
-                ],
-            }
-        )
-        graph_output = _FakeGraphOutput(value=self.final_state, interrupts=(fake_interrupt,))
-        fake_agent = _FakeAgent(final_state=graph_output, stream_events=self.stream_events)
-
-        with (
-            patch("main.AsyncSqliteSaver.from_conn_string", return_value=_FakeAsyncContextManager()),
-            patch("main.build_agent_with_async_checkpointer", return_value=fake_agent),
-        ):
-            response = self.client.post("/invoke", json=self.request_payload)
-
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertEqual(data["status"], "interrupted")
-        self.assertEqual(data["state"]["confirmation"]["status"], "needs_review")
-        self.assertIn("action_requests", data["state"]["confirmation"]["interrupt"])
-
-    def test_invoke_stream_returns_interrupt_result_and_done_then_stops(self):
-        interrupt_value = {
-            "action_requests": [
-                {
-                    "name": "execute_itinerary_replacement",
-                    "arguments": {
-                        "execution_id": "exe_1",
-                        "item_id": "combo_1",
-                        "backup_id": "combo_2",
-                    },
-                    "description": "主选无座，是否同意替换？",
-                }
-            ],
-            "review_configs": [
-                {
-                    "action_name": "execute_itinerary_replacement",
-                    "allowed_decisions": ["approve", "reject"],
-                }
-            ],
-        }
-        interrupt_payload = {"__interrupt__": [SimpleNamespace(value=interrupt_value)]}
-        stream_events = [
-            _build_stream_part(
-                "updates",
-                interrupt_payload,
-            ),
-            _build_stream_part(
-                "updates",
-                {
-                    "plan_trip": {
-                        "current_step": "plan_trip",
-                    }
-                },
-            ),
-        ]
-        fake_agent = _FakeAgent(final_state=self.final_state, stream_events=stream_events)
-
-        with (
-            patch("main.AsyncSqliteSaver.from_conn_string", return_value=_FakeAsyncContextManager()),
-            patch("main.build_agent_with_async_checkpointer", return_value=fake_agent),
-        ):
-            response = self.client.post("/invoke/stream", json=self.request_payload)
-
-        self.assertEqual(response.status_code, 200)
-        event_blocks = [block.strip() for block in response.text.split("\n\n") if block.strip()]
-        parsed_events = []
-        for block in event_blocks:
-            event_name = None
-            data = None
-            for line in block.splitlines():
-                if line.startswith("event:"):
-                    event_name = line[len("event:") :].strip()
-                if line.startswith("data:"):
-                    data = json.loads(line[len("data:") :].strip())
-            parsed_events.append((event_name, data))
-
-        result_events = [data for name, data in parsed_events if name == "result"]
-        self.assertEqual(len(result_events), 1)
-        self.assertEqual(result_events[0]["confirmation"]["status"], "needs_review")
-        self.assertEqual(parsed_events[-1][0], "done")
-
-    def test_invoke_stream_accepts_resume_payload(self):
-        fake_agent = _FakeAgent(final_state=self.final_state, stream_events=self.stream_events)
-        resume_payload = {"thread_id": "thread_test_001", "resume": {"decisions": [{"type": "approve"}]}}
-
-        with (
-            patch("main.AsyncSqliteSaver.from_conn_string", return_value=_FakeAsyncContextManager()),
-            patch("main.build_agent_with_async_checkpointer", return_value=fake_agent),
-        ):
-            response = self.client.post("/invoke/stream", json=resume_payload)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(fake_agent.astream_calls), 1)
-        called_payload, called_config, _, _ = fake_agent.astream_calls[0]
-        self.assertIsInstance(called_payload, Command)
-        self.assertEqual(called_config["configurable"]["thread_id"], "thread_test_001")
-
-    def test_invoke_stream_resume_should_heartbeat_and_not_error(self):
+    def test_invoke_stream_waiting_bubble_should_heartbeat_and_not_error(self):
         class _BlockingAgent:
             def __init__(self):
                 self.astream_calls = []
@@ -440,7 +323,7 @@ class TestMainAPI(unittest.TestCase):
         )()
 
         async def _run():
-            req = ChatRequest(thread_id="thread_test_002", resume={"decisions": [{"type": "approve"}]})
+            req = ChatRequest(thread_id="thread_test_002", user_input="测试等待")
             with (
                 patch("main.get_config", return_value=fake_config),
                 patch("main.AsyncSqliteSaver.from_conn_string", return_value=_FakeAsyncContextManager()),
@@ -456,8 +339,7 @@ class TestMainAPI(unittest.TestCase):
         chunks = asyncio.run(_run())
         self.assertFalse(any("event: error" in chunk for chunk in chunks))
         self.assertTrue(any('event: bubble' in chunk for chunk in chunks))
-        self.assertTrue(any('"phase": "waiting_resume"' in chunk for chunk in chunks))
+        self.assertTrue(any('"phase": "waiting_response"' in chunk for chunk in chunks))
 
 if __name__ == "__main__":
-    unittest.main()
     unittest.main()

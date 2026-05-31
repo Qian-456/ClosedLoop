@@ -103,8 +103,7 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
                 ctx = mock_executor._ExecutionContext(
                     request=ExecuteRequest(plan_id="plan_A", steps=[step]),
                     queue=asyncio.Queue(),
-                    decision_futures={},
-                    pending_confirmations={},
+                    control={"stop": False, "status": "ok", "stop_payload": None},
                     execution_key="test",
                     loop_id=id(asyncio.get_running_loop()),
                 )
@@ -122,12 +121,21 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
             while not ctx.queue.empty():
                 events.append(ctx.queue.get_nowait())
 
+            pending = [
+                e
+                for e in events
+                if e.get("type") == "item_update"
+                and e.get("data", {}).get("phase") == "pending_user_confirmation"
+            ]
+            self.assertEqual(len(pending), 0)
+
             done = [e for e in events if e.get("type") == "item_update" and e.get("data", {}).get("phase") == "done"]
             self.assertEqual(len(done), 1)
             data = done[0]["data"]
             self.assertTrue(data.get("replaced"))
             self.assertEqual(data.get("new_item_id"), "combo_backup")
             self.assertTrue(data.get("reserved"))
+            self.assertFalse(bool(ctx.control.get("stop")))
 
     def test_forced_combo_should_trigger_pending_confirmation_when_backup_requires_confirmation(self):
         from closedloop.contracts.execution import ExecuteRequest, ExecuteStep
@@ -191,8 +199,7 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
                 ctx = mock_executor._ExecutionContext(
                     request=ExecuteRequest(plan_id="plan_A", steps=[step]),
                     queue=asyncio.Queue(),
-                    decision_futures={},
-                    pending_confirmations={},
+                    control={"stop": False, "status": "ok", "stop_payload": None},
                     execution_key="test",
                     loop_id=id(asyncio.get_running_loop()),
                 )
@@ -200,31 +207,21 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
                 with patch("closedloop.execution.mock_executor.get_config", return_value=fake_config):
                     with patch("closedloop.execution.mock_executor.random.uniform", return_value=0.0):
                         with patch("closedloop.execution.mock_executor.asyncio.sleep", new=_noop_sleep):
-                            task = asyncio.create_task(
-                                mock_executor._check_and_reserve_one("exe_test", ctx, step)
-                            )
+                            await mock_executor._check_and_reserve_one("exe_test", ctx, step)
 
-                            event = None
-                            while True:
-                                next_event = await ctx.queue.get()
-                                if (
-                                    next_event.get("type") == "item_update"
-                                    and next_event.get("data", {}).get("phase")
-                                    == "pending_user_confirmation"
-                                ):
-                                    event = next_event
-                                    break
-                            self.assertIsNotNone(event)
-
-                            fut = ctx.decision_futures.get("combo_main")
-                            self.assertIsNotNone(fut)
-                            fut.set_result({"type": "approve"})
-
-                            await asyncio.wait_for(task, timeout=1.0)
-
-                events = [event]
+                events = []
                 while not ctx.queue.empty():
                     events.append(ctx.queue.get_nowait())
+
+                pending = [
+                    e
+                    for e in events
+                    if e.get("type") == "item_update"
+                    and e.get("data", {}).get("phase") == "pending_user_confirmation"
+                ]
+                self.assertEqual(len(pending), 1)
+                self.assertTrue(bool(ctx.control.get("stop")))
+                self.assertEqual(str(ctx.control.get("status")), "needs_fixup")
 
                 done = [
                     e

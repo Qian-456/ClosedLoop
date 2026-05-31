@@ -64,9 +64,21 @@ export type ThreePlansCopywriting = {
 
 export type Confirmation = {
   status: 'ok' | 'skipped' | 'fallback_rules' | string
+  execution_id?: string
   reason?: string
   plans?: Partial<ThreePlansCopywriting>
   interrupt?: unknown
+  fixup?: {
+    plan_id?: string
+    target_item_id?: string
+    reason?: string
+    backup_candidates?: Array<{
+      id: string
+      name: string
+      violation_reason?: string
+      requires_confirmation?: boolean
+    }>
+  }
   execution_summary?: {
     execution_id?: string
     replacements?: Array<{

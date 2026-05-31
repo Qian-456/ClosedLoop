@@ -37,7 +37,6 @@ app = FastAPI(title=config.PROJECT_NAME, lifespan=lifespan)
 class ChatRequest(BaseModel):
     user_input: str = ""
     thread_id: str = "default_session"
-    resume: Optional[dict] = None
 
 class ChatResponse(BaseModel):
     status: str
@@ -440,23 +439,6 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
     runtime_config = get_config()
     hitl_heartbeat_secs = float(getattr(runtime_config, "HITL_RESUME_HEARTBEAT_SECS", 1.0))
     hitl_max_wait_secs = float(getattr(runtime_config, "HITL_RESUME_MAX_WAIT_SECS", 3.0))
-    is_resume = isinstance(request.resume, dict) and bool(request.resume)
-
-    if is_resume:
-        decisions = request.resume.get("decisions") if isinstance(request.resume, dict) else None
-        decision_preview = None
-        if isinstance(decisions, list) and decisions:
-            first = decisions[0]
-            if isinstance(first, dict):
-                decision_preview = {
-                    "type": first.get("type"),
-                    "item_id": first.get("item_id"),
-                    "backup_id": first.get("backup_id"),
-                    "execution_id": first.get("execution_id"),
-                }
-        logger.info(
-            f"phase=api_invoke_stream | thread_id={request.thread_id} | event=resume_request_received | decision={decision_preview}"
-        )
 
     try:
         last_bubble_payload: str | None = None
@@ -484,205 +466,100 @@ async def _stream_invoke_events(request: ChatRequest) -> AsyncIterator[str]:
         async with AsyncSqliteSaver.from_conn_string(db_path) as checkpointer:
             workflow_app = build_agent_with_async_checkpointer(checkpointer)
 
-            input_payload: Any
-            if isinstance(request.resume, dict) and request.resume:
-                input_payload = Command(resume=request.resume)
-            else:
-                input_payload = {"messages": [("user", request.user_input)]}
+            input_payload: Any = {"messages": [("user", request.user_input)]}
+            aiter = workflow_app.astream(
+                input_payload,
+                config=config_run,
+                stream_mode=["messages", "updates", "custom"],
+                version="v2",
+            ).__aiter__()
+            heartbeat_ms = max(1, int(hitl_heartbeat_secs * 1000))
+            waited_ms = 0
+            pending_task: asyncio.Task | None = None
+            while True:
+                if pending_task is None:
+                    pending_task = asyncio.create_task(anext(aiter))
 
-            if is_resume:
-                aiter = workflow_app.astream(
-                    input_payload,
-                    config=config_run,
-                    stream_mode=["messages", "updates", "custom"],
-                    version="v2",
-                ).__aiter__()
-                heartbeat_ms = max(1, int(hitl_heartbeat_secs * 1000))
+                done, _ = await asyncio.wait({pending_task}, timeout=hitl_heartbeat_secs)
+                if not done:
+                    waited_ms += heartbeat_ms
+                    waiting_bubble = {
+                        "phase": "waiting_response",
+                        "step": "waiting_response",
+                        "node": None,
+                        "text": "正在等待系统返回…",
+                        "status": "running",
+                        "entries": [
+                            {
+                                "kind": "step",
+                                "title": "等待返回",
+                                "summary": "正在等待系统返回…",
+                            },
+                            {
+                                "kind": "meta",
+                                "title": "已等待",
+                                "summary": f"{waited_ms}ms",
+                            },
+                        ],
+                    }
+                    yield format_sse_event("bubble", waiting_bubble)
+                    logger.info(
+                        f"phase=api_invoke_stream | thread_id={request.thread_id} | event=heartbeat | waited_ms={waited_ms}"
+                    )
+                    if waited_ms >= int(hitl_max_wait_secs * 1000):
+                        logger.warning(
+                            f"phase=api_invoke_stream | thread_id={request.thread_id} | event=waiting_long | waited_ms={waited_ms}"
+                        )
+                    continue
+
+                try:
+                    part = pending_task.result()
+                except StopAsyncIteration:
+                    break
+                finally:
+                    pending_task = None
                 waited_ms = 0
-                pending_task: asyncio.Task | None = None
-                while True:
-                    if pending_task is None:
-                        pending_task = asyncio.create_task(anext(aiter))
 
-                    done, _ = await asyncio.wait({pending_task}, timeout=hitl_heartbeat_secs)
-                    if not done:
-                        waited_ms += heartbeat_ms
-                        waiting_bubble = {
-                            "phase": "waiting_resume",
-                            "step": "waiting_resume",
-                            "node": None,
-                            "text": "正在等待执行继续推进…",
-                            "status": "running",
-                            "entries": [
-                                {
-                                    "kind": "step",
-                                    "title": "等待继续执行",
-                                    "summary": "正在等待执行继续推进…",
-                                },
-                                {
-                                    "kind": "meta",
-                                    "title": "已等待",
-                                    "summary": f"{waited_ms}ms",
-                                },
-                            ],
-                        }
-                        yield format_sse_event("bubble", waiting_bubble)
-                        logger.info(
-                            f"phase=api_invoke_stream | thread_id={request.thread_id} | event=heartbeat | waited_ms={waited_ms}"
-                        )
-                        if waited_ms >= int(hitl_max_wait_secs * 1000):
-                            logger.warning(
-                                f"phase=api_invoke_stream | thread_id={request.thread_id} | event=resume_waiting | waited_ms={waited_ms}"
-                            )
+                part_type = part.get("type")
+                part_data = part.get("data")
+
+                if part_type == "messages" and isinstance(part_data, tuple) and len(part_data) == 2:
+                    message_chunk, metadata = part_data
+                    if not isinstance(message_chunk, AIMessageChunk):
                         continue
-
-                    try:
-                        part = pending_task.result()
-                    except StopAsyncIteration:
-                        break
-                    finally:
-                        pending_task = None
-                    waited_ms = 0
-
-                    part_type = part.get("type")
-                    part_data = part.get("data")
-
-                    if isinstance(part_data, dict) and "__interrupt__" in part_data:
-                        interrupt_raw = part_data.get("__interrupt__")
-                        interrupt_payload = _normalize_interrupt_payload(interrupt_raw)
-
-                        summary_text = _interrupt_summary_text(interrupt_payload)
-                        if summary_text:
-                            yield format_sse_event(
-                                "message",
-                                {
-                                    "text": summary_text,
-                                    "node": None,
-                                },
-                            )
-
+                    content = _extract_message_text_from_chunk(message_chunk).strip()
+                    if content:
                         yield format_sse_event(
-                            "result",
+                            "message",
                             {
-                                "confirmation": {
-                                    "status": "needs_review",
-                                    "interrupt": interrupt_payload,
-                                }
+                                "text": content,
+                                "node": metadata.get("langgraph_node") if isinstance(metadata, dict) else None,
                             },
                         )
-                        yield format_sse_event("done", {"success": True})
-                        return
+                    continue
 
-                    if part_type == "messages" and isinstance(part_data, tuple) and len(part_data) == 2:
-                        message_chunk, metadata = part_data
-                        if not isinstance(message_chunk, AIMessageChunk):
-                            continue
-                        content = _extract_message_text_from_chunk(message_chunk).strip()
-                        if content:
-                            yield format_sse_event(
-                                "message",
-                                {
-                                    "text": content,
-                                    "node": metadata.get("langgraph_node") if isinstance(metadata, dict) else None,
-                                },
-                            )
-                        continue
-
-                    if part_type == "updates":
-                        for node_name, update in _iter_update_entries(part_data):
-                            bubble_payload = _build_bubble_payload(node_name, update)
-                            bubble_signature = json.dumps(
-                                bubble_payload, ensure_ascii=False, sort_keys=True
-                            )
-                            if bubble_signature != last_bubble_payload:
-                                last_bubble_payload = bubble_signature
-                                logger.info(
-                                    f"phase=api_invoke_stream | thread_id={request.thread_id} | event=bubble | step={bubble_payload['step']}"
-                                )
-                                yield format_sse_event("bubble", bubble_payload)
-
-                            result_payload = _build_result_payload(update)
-                            if result_payload is not None:
-                                result_signature = json.dumps(result_payload, ensure_ascii=False, sort_keys=True)
-                                if result_signature != last_result_payload:
-                                    last_result_payload = result_signature
-                                    logger.info(
-                                        f"phase=api_invoke_stream | thread_id={request.thread_id} | event=result"
-                                    )
-                                    yield format_sse_event("result", result_payload)
-            else:
-                async for part in workflow_app.astream(
-                    input_payload,
-                    config=config_run,
-                    stream_mode=["messages", "updates", "custom"],
-                    version="v2",
-                ):
-                    part_type = part.get("type")
-                    part_data = part.get("data")
-
-                    if isinstance(part_data, dict) and "__interrupt__" in part_data:
-                        interrupt_raw = part_data.get("__interrupt__")
-                        interrupt_payload = _normalize_interrupt_payload(interrupt_raw)
-
-                        summary_text = _interrupt_summary_text(interrupt_payload)
-                        if summary_text:
-                            yield format_sse_event(
-                                "message",
-                                {
-                                    "text": summary_text,
-                                    "node": None,
-                                },
-                            )
-
-                        yield format_sse_event(
-                            "result",
-                            {
-                                "confirmation": {
-                                    "status": "needs_review",
-                                    "interrupt": interrupt_payload,
-                                }
-                            },
+                if part_type == "updates":
+                    for node_name, update in _iter_update_entries(part_data):
+                        bubble_payload = _build_bubble_payload(node_name, update)
+                        bubble_signature = json.dumps(
+                            bubble_payload, ensure_ascii=False, sort_keys=True
                         )
-                        yield format_sse_event("done", {"success": True})
-                        return
-
-                    if part_type == "messages" and isinstance(part_data, tuple) and len(part_data) == 2:
-                        message_chunk, metadata = part_data
-                        if not isinstance(message_chunk, AIMessageChunk):
-                            continue
-                        content = _extract_message_text_from_chunk(message_chunk).strip()
-                        if content:
-                            yield format_sse_event(
-                                "message",
-                                {
-                                    "text": content,
-                                    "node": metadata.get("langgraph_node") if isinstance(metadata, dict) else None,
-                                },
+                        if bubble_signature != last_bubble_payload:
+                            last_bubble_payload = bubble_signature
+                            logger.info(
+                                f"phase=api_invoke_stream | thread_id={request.thread_id} | event=bubble | step={bubble_payload['step']}"
                             )
-                        continue
+                            yield format_sse_event("bubble", bubble_payload)
 
-                    if part_type == "updates":
-                        for node_name, update in _iter_update_entries(part_data):
-                            bubble_payload = _build_bubble_payload(node_name, update)
-                            bubble_signature = json.dumps(
-                                bubble_payload, ensure_ascii=False, sort_keys=True
-                            )
-                            if bubble_signature != last_bubble_payload:
-                                last_bubble_payload = bubble_signature
+                        result_payload = _build_result_payload(update)
+                        if result_payload is not None:
+                            result_signature = json.dumps(result_payload, ensure_ascii=False, sort_keys=True)
+                            if result_signature != last_result_payload:
+                                last_result_payload = result_signature
                                 logger.info(
-                                    f"phase=api_invoke_stream | thread_id={request.thread_id} | event=bubble | step={bubble_payload['step']}"
+                                    f"phase=api_invoke_stream | thread_id={request.thread_id} | event=result"
                                 )
-                                yield format_sse_event("bubble", bubble_payload)
-
-                            result_payload = _build_result_payload(update)
-                            if result_payload is not None:
-                                result_signature = json.dumps(result_payload, ensure_ascii=False, sort_keys=True)
-                                if result_signature != last_result_payload:
-                                    last_result_payload = result_signature
-                                    logger.info(
-                                        f"phase=api_invoke_stream | thread_id={request.thread_id} | event=result"
-                                    )
-                                    yield format_sse_event("result", result_payload)
+                                yield format_sse_event("result", result_payload)
 
             logger.info(f"phase=api_invoke_stream | thread_id={request.thread_id} | event=done")
             yield format_sse_event("done", {"success": True})
@@ -705,7 +582,7 @@ async def invoke_graph(request: ChatRequest):
     """
     started_at = time.perf_counter()
     logger.info(
-        f"phase=api_invoke | event=request_received | thread_id={request.thread_id} | has_resume={bool(request.resume)}"
+        f"phase=api_invoke | event=request_received | thread_id={request.thread_id}"
     )
     logger.info(f"phase=api_invoke | event=graph_start | thread_id={request.thread_id} | input={request.user_input}")
     
@@ -716,34 +593,12 @@ async def invoke_graph(request: ChatRequest):
         async with AsyncSqliteSaver.from_conn_string(db_path) as checkpointer:
             workflow_app = build_agent_with_async_checkpointer(checkpointer)
 
-            input_payload: Any
-            if isinstance(request.resume, dict) and request.resume:
-                input_payload = Command(resume=request.resume)
-            else:
-                input_payload = {"messages": [("user", request.user_input)]}
+            input_payload: Any = {"messages": [("user", request.user_input)]}
 
             result = await workflow_app.ainvoke(
                 input_payload,
                 config=config_run,
                 version="v2",
-            )
-
-        if hasattr(result, "interrupts") and getattr(result, "interrupts"):
-            interrupts = getattr(result, "interrupts") or []
-            interrupt_value = _normalize_interrupt_payload(interrupts)
-            elapsed_ms = int((time.perf_counter() - started_at) * 1000)
-            logger.info(
-                f"phase=api_invoke | event=graph_end | status=interrupted | thread_id={request.thread_id} | elapsed_ms={elapsed_ms}"
-            )
-
-            return ChatResponse(
-                status="interrupted",
-                state={
-                    "confirmation": {
-                        "status": "needs_review",
-                        "interrupt": interrupt_value,
-                    }
-                },
             )
 
         final_state = getattr(result, "value", None) if hasattr(result, "value") else result
