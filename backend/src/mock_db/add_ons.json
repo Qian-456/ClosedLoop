@@ -1,13 +1,13 @@
 [
   {
     "id": "gift_shop_001",
-    "name": "花点时间·鲜花店(老城文化街区)",
+    "name": "花点时间·鲜花店(CBD核心商圈)",
     "category": "gift_shop",
     "sub_category": "鲜花店",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场3F 939号铺",
-    "latitude": 0.48,
-    "longitude": 3.001,
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场4F 714号铺",
+    "latitude": -2.033,
+    "longitude": -0.854,
     "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
@@ -18,7 +18,7 @@
       "可同城配送",
       "鲜花店"
     ],
-    "rating": 4.5,
+    "rating": 4.9,
     "tags": [
       "鲜花",
       "小聚",
@@ -86,8 +86,8 @@
         "stock": 999
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 5.0,
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 10.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -149,10 +149,10 @@
     "category": "gift_shop",
     "sub_category": "鲜花店",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场1F 423号铺",
-    "latitude": 0.078,
-    "longitude": -2.086,
-    "business_hours": "10:00-21:00",
+    "address": "CBD核心商圈某商场1F 96号铺",
+    "latitude": -2.444,
+    "longitude": -3.21,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合小聚",
@@ -162,7 +162,7 @@
       "可同城配送",
       "鲜花店"
     ],
-    "rating": 4.9,
+    "rating": 4.8,
     "tags": [
       "鲜花",
       "氛围感"
@@ -229,8 +229,8 @@
         "stock": 999
       }
     ],
-    "delivery_time_mins": 30,
-    "delivery_time_std_dev": 8.0,
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -292,9 +292,9 @@
     "category": "gift_shop",
     "sub_category": "永生花",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场1F 633号铺",
-    "latitude": -1.105,
-    "longitude": -0.502,
+    "address": "CBD核心商圈某商场2F 512号铺",
+    "latitude": -2.338,
+    "longitude": -2.764,
     "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
@@ -305,7 +305,7 @@
       "可同城配送",
       "永生花"
     ],
-    "rating": 4.7,
+    "rating": 5.0,
     "tags": [
       "永生花",
       "可保存"
@@ -372,8 +372,8 @@
         "stock": 999
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 10.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -434,10 +434,10 @@
     "category": "gift_shop",
     "sub_category": "香薰蜡烛",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场1F 543号铺",
-    "latitude": -2.329,
-    "longitude": -1.791,
-    "business_hours": "11:00-20:30",
+    "address": "CBD核心商圈某商场4F 217号铺",
+    "latitude": 0.45,
+    "longitude": -2.961,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合小聚",
@@ -447,7 +447,7 @@
       "可同城配送",
       "香薰蜡烛"
     ],
-    "rating": 5.0,
+    "rating": 4.5,
     "tags": [
       "香薰",
       "氛围感"
@@ -515,7 +515,7 @@
       }
     ],
     "delivery_time_mins": 60,
-    "delivery_time_std_dev": 10.0,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -576,9 +576,9 @@
     "category": "gift_shop",
     "sub_category": "手工巧克力",
     "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场7F 826号铺",
-    "latitude": -2.867,
-    "longitude": -1.606,
+    "address": "CBD核心商圈某商场1F 184号铺",
+    "latitude": -1.645,
+    "longitude": -2.328,
     "business_hours": "10:00-21:00",
     "indoor": true,
     "review_keywords": [
@@ -656,7 +656,7 @@
         "stock": 999
       }
     ],
-    "delivery_time_mins": 30,
+    "delivery_time_mins": 45,
     "delivery_time_std_dev": 5.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
@@ -714,13 +714,13 @@
   },
   {
     "id": "gift_shop_006",
-    "name": "小蛋糕店A(老城文化街区)",
+    "name": "小蛋糕店A(高新科技园)",
     "category": "gift_shop",
     "sub_category": "小蛋糕店",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场6F 274号铺",
-    "latitude": 0.114,
-    "longitude": 3.175,
+    "district": "高新科技园",
+    "address": "高新科技园某商场4F 581号铺",
+    "latitude": 3.657,
+    "longitude": -2.695,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -731,7 +731,7 @@
       "可同城配送",
       "小蛋糕店"
     ],
-    "rating": 5.0,
+    "rating": 4.9,
     "tags": [
       "蛋糕",
       "庆生"
@@ -799,7 +799,7 @@
       }
     ],
     "delivery_time_mins": 45,
-    "delivery_time_std_dev": 5.0,
+    "delivery_time_std_dev": 10.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -851,14 +851,14 @@
   },
   {
     "id": "gift_shop_007",
-    "name": "小蛋糕店B(高新科技园)",
+    "name": "小蛋糕店B(老城文化街区)",
     "category": "gift_shop",
     "sub_category": "小蛋糕店",
-    "district": "高新科技园",
-    "address": "高新科技园某商场4F 308号铺",
-    "latitude": 0.104,
-    "longitude": -3.538,
-    "business_hours": "11:00-20:30",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场2F 513号铺",
+    "latitude": 0.063,
+    "longitude": 0.553,
+    "business_hours": "10:00-21:00",
     "indoor": true,
     "review_keywords": [
       "适合朋友聚会",
@@ -868,7 +868,7 @@
       "可同城配送",
       "小蛋糕店"
     ],
-    "rating": 5.0,
+    "rating": 4.5,
     "tags": [
       "蛋糕",
       "朋友聚会"
@@ -936,7 +936,7 @@
       }
     ],
     "delivery_time_mins": 60,
-    "delivery_time_std_dev": 5.0,
+    "delivery_time_std_dev": 10.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -988,13 +988,13 @@
   },
   {
     "id": "gift_shop_008",
-    "name": "甜品礼盒店(CBD核心商圈)",
+    "name": "甜品礼盒店(老城文化街区)",
     "category": "gift_shop",
     "sub_category": "甜品礼盒",
-    "district": "CBD核心商圈",
-    "address": "CBD核心商圈某商场8F 58号铺",
-    "latitude": -0.508,
-    "longitude": -1.043,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场7F 993号铺",
+    "latitude": 0.16,
+    "longitude": 1.258,
     "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
@@ -1072,7 +1072,7 @@
         "stock": 50
       }
     ],
-    "delivery_time_mins": 60,
+    "delivery_time_mins": 45,
     "delivery_time_std_dev": 5.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
@@ -1131,9 +1131,9 @@
     "category": "gift_shop",
     "sub_category": "奶茶/咖啡团单",
     "district": "高新科技园",
-    "address": "高新科技园某商场6F 580号铺",
-    "latitude": 3.708,
-    "longitude": -3.519,
+    "address": "高新科技园某商场7F 443号铺",
+    "latitude": 1.96,
+    "longitude": -2.275,
     "business_hours": "10:00-21:00",
     "indoor": true,
     "review_keywords": [
@@ -1144,7 +1144,7 @@
       "可同城配送",
       "奶茶/咖啡团单"
     ],
-    "rating": 4.6,
+    "rating": 4.9,
     "tags": [
       "奶茶",
       "咖啡",
@@ -1213,7 +1213,7 @@
       }
     ],
     "delivery_time_mins": 30,
-    "delivery_time_std_dev": 5.0,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -1267,14 +1267,14 @@
   },
   {
     "id": "gift_shop_010",
-    "name": "儿童玩具店(高新科技园)",
+    "name": "儿童玩具店(大学城商圈)",
     "category": "gift_shop",
     "sub_category": "儿童玩具店",
-    "district": "高新科技园",
-    "address": "高新科技园某商场5F 921号铺",
-    "latitude": 2.596,
-    "longitude": -0.079,
-    "business_hours": "10:00-21:00",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场2F 275号铺",
+    "latitude": 0.072,
+    "longitude": -6.184,
+    "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1284,7 +1284,7 @@
       "可同城配送",
       "儿童玩具店"
     ],
-    "rating": 5.0,
+    "rating": 4.9,
     "tags": [
       "玩具",
       "3-6岁"
@@ -1351,8 +1351,8 @@
         "stock": 60
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 5.0,
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
@@ -1402,14 +1402,14 @@
   },
   {
     "id": "gift_shop_011",
-    "name": "益智拼图玩具(大学城商圈)",
+    "name": "益智拼图玩具(老城文化街区)",
     "category": "gift_shop",
     "sub_category": "益智玩具/拼图",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场3F 771号铺",
-    "latitude": 0.28,
-    "longitude": -4.608,
-    "business_hours": "10:00-21:00",
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场2F 94号铺",
+    "latitude": -0.379,
+    "longitude": 1.162,
+    "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1419,7 +1419,7 @@
       "可同城配送",
       "益智玩具/拼图"
     ],
-    "rating": 4.6,
+    "rating": 4.7,
     "tags": [
       "拼图",
       "7-10岁"
@@ -1486,8 +1486,8 @@
         "stock": 60
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 10.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
@@ -1537,14 +1537,14 @@
   },
   {
     "id": "gift_shop_012",
-    "name": "毛绒玩具屋(老城文化街区)",
+    "name": "毛绒玩具屋(大学城商圈)",
     "category": "gift_shop",
     "sub_category": "毛绒玩具",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场6F 394号铺",
-    "latitude": -2.1,
-    "longitude": 1.241,
-    "business_hours": "11:00-20:30",
+    "district": "大学城商圈",
+    "address": "大学城商圈某商场7F 460号铺",
+    "latitude": -0.056,
+    "longitude": -4.419,
+    "business_hours": "10:00-21:00",
     "indoor": true,
     "review_keywords": [
       "适合亲子",
@@ -1554,7 +1554,7 @@
       "可同城配送",
       "毛绒玩具"
     ],
-    "rating": 4.9,
+    "rating": 4.5,
     "tags": [
       "毛绒",
       "可爱"
@@ -1622,7 +1622,7 @@
       }
     ],
     "delivery_time_mins": 60,
-    "delivery_time_std_dev": 8.0,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
@@ -1676,9 +1676,9 @@
     "category": "gift_shop",
     "sub_category": "文具/手账小礼物",
     "district": "大学城商圈",
-    "address": "大学城商圈某商场2F 349号铺",
-    "latitude": 0.613,
-    "longitude": -4.32,
+    "address": "大学城商圈某商场6F 885号铺",
+    "latitude": -1.669,
+    "longitude": -5.125,
     "business_hours": "10:00-22:00",
     "indoor": true,
     "review_keywords": [
@@ -1689,7 +1689,7 @@
       "可同城配送",
       "文具/手账小礼物"
     ],
-    "rating": 4.5,
+    "rating": 4.7,
     "tags": [
       "文具",
       "手账"
@@ -1756,8 +1756,8 @@
         "stock": 60
       }
     ],
-    "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
+    "delivery_time_mins": 45,
+    "delivery_time_std_dev": 5.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "family"
@@ -1807,14 +1807,14 @@
   },
   {
     "id": "gift_shop_014",
-    "name": "文创礼品店(大学城商圈)",
+    "name": "文创礼品店(CBD核心商圈)",
     "category": "gift_shop",
     "sub_category": "文创礼品店",
-    "district": "大学城商圈",
-    "address": "大学城商圈某商场4F 365号铺",
-    "latitude": -0.169,
-    "longitude": -5.745,
-    "business_hours": "10:00-22:00",
+    "district": "CBD核心商圈",
+    "address": "CBD核心商圈某商场4F 586号铺",
+    "latitude": -1.522,
+    "longitude": -2.849,
+    "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
       "通用文创",
@@ -1824,7 +1824,7 @@
       "可同城配送",
       "文创礼品店"
     ],
-    "rating": 4.6,
+    "rating": 4.7,
     "tags": [
       "文创",
       "展览后"
@@ -1892,7 +1892,7 @@
       }
     ],
     "delivery_time_mins": 60,
-    "delivery_time_std_dev": 15.0,
+    "delivery_time_std_dev": 8.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"
@@ -1949,13 +1949,13 @@
   },
   {
     "id": "gift_shop_015",
-    "name": "潮玩盲盒店(高新科技园)",
+    "name": "潮玩盲盒店(老城文化街区)",
     "category": "gift_shop",
     "sub_category": "盲盒/潮玩",
-    "district": "高新科技园",
-    "address": "高新科技园某商场4F 731号铺",
-    "latitude": 4.088,
-    "longitude": -1.618,
+    "district": "老城文化街区",
+    "address": "老城文化街区某商场3F 65号铺",
+    "latitude": -0.416,
+    "longitude": 2.818,
     "business_hours": "10:00-21:00",
     "indoor": true,
     "review_keywords": [
@@ -1966,7 +1966,7 @@
       "可自提",
       "盲盒/潮玩"
     ],
-    "rating": 4.5,
+    "rating": 4.7,
     "tags": [
       "盲盒",
       "潮玩"
@@ -2089,14 +2089,14 @@
   },
   {
     "id": "gift_shop_016",
-    "name": "城市明信片纪念品(老城文化街区)",
+    "name": "城市明信片纪念品(高新科技园)",
     "category": "gift_shop",
     "sub_category": "明信片/纪念品",
-    "district": "老城文化街区",
-    "address": "老城文化街区某商场3F 758号铺",
-    "latitude": -1.598,
-    "longitude": 3.231,
-    "business_hours": "10:00-22:00",
+    "district": "高新科技园",
+    "address": "高新科技园某商场6F 258号铺",
+    "latitude": 2.359,
+    "longitude": -0.668,
+    "business_hours": "11:00-20:30",
     "indoor": true,
     "review_keywords": [
       "通用文创",
@@ -2106,7 +2106,7 @@
       "可同城配送",
       "明信片/纪念品"
     ],
-    "rating": 4.6,
+    "rating": 4.8,
     "tags": [
       "明信片",
       "纪念品"
@@ -2173,8 +2173,8 @@
         "stock": 260
       }
     ],
-    "delivery_time_mins": 45,
-    "delivery_time_std_dev": 10.0,
+    "delivery_time_mins": 30,
+    "delivery_time_std_dev": 15.0,
     "delivery_radius_km": 5.0,
     "suitable_groups": [
       "friends"

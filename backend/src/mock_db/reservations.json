@@ -6,10 +6,10 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 20,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 49,
+        "capacity_remaining": 6,
+        "queue_required": true,
+        "wait_minutes": 80
       }
     ]
   },
@@ -20,10 +20,10 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 26,
-        "capacity_remaining": 4,
-        "queue_required": true,
-        "wait_minutes": 78
+        "capacity_total": 20,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -34,8 +34,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 47,
-        "capacity_remaining": 28,
+        "capacity_total": 71,
+        "capacity_remaining": 42,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -48,10 +48,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 26,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 72,
+        "capacity_remaining": 17,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -60,28 +60,36 @@
     "target_id": "package_003_3",
     "time_slots": [
       {
+        "start_time": "11:30",
+        "end_time": "13:00",
+        "capacity_total": 40,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
         "start_time": "14:00",
         "end_time": "15:30",
-        "capacity_total": 20,
-        "capacity_remaining": 9,
+        "capacity_total": 40,
+        "capacity_remaining": 36,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 20,
+        "capacity_total": 40,
         "capacity_remaining": 17,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "18:30",
-        "end_time": "20:00",
-        "capacity_total": 20,
-        "capacity_remaining": 18,
-        "queue_required": false,
-        "wait_minutes": 0
+        "start_time": "16:30",
+        "end_time": "18:00",
+        "capacity_total": 40,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 76
       }
     ]
   },
@@ -91,11 +99,11 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:45",
-        "capacity_total": 30,
-        "capacity_remaining": 4,
-        "queue_required": true,
-        "wait_minutes": 79
+        "end_time": "21:30",
+        "capacity_total": 32,
+        "capacity_remaining": 11,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -106,8 +114,8 @@
       {
         "start_time": "19:00",
         "end_time": "21:00",
-        "capacity_total": 32,
-        "capacity_remaining": 31,
+        "capacity_total": 44,
+        "capacity_remaining": 13,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -119,9 +127,9 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "22:00",
-        "capacity_total": 32,
-        "capacity_remaining": 26,
+        "end_time": "21:30",
+        "capacity_total": 19,
+        "capacity_remaining": 13,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -132,17 +140,17 @@
     "target_id": "package_005_1",
     "time_slots": [
       {
-        "start_time": "13:00",
-        "end_time": "14:45",
-        "capacity_total": 26,
-        "capacity_remaining": 4,
-        "queue_required": true,
-        "wait_minutes": 78
+        "start_time": "12:00",
+        "end_time": "13:45",
+        "capacity_total": 24,
+        "capacity_remaining": 14,
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "13:30",
         "end_time": "15:15",
-        "capacity_total": 26,
+        "capacity_total": 24,
         "capacity_remaining": 12,
         "queue_required": false,
         "wait_minutes": 0
@@ -150,23 +158,23 @@
       {
         "start_time": "14:00",
         "end_time": "15:45",
-        "capacity_total": 26,
-        "capacity_remaining": 25,
+        "capacity_total": 24,
+        "capacity_remaining": 22,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "17:00",
-        "end_time": "18:45",
-        "capacity_total": 26,
-        "capacity_remaining": 13,
+        "start_time": "16:00",
+        "end_time": "17:45",
+        "capacity_total": 24,
+        "capacity_remaining": 11,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "17:30",
-        "end_time": "19:15",
-        "capacity_total": 26,
+        "start_time": "16:30",
+        "end_time": "18:15",
+        "capacity_total": 24,
         "capacity_remaining": 19,
         "queue_required": false,
         "wait_minutes": 0
@@ -180,8 +188,8 @@
       {
         "start_time": "15:00",
         "end_time": "17:00",
-        "capacity_total": 27,
-        "capacity_remaining": 15,
+        "capacity_total": 30,
+        "capacity_remaining": 21,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -193,9 +201,9 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 35,
-        "capacity_remaining": 18,
+        "end_time": "22:00",
+        "capacity_total": 17,
+        "capacity_remaining": 12,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -208,8 +216,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 56,
-        "capacity_remaining": 50,
+        "capacity_total": 70,
+        "capacity_remaining": 55,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -222,8 +230,8 @@
       {
         "start_time": "16:30",
         "end_time": "17:30",
-        "capacity_total": 72,
-        "capacity_remaining": 50,
+        "capacity_total": 34,
+        "capacity_remaining": 32,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -236,8 +244,8 @@
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 32,
-        "capacity_remaining": 11,
+        "capacity_total": 64,
+        "capacity_remaining": 28,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -250,8 +258,8 @@
       {
         "start_time": "18:00",
         "end_time": "19:45",
-        "capacity_total": 80,
-        "capacity_remaining": 59,
+        "capacity_total": 69,
+        "capacity_remaining": 64,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -264,10 +272,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:30",
-        "capacity_total": 33,
-        "capacity_remaining": 4,
+        "capacity_total": 45,
+        "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 80
+        "wait_minutes": 79
       }
     ]
   },
@@ -276,50 +284,26 @@
     "target_id": "package_007_3",
     "time_slots": [
       {
-        "start_time": "11:00",
-        "end_time": "13:30",
-        "capacity_total": 24,
-        "capacity_remaining": 22,
+        "start_time": "11:30",
+        "end_time": "14:00",
+        "capacity_total": 34,
+        "capacity_remaining": 21,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "12:30",
-        "end_time": "15:00",
-        "capacity_total": 24,
-        "capacity_remaining": 14,
+        "start_time": "12:00",
+        "end_time": "14:30",
+        "capacity_total": 34,
+        "capacity_remaining": 30,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "13:00",
-        "end_time": "15:30",
-        "capacity_total": 24,
-        "capacity_remaining": 12,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "13:30",
-        "end_time": "16:00",
-        "capacity_total": 24,
-        "capacity_remaining": 22,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "16:30",
-        "end_time": "19:00",
-        "capacity_total": 24,
-        "capacity_remaining": 11,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "19:30",
-        "end_time": "22:00",
-        "capacity_total": 24,
-        "capacity_remaining": 19,
+        "start_time": "15:30",
+        "end_time": "18:00",
+        "capacity_total": 34,
+        "capacity_remaining": 28,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -332,10 +316,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 69,
-        "capacity_remaining": 31,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 71,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       }
     ]
   },
@@ -346,8 +330,8 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 61,
-        "capacity_remaining": 39,
+        "capacity_total": 41,
+        "capacity_remaining": 41,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -360,8 +344,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:30",
-        "capacity_total": 63,
-        "capacity_remaining": 51,
+        "capacity_total": 79,
+        "capacity_remaining": 31,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -372,50 +356,42 @@
     "target_id": "package_009_1",
     "time_slots": [
       {
-        "start_time": "10:00",
-        "end_time": "10:45",
-        "capacity_total": 67,
-        "capacity_remaining": 66,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "11:30",
-        "end_time": "12:15",
-        "capacity_total": 67,
-        "capacity_remaining": 28,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
         "start_time": "13:30",
         "end_time": "14:15",
-        "capacity_total": 67,
-        "capacity_remaining": 64,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "14:00",
-        "end_time": "14:45",
-        "capacity_total": 67,
-        "capacity_remaining": 61,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:00",
-        "end_time": "18:45",
-        "capacity_total": 67,
-        "capacity_remaining": 10,
+        "capacity_total": 60,
+        "capacity_remaining": 11,
         "queue_required": true,
-        "wait_minutes": 78
+        "wait_minutes": 75
       },
       {
-        "start_time": "20:30",
-        "end_time": "21:15",
-        "capacity_total": 67,
-        "capacity_remaining": 18,
+        "start_time": "16:00",
+        "end_time": "16:45",
+        "capacity_total": 60,
+        "capacity_remaining": 42,
+        "queue_required": true,
+        "wait_minutes": 34
+      },
+      {
+        "start_time": "16:30",
+        "end_time": "17:15",
+        "capacity_total": 60,
+        "capacity_remaining": 39,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "17:45",
+        "capacity_total": 60,
+        "capacity_remaining": 27,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:15",
+        "capacity_total": 60,
+        "capacity_remaining": 13,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -429,9 +405,9 @@
         "start_time": "15:00",
         "end_time": "16:00",
         "capacity_total": 70,
-        "capacity_remaining": 26,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_remaining": 8,
+        "queue_required": true,
+        "wait_minutes": 81
       }
     ]
   },
@@ -442,8 +418,8 @@
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 26,
-        "capacity_remaining": 14,
+        "capacity_total": 71,
+        "capacity_remaining": 68,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -456,10 +432,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 24,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 49,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 79
       }
     ]
   },
@@ -470,8 +446,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 21,
-        "capacity_remaining": 10,
+        "capacity_total": 75,
+        "capacity_remaining": 62,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -482,34 +458,50 @@
     "target_id": "package_010_3",
     "time_slots": [
       {
-        "start_time": "12:30",
-        "end_time": "14:00",
-        "capacity_total": 30,
-        "capacity_remaining": 10,
+        "start_time": "11:30",
+        "end_time": "13:00",
+        "capacity_total": 74,
+        "capacity_remaining": 58,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "13:30",
-        "end_time": "15:00",
-        "capacity_total": 30,
-        "capacity_remaining": 7,
+        "start_time": "15:30",
+        "end_time": "17:00",
+        "capacity_total": 74,
+        "capacity_remaining": 38,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "17:30",
+        "capacity_total": 74,
+        "capacity_remaining": 17,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
         "start_time": "18:00",
         "end_time": "19:30",
-        "capacity_total": 30,
-        "capacity_remaining": 5,
+        "capacity_total": 74,
+        "capacity_remaining": 14,
         "queue_required": true,
-        "wait_minutes": 77
+        "wait_minutes": 75
       },
       {
-        "start_time": "18:30",
-        "end_time": "20:00",
-        "capacity_total": 30,
-        "capacity_remaining": 13,
+        "start_time": "19:00",
+        "end_time": "20:30",
+        "capacity_total": 74,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "21:00",
+        "capacity_total": 74,
+        "capacity_remaining": 17,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -522,8 +514,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 76,
-        "capacity_remaining": 25,
+        "capacity_total": 51,
+        "capacity_remaining": 40,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -536,8 +528,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 20,
-        "capacity_remaining": 6,
+        "capacity_total": 79,
+        "capacity_remaining": 22,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -550,10 +542,10 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 71,
-        "capacity_remaining": 8,
+        "capacity_total": 28,
+        "capacity_remaining": 5,
         "queue_required": true,
-        "wait_minutes": 81
+        "wait_minutes": 76
       }
     ]
   },
@@ -564,8 +556,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 71,
-        "capacity_remaining": 68,
+        "capacity_total": 48,
+        "capacity_remaining": 39,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -578,10 +570,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 49,
-        "capacity_remaining": 7,
-        "queue_required": true,
-        "wait_minutes": 79
+        "capacity_total": 20,
+        "capacity_remaining": 15,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -592,8 +584,8 @@
       {
         "start_time": "14:00",
         "end_time": "16:00",
-        "capacity_total": 46,
-        "capacity_remaining": 33,
+        "capacity_total": 50,
+        "capacity_remaining": 32,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -605,9 +597,9 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 39,
-        "capacity_remaining": 39,
+        "end_time": "22:00",
+        "capacity_total": 46,
+        "capacity_remaining": 26,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -619,11 +611,11 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 37,
-        "capacity_remaining": 29,
-        "queue_required": false,
-        "wait_minutes": 0
+        "end_time": "22:00",
+        "capacity_total": 25,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 84
       }
     ]
   },
@@ -634,10 +626,10 @@
       {
         "start_time": "15:00",
         "end_time": "17:00",
-        "capacity_total": 34,
-        "capacity_remaining": 5,
-        "queue_required": true,
-        "wait_minutes": 78
+        "capacity_total": 29,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -647,11 +639,11 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 35,
-        "capacity_remaining": 7,
-        "queue_required": true,
-        "wait_minutes": 74
+        "end_time": "22:00",
+        "capacity_total": 33,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -661,9 +653,9 @@
     "time_slots": [
       {
         "start_time": "19:00",
-        "end_time": "21:30",
-        "capacity_total": 22,
-        "capacity_remaining": 5,
+        "end_time": "22:00",
+        "capacity_total": 46,
+        "capacity_remaining": 35,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -676,8 +668,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 44,
-        "capacity_remaining": 26,
+        "capacity_total": 37,
+        "capacity_remaining": 34,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -690,10 +682,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 47,
-        "capacity_remaining": 11,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 72,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 84
       }
     ]
   },
@@ -704,8 +696,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:30",
-        "capacity_total": 78,
-        "capacity_remaining": 22,
+        "capacity_total": 48,
+        "capacity_remaining": 34,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -718,10 +710,10 @@
       {
         "start_time": "16:30",
         "end_time": "17:30",
-        "capacity_total": 28,
-        "capacity_remaining": 5,
-        "queue_required": true,
-        "wait_minutes": 76
+        "capacity_total": 67,
+        "capacity_remaining": 31,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -733,7 +725,7 @@
         "start_time": "18:00",
         "end_time": "19:00",
         "capacity_total": 48,
-        "capacity_remaining": 39,
+        "capacity_remaining": 16,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -746,10 +738,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:30",
-        "capacity_total": 20,
-        "capacity_remaining": 15,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 48,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 78
       }
     ]
   },
@@ -760,8 +752,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 55,
-        "capacity_remaining": 32,
+        "capacity_total": 35,
+        "capacity_remaining": 13,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -774,8 +766,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 51,
-        "capacity_remaining": 26,
+        "capacity_total": 42,
+        "capacity_remaining": 39,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -786,34 +778,34 @@
     "target_id": "package_019_2",
     "time_slots": [
       {
-        "start_time": "09:00",
-        "end_time": "10:00",
-        "capacity_total": 34,
-        "capacity_remaining": 18,
+        "start_time": "10:30",
+        "end_time": "11:30",
+        "capacity_total": 54,
+        "capacity_remaining": 17,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "10:00",
-        "end_time": "11:00",
-        "capacity_total": 34,
-        "capacity_remaining": 18,
+        "start_time": "13:00",
+        "end_time": "14:00",
+        "capacity_total": 54,
+        "capacity_remaining": 45,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "18:00",
-        "end_time": "19:00",
-        "capacity_total": 34,
-        "capacity_remaining": 31,
+        "start_time": "15:30",
+        "end_time": "16:30",
+        "capacity_total": 54,
+        "capacity_remaining": 54,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "21:00",
-        "end_time": "22:00",
-        "capacity_total": 34,
-        "capacity_remaining": 7,
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 54,
+        "capacity_remaining": 52,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -826,8 +818,8 @@
       {
         "start_time": "18:00",
         "end_time": "19:30",
-        "capacity_total": 43,
-        "capacity_remaining": 34,
+        "capacity_total": 70,
+        "capacity_remaining": 52,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -840,8 +832,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:30",
-        "capacity_total": 66,
-        "capacity_remaining": 56,
+        "capacity_total": 75,
+        "capacity_remaining": 16,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -854,8 +846,8 @@
       {
         "start_time": "19:00",
         "end_time": "21:00",
-        "capacity_total": 21,
-        "capacity_remaining": 20,
+        "capacity_total": 24,
+        "capacity_remaining": 22,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -866,26 +858,50 @@
     "target_id": "package_020_3",
     "time_slots": [
       {
+        "start_time": "12:00",
+        "end_time": "14:30",
+        "capacity_total": 19,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 82
+      },
+      {
         "start_time": "13:00",
         "end_time": "15:30",
-        "capacity_total": 20,
+        "capacity_total": 19,
+        "capacity_remaining": 8,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "13:30",
+        "end_time": "16:00",
+        "capacity_total": 19,
         "capacity_remaining": 14,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "14:30",
-        "end_time": "17:00",
-        "capacity_total": 20,
-        "capacity_remaining": 7,
-        "queue_required": false,
-        "wait_minutes": 0
+        "start_time": "14:00",
+        "end_time": "16:30",
+        "capacity_total": 19,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       },
       {
-        "start_time": "16:00",
-        "end_time": "18:30",
-        "capacity_total": 20,
-        "capacity_remaining": 11,
+        "start_time": "16:30",
+        "end_time": "19:00",
+        "capacity_total": 19,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 82
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "20:00",
+        "capacity_total": 19,
+        "capacity_remaining": 14,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -896,50 +912,26 @@
     "target_id": "package_021_1",
     "time_slots": [
       {
-        "start_time": "10:30",
-        "end_time": "11:15",
-        "capacity_total": 56,
-        "capacity_remaining": 22,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
         "start_time": "12:00",
         "end_time": "12:45",
-        "capacity_total": 56,
-        "capacity_remaining": 10,
-        "queue_required": true,
-        "wait_minutes": 76
-      },
-      {
-        "start_time": "12:30",
-        "end_time": "13:15",
-        "capacity_total": 56,
-        "capacity_remaining": 45,
+        "capacity_total": 47,
+        "capacity_remaining": 13,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "13:00",
-        "end_time": "13:45",
-        "capacity_total": 56,
-        "capacity_remaining": 54,
+        "start_time": "15:00",
+        "end_time": "15:45",
+        "capacity_total": 47,
+        "capacity_remaining": 18,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "19:30",
-        "end_time": "20:15",
-        "capacity_total": 56,
-        "capacity_remaining": 52,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "20:30",
-        "end_time": "21:15",
-        "capacity_total": 56,
-        "capacity_remaining": 50,
+        "start_time": "17:30",
+        "end_time": "18:15",
+        "capacity_total": 47,
+        "capacity_remaining": 36,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -950,42 +942,26 @@
     "target_id": "package_021_2",
     "time_slots": [
       {
-        "start_time": "12:00",
-        "end_time": "13:00",
-        "capacity_total": 73,
-        "capacity_remaining": 31,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "13:30",
-        "end_time": "14:30",
-        "capacity_total": 73,
-        "capacity_remaining": 62,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "15:00",
-        "end_time": "16:00",
-        "capacity_total": 73,
-        "capacity_remaining": 53,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "20:00",
-        "end_time": "21:00",
-        "capacity_total": 73,
-        "capacity_remaining": 11,
+        "start_time": "09:30",
+        "end_time": "10:30",
+        "capacity_total": 70,
+        "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 78
+        "wait_minutes": 90
       },
       {
-        "start_time": "21:00",
-        "end_time": "22:00",
-        "capacity_total": 73,
-        "capacity_remaining": 35,
+        "start_time": "10:30",
+        "end_time": "11:30",
+        "capacity_total": 70,
+        "capacity_remaining": 20,
+        "queue_required": true,
+        "wait_minutes": 67
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 70,
+        "capacity_remaining": 54,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -998,10 +974,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:00",
-        "capacity_total": 49,
-        "capacity_remaining": 31,
-        "queue_required": true,
-        "wait_minutes": 39
+        "capacity_total": 28,
+        "capacity_remaining": 28,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1012,10 +988,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 69,
-        "capacity_remaining": 11,
-        "queue_required": true,
-        "wait_minutes": 77
+        "capacity_total": 79,
+        "capacity_remaining": 35,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1026,8 +1002,8 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 49,
-        "capacity_remaining": 40,
+        "capacity_total": 25,
+        "capacity_remaining": 11,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1040,8 +1016,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:30",
-        "capacity_total": 24,
-        "capacity_remaining": 17,
+        "capacity_total": 23,
+        "capacity_remaining": 12,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1054,8 +1030,8 @@
       {
         "start_time": "16:30",
         "end_time": "17:30",
-        "capacity_total": 72,
-        "capacity_remaining": 27,
+        "capacity_total": 68,
+        "capacity_remaining": 29,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1068,10 +1044,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 38,
-        "capacity_remaining": 21,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 26,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       }
     ]
   },
@@ -1082,10 +1058,10 @@
       {
         "start_time": "14:00",
         "end_time": "15:30",
-        "capacity_total": 74,
-        "capacity_remaining": 62,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 24,
+        "capacity_remaining": 4,
+        "queue_required": true,
+        "wait_minutes": 77
       }
     ]
   },
@@ -1096,10 +1072,10 @@
       {
         "start_time": "16:30",
         "end_time": "17:30",
-        "capacity_total": 68,
-        "capacity_remaining": 6,
+        "capacity_total": 53,
+        "capacity_remaining": 43,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 25
       }
     ]
   },
@@ -1110,10 +1086,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 60,
-        "capacity_remaining": 50,
+        "capacity_total": 41,
+        "capacity_remaining": 7,
         "queue_required": true,
-        "wait_minutes": 23
+        "wait_minutes": 76
       }
     ]
   },
@@ -1124,10 +1100,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:00",
-        "capacity_total": 79,
-        "capacity_remaining": 20,
-        "queue_required": true,
-        "wait_minutes": 70
+        "capacity_total": 47,
+        "capacity_remaining": 44,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1138,10 +1114,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 47,
-        "capacity_remaining": 12,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 44,
+        "capacity_remaining": 5,
+        "queue_required": true,
+        "wait_minutes": 81
       }
     ]
   },
@@ -1152,10 +1128,10 @@
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 76,
-        "capacity_remaining": 38,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 26,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 81
       }
     ]
   },
@@ -1166,10 +1142,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:00",
-        "capacity_total": 37,
-        "capacity_remaining": 5,
-        "queue_required": true,
-        "wait_minutes": 79
+        "capacity_total": 76,
+        "capacity_remaining": 38,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1180,10 +1156,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:15",
-        "capacity_total": 36,
-        "capacity_remaining": 5,
-        "queue_required": true,
-        "wait_minutes": 79
+        "capacity_total": 68,
+        "capacity_remaining": 17,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1193,11 +1169,11 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 25,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 87
+        "end_time": "22:00",
+        "capacity_total": 19,
+        "capacity_remaining": 16,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1207,8 +1183,8 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "21:30",
-        "capacity_total": 34,
+        "end_time": "22:00",
+        "capacity_total": 25,
         "capacity_remaining": 14,
         "queue_required": false,
         "wait_minutes": 0
@@ -1222,10 +1198,10 @@
       {
         "start_time": "20:00",
         "end_time": "21:45",
-        "capacity_total": 26,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 67,
+        "capacity_remaining": 19,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1236,26 +1212,50 @@
       {
         "start_time": "11:00",
         "end_time": "13:00",
-        "capacity_total": 48,
-        "capacity_remaining": 43,
-        "queue_required": true,
-        "wait_minutes": 18
-      },
-      {
-        "start_time": "12:30",
-        "end_time": "14:30",
-        "capacity_total": 48,
-        "capacity_remaining": 21,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:00",
-        "end_time": "20:00",
-        "capacity_total": 48,
+        "capacity_total": 37,
         "capacity_remaining": 27,
         "queue_required": false,
         "wait_minutes": 0
+      },
+      {
+        "start_time": "11:30",
+        "end_time": "13:30",
+        "capacity_total": 37,
+        "capacity_remaining": 17,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "12:00",
+        "end_time": "14:00",
+        "capacity_total": 37,
+        "capacity_remaining": 18,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "13:00",
+        "end_time": "15:00",
+        "capacity_total": 37,
+        "capacity_remaining": 19,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "18:00",
+        "capacity_total": 37,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "21:00",
+        "capacity_total": 37,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 84
       }
     ]
   },
@@ -1264,36 +1264,36 @@
     "target_id": "package_027_3",
     "time_slots": [
       {
-        "start_time": "10:00",
-        "end_time": "12:30",
-        "capacity_total": 38,
-        "capacity_remaining": 19,
+        "start_time": "11:30",
+        "end_time": "14:00",
+        "capacity_total": 46,
+        "capacity_remaining": 40,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "10:30",
-        "end_time": "13:00",
-        "capacity_total": 38,
-        "capacity_remaining": 8,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "14:00",
-        "end_time": "16:30",
-        "capacity_total": 38,
-        "capacity_remaining": 4,
-        "queue_required": true,
-        "wait_minutes": 82
-      },
-      {
-        "start_time": "15:00",
-        "end_time": "17:30",
-        "capacity_total": 38,
+        "start_time": "13:30",
+        "end_time": "16:00",
+        "capacity_total": 46,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 90
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "18:30",
+        "capacity_total": 46,
+        "capacity_remaining": 20,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "20:00",
+        "capacity_total": 46,
+        "capacity_remaining": 36,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1304,8 +1304,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 30,
-        "capacity_remaining": 14,
+        "capacity_total": 31,
+        "capacity_remaining": 30,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1318,8 +1318,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 67,
-        "capacity_remaining": 19,
+        "capacity_total": 21,
+        "capacity_remaining": 18,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1332,10 +1332,10 @@
       {
         "start_time": "20:00",
         "end_time": "21:30",
-        "capacity_total": 48,
-        "capacity_remaining": 13,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 22,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 86
       }
     ]
   },
@@ -1346,8 +1346,8 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 68,
-        "capacity_remaining": 15,
+        "capacity_total": 45,
+        "capacity_remaining": 32,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1358,52 +1358,52 @@
     "target_id": "package_030_2",
     "time_slots": [
       {
-        "start_time": "10:00",
-        "end_time": "11:00",
-        "capacity_total": 35,
-        "capacity_remaining": 35,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
         "start_time": "11:00",
         "end_time": "12:00",
-        "capacity_total": 35,
-        "capacity_remaining": 18,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "12:30",
-        "end_time": "13:30",
-        "capacity_total": 35,
-        "capacity_remaining": 19,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "13:00",
-        "end_time": "14:00",
-        "capacity_total": 35,
-        "capacity_remaining": 12,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "14:00",
-        "end_time": "15:00",
-        "capacity_total": 35,
-        "capacity_remaining": 3,
+        "capacity_total": 37,
+        "capacity_remaining": 5,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 79
+      },
+      {
+        "start_time": "12:00",
+        "end_time": "13:00",
+        "capacity_total": 37,
+        "capacity_remaining": 32,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:00",
+        "end_time": "17:00",
+        "capacity_total": 37,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "16:30",
+        "end_time": "17:30",
+        "capacity_total": 37,
+        "capacity_remaining": 4,
+        "queue_required": true,
+        "wait_minutes": 81
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:30",
+        "capacity_total": 37,
+        "capacity_remaining": 27,
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 35,
-        "capacity_remaining": 15,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 37,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 84
       }
     ]
   },
@@ -1414,8 +1414,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:30",
-        "capacity_total": 51,
-        "capacity_remaining": 40,
+        "capacity_total": 79,
+        "capacity_remaining": 55,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1428,8 +1428,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 20,
-        "capacity_remaining": 11,
+        "capacity_total": 23,
+        "capacity_remaining": 9,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1442,10 +1442,10 @@
       {
         "start_time": "20:00",
         "end_time": "21:00",
-        "capacity_total": 75,
-        "capacity_remaining": 72,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 31,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       }
     ]
   },
@@ -1456,10 +1456,10 @@
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 31,
-        "capacity_remaining": 30,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 28,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       }
     ]
   },
@@ -1470,10 +1470,10 @@
       {
         "start_time": "16:30",
         "end_time": "19:15",
-        "capacity_total": 16,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 46,
+        "capacity_remaining": 22,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1484,10 +1484,10 @@
       {
         "start_time": "15:00",
         "end_time": "18:00",
-        "capacity_total": 28,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 87
+        "capacity_total": 31,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1498,10 +1498,10 @@
       {
         "start_time": "18:00",
         "end_time": "21:30",
-        "capacity_total": 40,
-        "capacity_remaining": 32,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 32,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 72
       }
     ]
   },
@@ -1512,8 +1512,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:45",
-        "capacity_total": 69,
-        "capacity_remaining": 53,
+        "capacity_total": 71,
+        "capacity_remaining": 54,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1526,8 +1526,8 @@
       {
         "start_time": "19:00",
         "end_time": "21:00",
-        "capacity_total": 49,
-        "capacity_remaining": 34,
+        "capacity_total": 19,
+        "capacity_remaining": 15,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1539,11 +1539,11 @@
     "time_slots": [
       {
         "start_time": "20:00",
-        "end_time": "22:00",
-        "capacity_total": 34,
-        "capacity_remaining": 5,
-        "queue_required": true,
-        "wait_minutes": 78
+        "end_time": "21:30",
+        "capacity_total": 46,
+        "capacity_remaining": 36,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1554,10 +1554,10 @@
       {
         "start_time": "20:00",
         "end_time": "21:45",
-        "capacity_total": 33,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 69,
+        "capacity_remaining": 13,
+        "queue_required": true,
+        "wait_minutes": 75
       }
     ]
   },
@@ -1568,10 +1568,10 @@
       {
         "start_time": "16:30",
         "end_time": "18:30",
-        "capacity_total": 19,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 22,
+        "capacity_remaining": 7,
+        "queue_required": true,
+        "wait_minutes": 65
       }
     ]
   },
@@ -1582,10 +1582,10 @@
       {
         "start_time": "20:00",
         "end_time": "22:00",
-        "capacity_total": 30,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 87
+        "capacity_total": 15,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1596,8 +1596,8 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 79,
-        "capacity_remaining": 55,
+        "capacity_total": 78,
+        "capacity_remaining": 19,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1610,8 +1610,8 @@
       {
         "start_time": "19:00",
         "end_time": "20:00",
-        "capacity_total": 23,
-        "capacity_remaining": 9,
+        "capacity_total": 22,
+        "capacity_remaining": 17,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1624,10 +1624,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:30",
-        "capacity_total": 31,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 61,
+        "capacity_remaining": 26,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1638,10 +1638,10 @@
       {
         "start_time": "18:00",
         "end_time": "19:00",
-        "capacity_total": 28,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 78,
+        "capacity_remaining": 40,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1650,52 +1650,44 @@
     "target_id": "package_036_2",
     "time_slots": [
       {
-        "start_time": "19:30",
-        "end_time": "20:30",
-        "capacity_total": 66,
-        "capacity_remaining": 15,
-        "queue_required": true,
-        "wait_minutes": 72
+        "start_time": "19:00",
+        "end_time": "20:00",
+        "capacity_total": 22,
+        "capacity_remaining": 12,
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
-        "start_time": "20:00",
-        "end_time": "21:00",
-        "capacity_total": 66,
-        "capacity_remaining": 54,
+        "start_time": "19:30",
+        "end_time": "20:30",
+        "capacity_total": 22,
+        "capacity_remaining": 9,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
         "start_time": "21:00",
         "end_time": "22:00",
-        "capacity_total": 66,
-        "capacity_remaining": 9,
+        "capacity_total": 22,
+        "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 79
-      },
-      {
-        "start_time": "21:30",
-        "end_time": "22:30",
-        "capacity_total": 66,
-        "capacity_remaining": 65,
-        "queue_required": false,
-        "wait_minutes": 0
+        "wait_minutes": 83
       },
       {
         "start_time": "22:00",
         "end_time": "23:00",
-        "capacity_total": 66,
-        "capacity_remaining": 21,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 22,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       },
       {
         "start_time": "23:00",
         "end_time": "00:00",
-        "capacity_total": 66,
-        "capacity_remaining": 13,
-        "queue_required": true,
-        "wait_minutes": 74
+        "capacity_total": 22,
+        "capacity_remaining": 9,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1706,8 +1698,8 @@
       {
         "start_time": "15:00",
         "end_time": "16:30",
-        "capacity_total": 63,
-        "capacity_remaining": 14,
+        "capacity_total": 59,
+        "capacity_remaining": 15,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1720,10 +1712,10 @@
       {
         "start_time": "14:00",
         "end_time": "15:00",
-        "capacity_total": 22,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "capacity_total": 51,
+        "capacity_remaining": 49,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1734,8 +1726,8 @@
       {
         "start_time": "14:00",
         "end_time": "16:00",
-        "capacity_total": 45,
-        "capacity_remaining": 23,
+        "capacity_total": 49,
+        "capacity_remaining": 48,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1749,9 +1741,9 @@
         "start_time": "14:00",
         "end_time": "15:00",
         "capacity_total": 79,
-        "capacity_remaining": 4,
+        "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 86
+        "wait_minutes": 90
       }
     ]
   },
@@ -1762,8 +1754,8 @@
       {
         "start_time": "15:00",
         "end_time": "16:00",
-        "capacity_total": 78,
-        "capacity_remaining": 53,
+        "capacity_total": 54,
+        "capacity_remaining": 22,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -1776,10 +1768,10 @@
       {
         "start_time": "16:30",
         "end_time": "17:30",
-        "capacity_total": 78,
-        "capacity_remaining": 40,
-        "queue_required": false,
-        "wait_minutes": 0
+        "capacity_total": 20,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 90
       }
     ]
   },
@@ -1790,10 +1782,10 @@
       {
         "start_time": "19:00",
         "end_time": "20:30",
-        "capacity_total": 43,
-        "capacity_remaining": 7,
-        "queue_required": true,
-        "wait_minutes": 77
+        "capacity_total": 62,
+        "capacity_remaining": 24,
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1802,16 +1794,38 @@
     "target_id": "combo_002_2",
     "time_slots": [
       {
-        "start_time": "12:00",
-        "end_time": "12:58",
-        "capacity_total": 16,
-        "capacity_remaining": 1,
+        "start_time": "12:30",
+        "end_time": "13:28",
+        "capacity_total": 11,
+        "capacity_remaining": 6,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "19:58",
+        "capacity_total": 11,
+        "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 61
+        "wait_minutes": 54
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_002_4",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "12:00",
+        "capacity_total": 16,
+        "capacity_remaining": 13,
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "12:30",
-        "end_time": "13:28",
+        "end_time": "13:30",
         "capacity_total": 16,
         "capacity_remaining": 2,
         "queue_required": true,
@@ -1821,127 +1835,39 @@
   },
   {
     "target_type": "combo",
-    "target_id": "combo_002_4",
-    "time_slots": [
-      {
-        "start_time": "11:30",
-        "end_time": "12:30",
-        "capacity_total": 16,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      },
-      {
-        "start_time": "17:00",
-        "end_time": "18:00",
-        "capacity_total": 16,
-        "capacity_remaining": 6,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "17:30",
-        "end_time": "18:30",
-        "capacity_total": 16,
-        "capacity_remaining": 7,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
     "target_id": "combo_004_5",
     "time_slots": [
       {
-        "start_time": "12:30",
-        "end_time": "13:25",
-        "capacity_total": 10,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      },
-      {
-        "start_time": "19:00",
-        "end_time": "19:55",
-        "capacity_total": 10,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      },
-      {
-        "start_time": "19:30",
-        "end_time": "20:25",
-        "capacity_total": 10,
-        "capacity_remaining": 5,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_010_2",
-    "time_slots": [
-      {
-        "start_time": "11:00",
-        "end_time": "12:00",
-        "capacity_total": 18,
-        "capacity_remaining": 12,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "17:30",
-        "end_time": "18:30",
-        "capacity_total": 18,
-        "capacity_remaining": 3,
-        "queue_required": true,
-        "wait_minutes": 55
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_010_3",
-    "time_slots": [
-      {
-        "start_time": "18:30",
-        "end_time": "20:04",
-        "capacity_total": 6,
+        "start_time": "11:30",
+        "end_time": "12:25",
+        "capacity_total": 17,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 55
+        "wait_minutes": 61
       },
       {
-        "start_time": "21:30",
-        "end_time": "23:04",
-        "capacity_total": 6,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_010_4",
-    "time_slots": [
+        "start_time": "12:00",
+        "end_time": "12:55",
+        "capacity_total": 17,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "17:55",
+        "capacity_total": 17,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
       {
         "start_time": "18:00",
-        "end_time": "18:54",
-        "capacity_total": 13,
-        "capacity_remaining": 7,
+        "end_time": "18:55",
+        "capacity_total": 17,
+        "capacity_remaining": 10,
         "queue_required": false,
         "wait_minutes": 0
-      },
-      {
-        "start_time": "19:00",
-        "end_time": "19:54",
-        "capacity_total": 13,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 60
       }
     ]
   },
@@ -1950,33 +1876,17 @@
     "target_id": "combo_011_2",
     "time_slots": [
       {
-        "start_time": "11:00",
-        "end_time": "12:23",
-        "capacity_total": 8,
-        "capacity_remaining": 6,
-        "queue_required": false,
-        "wait_minutes": 0
+        "start_time": "11:30",
+        "end_time": "12:53",
+        "capacity_total": 17,
+        "capacity_remaining": 3,
+        "queue_required": true,
+        "wait_minutes": 54
       },
       {
-        "start_time": "17:30",
-        "end_time": "18:53",
-        "capacity_total": 8,
-        "capacity_remaining": 4,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:00",
-        "end_time": "19:23",
-        "capacity_total": 8,
-        "capacity_remaining": 6,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:53",
-        "capacity_total": 8,
+        "start_time": "17:00",
+        "end_time": "18:23",
+        "capacity_total": 17,
         "capacity_remaining": 5,
         "queue_required": false,
         "wait_minutes": 0
@@ -1988,64 +1898,20 @@
     "target_id": "combo_012_1",
     "time_slots": [
       {
-        "start_time": "17:30",
-        "end_time": "18:28",
-        "capacity_total": 9,
-        "capacity_remaining": 2,
+        "start_time": "18:00",
+        "end_time": "18:58",
+        "capacity_total": 11,
+        "capacity_remaining": 7,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
         "start_time": "19:00",
         "end_time": "19:58",
-        "capacity_total": 9,
-        "capacity_remaining": 5,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_013_1",
-    "time_slots": [
-      {
-        "start_time": "18:00",
-        "end_time": "19:08",
-        "capacity_total": 15,
-        "capacity_remaining": 8,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:38",
-        "capacity_total": 15,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_013_2",
-    "time_slots": [
-      {
-        "start_time": "17:00",
-        "end_time": "18:07",
-        "capacity_total": 13,
-        "capacity_remaining": 2,
+        "capacity_total": 11,
+        "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 56
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:37",
-        "capacity_total": 13,
-        "capacity_remaining": 3,
-        "queue_required": false,
-        "wait_minutes": 0
+        "wait_minutes": 60
       }
     ]
   },
@@ -2054,9 +1920,25 @@
     "target_id": "combo_013_4",
     "time_slots": [
       {
-        "start_time": "12:00",
-        "end_time": "13:28",
-        "capacity_total": 10,
+        "start_time": "11:00",
+        "end_time": "12:28",
+        "capacity_total": 13,
+        "capacity_remaining": 2,
+        "queue_required": true,
+        "wait_minutes": 56
+      },
+      {
+        "start_time": "14:30",
+        "end_time": "15:58",
+        "capacity_total": 13,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "17:00",
+        "end_time": "18:28",
+        "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
@@ -2064,7 +1946,37 @@
       {
         "start_time": "17:30",
         "end_time": "18:58",
-        "capacity_total": 10,
+        "capacity_total": 13,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_015_4",
+    "time_slots": [
+      {
+        "start_time": "15:30",
+        "end_time": "16:26",
+        "capacity_total": 16,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:26",
+        "capacity_total": 16,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:00",
+        "end_time": "19:56",
+        "capacity_total": 16,
         "capacity_remaining": 7,
         "queue_required": false,
         "wait_minutes": 0
@@ -2073,34 +1985,12 @@
   },
   {
     "target_type": "combo",
-    "target_id": "combo_017_5",
-    "time_slots": [
-      {
-        "start_time": "11:30",
-        "end_time": "12:55",
-        "capacity_total": 10,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      },
-      {
-        "start_time": "19:00",
-        "end_time": "20:25",
-        "capacity_total": 10,
-        "capacity_remaining": 3,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_018_4",
+    "target_id": "combo_018_5",
     "time_slots": [
       {
         "start_time": "11:30",
         "end_time": "12:35",
-        "capacity_total": 12,
+        "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
@@ -2108,98 +1998,76 @@
       {
         "start_time": "17:30",
         "end_time": "18:35",
-        "capacity_total": 12,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 60
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:35",
-        "capacity_total": 12,
-        "capacity_remaining": 10,
+        "capacity_total": 9,
+        "capacity_remaining": 3,
         "queue_required": false,
         "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_019_5",
-    "time_slots": [
+      },
       {
-        "start_time": "11:00",
-        "end_time": "12:10",
-        "capacity_total": 8,
+        "start_time": "22:00",
+        "end_time": "23:05",
+        "capacity_total": 9,
         "capacity_remaining": 2,
         "queue_required": false,
         "wait_minutes": 0
-      },
-      {
-        "start_time": "11:30",
-        "end_time": "12:40",
-        "capacity_total": 8,
-        "capacity_remaining": 6,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "19:00",
-        "end_time": "20:10",
-        "capacity_total": 8,
-        "capacity_remaining": 6,
-        "queue_required": false,
-        "wait_minutes": 0
       }
     ]
   },
   {
     "target_type": "combo",
-    "target_id": "combo_021_1",
+    "target_id": "combo_019_1",
+    "time_slots": [
+      {
+        "start_time": "17:00",
+        "end_time": "18:40",
+        "capacity_total": 6,
+        "capacity_remaining": 1,
+        "queue_required": true,
+        "wait_minutes": 55
+      },
+      {
+        "start_time": "17:30",
+        "end_time": "19:10",
+        "capacity_total": 6,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "20:10",
+        "capacity_total": 6,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_020_3",
     "time_slots": [
       {
         "start_time": "17:30",
-        "end_time": "19:07",
-        "capacity_total": 13,
+        "end_time": "19:03",
+        "capacity_total": 8,
+        "capacity_remaining": 4,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:00",
+        "end_time": "19:33",
+        "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
       },
       {
-        "start_time": "18:00",
-        "end_time": "19:37",
-        "capacity_total": 13,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_021_4",
-    "time_slots": [
-      {
-        "start_time": "17:00",
-        "end_time": "18:15",
+        "start_time": "21:30",
+        "end_time": "23:03",
         "capacity_total": 8,
-        "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 58
-      },
-      {
-        "start_time": "17:30",
-        "end_time": "18:45",
-        "capacity_total": 8,
-        "capacity_remaining": 2,
-        "queue_required": false,
-        "wait_minutes": 0
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:45",
-        "capacity_total": 8,
-        "capacity_remaining": 8,
+        "capacity_remaining": 3,
         "queue_required": false,
         "wait_minutes": 0
       }
@@ -2211,57 +2079,35 @@
     "time_slots": [
       {
         "start_time": "17:00",
-        "end_time": "18:05",
-        "capacity_total": 15,
+        "end_time": "18:40",
+        "capacity_total": 12,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
       },
       {
         "start_time": "17:30",
-        "end_time": "18:35",
-        "capacity_total": 15,
-        "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
-      },
-      {
-        "start_time": "18:00",
-        "end_time": "19:05",
-        "capacity_total": 15,
+        "end_time": "19:10",
+        "capacity_total": 12,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
       },
       {
         "start_time": "18:30",
-        "end_time": "19:35",
-        "capacity_total": 15,
+        "end_time": "20:10",
+        "capacity_total": 12,
         "capacity_remaining": 0,
         "queue_required": true,
         "wait_minutes": 65
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_025_1",
-    "time_slots": [
-      {
-        "start_time": "14:00",
-        "end_time": "15:39",
-        "capacity_total": 14,
-        "capacity_remaining": 5,
-        "queue_required": false,
-        "wait_minutes": 0
       },
       {
-        "start_time": "14:30",
-        "end_time": "16:09",
-        "capacity_total": 14,
-        "capacity_remaining": 2,
+        "start_time": "21:00",
+        "end_time": "22:40",
+        "capacity_total": 12,
+        "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 56
+        "wait_minutes": 65
       }
     ]
   },
@@ -2270,36 +2116,80 @@
     "target_id": "combo_025_3",
     "time_slots": [
       {
-        "start_time": "17:00",
-        "end_time": "18:29",
+        "start_time": "18:00",
+        "end_time": "19:05",
+        "capacity_total": 15,
+        "capacity_remaining": 15,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "18:30",
+        "end_time": "19:35",
+        "capacity_total": 15,
+        "capacity_remaining": 10,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_025_5",
+    "time_slots": [
+      {
+        "start_time": "11:00",
+        "end_time": "11:59",
+        "capacity_total": 12,
+        "capacity_remaining": 0,
+        "queue_required": true,
+        "wait_minutes": 65
+      },
+      {
+        "start_time": "12:30",
+        "end_time": "13:29",
+        "capacity_total": 12,
+        "capacity_remaining": 7,
+        "queue_required": false,
+        "wait_minutes": 0
+      },
+      {
+        "start_time": "19:30",
+        "end_time": "20:29",
+        "capacity_total": 12,
+        "capacity_remaining": 3,
+        "queue_required": false,
+        "wait_minutes": 0
+      }
+    ]
+  },
+  {
+    "target_type": "combo",
+    "target_id": "combo_026_2",
+    "time_slots": [
+      {
+        "start_time": "14:00",
+        "end_time": "15:12",
         "capacity_total": 11,
         "capacity_remaining": 9,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "17:30",
-        "end_time": "18:59",
+        "start_time": "14:30",
+        "end_time": "15:42",
         "capacity_total": 11,
         "capacity_remaining": 5,
         "queue_required": false,
         "wait_minutes": 0
       },
       {
-        "start_time": "18:00",
-        "end_time": "19:29",
+        "start_time": "15:00",
+        "end_time": "16:12",
         "capacity_total": 11,
         "capacity_remaining": 2,
         "queue_required": true,
         "wait_minutes": 54
-      },
-      {
-        "start_time": "18:30",
-        "end_time": "19:59",
-        "capacity_total": 11,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
       }
     ]
   },
@@ -2309,7 +2199,7 @@
     "time_slots": [
       {
         "start_time": "17:00",
-        "end_time": "18:12",
+        "end_time": "17:52",
         "capacity_total": 13,
         "capacity_remaining": 9,
         "queue_required": false,
@@ -2317,7 +2207,7 @@
       },
       {
         "start_time": "18:00",
-        "end_time": "19:12",
+        "end_time": "18:52",
         "capacity_total": 13,
         "capacity_remaining": 3,
         "queue_required": false,
@@ -2325,33 +2215,19 @@
       },
       {
         "start_time": "19:00",
-        "end_time": "20:12",
+        "end_time": "19:52",
         "capacity_total": 13,
         "capacity_remaining": 7,
         "queue_required": false,
         "wait_minutes": 0
-      }
-    ]
-  },
-  {
-    "target_type": "combo",
-    "target_id": "combo_031_4",
-    "time_slots": [
-      {
-        "start_time": "11:00",
-        "end_time": "11:56",
-        "capacity_total": 11,
-        "capacity_remaining": 9,
-        "queue_required": false,
-        "wait_minutes": 0
       },
       {
-        "start_time": "11:30",
-        "end_time": "12:26",
-        "capacity_total": 11,
-        "capacity_remaining": 0,
+        "start_time": "19:30",
+        "end_time": "20:22",
+        "capacity_total": 13,
+        "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 56
       }
     ]
   }

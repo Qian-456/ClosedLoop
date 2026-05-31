@@ -681,6 +681,7 @@ def search_candidates(
     config_app = get_config()
     LoggerManager.setup(config_app)
     session_id = config.get("configurable", {}).get("thread_id", "default")
+    tool_http_timeout_secs = float(getattr(config_app, "TOOL_HTTP_TIMEOUT_SECS", 3.0))
     logger.info(
         f"phase=search_candidates | category={category} | query={user_request} | top_k={top_k} | session_id={session_id} | subcatory={subcatory}"
     )
@@ -709,17 +710,42 @@ def search_candidates(
     }
 
     try:
-        with httpx.Client(timeout=8.0, trust_env=False, proxy=None) as client:
+        with httpx.Client(timeout=tool_http_timeout_secs, trust_env=False, proxy=None) as client:
             response = client.post(configured_url, json=payload)
             response.raise_for_status()
             res_json = response.json()
+    except httpx.TimeoutException as error:
+        logger.error(f"phase=search_candidates | msg=search_sub_timeout | error={error}")
+        fail_msg = ToolMessage(
+            content=json.dumps(
+                {
+                    "tool": "search_candidates",
+                    "status": "timeout",
+                    "result": {
+                        "error": "搜索服务超时",
+                        "code": "TOOL_TIMEOUT",
+                        "recoverable": True,
+                        "detail": "搜索服务暂时不可用，请稍后重试，或改用重新规划。",
+                    },
+                },
+                ensure_ascii=False,
+            ),
+            tool_call_id=tool_call_id,
+        )
+        return Command(update={"messages": [fail_msg]})
     except Exception as error:
         logger.error(f"phase=search_candidates | msg=search_sub_failed | error={error}")
         fail_msg = ToolMessage(
             content=json.dumps(
                 {
-                    "error": "搜索服务不可用",
-                    "detail": "搜索服务暂时不可用，请稍后重试，或改用重新规划。",
+                    "tool": "search_candidates",
+                    "status": "failed",
+                    "result": {
+                        "error": "搜索服务不可用",
+                        "code": "UPSTREAM_ERROR",
+                        "recoverable": True,
+                        "detail": "搜索服务暂时不可用，请稍后重试，或改用重新规划。",
+                    },
                 },
                 ensure_ascii=False,
             ),

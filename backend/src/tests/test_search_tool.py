@@ -24,7 +24,10 @@ class TestSearchTool(unittest.TestCase):
         mock_get_config.return_value = type(
             "FakeConfig",
             (),
-            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
+            {
+                "SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search",
+                "TOOL_HTTP_TIMEOUT_SECS": 3.0,
+            },
         )()
 
         mock_client = MagicMock()
@@ -88,6 +91,7 @@ class TestSearchTool(unittest.TestCase):
         )
 
         mock_client.post.assert_called_once()
+        self.assertEqual(mock_httpx_client.call_args.kwargs.get("timeout"), 3.0)
         called_url = mock_client.post.call_args.args[0]
         self.assertEqual(called_url, "http://127.0.0.1:8002/search")
         payload = mock_client.post.call_args.kwargs.get("json", {})
@@ -131,7 +135,10 @@ class TestSearchTool(unittest.TestCase):
         mock_get_config.return_value = type(
             "FakeConfig",
             (),
-            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
+            {
+                "SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search",
+                "TOOL_HTTP_TIMEOUT_SECS": 3.0,
+            },
         )()
 
         mock_client = MagicMock()
@@ -181,6 +188,7 @@ class TestSearchTool(unittest.TestCase):
         )
 
         mock_client.post.assert_called_once()
+        self.assertEqual(mock_httpx_client.call_args.kwargs.get("timeout"), 3.0)
         payload = mock_client.post.call_args.kwargs.get("json", {})
         self.assertEqual(payload.get("session_id"), "thread-1")
         self.assertEqual(payload.get("subcatory"), "normal")
@@ -220,7 +228,10 @@ class TestSearchTool(unittest.TestCase):
         mock_get_config.return_value = type(
             "FakeConfig",
             (),
-            {"SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search"},
+            {
+                "SEARCH_SUB_API_URL": "http://127.0.0.1:8002/search",
+                "TOOL_HTTP_TIMEOUT_SECS": 3.0,
+            },
         )()
 
         mock_client = MagicMock()

@@ -56,14 +56,6 @@ class LoggerManager:
                 level="ERROR",
             )
 
-        logger.add(
-            os.path.join(log_dir, "app", "app_{time:YYYY-MM-DD}.log"),
-            rotation=config.logging.LOG_ROTATION,
-            retention=config.logging.LOG_RETENTION,
-            level=config.logging.LOG_LEVEL,
-            filter=lambda record: not ("plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"]),
-        )
-
         if getattr(config.logging, "LOG_ELK_ENABLED", False):
             elk_path = getattr(config.logging, "LOG_ELK_JSON_PATH", None)
             if elk_path:
@@ -79,31 +71,6 @@ class LoggerManager:
                     level=getattr(config.logging, "LOG_ELK_LEVEL", "DEBUG"),
                     serialize=True,
                 )
-
-        logger.add(
-            os.path.join(log_dir, "error", "error_{time:YYYY-MM-DD}.log"),
-            rotation=config.logging.LOG_ROTATION,
-            retention=config.logging.LOG_RETENTION,
-            level="ERROR",
-        )
-
-        # 专门针对 planner_subgraph 相关的模块设置单独的日志输出 (普通日志)
-        logger.add(
-            os.path.join(log_dir, "planner_subgraph", "planner_subgraph_{time:YYYY-MM-DD}.log"),
-            rotation=config.logging.LOG_ROTATION,
-            retention=config.logging.LOG_RETENTION,
-            level=config.logging.LOG_LEVEL,
-            filter=lambda record: "plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"],
-        )
-
-        # 专门针对 planner_subgraph 相关的模块设置单独的错误日志输出
-        logger.add(
-            os.path.join(log_dir, "planner_subgraph_error", "planner_subgraph_error_{time:YYYY-MM-DD}.log"),
-            rotation=config.logging.LOG_ROTATION,
-            retention=config.logging.LOG_RETENTION,
-            level="ERROR",
-            filter=lambda record: "plan_subgraph" in record["name"] or "phase=planner_" in record["message"] or "phase=rerank_" in record["message"] or "phase=filter_" in record["message"] or "phase=retrieve_" in record["message"] or "phase=search_" in record["message"],
-        )
 
         cls._initialized = True
 

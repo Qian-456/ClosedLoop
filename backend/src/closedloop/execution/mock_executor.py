@@ -27,10 +27,23 @@ _reservations_lock = asyncio.Lock()
 class _ExecutionContext:
     request: ExecuteRequest
     queue: asyncio.Queue[dict[str, Any]]
+    decision_futures: dict[str, asyncio.Future[dict[str, Any]]]
+    pending_confirmations: dict[str, dict[str, Any]]
+    execution_key: str
+    loop_id: int
 
 
 _executions: dict[str, _ExecutionContext] = {}
+_execution_keys: dict[str, str] = {}
 _executions_guard = asyncio.Lock()
+
+
+def _execution_key_from_request(request: ExecuteRequest) -> str:
+    try:
+        dumped = request.model_dump()
+    except Exception:
+        dumped = {"plan_id": getattr(request, "plan_id", ""), "steps": getattr(request, "steps", [])}
+    return json.dumps(dumped, ensure_ascii=False, sort_keys=True)
 
 def _resolve_dir(v: str) -> str:
     if not v:
@@ -227,12 +240,27 @@ def _reserve_capacity(
 async def start_execution(request: ExecuteRequest) -> str:
     """创建执行会话并启动后台任务，返回 execution_id。"""
 
-    execution_id = f"exe_{uuid.uuid4().hex}"
-    queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
-    ctx = _ExecutionContext(request=request, queue=queue)
-
+    execution_key = _execution_key_from_request(request)
+    current_loop_id = id(asyncio.get_running_loop())
     async with _executions_guard:
+        existing_id = _execution_keys.get(execution_key)
+        if existing_id and existing_id in _executions:
+            existing_ctx = _executions.get(existing_id)
+            if existing_ctx is not None and existing_ctx.loop_id == current_loop_id:
+                return existing_id
+
+        execution_id = f"exe_{uuid.uuid4().hex}"
+        queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
+        ctx = _ExecutionContext(
+            request=request,
+            queue=queue,
+            decision_futures={},
+            pending_confirmations={},
+            execution_key=execution_key,
+            loop_id=current_loop_id,
+        )
         _executions[execution_id] = ctx
+        _execution_keys[execution_key] = execution_id
 
     asyncio.create_task(_run_execution(execution_id, ctx))
     return execution_id
@@ -247,15 +275,65 @@ async def iter_events(execution_id: str) -> AsyncIterator[dict[str, Any]]:
         yield ExecuteEvent(type="done", data={"status": "not_found"}).model_dump()
         return
 
+    done_seen = False
     try:
         while True:
             event = await ctx.queue.get()
             yield event
             if event.get("type") == "done":
+                done_seen = True
                 return
     finally:
-        async with _executions_guard:
-            _executions.pop(execution_id, None)
+        if done_seen:
+            async with _executions_guard:
+                removed = _executions.pop(execution_id, None)
+                if removed is not None:
+                    mapped = _execution_keys.get(removed.execution_key)
+                    if mapped == execution_id:
+                        _execution_keys.pop(removed.execution_key, None)
+
+
+async def peek_pending_confirmation(execution_id: str) -> dict[str, Any] | None:
+    async with _executions_guard:
+        ctx = _executions.get(execution_id)
+    if not ctx:
+        return None
+    if not ctx.pending_confirmations:
+        return None
+    for _k, v in ctx.pending_confirmations.items():
+        if isinstance(v, dict):
+            return v
+    return None
+
+
+async def submit_decision(execution_id: str, item_id: str, decision: dict[str, Any]) -> bool:
+    async with _executions_guard:
+        ctx = _executions.get(execution_id)
+    if not ctx:
+        return False
+
+    fut = ctx.decision_futures.get(str(item_id))
+    if fut is None:
+        if ctx.decision_futures:
+            logger.error(
+                f"phase=execute_mock | action=submit_decision_failed | execution_id={execution_id} | item_id={item_id} | reason=no_pending_future"
+            )
+            return False
+
+        loop = asyncio.get_running_loop()
+        fut = loop.create_future()
+        ctx.decision_futures[str(item_id)] = fut
+
+    if fut.done():
+        return False
+
+    fut.set_result(decision or {})
+    ctx.pending_confirmations.pop(str(item_id), None)
+    decision_type = str((decision or {}).get("type") or "")
+    logger.info(
+        f"phase=execute_mock | action=submit_decision_received | execution_id={execution_id} | item_id={item_id} | decision_type={decision_type}"
+    )
+    return True
 
 
 async def _emit(ctx: _ExecutionContext, event: ExecuteEvent) -> None:
@@ -300,7 +378,9 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
         ),
     )
 
-    check_delay = float(random.uniform(0.05, 0.30))
+    config = get_config()
+    sim_delay_max = float(getattr(config, "EXECUTION_SIM_DELAY_MAX_SECS", 0.02))
+    check_delay = float(random.uniform(0.0, max(0.0, sim_delay_max)))
     t0 = time.perf_counter()
     await asyncio.sleep(check_delay)
     checked_ms = int((time.perf_counter() - t0) * 1000)
@@ -320,7 +400,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
         ),
     )
 
-    reserve_delay = float(random.uniform(0.05, 0.30))
+    reserve_delay = float(random.uniform(0.0, max(0.0, sim_delay_max)))
     t1 = time.perf_counter()
     await asyncio.sleep(reserve_delay)
     reserved_ms = int((time.perf_counter() - t1) * 1000)
@@ -442,37 +522,98 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                         _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
             else:
                 reserved = True
+                reserved_detail = {"requires_booking": False}
 
             if not reserved and step.replacement_policy != "strict" and not step.user_touched:
-                logger.debug(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
+                logger.info(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
                 async with _reservations_lock:
                     reservations = _read_list_json(repo_dir, "reservations.json")
-                    for backup in (step.backup_candidates or []):
+                    for attempt_index, backup in enumerate((step.backup_candidates or []), start=1):
                         b_requires_confirmation = backup.get("requires_confirmation", False)
-                        logger.debug(f"phase=execute_mock | action=fallback_check | backup_id={backup.get('id')} | requires_confirmation={b_requires_confirmation}")
-                        if b_requires_confirmation:
-                            await _emit(ctx, ExecuteEvent(
-                                type="item_update",
-                                data={
-                                    "execution_id": execution_id,
-                                    "item_id": step.item_id,
-                                    "item_type": step.item_type,
-                                    "phase": "pending_user_confirmation",
-                                    "message": f"主选餐厅无座，备选餐厅({backup.get('name')})触发提醒: {backup.get('violation_reason')}",
-                                }
-                            ))
-                            break
-
+                        logger.info(
+                            f"phase=execute_mock | action=fallback_check | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={backup.get('id')} | requires_confirmation={b_requires_confirmation}"
+                        )
                         b_id = backup.get("id")
                         if not b_id or str(b_id) in forced_ids:
+                            logger.info(
+                                f"phase=execute_mock | action=fallback_next | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | reason=invalid_or_forced"
+                            )
                             continue
 
                         b_combo = _find_combo(restaurants, b_id)
                         if not b_combo:
+                            logger.info(f"phase=execute_mock | action=fallback_skip | execution_id={execution_id} | backup_id={b_id} | reason=combo_not_found")
+                            logger.info(
+                                f"phase=execute_mock | action=fallback_next | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | reason=combo_not_found"
+                            )
                             continue
+
+                        if b_requires_confirmation:
+                            loop = asyncio.get_running_loop()
+                            fut = loop.create_future()
+                            ctx.decision_futures[str(step.item_id)] = fut
+                            ctx.pending_confirmations[str(step.item_id)] = {
+                                "execution_id": execution_id,
+                                "item_id": step.item_id,
+                                "item_type": step.item_type,
+                                "backup_id": b_id,
+                                "backup_name": backup.get("name"),
+                                "violation_reason": backup.get("violation_reason"),
+                                "allowed_decisions": ["approve", "reject"],
+                            }
+
+                            logger.info(f"phase=execute_mock | action=fallback_pending_confirmation | execution_id={execution_id} | original_id={step.item_id} | backup_id={b_id}")
+                            await _emit(
+                                ctx,
+                                ExecuteEvent(
+                                    type="item_update",
+                                    data={
+                                        "execution_id": execution_id,
+                                        "item_id": step.item_id,
+                                        "item_type": step.item_type,
+                                        "phase": "pending_user_confirmation",
+                                        "message": f"主选餐厅无座，备选餐厅({backup.get('name')})触发提醒: {backup.get('violation_reason')}",
+                                        "backup_id": b_id,
+                                        "backup_name": backup.get("name"),
+                                        "violation_reason": backup.get("violation_reason"),
+                                        "allowed_decisions": ["approve", "reject"],
+                                    },
+                                ),
+                            )
+
+                            wait_started = time.monotonic()
+                            logger.info(
+                                f"phase=execute_mock | action=decision_wait_start | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id}"
+                            )
+                            decision = await fut
+                            ctx.decision_futures.pop(str(step.item_id), None)
+                            ctx.pending_confirmations.pop(str(step.item_id), None)
+                            decision_type = str((decision or {}).get("type") or "reject")
+                            wait_ms = int((time.monotonic() - wait_started) * 1000)
+                            logger.info(
+                                f"phase=execute_mock | action=decision_received | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | decision_type={decision_type} | elapsed_ms={wait_ms}"
+                            )
+                            if decision_type != "approve":
+                                reserved_detail = {
+                                    **(reserved_detail or {}),
+                                    "pending_decision": decision_type,
+                                }
+                                logger.info(
+                                    f"phase=execute_mock | action=fallback_next | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | reason=decision_{decision_type}"
+                                )
+                                continue
+
                         b_req_booking = bool(b_combo.get("requires_booking", False))
                         if b_req_booking:
-                            b_reserved, b_detail = _reserve_capacity(reservations, "combo", str(b_id), step.start_time)
+                            logger.info(
+                                f"phase=execute_mock | action=fallback_try_reserve | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | requires_booking=True | start_time={step.start_time}"
+                            )
+                            b_reserved, b_detail = _reserve_capacity(
+                                reservations, "combo", str(b_id), step.start_time
+                            )
+                            logger.info(
+                                f"phase=execute_mock | action=fallback_reserve_result | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | reserved={b_reserved} | detail={b_detail}"
+                            )
                             if b_reserved:
                                 reserved = True
                                 reserved_detail = b_detail
@@ -481,12 +622,20 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                                 new_item_name = backup.get("name")
                                 _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
                                 break
-                        else:
-                            reserved = True
-                            replaced = True
-                            new_item_id = str(b_id)
-                            new_item_name = backup.get("name")
-                            break
+                            reserved_detail = b_detail
+                            logger.info(
+                                f"phase=execute_mock | action=fallback_next | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | reason=booking_failed"
+                            )
+                            continue
+
+                        logger.info(
+                            f"phase=execute_mock | action=fallback_try_reserve | execution_id={execution_id} | original_id={step.item_id} | attempt={attempt_index} | backup_id={b_id} | requires_booking=False"
+                        )
+                        reserved = True
+                        replaced = True
+                        new_item_id = str(b_id)
+                        new_item_name = backup.get("name")
+                        break
             logger.info(
                 f"phase=execute_mock | action=reserve_combo | execution_id={execution_id} | combo_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail} | replaced={replaced} | new_id={new_item_id}"
             )
@@ -505,6 +654,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                 "checked_ms": checked_ms,
                 "reserved_ms": reserved_ms,
                 "reserved": bool(reserved),
+                "detail": reserved_detail,
                 "delivery_time": delivery_time,
                 "replaced": replaced,
                 "new_item_id": new_item_id,
@@ -528,7 +678,9 @@ async def _book_taxi(execution_id: str, ctx: _ExecutionContext, step: ExecuteSte
         ),
     )
 
-    check_delay = float(random.uniform(0.05, 0.30))
+    config = get_config()
+    sim_delay_max = float(getattr(config, "EXECUTION_SIM_DELAY_MAX_SECS", 0.02))
+    check_delay = float(random.uniform(0.0, max(0.0, sim_delay_max)))
     t0 = time.perf_counter()
     await asyncio.sleep(check_delay)
     checked_ms = int((time.perf_counter() - t0) * 1000)
@@ -548,7 +700,7 @@ async def _book_taxi(execution_id: str, ctx: _ExecutionContext, step: ExecuteSte
         ),
     )
 
-    reserve_delay = float(random.uniform(0.05, 0.30))
+    reserve_delay = float(random.uniform(0.0, max(0.0, sim_delay_max)))
     t1 = time.perf_counter()
     await asyncio.sleep(reserve_delay)
     reserved_ms = int((time.perf_counter() - t1) * 1000)
@@ -569,6 +721,7 @@ async def _book_taxi(execution_id: str, ctx: _ExecutionContext, step: ExecuteSte
                 "checked_ms": checked_ms,
                 "reserved_ms": reserved_ms,
                 "reserved": True,
+                "detail": {"commute_mode": "taxi", "checked_ms": checked_ms, "reserved_ms": reserved_ms},
             },
         ),
     )

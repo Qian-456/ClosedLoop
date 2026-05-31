@@ -66,6 +66,23 @@ export type Confirmation = {
   status: 'ok' | 'skipped' | 'fallback_rules' | string
   reason?: string
   plans?: Partial<ThreePlansCopywriting>
+  interrupt?: unknown
+  execution_summary?: {
+    execution_id?: string
+    replacements?: Array<{
+      original_id?: string
+      original_name?: string
+      new_item_id?: string
+      new_item_name?: string
+      item_type?: ItineraryItemType | string
+    }>
+    failures?: Array<{
+      item_id?: string
+      item_name?: string
+      item_type?: ItineraryItemType | string
+    }>
+    items?: unknown[]
+  }
 }
 
 export type Constraints = {

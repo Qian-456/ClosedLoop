@@ -16,8 +16,6 @@ from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.graph.tools.plan_sub_api import request_plan_sub_json
 
-PLAN_SUB_RETRYABLE_ERRORS = (httpx.TimeoutException, httpx.NetworkError, httpx.TransportError)
-
 
 class PlanTripInput(BaseModel):
     """用于生成本地生活行程规划的结构化输入。"""
@@ -129,12 +127,12 @@ def plan_trip(
 ) -> Command:
     """
     根据结构化参数调用本地规划子图，生成多套本地生活行程方案。
-
-    该工具只做进程内子图调用，不访问 HTTP 接口。
     """
     config = get_config()
     LoggerManager.setup(config)
     session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
+    tool_budget_secs = float(getattr(config, "TOOL_MAX_RUNTIME_SECS", 3.0))
+    started_at = time.perf_counter()
 
     logger.info(f"phase=plan_trip | input=group_type={group_type} budget={budget} time_period={time_period} session_id={session_id}")
 
@@ -167,26 +165,20 @@ def plan_trip(
             "top_k": 1,
             "session_id": session_id,
         }
-        
-        for attempt in range(3):
-            try:
-                subgraph_output = request_plan_sub_json(
-                    method="POST",
-                    configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
-                    target_path="/plan",
-                    phase="plan_trip",
-                    json=payload,
-                    timeout=3.0,
-                    network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
-                )
-                break
-            except PLAN_SUB_RETRYABLE_ERRORS as e:
-                if attempt == 2:
-                    raise
-                logger.warning(
-                    f"phase=plan_trip | msg=retrying | attempt={attempt+1} | retryable=True | error={e}"
-                )
-                time.sleep(2.0)
+
+        remaining_secs = tool_budget_secs - (time.perf_counter() - started_at)
+        if remaining_secs <= 0:
+            raise TimeoutError("tool_budget_exhausted")
+
+        subgraph_output = request_plan_sub_json(
+            method="POST",
+            configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+            target_path="/plan",
+            phase="plan_trip",
+            json=payload,
+            timeout=remaining_secs,
+            network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
+        )
 
         candidates = subgraph_output.get("candidates", {}) if isinstance(subgraph_output, dict) else {}
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
@@ -199,11 +191,25 @@ def plan_trip(
             f"| gift_count={candidate_counts['gift_count']}"
         )
         logger.info(f"phase=plan_trip | result=success | itinerary_status={result.get('status')}")
+    except (TimeoutError, httpx.TimeoutException) as e:
+        constraints = raw_constraints
+        candidates = {}
+        result = {
+            "error": "规划子图调用失败",
+            "code": "TOOL_TIMEOUT",
+            "recoverable": True,
+            "message": str(e),
+            "constraints": constraints,
+        }
+        status = "timeout"
+        logger.error(f"phase=plan_trip | error=timeout | detail={e}")
     except Exception as e:
         constraints = raw_constraints
         candidates = {}
         result = {
             "error": "规划子图调用失败",
+            "code": "UPSTREAM_ERROR",
+            "recoverable": True,
             "message": str(e),
             "constraints": constraints,
         }
@@ -253,6 +259,8 @@ def generate_alternative_plans(
     config = get_config()
     LoggerManager.setup(config)
     session_id = config_runnable.get("configurable", {}).get("thread_id", "default")
+    tool_budget_secs = float(getattr(config, "TOOL_MAX_RUNTIME_SECS", 3.0))
+    started_at = time.perf_counter()
     
     logger.info(f"phase=generate_alternative_plans | count={count} | session_id={session_id}")
     
@@ -278,31 +286,40 @@ def generate_alternative_plans(
             "top_k": count,
             "session_id": session_id,
         }
-        
-        import time
-        for attempt in range(3):
-            try:
-                subgraph_output = request_plan_sub_json(
-                    method="POST",
-                    configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
-                    target_path="/plan",
-                    phase="generate_alternative_plans",
-                    json=payload,
-                    timeout=30.0,
-                    network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
-                )
-                break
-            except Exception as e:
-                if attempt == 2:
-                    raise
-                logger.warning(f"phase=generate_alternative_plans | msg=retrying | attempt={attempt+1} | error={e}")
-                time.sleep(2.0)
+
+        remaining_secs = tool_budget_secs - (time.perf_counter() - started_at)
+        if remaining_secs <= 0:
+            raise TimeoutError("tool_budget_exhausted")
+
+        subgraph_output = request_plan_sub_json(
+            method="POST",
+            configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+            target_path="/plan",
+            phase="generate_alternative_plans",
+            json=payload,
+            timeout=remaining_secs,
+            network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
+        )
             
         result = subgraph_output.get("itinerary", {}) if isinstance(subgraph_output, dict) else {}
         status = "success"
         logger.info(f"phase=generate_alternative_plans | result=success | count={count}")
+    except (TimeoutError, httpx.TimeoutException) as e:
+        result = {
+            "error": "备选方案生成超时",
+            "code": "TOOL_TIMEOUT",
+            "recoverable": True,
+            "message": str(e),
+        }
+        status = "timeout"
+        logger.error(f"phase=generate_alternative_plans | error=timeout | detail={e}")
     except Exception as e:
-        result = {"error": str(e)}
+        result = {
+            "error": "备选方案生成失败",
+            "code": "UPSTREAM_ERROR",
+            "recoverable": True,
+            "message": str(e),
+        }
         status = "failed"
         logger.error(f"phase=generate_alternative_plans | error={e}")
         

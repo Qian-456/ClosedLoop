@@ -410,4 +410,5 @@ class ClosedLoopState(AgentState):
     candidates: NotRequired[Candidates]
     itinerary: NotRequired[list[dict]]
     confirmation: NotRequired[dict]
+    execution_report: NotRequired[dict]
     current_step: Annotated[Optional[str], replace_value]

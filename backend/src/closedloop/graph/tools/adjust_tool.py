@@ -34,6 +34,7 @@ def adjust_plan_item(
     """
     config = get_config()
     LoggerManager.setup(config)
+    tool_http_timeout_secs = float(getattr(config, "TOOL_HTTP_TIMEOUT_SECS", 3.0))
 
     logger.info(f"phase=adjust_plan_item | plan_id={plan_id} | target={target_item_id} | new={new_item_id}")
 
@@ -72,7 +73,7 @@ def adjust_plan_item(
                 target_path=f"/item/{new_item_id}",
                 phase="adjust_plan_item",
                 params={"session_id": session_id},
-                timeout=10.0,
+                timeout=tool_http_timeout_secs,
                 network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
             )
             if res_data.get("status") == "success" and res_data.get("item"):

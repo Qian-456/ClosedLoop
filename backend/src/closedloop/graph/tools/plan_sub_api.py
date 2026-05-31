@@ -1,4 +1,5 @@
 import socket
+import time
 from typing import Any, Literal
 from urllib.parse import urlsplit
 
@@ -71,23 +72,41 @@ def request_plan_sub_json(
     candidate_urls = build_plan_sub_candidate_urls(configured_url, target_path, network_mode=network_mode)
     request_method = method.upper()
     last_error: Exception | None = None
+    started_at = time.perf_counter()
+    deadline = started_at + float(timeout)
+    total_candidates = len(candidate_urls)
 
     with httpx.Client(timeout=timeout, trust_env=False, proxy=None) as client:
-        for candidate_url in candidate_urls:
+        for attempt_index, candidate_url in enumerate(candidate_urls, start=1):
+            now = time.perf_counter()
+            remaining_secs = deadline - now
+            if remaining_secs <= 0:
+                elapsed_ms = int((now - started_at) * 1000)
+                logger.warning(
+                    f"phase={phase} | msg=plan_sub_api_total_timeout | method={request_method} "
+                    f"| elapsed_ms={elapsed_ms} | attempts={attempt_index-1}/{total_candidates}"
+                )
+                raise TimeoutError("plan_sub_api_total_timeout")
+
             try:
+                remaining_ms = int(remaining_secs * 1000)
                 logger.info(
-                    f"phase={phase} | msg=plan_sub_api_attempt | method={request_method} | url={candidate_url}"
+                    f"phase={phase} | msg=plan_sub_api_attempt | method={request_method} "
+                    f"| attempt={attempt_index}/{total_candidates} | remaining_ms={remaining_ms} | url={candidate_url}"
                 )
                 response = client.request(
                     request_method,
                     candidate_url,
                     json=json,
                     params=params,
+                    timeout=remaining_secs,
                 )
                 response.raise_for_status()
                 payload = response.json()
+                elapsed_ms = int((time.perf_counter() - started_at) * 1000)
                 logger.info(
-                    f"phase={phase} | msg=plan_sub_api_success | method={request_method} | url={candidate_url}"
+                    f"phase={phase} | msg=plan_sub_api_success | method={request_method} "
+                    f"| elapsed_ms={elapsed_ms} | url={candidate_url}"
                 )
                 return payload
             except socket.gaierror as error:

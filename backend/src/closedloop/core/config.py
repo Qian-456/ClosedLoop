@@ -52,6 +52,11 @@ class AppConfig(BaseSettings):
     PLAN_SUB_API_URL: str = "http://localhost:8001/plan"
     SEARCH_SUB_API_URL: str = "http://127.0.0.1:8002/search"
     PLAN_SUB_NETWORK_MODE: Literal["local", "docker"] = "local"
+    HITL_RESUME_HEARTBEAT_SECS: float = 1.0
+    HITL_RESUME_MAX_WAIT_SECS: float = 3.0
+    TOOL_MAX_RUNTIME_SECS: float = 3.0
+    TOOL_HTTP_TIMEOUT_SECS: float = 3.0
+    EXECUTION_SIM_DELAY_MAX_SECS: float = 0.02
 
     logging: LoggingSettings = Field(default_factory=LoggingSettings)
     deepseek: DeepSeekSettings = Field(default_factory=DeepSeekSettings)

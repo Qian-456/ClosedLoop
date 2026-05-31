@@ -99,14 +99,24 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
                 replacement_policy="equivalent_only",
                 user_touched=False,
             )
-            ctx = mock_executor._ExecutionContext(
-                request=ExecuteRequest(plan_id="plan_A", steps=[step]), queue=asyncio.Queue()
-            )
+            async def _run():
+                ctx = mock_executor._ExecutionContext(
+                    request=ExecuteRequest(plan_id="plan_A", steps=[step]),
+                    queue=asyncio.Queue(),
+                    decision_futures={},
+                    pending_confirmations={},
+                    execution_key="test",
+                    loop_id=id(asyncio.get_running_loop()),
+                )
 
-            with patch("closedloop.execution.mock_executor.get_config", return_value=fake_config):
-                with patch("closedloop.execution.mock_executor.random.uniform", return_value=0.0):
-                    with patch("closedloop.execution.mock_executor.asyncio.sleep", new=_noop_sleep):
-                        asyncio.run(mock_executor._check_and_reserve_one("exe_test", ctx, step))
+                with patch("closedloop.execution.mock_executor.get_config", return_value=fake_config):
+                    with patch("closedloop.execution.mock_executor.random.uniform", return_value=0.0):
+                        with patch("closedloop.execution.mock_executor.asyncio.sleep", new=_noop_sleep):
+                            await mock_executor._check_and_reserve_one("exe_test", ctx, step)
+
+                return ctx
+
+            ctx = asyncio.run(_run())
 
             events = []
             while not ctx.queue.empty():
@@ -126,72 +136,106 @@ class TestMockExecutorForcedOutOfStock(unittest.TestCase):
         async def _noop_sleep(*_args, **_kwargs):
             return None
 
-        with tempfile.TemporaryDirectory() as repo_dir, tempfile.TemporaryDirectory() as rw_dir:
-            restaurants = [
-                {
-                    "id": "restaurant_001",
-                    "combos": [
-                        {"combo_id": "combo_main", "requires_booking": False},
-                        {"combo_id": "combo_backup", "requires_booking": False},
-                    ],
-                }
-            ]
-            for name, content in (
-                ("restaurants.json", restaurants),
-                ("activities.json", []),
-                ("add_ons.json", []),
-                ("reservations.json", []),
-            ):
-                with open(os.path.join(repo_dir, name), "w", encoding="utf-8") as f:
-                    json.dump(content, f, ensure_ascii=False, indent=2)
+        async def _run():
+            with tempfile.TemporaryDirectory() as repo_dir, tempfile.TemporaryDirectory() as rw_dir:
+                restaurants = [
+                    {
+                        "id": "restaurant_001",
+                        "combos": [
+                            {"combo_id": "combo_main", "requires_booking": False},
+                            {"combo_id": "combo_backup", "requires_booking": False},
+                        ],
+                    }
+                ]
+                for name, content in (
+                    ("restaurants.json", restaurants),
+                    ("activities.json", []),
+                    ("add_ons.json", []),
+                    ("reservations.json", []),
+                ):
+                    with open(os.path.join(repo_dir, name), "w", encoding="utf-8") as f:
+                        json.dump(content, f, ensure_ascii=False, indent=2)
 
-            fake_config = type(
-                "FakeConfig",
-                (),
-                {
-                    "data": type(
-                        "Data",
-                        (),
+                fake_config = type(
+                    "FakeConfig",
+                    (),
+                    {
+                        "data": type(
+                            "Data",
+                            (),
+                            {
+                                "MOCK_DB_REPO_DIR": repo_dir,
+                                "MOCK_DB_RW_DIR": rw_dir,
+                                "FORCE_OUT_OF_STOCK_IDS": "(combo_main,)",
+                            },
+                        )()
+                    },
+                )()
+
+                step = ExecuteStep(
+                    item_id="combo_main",
+                    item_type="restaurant",
+                    start_time="12:00",
+                    end_time="13:00",
+                    backup_candidates=[
                         {
-                            "MOCK_DB_REPO_DIR": repo_dir,
-                            "MOCK_DB_RW_DIR": rw_dir,
-                            "FORCE_OUT_OF_STOCK_IDS": "(combo_main,)",
-                        },
-                    )()
-                },
-            )()
+                            "id": "combo_backup",
+                            "name": "备选餐厅",
+                            "requires_confirmation": True,
+                            "violation_reason": "超出预算或时间",
+                        }
+                    ],
+                    replacement_policy="equivalent_only",
+                    user_touched=False,
+                )
+                ctx = mock_executor._ExecutionContext(
+                    request=ExecuteRequest(plan_id="plan_A", steps=[step]),
+                    queue=asyncio.Queue(),
+                    decision_futures={},
+                    pending_confirmations={},
+                    execution_key="test",
+                    loop_id=id(asyncio.get_running_loop()),
+                )
 
-            step = ExecuteStep(
-                item_id="combo_main",
-                item_type="restaurant",
-                start_time="12:00",
-                end_time="13:00",
-                backup_candidates=[{"id": "combo_backup", "name": "备选餐厅", "requires_confirmation": True, "violation_reason": "超出预算或时间"}],
-                replacement_policy="equivalent_only",
-                user_touched=False,
-            )
-            ctx = mock_executor._ExecutionContext(
-                request=ExecuteRequest(plan_id="plan_A", steps=[step]), queue=asyncio.Queue()
-            )
+                with patch("closedloop.execution.mock_executor.get_config", return_value=fake_config):
+                    with patch("closedloop.execution.mock_executor.random.uniform", return_value=0.0):
+                        with patch("closedloop.execution.mock_executor.asyncio.sleep", new=_noop_sleep):
+                            task = asyncio.create_task(
+                                mock_executor._check_and_reserve_one("exe_test", ctx, step)
+                            )
 
-            with patch("closedloop.execution.mock_executor.get_config", return_value=fake_config):
-                with patch("closedloop.execution.mock_executor.random.uniform", return_value=0.0):
-                    with patch("closedloop.execution.mock_executor.asyncio.sleep", new=_noop_sleep):
-                        asyncio.run(mock_executor._check_and_reserve_one("exe_test", ctx, step))
+                            event = None
+                            while True:
+                                next_event = await ctx.queue.get()
+                                if (
+                                    next_event.get("type") == "item_update"
+                                    and next_event.get("data", {}).get("phase")
+                                    == "pending_user_confirmation"
+                                ):
+                                    event = next_event
+                                    break
+                            self.assertIsNotNone(event)
 
-            events = []
-            while not ctx.queue.empty():
-                events.append(ctx.queue.get_nowait())
+                            fut = ctx.decision_futures.get("combo_main")
+                            self.assertIsNotNone(fut)
+                            fut.set_result({"type": "approve"})
 
-            pending = [
-                e
-                for e in events
-                if e.get("type") == "item_update"
-                and e.get("data", {}).get("phase") == "pending_user_confirmation"
-            ]
-            self.assertEqual(len(pending), 1)
+                            await asyncio.wait_for(task, timeout=1.0)
+
+                events = [event]
+                while not ctx.queue.empty():
+                    events.append(ctx.queue.get_nowait())
+
+                done = [
+                    e
+                    for e in events
+                    if e.get("type") == "item_update"
+                    and e.get("data", {}).get("phase") == "done"
+                ]
+                self.assertEqual(len(done), 1)
+
+        asyncio.run(_run())
 
 
 if __name__ == "__main__":
     unittest.main()
-
