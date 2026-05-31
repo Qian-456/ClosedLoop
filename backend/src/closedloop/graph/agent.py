@@ -132,6 +132,8 @@ FIXUP_AGENT_SYSTEM_PROMPT = """
    - 即使你认为候选1更合适，也必须等待用户明确选择，禁止默认替换
 3. 用户选择候选1/2时：
    - 调用 adjust_and_execute_plan_item(plan_id, target_item_id, new_item_id=<候选id>) 完成替换和执行。
+   - 一次用户选择只允许调用一次 adjust_and_execute_plan_item；禁止同一轮同时修多个 target_item_id。
+   - plan_id、target_item_id 必须严格来自当前 confirmation.fixup；不能自行改成其他失败项。
    - 中途禁止再问用户确认（包括交通选项/风险提示等），直接推进到执行工具。
 4. 用户选择搜索时：
    - 调用 search_candidates(query=...)，把结果列出来让用户明确选一个 new_item_id

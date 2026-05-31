@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useItineraryStore } from '../store/useItineraryStore'
 
 import type { Confirmation, ItineraryPlan } from '../model/types'
 
@@ -13,6 +14,7 @@ type Props = {
  * Renders the final plan result panel after the stream finishes.
  */
 export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
+  const invokeStatus = useItineraryStore((s) => s.invokeStatus)
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
   const [expanded, setExpanded] = useState(false)
@@ -29,7 +31,9 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
     return '方案生成完成后会展示在这里。'
   }, [confirmation, errorMessage, hasPlans, plans.length])
 
-  const fixupPayload = (confirmation as any)?.fixup ?? null
+  // Fixup 强行清空逻辑：如果状态是 executed 或 failed，说明执行已经彻底结束（无论成功与否），必须清空 fixup 遗留数据
+  const isFixupFinished = confirmation?.status === 'executed' || confirmation?.status === 'failed'
+  const fixupPayload = isFixupFinished ? null : (confirmation as any)?.fixup ?? null
   const backupCandidates = Array.isArray(fixupPayload?.backup_candidates)
     ? (fixupPayload.backup_candidates as any[])
     : []
@@ -64,28 +68,26 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   return (
     <div className="px-4 pb-4">
       <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-        {confirmation?.status === 'needs_fixup' ? (
+        {confirmation?.status === 'needs_fixup' &&
+        invokeStatus !== 'running' &&
+        backupCandidates.length > 0 ? (
           <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
             <div className="font-semibold">需要你确认</div>
             <div className="mt-1 text-xs text-amber-800">
               执行遇到备选替换。请在输入框回复：选1 / 选2 / 搜索 关键词
             </div>
-            {topCandidates.length > 0 ? (
-              <div className="mt-3 space-y-2 text-xs text-amber-900">
-                {topCandidates.map((candidate, index) => (
-                  <div key={String(candidate?.id ?? index)} className="rounded-xl bg-white/60 px-3 py-2">
-                    <div className="font-semibold">
-                      候选{index + 1}：{String(candidate?.name ?? candidate?.id ?? '')}
-                    </div>
-                    {candidate?.violation_reason ? (
-                      <div className="mt-1 text-amber-800">原因：{String(candidate.violation_reason)}</div>
-                    ) : null}
+            <div className="mt-3 space-y-2 text-xs text-amber-900">
+              {topCandidates.map((candidate, index) => (
+                <div key={String(candidate?.id ?? index)} className="rounded-xl bg-white/60 px-3 py-2">
+                  <div className="font-semibold">
+                    候选{index + 1}：{String(candidate?.name ?? candidate?.id ?? '')}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-3 text-xs text-amber-800">当前没有可用的候选备选，请直接回复：搜索 关键词</div>
-            )}
+                  {candidate?.violation_reason ? (
+                    <div className="mt-1 text-amber-800">原因：{String(candidate.violation_reason)}</div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
           </div>
         ) : null}
 

@@ -85,6 +85,29 @@ def _safe_float(v: Any) -> float:
         return 0.0
 
 
+def _merge_previous_execution_summary(previous_summary: dict | None) -> dict:
+    """继承历史成功项，旧失败必须由本轮执行重新计算。"""
+    execution_summary: dict = {
+        "execution_id": None,
+        "replacements": [],
+        "failures": [],
+        "items": [],
+    }
+    if not isinstance(previous_summary, dict):
+        return execution_summary
+
+    if isinstance(previous_summary.get("replacements"), list):
+        execution_summary["replacements"].extend(previous_summary.get("replacements") or [])
+    if isinstance(previous_summary.get("items"), list):
+        execution_summary["items"].extend(
+            [
+                item for item in (previous_summary.get("items") or [])
+                if isinstance(item, dict) and item.get("reserved") is True
+            ]
+        )
+    return execution_summary
+
+
 def _read_list_json(path: str) -> list[dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -321,19 +344,7 @@ async def _do_execute_itinerary(
 
         expected_total_cost = _safe_float(target_plan.get("total_cost"))
 
-        execution_summary: dict = {
-            "execution_id": None,
-            "replacements": [],
-            "failures": [],
-            "items": [],
-        }
-        if isinstance(previous_summary, dict):
-            if isinstance(previous_summary.get("replacements"), list):
-                execution_summary["replacements"].extend(previous_summary.get("replacements") or [])
-            if isinstance(previous_summary.get("failures"), list):
-                execution_summary["failures"].extend(previous_summary.get("failures") or [])
-            if isinstance(previous_summary.get("items"), list):
-                execution_summary["items"].extend(previous_summary.get("items") or [])
+        execution_summary = _merge_previous_execution_summary(previous_summary)
 
         execution_id: str | None = None
         status = "success"
@@ -363,6 +374,71 @@ async def _do_execute_itinerary(
 
                         if data.get("phase") == "pending_user_confirmation":
                             backup_candidates = data.get("backup_candidates")
+                            if isinstance(backup_candidates, list):
+                                # 提前试算过滤：剔除会导致 L3(替换其他项目)、L4(删项) 或 L5(需用户选择) 的危险备选
+                                from closedloop.graph.plan_subgraph.repairer import repair_plan
+                                safe_candidates = []
+                                
+                                target_item_id = data.get("item_id")
+                                original_ids = {str(s.get("item", {}).get("id")) for s in target_plan.get("steps", []) if s.get("item", {}).get("type") != "commute"}
+                                
+                                constraints_dict = state.get("constraints", {})
+                                budget = constraints_dict.get("budget", 999999.0)
+                                duration_hours = constraints_dict.get("duration_hours")
+                                duration_hours_range = (4.0, 6.0)
+                                if isinstance(duration_hours, (list, tuple)) and len(duration_hours) == 2:
+                                    duration_hours_range = (float(duration_hours[0]), float(duration_hours[1]))
+                                elif isinstance(duration_hours, (int, float)):
+                                    duration_hours_range = (float(duration_hours), float(duration_hours))
+                                duration_range_mins = (duration_hours_range[0] * 60.0, duration_hours_range[1] * 60.0)
+                                commute_preference = constraints_dict.get("commute_preference", "auto")
+                                candidates_pool = state.get("candidates", {})
+                                
+                                # 提前计算所有备选 gift_shop 的运费，防止 repair_plan 时费用超标
+                                # 这里使用一个简单的默认送货距离(同城)来估算运费
+                                from closedloop.graph.plan_subgraph.planner_utils import calculate_delivery_fee
+                                for cand in backup_candidates:
+                                    cand_type = cand.get("type")
+                                    if not cand_type and "gift_id" in cand:
+                                        cand_type = "gift_shop"
+                                    
+                                    if cand_type == "gift_shop" and "delivery_fee" not in cand:
+                                        # 假设一个默认的同城配送距离，比如 5km，来提前垫高备选的 cost
+                                        # 这样 repair_plan 在做 _calc_plan_metrics 之前就能有一个相对真实的基准价
+                                        base_price = float(cand.get("price", 0.0))
+                                        est_fee = calculate_delivery_fee(5.0) 
+                                        cand["price"] = base_price + est_fee
+                                        cand["delivery_fee"] = est_fee
+                                
+                                for cand in backup_candidates:
+                                    try:
+                                        cand_id = str(cand.get("combo_id") or cand.get("package_id") or cand.get("gift_id") or cand.get("id"))
+                                        expected_new_ids = (original_ids - {str(target_item_id)}) | {cand_id}
+
+                                        # repair_plan 可能原地修改 new_item，因此传入 deepcopy 做干跑校验。
+                                        import copy
+                                        repair_res = repair_plan(
+                                            plan=target_plan,
+                                            target_item_id=target_item_id,
+                                            new_item=copy.deepcopy(cand),
+                                            budget=budget,
+                                            duration_range_mins=duration_range_mins,
+                                            candidates=candidates_pool,
+                                            commute_preference=commute_preference
+                                        )
+                                        cand_status = repair_res.get("status")
+                                        if cand_status == "success" and "plan" in repair_res:
+                                            actual_new_ids = {str(s.get("item", {}).get("id")) for s in repair_res["plan"].get("steps", []) if s.get("item", {}).get("type") != "commute"}
+                                            
+                                            # 严格校验：如果 IDs 完全一致，说明没有触发 L3(替换其他项目) 或 L4(删除项目)
+                                            # 只有 L1 和 L2 会保留所有原有项目的 ID 不变（仅仅是压缩了 duration）
+                                            if actual_new_ids == expected_new_ids:
+                                                safe_candidates.append(cand)
+                                    except Exception as e:
+                                        logger.warning(f"phase=execute_itinerary | msg=repair_plan_dry_run_failed | error={e}")
+                                
+                                backup_candidates = safe_candidates
+
                             fixup = {
                                 "plan_id": plan_id,
                                 "target_item_id": data.get("item_id"),
@@ -483,7 +559,27 @@ async def _do_execute_itinerary(
             missing_ids = list(expected_set - executed_set)
             missing_count = len(missing_ids)
 
-            if failures_count == 0 and expected_set != executed_set:
+            # 新增：更全面的一致性校验（ID、总时长、总花费）
+            plan_total_cost = expected_total_cost if expected_total_cost > 0 else expected_total_cost_mapped
+            plan_total_duration = _safe_float(target_plan.get("total_duration_minutes"))
+            
+            # 在没有 failure 的情况下，严格校验 ID 和 预算
+            overpay = (executed_total_cost - plan_total_cost) > 1e-6
+            is_consistent = (failures_count == 0 and missing_count == 0 and not overpay)
+            
+            logger.info(
+                "phase=execute_itinerary | action=consistency_check "
+                f"| plan_id={plan_id} "
+                f"| plan_total_cost={plan_total_cost} "
+                f"| executed_cost={executed_total_cost} "
+                f"| overpay={overpay} "
+                f"| expected_steps={len(expected_set)} "
+                f"| executed_steps={len(executed_set)} "
+                f"| missing_count={missing_count} "
+                f"| is_consistent={is_consistent}"
+            )
+
+            if failures_count == 0 and missing_count > 0:
                 if attempt == 0:
                     logger.warning("phase=execute_itinerary | action=consistency_check_failed | msg=retrying")
                     _restore_runtime_jsons(rw_dir, runtime_snapshot)
@@ -492,7 +588,7 @@ async def _do_execute_itinerary(
                     logger.error("phase=execute_itinerary | action=consistency_check_failed | msg=retry_exhausted")
                     # Fallthrough to needs_fixup logic if it fails twice
 
-            if failures_count > 0 or expected_set != executed_set:
+            if failures_count > 0 or missing_count > 0:
                 target_item_id = None
                 failures = execution_summary.get("failures") or []
                 if isinstance(failures, list) and failures:
@@ -529,27 +625,15 @@ async def _do_execute_itinerary(
                 }
                 status = "needs_fixup"
             else:
-                plan_total_cost = expected_total_cost
-                overpay = (executed_total_cost - plan_total_cost) > 1e-6
-                logger.info(
-                    "phase=execute_itinerary | action=consistency_check "
-                    f"| plan_id={plan_id} "
-                    f"| plan_total_cost={plan_total_cost} "
-                    f"| executed_cost={executed_total_cost} "
-                    f"| overpay={overpay} "
-                    f"| expected_steps={len(expected_set)} "
-                    f"| executed_steps={len(executed_set)}"
-                )
-
                 if overpay:
                     _restore_runtime_jsons(rw_dir, runtime_snapshot)
-                    message = "执行一致性校验失败：已回滚本次执行，并将由系统自动重试。"
+                    message = "执行一致性校验失败（预算超标或行程不匹配）：已回滚本次执行，请重新调整您的行程方案。"
                     result = {
                         "plan_id": plan_id,
                         "execution_id": execution_id,
-                        "booked_items": booked_items,
-                        "commute_status": commute_status,
-                        "execution_summary": execution_summary,
+                        "booked_items": [],
+                        "commute_status": [],
+                        "execution_summary": None, # 清空 report 以引导重试
                         "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY",
                         "message": message,
                     }
@@ -558,7 +642,14 @@ async def _do_execute_itinerary(
                         "execution_id": execution_id,
                         "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY",
                         "message": message,
-                        "execution_summary": execution_summary,
+                        "execution_summary": None, # 清空 report
+                    }
+                    # 清空局部的 execution_summary 避免残留
+                    execution_summary = {
+                        "execution_id": None,
+                        "replacements": [],
+                        "failures": [],
+                        "items": [],
                     }
                     status = "failed"
                 else:

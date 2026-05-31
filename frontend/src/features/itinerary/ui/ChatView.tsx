@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { SendHorizontal, Bot, User, Plus } from 'lucide-react'
+import { SendHorizontal, Bot, User } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { invokeStream } from '../api/invoke'
 import clsx from 'clsx'
@@ -22,7 +22,6 @@ export function ChatView() {
   const setInvokeRunning = useItineraryStore((s) => s.setInvokeRunning)
   const applyInvokeStreamEvent = useItineraryStore((s) => s.applyInvokeStreamEvent)
   const setInvokeError = useItineraryStore((s) => s.setInvokeError)
-  const resetSession = useItineraryStore((s) => s.reset)
 
   const currentSession = sessions.find((s) => s.id === currentSessionId)
   const messages = currentSession?.messages || EMPTY_MESSAGES
@@ -79,15 +78,6 @@ export function ChatView() {
 
   return (
     <div className="flex flex-col h-full bg-[#F6F7FB]">
-      <div className="absolute top-0 right-0 p-4 z-20">
-        <button 
-          onClick={() => resetSession()}
-          className="p-2 text-slate-600 bg-white/50 backdrop-blur hover:bg-white rounded-full shadow-sm"
-          title="新建对话"
-        >
-          <Plus className="h-5 w-5" />
-        </button>
-      </div>
       <div 
         ref={scrollRef}
         className="flex-1 overflow-y-auto px-4 py-6 space-y-6"
