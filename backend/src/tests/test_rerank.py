@@ -33,19 +33,19 @@ class TestRerankNode(unittest.TestCase):
         # suitable_groups: family in suitable -> +15
         # activity_preferences: ["打卡点"] 命中 tags ["打卡点"] -> +5
         # capacity: "温馨三口之家套餐" -> 2.6; effective_people = 2.4; diff = 0.2 -> penalty 小
-        self.assertEqual(score, 89)
+        self.assertEqual(score, 86)
 
     def test_score_item_matches_chinese_suitable_groups(self):
         family_restaurant = self.restaurant_item.copy()
         family_restaurant["suitable_groups"] = ["家庭亲子"]
-        self.assertEqual(score_item(family_restaurant, {"name": "温馨三口之家套餐"}, self.base_constraints), 89)
+        self.assertEqual(score_item(family_restaurant, {"name": "温馨三口之家套餐"}, self.base_constraints), 86)
 
         friends_constraints = self.base_constraints.model_copy(
             update={"group_type": "friends", "child_count": 0, "child_profiles": []}
         )
         friends_restaurant = self.restaurant_item.copy()
         friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        self.assertEqual(score_item(friends_restaurant, {"name": "温馨三口之家套餐"}, friends_constraints), 79)
+        self.assertEqual(score_item(friends_restaurant, {"name": "温馨三口之家套餐"}, friends_constraints), 76)
 
     def test_get_capacity_from_name(self):
         # 测试明确的 X大Y小
@@ -93,7 +93,7 @@ class TestRerankNode(unittest.TestCase):
         # rating 58.5 + dist 13.333 + fit 15 (features matched)
         # capacity: "家庭欢乐餐" returns capacity 2.6. effective_people is 2.4.
         # diff = 0.2 -> penalty = 0.04*10 + 0.2*5 = 0.4 + 1.0 = 1.4
-        self.assertEqual(score, 89)
+        self.assertEqual(score, 86)
 
         # Friends match
         friends_constraints = self.base_constraints.model_copy(
@@ -104,7 +104,7 @@ class TestRerankNode(unittest.TestCase):
         # rating 58.5 + dist 13.333 + fit 15 (features matched) 
         # capacity: "双人餐" returns capacity 2.0. effective_people is 2.4.
         # diff = 0.4 -> penalty = 0.16*10 + 0.4*5 = 1.6 + 2.0 = 3.6
-        self.assertEqual(score_friends, 91)
+        self.assertEqual(score_friends, 88)
 
     def test_score_item_group_mismatch_penalty(self):
         item = self.restaurant_item.copy()

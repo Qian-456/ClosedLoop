@@ -60,27 +60,25 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
         # 如果实际距离小于用户选择的距离下限，得满分 (20分)。
         # 如果实际距离大于用户选择的距离上限，得 0 分。
         # 如果实际距离在区间内，进行线性归一化插值。
-        min_distance = 0.0
-        max_distance = 10.0
-        
         if pref_dist == "<2km":
-            min_distance = 0.0
-            max_distance = 2.0
+            optimal_max = 2.0
+            tolerate_max = 4.0
         elif pref_dist == "2km-5km":
-            min_distance = 2.0
-            max_distance = 5.0
+            optimal_max = 5.0
+            tolerate_max = 8.0
         elif pref_dist == ">5km":
-            min_distance = 5.0
-            max_distance = 10.0 # 设定一个合理的全局上限
+            optimal_max = 10.0
+            tolerate_max = 12.0
             
-        if actual_dist <= min_distance:
-            scene_fit_score += 20.0
-        elif actual_dist >= max_distance:
-            scene_fit_score += 0.0
+        if actual_dist <= optimal_max:
+            # 距离越近越好，但在最优区间内分数都在高位 (15~20)
+            scene_fit_score += 20.0 - (actual_dist / optimal_max) * 5.0
+        elif actual_dist <= tolerate_max:
+            # 超出最优区间，分数快速衰减 (15~0)
+            ratio = (tolerate_max - actual_dist) / (tolerate_max - optimal_max)
+            scene_fit_score += ratio * 15.0
         else:
-            # 线性插值，距离越接近 min_distance 得分越高
-            ratio = (max_distance - actual_dist) / (max_distance - min_distance)
-            scene_fit_score += ratio * 20.0
+            scene_fit_score += 0.0
 
     suitable_groups = item.get("suitable_groups", []) or []
     if isinstance(suitable_groups, list):
@@ -171,7 +169,7 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
                 if any(k in combined_text for k in ("排队", "网红", "爆款")):
                     scene_fit_score -= 5
 
-        tag_matching_score = min(20, matched * 5)
+        tag_matching_score = min(30, matched * 8)
 
         if any(
             isinstance(p, str)
@@ -211,9 +209,12 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
             scene_fit_score -= (expected_wait_minutes / 10.0) * 2
 
     # 2. 质量热度分 (Quality & Popularity Mock)
-    # 将 rating (例如 4.7) 映射到 0-65 分，使得满分体系更接近 100 分
-    # 因为距离满分 20，人群匹配满分 15，加上 65 刚好 100
-    quality_score = (item.get("rating", 0) / 5.0) * 65.0
+    # 放大利差，让高分店铺更具优势，假设底分为 3.0
+    rating = float(item.get("rating", 0.0) or 0.0)
+    if rating >= 3.0:
+        quality_score = min(65.0, ((rating - 3.0) / 2.0) * 65.0)
+    else:
+        quality_score = (rating / 3.0) * 10.0 # 差评店得分极低
 
     # 核心修正：有机得分（Organic Score）最高严格控制在 100 分
     organic_score = max(0.0, min(100.0, scene_fit_score + quality_score))

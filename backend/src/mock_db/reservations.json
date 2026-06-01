@@ -16,8 +16,8 @@
         "end_time": "18:00",
         "capacity_total": 34,
         "capacity_remaining": 1,
-        "queue_required": true,
-        "wait_minutes": 88
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "18:00",
@@ -41,7 +41,7 @@
         "capacity_total": 34,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 85
+        "wait_minutes": 7
       }
     ]
   },
@@ -69,7 +69,7 @@
         "capacity_total": 65,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 3
       },
       {
         "start_time": "14:00",
@@ -99,7 +99,7 @@
         "capacity_total": 57,
         "capacity_remaining": 4,
         "queue_required": true,
-        "wait_minutes": 84
+        "wait_minutes": 2
       }
     ]
   },
@@ -141,7 +141,7 @@
         "capacity_total": 54,
         "capacity_remaining": 20,
         "queue_required": true,
-        "wait_minutes": 60
+        "wait_minutes": 1
       },
       {
         "start_time": "16:30",
@@ -193,7 +193,7 @@
         "capacity_total": 38,
         "capacity_remaining": 27,
         "queue_required": true,
-        "wait_minutes": 33
+        "wait_minutes": 21
       }
     ]
   },
@@ -220,8 +220,8 @@
         "end_time": "17:45",
         "capacity_total": 34,
         "capacity_remaining": 6,
-        "queue_required": true,
-        "wait_minutes": 76
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "18:30",
@@ -265,7 +265,7 @@
         "capacity_total": 43,
         "capacity_remaining": 11,
         "queue_required": true,
-        "wait_minutes": 70
+        "wait_minutes": 13
       }
     ]
   },
@@ -307,7 +307,7 @@
         "capacity_total": 51,
         "capacity_remaining": 7,
         "queue_required": true,
-        "wait_minutes": 79
+        "wait_minutes": 8
       }
     ]
   },
@@ -356,8 +356,8 @@
         "end_time": "14:30",
         "capacity_total": 41,
         "capacity_remaining": 9,
-        "queue_required": true,
-        "wait_minutes": 72
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "16:30",
@@ -365,7 +365,7 @@
         "capacity_total": 41,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 5
       },
       {
         "start_time": "19:00",
@@ -387,7 +387,7 @@
         "capacity_total": 77,
         "capacity_remaining": 7,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 10
       }
     ]
   },
@@ -401,7 +401,7 @@
         "capacity_total": 23,
         "capacity_remaining": 4,
         "queue_required": true,
-        "wait_minutes": 76
+        "wait_minutes": 6
       }
     ]
   },
@@ -415,7 +415,7 @@
         "capacity_total": 23,
         "capacity_remaining": 5,
         "queue_required": true,
-        "wait_minutes": 73
+        "wait_minutes": 10
       }
     ]
   },
@@ -481,7 +481,7 @@
         "capacity_total": 50,
         "capacity_remaining": 30,
         "queue_required": true,
-        "wait_minutes": 42
+        "wait_minutes": 27
       }
     ]
   },
@@ -495,7 +495,7 @@
         "capacity_total": 60,
         "capacity_remaining": 4,
         "queue_required": true,
-        "wait_minutes": 85
+        "wait_minutes": 42
       }
     ]
   },
@@ -547,7 +547,7 @@
         "capacity_total": 34,
         "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 76
+        "wait_minutes": 8
       },
       {
         "start_time": "19:30",
@@ -555,7 +555,7 @@
         "capacity_total": 34,
         "capacity_remaining": 19,
         "queue_required": true,
-        "wait_minutes": 45
+        "wait_minutes": 14
       }
     ]
   },
@@ -569,7 +569,7 @@
         "capacity_total": 50,
         "capacity_remaining": 7,
         "queue_required": true,
-        "wait_minutes": 79
+        "wait_minutes": 12
       },
       {
         "start_time": "20:30",
@@ -585,7 +585,7 @@
         "capacity_total": 50,
         "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 80
+        "wait_minutes": 24
       },
       {
         "start_time": "22:00",
@@ -593,7 +593,7 @@
         "capacity_total": 50,
         "capacity_remaining": 9,
         "queue_required": true,
-        "wait_minutes": 76
+        "wait_minutes": 11
       }
     ]
   },
@@ -607,7 +607,7 @@
         "capacity_total": 50,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 2
       }
     ]
   },
@@ -673,7 +673,7 @@
         "capacity_total": 77,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 22
       }
     ]
   },
@@ -715,7 +715,7 @@
         "capacity_total": 29,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 2
       }
     ]
   },
@@ -743,7 +743,7 @@
         "capacity_total": 34,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 3
       }
     ]
   },
@@ -757,7 +757,7 @@
         "capacity_total": 33,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 14
       }
     ]
   },
@@ -799,7 +799,7 @@
         "capacity_total": 21,
         "capacity_remaining": 11,
         "queue_required": true,
-        "wait_minutes": 48
+        "wait_minutes": 11
       }
     ]
   },
@@ -855,7 +855,7 @@
         "capacity_total": 25,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 11
       }
     ]
   },
@@ -869,7 +869,7 @@
         "capacity_total": 67,
         "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 8
       }
     ]
   },
@@ -883,7 +883,7 @@
         "capacity_total": 39,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 88
+        "wait_minutes": 2
       },
       {
         "start_time": "14:00",
@@ -891,7 +891,7 @@
         "capacity_total": 39,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 5
       },
       {
         "start_time": "18:30",
@@ -913,7 +913,7 @@
         "capacity_total": 40,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 7
       }
     ]
   },
@@ -941,7 +941,7 @@
         "capacity_total": 38,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 12
       },
       {
         "start_time": "14:30",
@@ -1009,7 +1009,7 @@
         "capacity_total": 22,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 7
       }
     ]
   },
@@ -1037,7 +1037,7 @@
         "capacity_total": 32,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 88
+        "wait_minutes": 1
       },
       {
         "start_time": "12:30",
@@ -1053,7 +1053,7 @@
         "capacity_total": 32,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 1
       },
       {
         "start_time": "19:00",
@@ -1061,7 +1061,7 @@
         "capacity_total": 32,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 12
       }
     ]
   },
@@ -1099,7 +1099,7 @@
         "capacity_total": 24,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 80
+        "wait_minutes": 6
       },
       {
         "start_time": "17:30",
@@ -1121,7 +1121,7 @@
         "capacity_total": 52,
         "capacity_remaining": 9,
         "queue_required": true,
-        "wait_minutes": 76
+        "wait_minutes": 10
       },
       {
         "start_time": "16:00",
@@ -1129,7 +1129,7 @@
         "capacity_total": 52,
         "capacity_remaining": 44,
         "queue_required": true,
-        "wait_minutes": 22
+        "wait_minutes": 15
       },
       {
         "start_time": "18:30",
@@ -1151,7 +1151,7 @@
         "capacity_total": 46,
         "capacity_remaining": 7,
         "queue_required": true,
-        "wait_minutes": 78
+        "wait_minutes": 14
       }
     ]
   },
@@ -1165,7 +1165,7 @@
         "capacity_total": 30,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 19
       }
     ]
   },
@@ -1179,7 +1179,7 @@
         "capacity_total": 37,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 8
       }
     ]
   },
@@ -1193,7 +1193,7 @@
         "capacity_total": 76,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 13
       }
     ]
   },
@@ -1305,7 +1305,7 @@
         "capacity_total": 50,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 85
+        "wait_minutes": 12
       }
     ]
   },
@@ -1319,7 +1319,7 @@
         "capacity_total": 34,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 4
       }
     ]
   },
@@ -1389,7 +1389,7 @@
         "capacity_total": 43,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 2
       },
       {
         "start_time": "11:30",
@@ -1397,7 +1397,7 @@
         "capacity_total": 43,
         "capacity_remaining": 4,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 3
       },
       {
         "start_time": "12:30",
@@ -1421,7 +1421,7 @@
         "capacity_total": 43,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 5
       }
     ]
   },
@@ -1459,7 +1459,7 @@
         "capacity_total": 35,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 83
+        "wait_minutes": 13
       },
       {
         "start_time": "18:30",
@@ -1467,7 +1467,7 @@
         "capacity_total": 35,
         "capacity_remaining": 4,
         "queue_required": true,
-        "wait_minutes": 81
+        "wait_minutes": 12
       }
     ]
   },
@@ -1537,7 +1537,7 @@
         "capacity_total": 75,
         "capacity_remaining": 32,
         "queue_required": true,
-        "wait_minutes": 56
+        "wait_minutes": 14
       }
     ]
   },
@@ -1550,8 +1550,8 @@
         "end_time": "16:30",
         "capacity_total": 27,
         "capacity_remaining": 2,
-        "queue_required": true,
-        "wait_minutes": 84
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1565,7 +1565,7 @@
         "capacity_total": 20,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 3
       }
     ]
   },
@@ -1579,7 +1579,7 @@
         "capacity_total": 21,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 8
       },
       {
         "start_time": "14:00",
@@ -1587,7 +1587,7 @@
         "capacity_total": 21,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 10
       },
       {
         "start_time": "17:00",
@@ -1595,15 +1595,15 @@
         "capacity_total": 21,
         "capacity_remaining": 19,
         "queue_required": true,
-        "wait_minutes": 18
+        "wait_minutes": 28
       },
       {
         "start_time": "19:00",
         "end_time": "20:00",
         "capacity_total": 21,
         "capacity_remaining": 2,
-        "queue_required": true,
-        "wait_minutes": 82
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -1617,7 +1617,7 @@
         "capacity_total": 35,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 8
       }
     ]
   },
@@ -1701,7 +1701,7 @@
         "capacity_total": 22,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 5
       }
     ]
   },
@@ -1827,7 +1827,7 @@
         "capacity_total": 79,
         "capacity_remaining": 10,
         "queue_required": true,
-        "wait_minutes": 80
+        "wait_minutes": 3
       }
     ]
   },
@@ -1871,7 +1871,7 @@
         "capacity_total": 30,
         "capacity_remaining": 14,
         "queue_required": true,
-        "wait_minutes": 53
+        "wait_minutes": 9
       },
       {
         "start_time": "21:30",
@@ -1901,7 +1901,7 @@
         "capacity_total": 30,
         "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 74
+        "wait_minutes": 6
       }
     ]
   },
@@ -1967,7 +1967,7 @@
         "capacity_total": 46,
         "capacity_remaining": 6,
         "queue_required": true,
-        "wait_minutes": 80
+        "wait_minutes": 5
       },
       {
         "start_time": "15:00",
@@ -1982,8 +1982,8 @@
         "end_time": "18:00",
         "capacity_total": 46,
         "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 90
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -2019,7 +2019,7 @@
         "capacity_total": 28,
         "capacity_remaining": 8,
         "queue_required": true,
-        "wait_minutes": 67
+        "wait_minutes": 15
       },
       {
         "start_time": "14:00",
@@ -2043,7 +2043,7 @@
         "capacity_total": 28,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 44
       },
       {
         "start_time": "17:30",
@@ -2093,7 +2093,7 @@
         "capacity_total": 62,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 9
       }
     ]
   },
@@ -2107,7 +2107,7 @@
         "capacity_total": 75,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 90
+        "wait_minutes": 7
       }
     ]
   },
@@ -2129,7 +2129,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 2
       },
       {
         "start_time": "17:00",
@@ -2145,7 +2145,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 30
       },
       {
         "start_time": "18:30",
@@ -2161,7 +2161,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 4
       }
     ]
   },
@@ -2199,7 +2199,7 @@
         "capacity_total": 11,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 30
       },
       {
         "start_time": "18:00",
@@ -2207,7 +2207,7 @@
         "capacity_total": 11,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 60
+        "wait_minutes": 5
       },
       {
         "start_time": "18:30",
@@ -2215,7 +2215,7 @@
         "capacity_total": 11,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 54
+        "wait_minutes": 13
       }
     ]
   },
@@ -2261,7 +2261,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       },
       {
         "start_time": "18:30",
@@ -2315,7 +2315,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 12
       },
       {
         "start_time": "19:00",
@@ -2337,7 +2337,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 11
       },
       {
         "start_time": "17:30",
@@ -2345,7 +2345,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 14
       },
       {
         "start_time": "18:00",
@@ -2353,7 +2353,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 22
       },
       {
         "start_time": "18:30",
@@ -2361,7 +2361,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       },
       {
         "start_time": "19:00",
@@ -2369,15 +2369,15 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 7
       },
       {
         "start_time": "19:00",
         "end_time": "20:15",
         "capacity_total": 13,
         "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
+        "queue_required": false,
+        "wait_minutes": 0
       }
     ]
   },
@@ -2391,7 +2391,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 35
       },
       {
         "start_time": "11:30",
@@ -2399,7 +2399,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 17
       },
       {
         "start_time": "17:00",
@@ -2407,7 +2407,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 10
       },
       {
         "start_time": "17:30",
@@ -2415,7 +2415,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 22
       },
       {
         "start_time": "18:00",
@@ -2423,7 +2423,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       },
       {
         "start_time": "18:30",
@@ -2431,7 +2431,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 4
       }
     ]
   },
@@ -2445,7 +2445,7 @@
         "capacity_total": 16,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       },
       {
         "start_time": "11:00",
@@ -2499,7 +2499,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       },
       {
         "start_time": "17:00",
@@ -2507,7 +2507,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       },
       {
         "start_time": "17:30",
@@ -2515,7 +2515,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 36
       },
       {
         "start_time": "18:30",
@@ -2523,7 +2523,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 13
       },
       {
         "start_time": "18:30",
@@ -2531,7 +2531,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "18:30",
@@ -2539,7 +2539,7 @@
         "capacity_total": 14,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 3
       }
     ]
   },
@@ -2553,7 +2553,7 @@
         "capacity_total": 16,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 38
       },
       {
         "start_time": "11:30",
@@ -2561,7 +2561,7 @@
         "capacity_total": 16,
         "capacity_remaining": 5,
         "queue_required": true,
-        "wait_minutes": 46
+        "wait_minutes": 3
       },
       {
         "start_time": "17:00",
@@ -2585,7 +2585,7 @@
         "capacity_total": 16,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       },
       {
         "start_time": "19:00",
@@ -2623,7 +2623,7 @@
         "capacity_total": 18,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 62
+        "wait_minutes": 4
       },
       {
         "start_time": "17:30",
@@ -2661,7 +2661,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 8
       },
       {
         "start_time": "14:30",
@@ -2669,7 +2669,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 2
       },
       {
         "start_time": "18:00",
@@ -2677,7 +2677,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 3
       },
       {
         "start_time": "18:00",
@@ -2685,7 +2685,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 32
       },
       {
         "start_time": "18:30",
@@ -2693,7 +2693,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 2
       },
       {
         "start_time": "21:00",
@@ -2701,7 +2701,7 @@
         "capacity_total": 8,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 7
       }
     ]
   },
@@ -2715,7 +2715,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       },
       {
         "start_time": "18:30",
@@ -2723,7 +2723,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 12
       },
       {
         "start_time": "19:00",
@@ -2731,7 +2731,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 5
       },
       {
         "start_time": "19:30",
@@ -2739,7 +2739,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 12
       },
       {
         "start_time": "21:30",
@@ -2747,7 +2747,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 14
       },
       {
         "start_time": "22:30",
@@ -2755,7 +2755,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 15
       }
     ]
   },
@@ -2769,7 +2769,7 @@
         "capacity_total": 11,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 9
       },
       {
         "start_time": "17:30",
@@ -2785,7 +2785,7 @@
         "capacity_total": 11,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "18:00",
@@ -2801,7 +2801,7 @@
         "capacity_total": 11,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "19:00",
@@ -2823,7 +2823,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "17:00",
@@ -2831,7 +2831,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 30
       },
       {
         "start_time": "17:30",
@@ -2839,7 +2839,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 5
       },
       {
         "start_time": "18:30",
@@ -2847,7 +2847,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 31
       },
       {
         "start_time": "19:00",
@@ -2855,7 +2855,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 20
       },
       {
         "start_time": "19:30",
@@ -2863,7 +2863,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 17
       }
     ]
   },
@@ -2901,7 +2901,7 @@
         "capacity_total": 10,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 53
+        "wait_minutes": 7
       },
       {
         "start_time": "21:00",
@@ -2917,7 +2917,7 @@
         "capacity_total": 10,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 53
+        "wait_minutes": 7
       }
     ]
   },
@@ -3017,7 +3017,7 @@
         "capacity_total": 17,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "19:00",
@@ -3039,7 +3039,7 @@
         "capacity_total": 10,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 13
       },
       {
         "start_time": "17:00",
@@ -3063,7 +3063,7 @@
         "capacity_total": 10,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 59
+        "wait_minutes": 10
       },
       {
         "start_time": "18:30",
@@ -3117,7 +3117,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       },
       {
         "start_time": "19:00",
@@ -3125,7 +3125,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 10
       },
       {
         "start_time": "22:00",
@@ -3133,7 +3133,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 12
       }
     ]
   },
@@ -3147,7 +3147,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 35
       },
       {
         "start_time": "14:30",
@@ -3163,7 +3163,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 10
       },
       {
         "start_time": "18:00",
@@ -3171,7 +3171,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 2
       },
       {
         "start_time": "18:00",
@@ -3179,7 +3179,7 @@
         "capacity_total": 13,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 56
+        "wait_minutes": 34
       },
       {
         "start_time": "21:30",
@@ -3201,7 +3201,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 3
       },
       {
         "start_time": "17:30",
@@ -3225,7 +3225,7 @@
         "capacity_total": 15,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 53
+        "wait_minutes": 21
       },
       {
         "start_time": "19:00",
@@ -3241,7 +3241,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 4
       }
     ]
   },
@@ -3333,7 +3333,7 @@
         "capacity_total": 10,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 2
       },
       {
         "start_time": "19:30",
@@ -3371,7 +3371,7 @@
         "capacity_total": 16,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 11
       },
       {
         "start_time": "14:30",
@@ -3449,7 +3449,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 14
       },
       {
         "start_time": "18:30",
@@ -3471,7 +3471,7 @@
         "capacity_total": 10,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 9
       },
       {
         "start_time": "14:00",
@@ -3486,8 +3486,8 @@
         "end_time": "15:31",
         "capacity_total": 10,
         "capacity_remaining": 0,
-        "queue_required": true,
-        "wait_minutes": 65
+        "queue_required": false,
+        "wait_minutes": 0
       },
       {
         "start_time": "17:30",
@@ -3503,7 +3503,7 @@
         "capacity_total": 10,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 53
+        "wait_minutes": 9
       },
       {
         "start_time": "18:30",
@@ -3525,7 +3525,7 @@
         "capacity_total": 17,
         "capacity_remaining": 5,
         "queue_required": true,
-        "wait_minutes": 47
+        "wait_minutes": 3
       },
       {
         "start_time": "14:30",
@@ -3541,7 +3541,7 @@
         "capacity_total": 17,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 4
       },
       {
         "start_time": "17:00",
@@ -3557,7 +3557,7 @@
         "capacity_total": 17,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 3
       },
       {
         "start_time": "18:30",
@@ -3603,7 +3603,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 4
       },
       {
         "start_time": "18:00",
@@ -3619,7 +3619,7 @@
         "capacity_total": 13,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       }
     ]
   },
@@ -3633,7 +3633,7 @@
         "capacity_total": 16,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 6
       },
       {
         "start_time": "14:00",
@@ -3665,7 +3665,7 @@
         "capacity_total": 16,
         "capacity_remaining": 10,
         "queue_required": true,
-        "wait_minutes": 28
+        "wait_minutes": 8
       },
       {
         "start_time": "18:30",
@@ -3687,7 +3687,7 @@
         "capacity_total": 9,
         "capacity_remaining": 3,
         "queue_required": true,
-        "wait_minutes": 45
+        "wait_minutes": 8
       },
       {
         "start_time": "17:30",
@@ -3703,7 +3703,7 @@
         "capacity_total": 9,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "18:00",
@@ -3719,7 +3719,7 @@
         "capacity_total": 9,
         "capacity_remaining": 1,
         "queue_required": true,
-        "wait_minutes": 58
+        "wait_minutes": 28
       },
       {
         "start_time": "18:30",
@@ -3749,7 +3749,7 @@
         "capacity_total": 18,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 1
       },
       {
         "start_time": "17:30",
@@ -3765,7 +3765,7 @@
         "capacity_total": 18,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 58
+        "wait_minutes": 39
       },
       {
         "start_time": "18:00",
@@ -3795,7 +3795,7 @@
         "capacity_total": 15,
         "capacity_remaining": 2,
         "queue_required": true,
-        "wait_minutes": 57
+        "wait_minutes": 23
       },
       {
         "start_time": "15:30",
@@ -3803,7 +3803,7 @@
         "capacity_total": 15,
         "capacity_remaining": 9,
         "queue_required": true,
-        "wait_minutes": 29
+        "wait_minutes": 14
       },
       {
         "start_time": "17:00",
@@ -3811,7 +3811,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 13
       },
       {
         "start_time": "17:00",
@@ -3835,7 +3835,7 @@
         "capacity_total": 15,
         "capacity_remaining": 0,
         "queue_required": true,
-        "wait_minutes": 65
+        "wait_minutes": 3
       }
     ]
   }

@@ -324,7 +324,7 @@ class TestRetrieveCandidates(unittest.TestCase):
         restaurant["restaurant_id"] = "r_evt_1"
         restaurant["combos"] = [
             {"combo_id": "c_ok", "name": "2大1小家庭餐", "price": 100},
-            {"combo_id": "c_exp", "name": "2大1小家庭餐", "price": 250},
+            {"combo_id": "c_exp", "name": "2大1小家庭餐", "price": 260},
         ]
 
         filtered, events, counts = _apply_filters_with_events(
@@ -354,7 +354,7 @@ class TestRetrieveCandidates(unittest.TestCase):
         gift_shop["shop_id"] = "o_evt_1"
         gift_shop["gifts"] = [
             {"gift_id": "g1", "price": 200},
-            {"gift_id": "g2", "price": 120},
+            {"gift_id": "g2", "price": 130},
         ]
 
         filtered, events, counts = _apply_filters_with_events(

@@ -226,7 +226,7 @@ def _apply_filters_with_events(
                         }
         return None
 
-    def _dietary_detail(tags_set: set[str]) -> dict | None:
+    def _dietary_detail(tags_set: set[str], text: str) -> dict | None:
         if not constraints.dietary_restrictions:
             return None
 
@@ -247,8 +247,8 @@ def _apply_filters_with_events(
 
         for r, kws in mapping.items():
             for kw in kws:
-                if kw in tags_set:
-                    return {"matched_term": kw, "matched_field": "tags", "restriction": r}
+                if kw in tags_set or kw in text:
+                    return {"matched_term": kw, "matched_field": "tags_or_text", "restriction": r}
         return None
 
     for item in items:
@@ -310,7 +310,7 @@ def _apply_filters_with_events(
                 item["age_range_mismatch_for_children"] = True
 
         if item_type in ("restaurant", "activity"):
-            threshold = budget * 0.7
+            threshold = budget * 0.85
             sub_key = "combos" if item_type == "restaurant" else "packages"
             subject = "combo" if item_type == "restaurant" else "package"
             sub_items = item.get(sub_key, []) or []
@@ -358,7 +358,7 @@ def _apply_filters_with_events(
             item[sub_key] = valid_sub_items
 
         elif item_type == "gift_shop":
-            threshold = budget * 0.3
+            threshold = budget * 0.4
             gifts = item.get("gifts", []) or []
             valid_gifts = []
             for g in gifts:
@@ -390,11 +390,11 @@ def _apply_filters_with_events(
 
         if "distance_km" in item:
             pref_dist = constraints.preferred_distance
-            max_distance = 10.0
+            max_distance = 12.0
             if pref_dist == "<2km":
-                max_distance = 2.0
+                max_distance = 4.0
             elif pref_dist == "2km-5km":
-                max_distance = 7.0
+                max_distance = 8.0
 
             if item["distance_km"] > max_distance:
                 _emit_drop(
@@ -476,7 +476,13 @@ def _apply_filters_with_events(
                 )
                 continue
 
-        dietary_detail = _dietary_detail(tags)
+        item_searchable_text = item.get("name", "") + " " + " ".join(tags)
+        for c in item.get("combos", []) + item.get("packages", []) + item.get("gifts", []):
+            item_searchable_text += " " + c.get("name", "")
+            item_searchable_text += " " + c.get("description", "")
+            item_searchable_text += " " + c.get("features", "")
+            
+        dietary_detail = _dietary_detail(tags, item_searchable_text)
         if dietary_detail:
             dietary_detail.update(
                 {
@@ -905,7 +911,7 @@ def rule_filter(item: dict, constraints: Constraints) -> bool:
             if "牛" in r:
                 diet_keywords.update(["牛排", "潮汕牛肉", "牛肉"])
 
-        if tags.intersection(diet_keywords):
+        if tags.intersection(diet_keywords) or any(k in searchable_text for k in diet_keywords):
             return False
 
     if constraints.group_type == "family" and "幼儿" in avoid_tags:
