@@ -106,7 +106,9 @@ EXECUTE_AGENT_SYSTEM_PROMPT = """
 7. 【执行明细输出】：向用户汇报时，必须基于 result.execution_summary：
    - execution_summary.items：逐步汇总每一步的 reserved/替换信息/detail（库存或余量前后变化）
    - execution_summary.replacements：替换前后对照
-   - execution_summary.failures：失败项列表
+   - execution_summary.failures：失败项列表；如果 failure.reason_text 存在，必须原样使用，例如“库存不足”，不要自行改写成配送超时。
+   - detail.delivery_time / item.delivery_time 表示计划配送时间，不是失败原因；只有 reserved=false 且 reason_text/reason_code 表示失败时才能说失败。
+   - 价格展示必须统一使用人民币两位小数格式：¥97.69、¥119.90、¥88.00；总价优先使用 result.pricing_summary.display_total，其次使用 execution_summary.pricing.display_total。
    不允许编造任何明细；如果缺字段就诚实说“暂时未拿到”。
 8. 【自动重试策略】：当 status=timeout 时，在不需要用户额外输入的前提下，你应当自动再调用一次 execute_itinerary（同 plan_id 与 book_commutes_policy），尝试拿到最终结果；重试最多 1 次。
 9. 【一致性校验失败自动重试】：当 ToolMessage.result.code=EXECUTION_INCONSISTENT_NEEDS_RETRY 或 confirmation.code=EXECUTION_INCONSISTENT_NEEDS_RETRY 时，代表系统已回滚本次执行并需要自动重试一次。你必须自动立刻再调用一次 execute_itinerary（同 plan_id 与 book_commutes_policy），重试最多 1 次。对用户不要说“已成功”，只在最终 success 后再汇报成功。
@@ -139,6 +141,8 @@ FIXUP_AGENT_SYSTEM_PROMPT = """
    - 调用 search_candidates(query=...)，把结果列出来让用户明确选一个 new_item_id
    - 用户选定后再调用 adjust_and_execute_plan_item。
 5. 【百分百诚实】：只有 adjust_and_execute_plan_item 返回 status=success 才能说“预约成功”；timeout/failed 必须如实说明，并告知下一步（例如自动重试或继续搜索）。
+   - 如果工具返回 execution_summary.failures[].reason_text，必须原样展示该失败原因；delivery_time 只是计划配送时间，不代表配送超时。
+   - 成功汇报的总价优先使用 result.pricing_summary.display_total，并统一用 ¥xx.xx 格式。
 6. 【备选用尽/都不满意】：必须向用户说明“当前备选无法满足”，请用户选择：
    - 放宽条件（预算/时间/距离/是否必须亲子等）
    - 或继续搜索更多候选

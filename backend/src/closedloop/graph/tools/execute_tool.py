@@ -85,6 +85,54 @@ def _safe_float(v: Any) -> float:
         return 0.0
 
 
+def _planned_item_cost(item: dict[str, Any]) -> float:
+    """按行程展示口径计算单个 item 的费用；礼物必须包含配送费。"""
+    if not isinstance(item, dict):
+        return 0.0
+
+    item_type = item.get("type")
+    cost = _safe_float(item.get("cost"))
+    if item_type == "gift_shop":
+        gift_price = _safe_float(item.get("gift_price"))
+        delivery_fee = _safe_float(item.get("delivery_fee"))
+        if gift_price > 0 or delivery_fee > 0:
+            return float(round(gift_price + delivery_fee, 2))
+        return cost
+
+    if cost > 0:
+        return cost
+    return _safe_float(item.get("price"))
+
+
+def _execution_failure_reason(data: dict[str, Any]) -> dict[str, str]:
+    """把执行明细转换成面向用户和 Agent 的稳定失败原因。"""
+    detail = data.get("detail") if isinstance(data, dict) else None
+    detail = detail if isinstance(detail, dict) else {}
+
+    if detail.get("forced_out_of_stock") is True:
+        return {"reason_code": "out_of_stock", "reason_text": "库存不足"}
+
+    stock_keys = (
+        "stock_before",
+        "available_stock_before",
+        "capacity_remaining_before",
+    )
+    for key in stock_keys:
+        value = detail.get(key)
+        if isinstance(value, int) and value <= 0:
+            return {"reason_code": "out_of_stock", "reason_text": "库存不足"}
+
+    raw_reason = detail.get("reason")
+    if raw_reason == "out_of_stock":
+        return {"reason_code": "out_of_stock", "reason_text": "库存不足"}
+    if raw_reason == "no_record":
+        return {"reason_code": "booking_record_missing", "reason_text": "预约记录缺失"}
+    if raw_reason == "no_time_slot":
+        return {"reason_code": "time_slot_unavailable", "reason_text": "无可用预约时段"}
+
+    return {"reason_code": "reservation_failed", "reason_text": "预订失败"}
+
+
 def _merge_previous_execution_summary(previous_summary: dict | None) -> dict:
     """继承历史成功项，旧失败必须由本轮执行重新计算。"""
     execution_summary: dict = {
@@ -141,7 +189,11 @@ def _lookup_item_cost(
             for s in add_ons:
                 for g in (s.get("gifts") or []):
                     if g.get("gift_id") == item_id:
-                        return _safe_float(g.get("price") or g.get("gift_price") or g.get("cost") or 0.0)
+                        gift_price = _safe_float(g.get("gift_price") or g.get("price") or 0.0)
+                        delivery_fee = _safe_float(g.get("delivery_fee") or 0.0)
+                        if gift_price > 0 or delivery_fee > 0:
+                            return float(round(gift_price + delivery_fee, 2))
+                        return _safe_float(g.get("cost") or 0.0)
             return 0.0
         return 0.0
     except Exception:
@@ -338,7 +390,7 @@ async def _do_execute_itinerary(
             if not isinstance(item_id, str) or not item_id:
                 continue
             expected_step_ids.append(item_id)
-            plan_cost_by_id[item_id] = _safe_float(item.get("cost") or item.get("gift_price") or 0.0)
+            plan_cost_by_id[item_id] = _planned_item_cost(item)
             if isinstance(item_type, str) and item_type:
                 plan_type_by_id[item_id] = item_type
 
@@ -475,11 +527,16 @@ async def _do_execute_itinerary(
                                     }
                                 )
                             if data.get("reserved") is False:
+                                failure_reason = _execution_failure_reason(data)
                                 execution_summary["failures"].append(
                                     {
                                         "item_id": data.get("item_id"),
                                         "item_name": item_name_map.get(str(data.get("item_id") or ""), ""),
                                         "item_type": data.get("item_type"),
+                                        "reason_code": failure_reason["reason_code"],
+                                        "reason_text": failure_reason["reason_text"],
+                                        "detail": data.get("detail"),
+                                        "delivery_time": data.get("delivery_time"),
                                     }
                                 )
                         continue
@@ -550,8 +607,8 @@ async def _do_execute_itinerary(
                     return 0.0
                 return _lookup_item_cost(rw_dir, t, _id)
 
-            expected_total_cost_mapped = sum(_cost_for_id(x) for x in expected_mapped_ids)
-            executed_total_cost = sum(_cost_for_id(x) for x in executed_step_ids)
+            expected_total_cost_mapped = float(round(sum(_cost_for_id(x) for x in expected_mapped_ids), 2))
+            executed_total_cost = float(round(sum(_cost_for_id(x) for x in executed_step_ids), 2))
             expected_set = {x for x in expected_mapped_ids if isinstance(x, str) and x}
             executed_set = {x for x in executed_step_ids if isinstance(x, str) and x}
 
@@ -561,16 +618,29 @@ async def _do_execute_itinerary(
 
             # 新增：更全面的一致性校验（ID、总时长、总花费）
             plan_total_cost = expected_total_cost if expected_total_cost > 0 else expected_total_cost_mapped
+            expected_charge_cost = expected_total_cost_mapped
+            if expected_total_cost > 0 and expected_total_cost < expected_total_cost_mapped:
+                # 如果 plan.total_cost 比条目合计还低，说明方案价格口径本身异常，按更低阈值守住付款门。
+                expected_charge_cost = expected_total_cost
             plan_total_duration = _safe_float(target_plan.get("total_duration_minutes"))
+            pricing_summary = {
+                "plan_total_cost": float(round(plan_total_cost, 2)),
+                "expected_charge_cost": float(round(expected_charge_cost, 2)),
+                "executed_cost": float(round(executed_total_cost, 2)),
+                "currency": "CNY",
+                "display_total": f"¥{executed_total_cost:.2f}",
+            }
+            execution_summary["pricing"] = pricing_summary
             
             # 在没有 failure 的情况下，严格校验 ID 和 预算
-            overpay = (executed_total_cost - plan_total_cost) > 1e-6
+            overpay = (executed_total_cost - expected_charge_cost) > 1e-6
             is_consistent = (failures_count == 0 and missing_count == 0 and not overpay)
             
             logger.info(
                 "phase=execute_itinerary | action=consistency_check "
                 f"| plan_id={plan_id} "
                 f"| plan_total_cost={plan_total_cost} "
+                f"| expected_charge_cost={expected_charge_cost} "
                 f"| executed_cost={executed_total_cost} "
                 f"| overpay={overpay} "
                 f"| expected_steps={len(expected_set)} "
@@ -591,10 +661,13 @@ async def _do_execute_itinerary(
             if failures_count > 0 or missing_count > 0:
                 target_item_id = None
                 failures = execution_summary.get("failures") or []
+                fixup_reason = "存在未成功预订项目，需要补齐后再进入付款对账"
                 if isinstance(failures, list) and failures:
                     first_failure = failures[0] if isinstance(failures[0], dict) else {}
                     if isinstance(first_failure, dict):
                         target_item_id = first_failure.get("item_id")
+                        if isinstance(first_failure.get("reason_text"), str) and first_failure.get("reason_text"):
+                            fixup_reason = str(first_failure.get("reason_text"))
                 if (not isinstance(target_item_id, str) or not target_item_id) and missing_ids:
                     target_item_id = missing_ids[0]
 
@@ -606,7 +679,7 @@ async def _do_execute_itinerary(
                 fixup = {
                     "plan_id": plan_id,
                     "target_item_id": target_item_id,
-                    "reason": "存在未成功预订项目，需要补齐后再进入付款对账",
+                    "reason": fixup_reason,
                     "backup_candidates": [],
                 }
                 confirmation = {
@@ -620,6 +693,7 @@ async def _do_execute_itinerary(
                     "booked_items": booked_items,
                     "commute_status": commute_status,
                     "execution_summary": execution_summary,
+                    "pricing_summary": pricing_summary,
                     "code": "NEEDS_FIXUP",
                     "message": "执行未完全成功：需要补齐替换后再继续执行。",
                 }
@@ -634,6 +708,7 @@ async def _do_execute_itinerary(
                         "booked_items": [],
                         "commute_status": [],
                         "execution_summary": None, # 清空 report 以引导重试
+                        "pricing_summary": pricing_summary,
                         "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY",
                         "message": message,
                     }
@@ -660,6 +735,7 @@ async def _do_execute_itinerary(
                         "booked_items": booked_items,
                         "commute_status": commute_status,
                         "execution_summary": execution_summary,
+                        "pricing_summary": pricing_summary,
                         "message": result_message,
                     }
                     confirmation = {
@@ -668,6 +744,7 @@ async def _do_execute_itinerary(
                         "message": result_message,
                         "summary": {
                             "failures": 0,
+                            "pricing": pricing_summary,
                         },
                         "execution_summary": execution_summary,
                     }
