@@ -30,6 +30,8 @@ export type ItineraryStep = {
   order_id: string
   duration_minutes: number
   note: string
+  start_time?: string | null
+  end_time?: string | null
   item: ItineraryItem
 }
 
