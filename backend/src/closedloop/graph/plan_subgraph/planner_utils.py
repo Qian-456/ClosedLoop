@@ -574,22 +574,21 @@ def generate_and_score_combinations(
         dfs(0, [], (0.0, 0.0), 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0, [], set())
         
         if pattern_plans:
-            # 优化：使用 heapq 获取 Top 3，时间复杂度 O(N)，比全量 sort O(N log N) 更快
-            top3_plans = heapq.nlargest(3, pattern_plans, key=lambda x: x["average_score"])
-            grouped_plans.append(top3_plans)
+            # 不再限制 Top N，保留所有合法方案，以最大化后续去重/多样性选择的空间
+            grouped_plans.append(pattern_plans)
 
         if log_stats:
-            top3_count = len(top3_plans) if pattern_plans else 0
-            top3_unique_sigs_count = 0
+            pattern_plans_count = len(pattern_plans) if pattern_plans else 0
+            unique_sigs_count = 0
             if pattern_plans:
                 sigs = set()
-                for p in top3_plans:
+                for p in pattern_plans:
                     sig = tuple(
                         item.get("combo_id") or item.get("package_id") or item.get("gift_id", "unknown")
                         for item in p.get("combo", [])
                     )
                     sigs.add(sig)
-                top3_unique_sigs_count = len(sigs)
+                unique_sigs_count = len(sigs)
 
             for k, v in prune_counts.items():
                 if dfs_global_prune_stats is not None:
@@ -598,20 +597,12 @@ def generate_and_score_combinations(
             pattern_id = pattern.get("id") or pattern.get("pattern_id")
             pattern_desc = pattern.get("desc")
             logger.info(
-                f"phase=planner_dfs_stats | pattern_id={pattern_id} | desc={pattern_desc} | step_pool_sizes={step_pool_sizes} | leaf_valid={pattern_valid_leaf_count} | top3_count={top3_count} | top3_unique_sigs_count={top3_unique_sigs_count} | prune_counts={prune_counts}"
+                f"phase=planner_dfs_stats | pattern_id={pattern_id} | desc={pattern_desc} | step_pool_sizes={step_pool_sizes} | leaf_valid={pattern_valid_leaf_count} | pattern_plans_count={pattern_plans_count} | unique_sigs_count={unique_sigs_count} | prune_counts={prune_counts}"
             )
         
     candidate_pool = []
-    num_patterns = len(grouped_plans)
-    
-    if num_patterns >= 3:
-        for p_plans in grouped_plans:
-            candidate_pool.append(p_plans[0])
-    elif num_patterns == 2:
-        for p_plans in grouped_plans:
-            candidate_pool.extend(p_plans[:2])
-    elif num_patterns == 1:
-        candidate_pool.extend(grouped_plans[0][:3])
+    for p_plans in grouped_plans:
+        candidate_pool.extend(p_plans)
         
     def get_combo_signature(plan: dict) -> tuple:
         return tuple(
@@ -621,6 +612,10 @@ def generate_and_score_combinations(
         
     unique_candidates = []
     seen_sigs = set()
+    
+    # 按照分数整体降序排序，保证高分方案优先
+    candidate_pool.sort(key=lambda x: x["average_score"], reverse=True)
+    
     for p in candidate_pool:
         sig = get_combo_signature(p)
         if sig not in seen_sigs:
@@ -628,20 +623,6 @@ def generate_and_score_combinations(
             seen_sigs.add(sig)
 
     unique_after_dedup = len(unique_candidates)
-
-    if len(unique_candidates) < 3:
-        for rank_idx in (1, 2):
-            for p_plans in grouped_plans:
-                if len(unique_candidates) >= 3:
-                    break
-                if len(p_plans) <= rank_idx:
-                    continue
-                p = p_plans[rank_idx]
-                sig = get_combo_signature(p)
-                if sig in seen_sigs:
-                    continue
-                unique_candidates.append(p)
-                seen_sigs.add(sig)
 
     if log_stats:
         logger.info(

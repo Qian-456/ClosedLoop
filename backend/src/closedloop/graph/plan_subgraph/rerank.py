@@ -196,6 +196,8 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
         diff = abs(capacity - effective_people)
         # 惩罚分：指数级惩罚，相差 1 个人等效扣 15 分，相差 2 人扣 50 分，相差 3 人扣 105 分。
         capacity_penalty = (diff ** 2) * 18 + (diff * 9)
+        if diff > 0.21:
+            capacity_penalty += 20.0  # 基础不匹配惩罚，确保精确匹配优先
         scene_fit_score -= capacity_penalty
 
     # 排队偏好打分调整

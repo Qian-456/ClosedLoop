@@ -45,7 +45,7 @@ class TestRerankNode(unittest.TestCase):
         )
         friends_restaurant = self.restaurant_item.copy()
         friends_restaurant["suitable_groups"] = ["朋友聚会"]
-        self.assertEqual(score_item(friends_restaurant, {"name": "温馨三口之家套餐"}, friends_constraints), 76)
+        self.assertEqual(score_item(friends_restaurant, {"name": "温馨三口之家套餐"}, friends_constraints), 56)
 
     def test_get_capacity_from_name(self):
         # 测试明确的 X大Y小
