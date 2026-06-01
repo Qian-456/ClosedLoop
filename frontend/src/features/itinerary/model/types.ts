@@ -13,6 +13,24 @@ export type ItineraryItem = {
   gift_price?: number | null
   delivery_fee?: number | null
   delivery_distance_km?: number | null
+  price_breakdown?: {
+    base_price?: number
+    gift_price?: number
+    delivery_fee?: number
+    commute_fee?: number
+    total?: number
+  } | null
+  duration_breakdown?: {
+    base_minutes?: number
+    wait_minutes?: number
+    buffer_minutes?: number
+    total_minutes?: number
+  } | null
+  expected_wait_minutes?: number | null
+  queue_required?: boolean | null
+  requires_booking?: boolean | null
+  booking_target_type?: 'restaurant' | 'package' | null
+  booking_target_id?: string | null
   intro?: string | null
   features?: string | null
   commute_from?: string | null

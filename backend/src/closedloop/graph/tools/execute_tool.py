@@ -90,6 +90,12 @@ def _planned_item_cost(item: dict[str, Any]) -> float:
     if not isinstance(item, dict):
         return 0.0
 
+    breakdown = item.get("price_breakdown")
+    if isinstance(breakdown, dict):
+        total = _safe_float(breakdown.get("total"))
+        if total > 0:
+            return total
+
     item_type = item.get("type")
     cost = _safe_float(item.get("cost"))
     if item_type == "gift_shop":
@@ -367,6 +373,8 @@ async def _do_execute_itinerary(
                 execute_steps.append(ExecuteStep(
                     item_id=item_id, item_type=item_type,
                     start_time=start_time, end_time=end_time, commute_mode=None,
+                    booking_target_type=item.get("booking_target_type"),
+                    booking_target_id=item.get("booking_target_id"),
                     backup_candidates=item.get("backup_candidates"),
                     replacement_policy=item.get("replacement_policy", "equivalent_only"),
                     user_touched=item.get("user_touched", False)

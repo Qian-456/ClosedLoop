@@ -123,6 +123,8 @@ class RankedCombo(TypedDict, total=False):
     duration_std_dev: NotRequired[float]
     suitable_time_slots: NotRequired[list[str]]
     score: Required[int]
+    expected_wait_minutes: NotRequired[int]
+    requires_booking: NotRequired[bool]
     
     restaurant_id: Required[str]
     restaurant_name: Required[str]
@@ -155,6 +157,8 @@ class RankedPackage(TypedDict, total=False):
     duration_std_dev: NotRequired[float]
     start_time: NotRequired[str]
     score: Required[int]
+    expected_wait_minutes: NotRequired[int]
+    requires_booking: NotRequired[bool]
 
     venue_id: Required[str]
     venue_name: Required[str]
@@ -275,6 +279,10 @@ class Constraints(BaseModel):
     include_gift: bool = Field(
         default=True,
         description="是否推荐包含礼品（gift_shop）的行程。默认为 True。除非用户明确说不要推荐礼品、惊喜等，才设为 False。"
+    )
+    queue_preference: Literal["avoid_queues", "accept_hot", "neutral"] = Field(
+        default="neutral",
+        description="排队偏好：avoid_queues(尽量少排队/怕麻烦), accept_hot(去网红店/热门店/不怕排队), neutral(中立)"
     )
 
     @model_validator(mode="before")

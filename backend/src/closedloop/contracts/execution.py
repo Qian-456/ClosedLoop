@@ -17,6 +17,10 @@ class ExecuteStep(BaseModel):
     commute_mode: Literal["walking", "taxi", "driving"] | None = Field(
         default=None, description="通勤交通方式（仅 commute）"
     )
+    booking_target_type: Literal["restaurant", "package"] | None = Field(
+        default=None, description="预约扣减目标类型"
+    )
+    booking_target_id: str | None = Field(default=None, description="预约扣减目标 id")
     backup_candidates: Optional[list[dict]] = Field(
         default=None, description="系统内部备选队列"
     )

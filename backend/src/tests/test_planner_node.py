@@ -94,10 +94,19 @@ class TestPlannerNode(unittest.TestCase):
         self.assertEqual(steps[0]["item"]["type"], "commute")
         self.assertIn("commute_options", steps[0]["item"])
         self.assertEqual(len(steps[0]["item"]["commute_options"]), 2)
+        self.assertIn("price_breakdown", steps[0]["item"])
+        self.assertIn("duration_breakdown", steps[0]["item"])
 
         # 非通勤节点应包含介绍与特色
         self.assertEqual(steps[1]["item"]["intro"], "亲子互动的室内游乐区")
         self.assertEqual(steps[1]["item"]["features"], "亲子友好，解放体力")
+        self.assertEqual(steps[1]["item"]["price_breakdown"]["total"], 100.0)
+        self.assertEqual(steps[1]["item"]["duration_breakdown"]["base_minutes"], 120)
+        self.assertIn("buffer_minutes", steps[1]["item"]["duration_breakdown"])
+        self.assertEqual(steps[3]["item"]["booking_target_type"], "restaurant")
+        self.assertEqual(steps[3]["item"]["booking_target_id"], "tea_1")
+        self.assertEqual(steps[5]["item"]["booking_target_type"], "package")
+        self.assertEqual(steps[5]["item"]["booking_target_id"], "act_2")
         
         # Verify calculated values
         # 真实步骤耗时 265（gift 收礼时长 10），4个通勤步骤各 2 分钟 = 8 分钟，总 273

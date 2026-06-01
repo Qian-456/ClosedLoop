@@ -29,7 +29,8 @@ class TestExecuteAPI(unittest.TestCase):
         with TestClient(app) as client, tempfile.TemporaryDirectory() as tmpdir:
             restaurants = [
                 {
-                    "restaurant_id": "r1",
+                    "id": "restaurant_1",
+                    "restaurant_id": "restaurant_1",
                     "name": "餐厅A",
                     "location": {
                         "latitude": 0.0,
@@ -120,8 +121,8 @@ class TestExecuteAPI(unittest.TestCase):
             ]
             reservations = [
                 {
-                    "target_type": "combo",
-                    "target_id": "combo_1",
+                    "target_type": "restaurant",
+                    "target_id": "restaurant_1",
                     "time_slots": [
                         {
                             "start_time": "13:00",
@@ -166,6 +167,8 @@ class TestExecuteAPI(unittest.TestCase):
                     {
                         "item_id": "combo_1",
                         "item_type": "restaurant",
+                        "booking_target_type": "restaurant",
+                        "booking_target_id": "restaurant_1",
                         "start_time": "14:00",
                         "end_time": "15:00",
                     },
@@ -244,7 +247,7 @@ class TestExecuteAPI(unittest.TestCase):
             self.assertEqual(new_add_ons[0]["gifts"][0]["stock"], 0)
 
             new_reservations = _read_json(os.path.join(tmpdir, "reservations.json"))
-            combo_slot = next(r for r in new_reservations if r["target_id"] == "combo_1")["time_slots"][0]
+            combo_slot = next(r for r in new_reservations if r["target_id"] == "restaurant_1")["time_slots"][0]
             pkg_slot = next(r for r in new_reservations if r["target_id"] == "package_1")["time_slots"][0]
             self.assertEqual(combo_slot["capacity_remaining"], 0)
             self.assertEqual(pkg_slot["capacity_remaining"], 0)

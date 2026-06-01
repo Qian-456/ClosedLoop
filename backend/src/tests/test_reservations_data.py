@@ -33,19 +33,15 @@ class TestReservationsData(unittest.TestCase):
         activities = load_mock_data("activities.json")
         reservations = load_mock_data("reservations.json")
 
-        booking_combo_ids: set[str] = set()
-        for r in restaurants:
-            for c in r.get("combos", []):
-                if c.get("requires_booking") is True and c.get("combo_id"):
-                    booking_combo_ids.add(c["combo_id"])
+        restaurant_ids: set[str] = {r["id"] for r in restaurants if r.get("id")}
 
         booking_package_ids: set[str] = set()
         for v in activities:
             for p in v.get("packages", []):
-                if p.get("requires_booking") is True and p.get("package_id"):
+                if p.get("package_id"):
                     booking_package_ids.add(p["package_id"])
 
-        seen_combo_ids: set[str] = set()
+        seen_restaurant_ids: set[str] = set()
         seen_package_ids: set[str] = set()
 
         self.assertIsInstance(reservations, list)
@@ -58,15 +54,15 @@ class TestReservationsData(unittest.TestCase):
             target_id = rec["target_id"]
             time_slots = rec["time_slots"]
 
-            self.assertIn(target_type, ("combo", "package"))
+            self.assertIn(target_type, ("restaurant", "package"))
             self.assertIsInstance(target_id, str)
             self.assertIsInstance(time_slots, list)
             self.assertGreater(len(time_slots), 0)
 
-            if target_type == "combo":
-                self.assertIn(target_id, booking_combo_ids)
-                self.assertNotIn(target_id, seen_combo_ids)
-                seen_combo_ids.add(target_id)
+            if target_type == "restaurant":
+                self.assertIn(target_id, restaurant_ids)
+                self.assertNotIn(target_id, seen_restaurant_ids)
+                seen_restaurant_ids.add(target_id)
             else:
                 self.assertIn(target_id, booking_package_ids)
                 self.assertNotIn(target_id, seen_package_ids)
@@ -91,10 +87,9 @@ class TestReservationsData(unittest.TestCase):
                 self.assertGreaterEqual(slot["capacity_remaining"], 0)
                 self.assertLessEqual(slot["capacity_remaining"], slot["capacity_total"])
 
-        self.assertEqual(seen_combo_ids, booking_combo_ids)
+        self.assertEqual(seen_restaurant_ids, restaurant_ids)
         self.assertEqual(seen_package_ids, booking_package_ids)
 
 
 if __name__ == "__main__":
     unittest.main()
-

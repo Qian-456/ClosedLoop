@@ -7,6 +7,7 @@ from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.state import Constraints, PlanState, RankedCombo, RankedPackage, RankedGift
 from closedloop.graph.plan_subgraph.retrieve import _ensure_candidates_dict, _empty_candidates
 from closedloop.utils.capacity import _get_effective_people, _get_capacity_from_name
+from closedloop.utils.mock_db import load_mock_data
 
 def _has_flexible_people_phrase(text: str) -> bool:
     if not text:
@@ -44,7 +45,7 @@ def _get_group_mismatch_penalty(inner_item: dict, constraints: Constraints) -> i
     return 0
 
 
-def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
+def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_wait_minutes: int = 0) -> int:
     """
     计算排序分数 (三维度打分)：
     总分 = 场景契合分（硬编码） + 质量热度分（模拟推荐） + 商业干预分（商业加权）
@@ -199,6 +200,16 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints) -> int:
         capacity_penalty = (diff ** 2) * 18 + (diff * 9)
         scene_fit_score -= capacity_penalty
 
+    # 排队偏好打分调整
+    if expected_wait_minutes > 0:
+        queue_pref = getattr(constraints, "queue_preference", "neutral")
+        if queue_pref == "avoid_queues":
+            scene_fit_score -= (expected_wait_minutes / 10.0) * 10
+        elif queue_pref == "accept_hot":
+            scene_fit_score += (expected_wait_minutes / 10.0) * 2
+        else:
+            scene_fit_score -= (expected_wait_minutes / 10.0) * 2
+
     # 2. 质量热度分 (Quality & Popularity Mock)
     # 将 rating (例如 4.7) 映射到 0-65 分，使得满分体系更接近 100 分
     # 因为距离满分 20，人群匹配满分 15，加上 65 刚好 100
@@ -249,6 +260,20 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     if isinstance(constraints, dict):
         constraints = Constraints(**constraints)
 
+    try:
+        reservations = load_mock_data("reservations.json")
+    except Exception as e:
+        logger.warning(f"phase=rerank_node | msg=failed_to_load_reservations | error={e}")
+        reservations = []
+
+    wait_time_map = {}
+    for res in reservations:
+        target_id = res.get("target_id")
+        slots = res.get("time_slots", [])
+        if target_id and slots:
+            max_wait = max((s.get("wait_minutes", 0) for s in slots), default=0)
+            wait_time_map[target_id] = max_wait
+
     ranked_combos: list[RankedCombo] = []
     ranked_breakfast_combos: list[RankedCombo] = []
     ranked_lunch_combos: list[RankedCombo] = []
@@ -261,9 +286,13 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
 
     # 处理餐厅
     for rest in candidates.get("nearby_restaurants", []):
+        restaurant_id = rest.get("id", "") or rest.get("restaurant_id", "")
+        restaurant_expected_wait = wait_time_map.get(restaurant_id, 0)
         for combo in rest.get("combos", []):
+            combo_id = combo.get("combo_id") or combo.get("id", "")
+            expected_wait = restaurant_expected_wait
             rc: RankedCombo = {
-                "combo_id": combo.get("combo_id") or combo.get("id", ""),
+                "combo_id": combo_id,
                 "name": combo.get("name", ""),
                 "price": combo.get("price", 0.0),
                 "description": combo.get("description", ""),
@@ -271,8 +300,10 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
                 "duration_mins": combo.get("duration_mins", 0),
                 "duration_std_dev": combo.get("duration_std_dev", 0.0),
                 "suitable_time_slots": combo.get("suitable_time_slots", []),
-                "score": score_item(rest, combo, constraints),
-                "restaurant_id": rest.get("id", ""),
+                "score": score_item(rest, combo, constraints, expected_wait),
+                "expected_wait_minutes": expected_wait,
+                "requires_booking": combo.get("requires_booking", False),
+                "restaurant_id": restaurant_id,
                 "restaurant_name": rest.get("name", ""),
                 "distance_km": rest.get("distance_km", 0.0),
                 "rating": rest.get("rating", 0.0),
@@ -310,8 +341,10 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     # 处理活动
     for act in candidates.get("nearby_activities", []):
         for pkg in act.get("packages", []):
+            package_id = pkg.get("package_id") or pkg.get("id", "")
+            expected_wait = wait_time_map.get(package_id, 0)
             rp: RankedPackage = {
-                "package_id": pkg.get("package_id") or pkg.get("id", ""),
+                "package_id": package_id,
                 "name": pkg.get("name", ""),
                 "price": pkg.get("price", 0.0),
                 "description": pkg.get("description", ""),
@@ -319,7 +352,9 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
                 "duration_mins": pkg.get("duration_mins", 0),
                 "duration_std_dev": pkg.get("duration_std_dev", 0.0),
                 "start_time": pkg.get("start_time", ""),
-                "score": score_item(act, pkg, constraints),
+                "score": score_item(act, pkg, constraints, expected_wait),
+                "expected_wait_minutes": expected_wait,
+                "requires_booking": pkg.get("requires_booking", False),
                 "venue_id": act.get("id", ""),
                 "venue_name": act.get("name", ""),
                 "category": act.get("category", ""),

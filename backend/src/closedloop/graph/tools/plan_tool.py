@@ -75,6 +75,10 @@ class PlanTripInput(BaseModel):
         default=True,
         description="是否推荐包含礼品（gift_shop）的行程。默认为 True。除非用户明确说不要推荐礼品、惊喜等，才设为 False。"
     )
+    queue_preference: Literal["avoid_queues", "accept_hot", "neutral"] = Field(
+        default="neutral",
+        description="排队偏好：avoid_queues(尽量少排队/怕麻烦), accept_hot(去网红店/热门店/不怕排队), neutral(中立)"
+    )
 
 
 def _count_plan_candidates(candidates: dict | None) -> dict[str, int]:
@@ -124,6 +128,7 @@ def plan_trip(
     commute_preference: Literal["auto", "walking", "taxi", "driving"] = "auto",
     preferred_pattern_steps: Optional[list[str]] = None,
     include_gift: bool = True,
+    queue_preference: Literal["avoid_queues", "accept_hot", "neutral"] = "neutral",
 ) -> Command:
     """
     根据结构化参数调用本地规划子图，生成多套本地生活行程方案。
@@ -154,6 +159,7 @@ def plan_trip(
         "commute_preference": commute_preference,
         "preferred_pattern_steps": preferred_pattern_steps,
         "include_gift": include_gift,
+        "queue_preference": queue_preference,
     }
 
     try:

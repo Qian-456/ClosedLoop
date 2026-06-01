@@ -25,6 +25,19 @@ class ItineraryItem(BaseModel):
     gift_price: Optional[float] = Field(default=None, description="礼物价格（仅 gift_shop）")
     delivery_fee: Optional[float] = Field(default=None, description="配送费（仅 gift_shop）")
     delivery_distance_km: Optional[float] = Field(default=None, description="配送距离（仅 gift_shop）")
+    price_breakdown: Optional[dict[str, float]] = Field(
+        default=None, description="费用明细：基础价、礼品、配送、通勤与合计"
+    )
+    duration_breakdown: Optional[dict[str, int]] = Field(
+        default=None, description="时间明细：基础时长、等待、转场缓冲与合计"
+    )
+    expected_wait_minutes: Optional[int] = Field(default=None, description="预计等待/排队时长")
+    queue_required: Optional[bool] = Field(default=None, description="是否预计需要排队")
+    requires_booking: Optional[bool] = Field(default=None, description="是否需要预约")
+    booking_target_type: Optional[Literal["restaurant", "package"]] = Field(
+        default=None, description="预约扣减目标类型"
+    )
+    booking_target_id: Optional[str] = Field(default=None, description="预约扣减目标 id")
     parent_name: Optional[str] = Field(default=None, description="父级地点名，如餐厅名或活动场地名")
     display_name: Optional[str] = Field(default=None, description="前端主展示名，优先显示地点名")
     sub_name: Optional[str] = Field(default=None, description="前端副展示名，优先显示套餐名或票种名")

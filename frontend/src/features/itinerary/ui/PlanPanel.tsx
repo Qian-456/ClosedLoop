@@ -1,8 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronLeft, Clock3 } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { PlanCard } from './PlanCard'
 
-import type { Confirmation, ItineraryPlan, ThreePlansCopywriting } from '../model/types'
+import type { Confirmation, ItineraryPlan, ItineraryPlanVariant, ItineraryStep, ThreePlansCopywriting } from '../model/types'
 
 type Props = {
   itinerary?: ItineraryPlan | null
@@ -10,10 +11,66 @@ type Props = {
   errorMessage?: string | null
 }
 
+function formatCost(value: unknown) {
+  const n = Number(value ?? 0)
+  return `¥${Number.isFinite(n) ? Math.round(n) : 0}`
+}
+
+function formatDuration(value: unknown) {
+  const safeMinutes = Math.max(0, Math.round(Number(value ?? 0)))
+  const h = Math.floor(safeMinutes / 60)
+  const m = safeMinutes % 60
+  if (h > 0 && m > 0) return `${h}h${m}m`
+  if (h > 0) return `${h}h`
+  return `${m}分钟`
+}
+
+function PlanSummaryCard({
+  plan,
+  onOpen,
+}: {
+  plan: ItineraryPlanVariant
+  onOpen: () => void
+}) {
+  return (
+    <button
+      type="button"
+      className="w-full min-w-[280px] rounded-[8px] border border-blue-100 bg-white px-4 py-4 text-left shadow-sm transition hover:border-blue-200"
+      onClick={onOpen}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-lg font-bold leading-7 text-slate-950">{plan.title}</div>
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
+            <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 font-semibold text-blue-600">
+              推荐指数 {Math.round(plan.experience_score ?? plan.average_score ?? 0)}
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <Clock3 className="h-4 w-4" />
+              总时长 <b className="text-slate-700">{formatDuration(plan.total_duration_minutes)}</b>
+            </span>
+          </div>
+        </div>
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="rounded-full bg-emerald-50 px-4 py-2 text-lg font-bold text-emerald-700">
+            {formatCost(plan.total_cost)}
+          </span>
+          <ChevronDown className="h-5 w-5 text-slate-300" />
+        </div>
+      </div>
+    </button>
+  )
+}
+
 export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const invokeStatus = useItineraryStore((s) => s.invokeStatus)
+  const [selectedStep, setSelectedStep] = useState<ItineraryStep | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
+  const selectedPlan = plans.find((plan) => plan.plan_id === selectedPlanId) ?? null
+
   const summaryText = useMemo(() => {
     if (hasPlans) return `已生成 ${plans.length} 套可执行方案`
     if (confirmation) return `当前确认状态：${confirmation.status}`
@@ -32,6 +89,18 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
     (confirmation as any)?.execution_summary ?? (confirmation as any)?.executionSummary ?? null
   const replacements = Array.isArray(executionSummary?.replacements) ? executionSummary.replacements : []
   const failures = Array.isArray(executionSummary?.failures) ? executionSummary.failures : []
+
+  const collapsePanel = () => {
+    setSelectedStep(null)
+    setSelectedPlanId(null)
+    setIsExpanded(false)
+  }
+
+  const openPanel = () => {
+    setSelectedStep(null)
+    setSelectedPlanId(null)
+    setIsExpanded(true)
+  }
 
   if (!itinerary && !confirmation && !errorMessage) {
     return (
@@ -53,16 +122,42 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
     )
   }
 
+  if (hasPlans && !isExpanded) {
+    return (
+      <div className="px-4 pb-2">
+        <button
+          type="button"
+          className="mx-auto flex h-9 w-32 items-center justify-center rounded-t-[22px] border border-b-0 border-slate-200 bg-white shadow-[0_-8px_28px_rgba(15,23,42,0.10)]"
+          aria-label="展开推荐方案"
+          aria-expanded={false}
+          onClick={openPanel}
+        >
+          <span className="h-1.5 w-14 rounded-full bg-slate-300" />
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <div className="px-4 pb-4">
-      <section className="rounded-[8px] border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="px-0 pb-4">
+      <section className="rounded-t-[28px] border border-slate-200 bg-white/95 px-5 pb-5 pt-4 shadow-[0_-18px_60px_rgba(15,23,42,0.12)] backdrop-blur">
+        <button
+          type="button"
+          className="mx-auto mb-5 block h-6 w-20 rounded-full"
+          aria-label="收起推荐方案"
+          aria-expanded={true}
+          onClick={collapsePanel}
+        >
+          <span className="mx-auto block h-1.5 w-14 rounded-full bg-slate-300" />
+        </button>
+
         {confirmation?.status === 'needs_fixup' &&
         invokeStatus !== 'running' &&
         backupCandidates.length > 0 ? (
           <div className="mb-4 rounded-[8px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
             <div className="font-semibold">需要你确认</div>
             <div className="mt-1 text-xs text-amber-800">
-              执行遇到备选替换。请在输入框回复：选 1 / 选 2 / 搜索 关键词。
+              执行遇到备选替换。请在输入框回复：选 1 / 选 2 / 搜索关键词。
             </div>
             <div className="mt-3 space-y-2 text-xs text-amber-900">
               {topCandidates.map((candidate, index) => (
@@ -81,24 +176,52 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
 
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-slate-950">推荐方案</h2>
-            <p className="mt-1 text-xs text-slate-500">{summaryText}</p>
+            <h2 className="text-xl font-bold text-slate-950">推荐方案</h2>
+            <p className="mt-1 text-sm text-slate-500">{summaryText}</p>
           </div>
         </div>
 
-        <div className="mt-4 max-h-[48vh] space-y-3 overflow-y-auto pr-1">
+        <div className="mt-5 max-h-[62vh] overflow-y-auto pr-1">
           {!hasPlans ? (
             <div className="rounded-[8px] bg-slate-50 px-4 py-3 text-sm text-slate-500">
               当前条件下暂时没有生成出合适方案，可以继续调整需求后重试。
             </div>
-          ) : (
-            plans.map((plan) => (
+          ) : selectedPlan ? (
+            <div>
+              <button
+                type="button"
+                className="mb-4 inline-flex items-center gap-1 rounded-full bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500"
+                onClick={() => {
+                  setSelectedStep(null)
+                  setSelectedPlanId(null)
+                }}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                返回方案列表
+              </button>
               <PlanCard
-                key={plan.plan_id}
-                plan={plan}
-                copywriting={confirmation?.plans?.[plan.plan_id as keyof ThreePlansCopywriting]}
+                plan={selectedPlan}
+                copywriting={confirmation?.plans?.[selectedPlan.plan_id as keyof ThreePlansCopywriting]}
+                selectedStep={selectedStep}
+                onOpenStep={setSelectedStep}
+                onCloseStep={() => setSelectedStep(null)}
+                onCollapsePanel={collapsePanel}
               />
-            ))
+            </div>
+          ) : (
+            <div className="flex gap-3 overflow-x-auto pb-1">
+              {plans.map((plan) => (
+                <div key={plan.plan_id} className="w-[84%] max-w-[360px] shrink-0">
+                  <PlanSummaryCard
+                    plan={plan}
+                    onOpen={() => {
+                      setSelectedStep(null)
+                      setSelectedPlanId(plan.plan_id)
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
           )}
         </div>
 
@@ -119,7 +242,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
                   {replacements.map((item: any, idx: number) => (
                     <div key={`${item.original_id ?? idx}`} className="text-sm">
                       {(item.original_name as string) || (item.original_id as string) || '原项'} -&gt;{' '}
-                      {(item.new_item_name as string) || (item.new_item_id as string) || '备选'}
+                      {(item.new_item_name as string) || (item.new_item_id as string) || '备选项'}
                     </div>
                   ))}
                 </div>
@@ -132,7 +255,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
                 <div className="space-y-1">
                   {failures.map((item: any, idx: number) => (
                     <div key={`${item.item_id ?? idx}`} className="text-sm text-rose-700">
-                      {(item.item_name as string) || (item.item_id as string) || '预订失败'}
+                      {(item.item_name as string) || (item.item_id as string) || '预约失败'}
                     </div>
                   ))}
                 </div>

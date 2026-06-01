@@ -24,7 +24,7 @@ def _format_minutes_to_hhmm(minutes: int) -> str:
 
 def _pick_capacity_total(*, target_type: str, duration_mins: int | None) -> int:
     duration_mins = int(duration_mins or 60)
-    if target_type == "combo":
+    if target_type in ("combo", "restaurant"):
         if duration_mins >= 150:
             return random.randint(4, 10)
         if duration_mins >= 90:
@@ -132,8 +132,6 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
     for venue in mock_db.get("activity_venues", []):
         business_hours = venue.get("business_hours") or "09:00-22:00"
         for p in venue.get("packages", []):
-            if p.get("requires_booking") is not True:
-                continue
             target_id = p.get("package_id")
             if not target_id:
                 continue
@@ -170,50 +168,66 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
                 }
             )
 
+    demo_full_combo_ids = {"combo_005_1", "combo_006_5", "combo_008_4", "combo_011_3", "combo_012_4", "combo_014_1"}
     for restaurant in mock_db.get("restaurants", []):
-        for c in restaurant.get("combos", []):
-            if c.get("requires_booking") is not True:
-                continue
-            target_id = c.get("combo_id")
-            if not target_id:
-                continue
+        target_id = restaurant.get("id") or restaurant.get("restaurant_id")
+        if not target_id:
+            continue
 
-            raw_slots = _build_time_slots_for_combo(combo=c)
-            duration_mins = int(c.get("duration_mins") or 60)
-            capacity_total = _pick_capacity_total(target_type="combo", duration_mins=duration_mins)
-            time_slots: list[dict] = []
-            for s in raw_slots:
-                remaining = random.randint(0, capacity_total)
-                if random.random() < 0.18:
-                    remaining = 0
-                
-                # 为特定的演示餐厅固定容量为0，方便触发 fallback 逻辑
-                if target_id in ("combo_005_1", "combo_006_5", "combo_008_4", "combo_011_3", "combo_012_4", "combo_014_1"):
-                    remaining = 0
-                    
-                fullness = 1.0 - (remaining / max(1, capacity_total))
-                queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.06)
-                wait_minutes = 0
-                if queue_required:
-                    wait_minutes = int(round(5 + 60 * fullness))
-                time_slots.append(
-                    {
-                        "start_time": s["start_time"],
-                        "end_time": s["end_time"],
-                        "capacity_total": capacity_total,
-                        "capacity_remaining": remaining,
-                        "queue_required": bool(queue_required),
-                        "wait_minutes": int(wait_minutes),
-                    }
-                )
+        combos = restaurant.get("combos", []) or []
+        raw_slot_map: dict[tuple[str, str], dict] = {}
+        duration_values: list[int] = []
+        force_full = False
+        for c in combos:
+            combo_id = c.get("combo_id")
+            if combo_id in demo_full_combo_ids:
+                force_full = True
+            duration_values.append(int(c.get("duration_mins") or 60))
+            for s in _build_time_slots_for_combo(combo=c):
+                raw_slot_map[(s["start_time"], s["end_time"])] = s
 
-            reservations.append(
+        raw_slots = sorted(raw_slot_map.values(), key=lambda x: (x["start_time"], x["end_time"]))
+        if not raw_slots:
+            raw_slots = [{"start_time": "11:00", "end_time": "13:00"}, {"start_time": "17:00", "end_time": "20:00"}]
+        if len(raw_slots) > 6:
+            raw_slots = random.sample(raw_slots, k=6)
+            raw_slots.sort(key=lambda x: (x["start_time"], x["end_time"]))
+
+        duration_mins = int(sum(duration_values) / max(1, len(duration_values))) if duration_values else 60
+        capacity_total = _pick_capacity_total(target_type="restaurant", duration_mins=duration_mins)
+        time_slots: list[dict] = []
+        for s in raw_slots:
+            remaining = random.randint(0, capacity_total)
+            if random.random() < 0.18:
+                remaining = 0
+
+            # 为特定演示餐厅固定满位，方便触发 fallback 逻辑。
+            if force_full:
+                remaining = 0
+
+            fullness = 1.0 - (remaining / max(1, capacity_total))
+            queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.06)
+            wait_minutes = 0
+            if queue_required:
+                wait_minutes = int(round(5 + 60 * fullness))
+            time_slots.append(
                 {
-                    "target_type": "combo",
-                    "target_id": target_id,
-                    "time_slots": time_slots,
+                    "start_time": s["start_time"],
+                    "end_time": s["end_time"],
+                    "capacity_total": capacity_total,
+                    "capacity_remaining": remaining,
+                    "queue_required": bool(queue_required),
+                    "wait_minutes": int(wait_minutes),
                 }
             )
+
+        reservations.append(
+            {
+                "target_type": "restaurant",
+                "target_id": target_id,
+                "time_slots": time_slots,
+            }
+        )
 
     return reservations
 

@@ -39,6 +39,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 - dietary_restrictions 优先归类为：辣、海鲜、生冷、甜、快餐、牛；其他保留原词。
 - commute_preference 未明确时使用 auto。
 - include_gift：如果用户明确说“不要推荐礼品”、“不要惊喜”等，则提取为 False，否则默认 True。
+- queue_preference：根据用户的话语判断排队偏好。如果用户提到“少排队”、“怕麻烦”、“快一点”，设为 avoid_queues；如果提到“去网红店”、“热门店”、“不怕排队”，设为 accept_hot；未提及或无明显倾向时设为 neutral。
 
 工具调用规范：
 1. **首次规划（当约束为空时）：** 

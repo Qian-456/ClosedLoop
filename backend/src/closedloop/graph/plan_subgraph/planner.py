@@ -39,6 +39,47 @@ def _get_letter_id(index: int) -> str:
         result = chr(65 + rem) + result
     return result
 
+def _money(value: Any) -> float:
+    try:
+        return float(value or 0.0)
+    except Exception:
+        return 0.0
+
+def _minutes(value: Any, fallback: int = 0) -> int:
+    try:
+        return int(round(float(value)))
+    except Exception:
+        return fallback
+
+def _price_breakdown(
+    *,
+    base_price: float = 0.0,
+    gift_price: float = 0.0,
+    delivery_fee: float = 0.0,
+    commute_fee: float = 0.0,
+) -> dict[str, float]:
+    total = base_price + gift_price + delivery_fee + commute_fee
+    return {
+        "base_price": float(round(base_price, 2)),
+        "gift_price": float(round(gift_price, 2)),
+        "delivery_fee": float(round(delivery_fee, 2)),
+        "commute_fee": float(round(commute_fee, 2)),
+        "total": float(round(total, 2)),
+    }
+
+def _duration_breakdown(
+    *,
+    base_minutes: int,
+    wait_minutes: int = 0,
+    buffer_minutes: int = 0,
+) -> dict[str, int]:
+    return {
+        "base_minutes": int(base_minutes),
+        "wait_minutes": int(wait_minutes),
+        "buffer_minutes": int(buffer_minutes),
+        "total_minutes": int(base_minutes + wait_minutes + buffer_minutes),
+    }
+
 def _is_sufficiently_different(new_plan: dict, past_plans: list[dict], threshold_ratio: float = 0.0) -> bool:
     """判断新方案与已有方案集合是否有足够差异（允许重合的比例 <= threshold_ratio）"""
     new_ids = set([x for x in _plan_signature(new_plan, exclude_gifts=True).split("|") if x])
@@ -380,7 +421,14 @@ def planner_node(state: PlanState) -> PlanState:
                 rewritten = _rewrite_commutes_for_taxi_preference(commutes)
                 p["commutes"] = rewritten
                 combo = p.get("combo", []) or []
-                items_cost = sum(float(i.get("price", 0.0) or 0.0) for i in combo)
+                items_cost = sum(
+                    (
+                        _money(i.get("gift_price", i.get("price", 0.0))) + _money(i.get("delivery_fee", 0.0))
+                        if i.get("gift_id") or i.get("_step_type") == "gift_shop"
+                        else _money(i.get("price", 0.0))
+                    )
+                    for i in combo
+                )
                 commutes_cost = sum(float(c.get("cost", 0.0) or 0.0) for c in rewritten)
                 p["total_cost"] = float(round(items_cost + commutes_cost, 2))
 
@@ -436,6 +484,7 @@ def planner_node(state: PlanState) -> PlanState:
                         location="途中",
                         distance_km=dist,
                         cost=commute["cost"],
+                        price_breakdown=_price_breakdown(commute_fee=_money(commute.get("cost"))),
                         commute_from=commute_from,
                         commute_to=commute_to,
                         commute_mode=commute_mode,
@@ -445,6 +494,7 @@ def planner_node(state: PlanState) -> PlanState:
                         )
                     )
                     commute_dur_mins = int(math.ceil(float(commute["time"])))
+                    commute_item.duration_breakdown = _duration_breakdown(base_minutes=commute_dur_mins)
                     start_str = _float_hours_to_time_str(current_time)
                     current_time += (commute_dur_mins / 60.0)
                     end_str = _float_hours_to_time_str(current_time)
@@ -463,13 +513,18 @@ def planner_node(state: PlanState) -> PlanState:
                 # 2. 加入实际地点节点
                 # 确定时长
                 if is_activity_step:
-                    duration_mins = selected_item.get("duration_mins", 90)
+                    base_duration_mins = _minutes(selected_item.get("duration_mins"), 90)
                 elif step_type == "gift_shop":
-                    duration_mins = int(selected_item.get("receive_duration_mins") or 10)
+                    base_duration_mins = int(selected_item.get("receive_duration_mins") or 10)
                 elif step_type.startswith("restaurant:"):
-                    duration_mins = selected_item.get("duration_mins", 60) if meal_category != "afternoon_tea" else selected_item.get("duration_mins", 45)
+                    base_duration_mins = _minutes(
+                        selected_item.get("duration_mins"),
+                        60 if meal_category != "afternoon_tea" else 45,
+                    )
                 else:
-                    duration_mins = 60
+                    base_duration_mins = 60
+                expected_wait_minutes = _minutes(selected_item.get("expected_wait_minutes"), 0)
+                duration_mins = base_duration_mins + expected_wait_minutes
 
                 if step_type.startswith("restaurant:"):
                     item_type = "restaurant"
@@ -488,7 +543,7 @@ def planner_node(state: PlanState) -> PlanState:
                         address = location_dict.get("address", "未知地址")
                     else:
                         address = "未知地址"
-                price = selected_item.get("price", 0.0)
+                price = _money(selected_item.get("price", 0.0))
 
                 gift_price = None
                 delivery_fee = None
@@ -496,11 +551,29 @@ def planner_node(state: PlanState) -> PlanState:
                 distance = selected_item.get("distance_km", 0.0)
                 cost = price
                 if item_type == "gift_shop":
-                    gift_price = float(selected_item.get("gift_price", price) or 0.0)
-                    delivery_fee = float(selected_item.get("delivery_fee", 0.0) or 0.0)
+                    gift_price = _money(selected_item.get("gift_price", price))
+                    delivery_fee = _money(selected_item.get("delivery_fee", 0.0))
                     delivery_distance_km = float(selected_item.get("delivery_distance_km", 0.0) or 0.0)
                     distance = delivery_distance_km
                     cost = float(round(gift_price + delivery_fee, 2))
+
+                if item_type == "gift_shop":
+                    step_price_breakdown = _price_breakdown(
+                        gift_price=float(gift_price or 0.0),
+                        delivery_fee=float(delivery_fee or 0.0),
+                    )
+                else:
+                    step_price_breakdown = _price_breakdown(base_price=float(cost or 0.0))
+
+                booking_target_type = None
+                booking_target_id = None
+                if item_type == "restaurant":
+                    booking_target_type = "restaurant"
+                    booking_target_id = selected_item.get("restaurant_id") or item_id
+                elif item_type == "activity":
+                    booking_target_type = "package"
+                    booking_target_id = item_id
+                requires_booking = bool(selected_item.get("requires_booking", item_type in ("restaurant", "activity")))
 
                 parent_name = selected_item.get("shop_name") if item_type == "gift_shop" else place_name
                 display_name = parent_name or name
@@ -519,6 +592,16 @@ def planner_node(state: PlanState) -> PlanState:
                     gift_price=gift_price,
                     delivery_fee=delivery_fee,
                     delivery_distance_km=delivery_distance_km,
+                    price_breakdown=step_price_breakdown,
+                    duration_breakdown=_duration_breakdown(
+                        base_minutes=base_duration_mins,
+                        wait_minutes=expected_wait_minutes,
+                    ),
+                    expected_wait_minutes=expected_wait_minutes,
+                    queue_required=expected_wait_minutes > 0,
+                    requires_booking=requires_booking,
+                    booking_target_type=booking_target_type,
+                    booking_target_id=booking_target_id,
                     intro=selected_item.get("description"),
                     features=selected_item.get("features"),
                 )
@@ -555,12 +638,13 @@ def planner_node(state: PlanState) -> PlanState:
                     name="返程回家",
                     display_name=f"{commute_from} -> {commute_to}",
                     sub_name=f"推荐方式：{ {'walking': '步行', 'taxi': '打车', 'driving': '自驾'}.get(commute_mode, '未知') }",
-                    type="commute",
-                    location="途中",
-                    distance_km=dist,
-                    cost=final_commute["cost"],
-                    commute_from=commute_from,
-                    commute_to=commute_to,
+                        type="commute",
+                        location="途中",
+                        distance_km=dist,
+                        cost=final_commute["cost"],
+                        price_breakdown=_price_breakdown(commute_fee=_money(final_commute.get("cost"))),
+                        commute_from=commute_from,
+                        commute_to=commute_to,
                     commute_mode=commute_mode,
                     commute_options=calculate_commute_options(
                         dist,
@@ -568,6 +652,7 @@ def planner_node(state: PlanState) -> PlanState:
                     )
                 )
                 commute_dur_mins = int(math.ceil(float(final_commute["time"])))
+                commute_item.duration_breakdown = _duration_breakdown(base_minutes=commute_dur_mins)
                 start_str = _float_hours_to_time_str(current_time)
                 current_time += (commute_dur_mins / 60.0)
                 end_str = _float_hours_to_time_str(current_time)
@@ -581,9 +666,17 @@ def planner_node(state: PlanState) -> PlanState:
                 ))
             
             # 根据契约：独立缓冲在计算总耗时和时序时生效，不加入具体step中。每个步骤后加5分钟，除了最后一步。
+            for idx, step in enumerate(steps):
+                if step.item.duration_breakdown is None:
+                    continue
+                step.item.duration_breakdown["buffer_minutes"] = 5 if idx < len(steps) - 1 else 0
+
             num_buffers = max(0, len(steps) - 1)
             total_duration_minutes = sum(int(s.duration_minutes) for s in steps) + 5 * num_buffers
-            total_cost = sum(float(s.item.cost or 0.0) for s in steps)
+            total_cost = sum(
+                _money((s.item.price_breakdown or {}).get("total") if s.item.price_breakdown else s.item.cost)
+                for s in steps
+            )
 
             # 预埋备选队列并计算越界判定
             max_duration = required_duration_range_mins[1]
@@ -605,14 +698,16 @@ def planner_node(state: PlanState) -> PlanState:
                     cand_list = candidates.get("ranked_gifts", [])
                 
                 backup_candidates = []
-                old_cost = float(step.item.cost or 0.0)
+                old_cost = _money((step.item.price_breakdown or {}).get("total") if step.item.price_breakdown else step.item.cost)
                 old_duration = int(step.duration_minutes)
                 
                 for cand in cand_list:
                     cand_id = str(cand.get("combo_id") or cand.get("package_id") or cand.get("gift_id") or cand.get("id"))
                     if cand_id and cand_id != item_id and cand_id not in item_ids:
-                        new_cost = float(cand.get("cost", 0.0) or cand.get("combo_price", 0.0) or cand.get("price", 0.0))
-                        new_duration = int(cand.get("duration_mins", 60))
+                        new_cost = _money(cand.get("cost", 0.0) or cand.get("combo_price", 0.0) or cand.get("price", 0.0))
+                        if cand.get("gift_id") or cand.get("_step_type") == "gift_shop":
+                            new_cost = _money(cand.get("gift_price", new_cost)) + _money(cand.get("delivery_fee", 0.0))
+                        new_duration = int(cand.get("duration_mins", cand.get("receive_duration_mins", 60))) + _minutes(cand.get("expected_wait_minutes"), 0)
                         
                         new_total_cost = total_cost - old_cost + new_cost
                         new_total_duration = total_duration_minutes - old_duration + new_duration

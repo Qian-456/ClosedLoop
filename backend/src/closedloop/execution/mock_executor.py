@@ -155,6 +155,16 @@ def _find_combo(restaurants: list[dict[str, Any]], combo_id: str) -> dict[str, A
     return None
 
 
+def _find_combo_with_restaurant(
+    restaurants: list[dict[str, Any]], combo_id: str
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    for r in restaurants:
+        for c in r.get("combos", []) or []:
+            if c.get("combo_id") == combo_id:
+                return c, r
+    return None, None
+
+
 def _find_package(
     activities: list[dict[str, Any]], package_id: str
 ) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
@@ -201,7 +211,7 @@ def _forced_out_of_stock_ids() -> set[str]:
 
 def _reserve_capacity(
     reservations: list[dict[str, Any]],
-    target_type: Literal["combo", "package"],
+    target_type: Literal["restaurant", "package"],
     target_id: str,
     start_time: str,
 ) -> tuple[bool, dict[str, Any] | None]:
@@ -461,9 +471,11 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
         elif step.item_type == "restaurant":
             requires_booking = False
             restaurants = _read_list_json(repo_dir, "restaurants.json")
-            combo = _find_combo(restaurants, step.item_id)
+            combo, restaurant = _find_combo_with_restaurant(restaurants, step.item_id)
             if combo is not None:
                 requires_booking = bool(combo.get("requires_booking", False))
+            booking_target_type = step.booking_target_type or "restaurant"
+            booking_target_id = step.booking_target_id or ((restaurant or {}).get("id") or (restaurant or {}).get("restaurant_id") or step.item_id)
 
             reservations = None
             if step.item_id in forced_ids:
@@ -473,7 +485,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                 async with _reservations_lock:
                     reservations = _read_list_json(repo_dir, "reservations.json")
                     reserved, reserved_detail = _reserve_capacity(
-                        reservations, "combo", step.item_id, step.start_time
+                        reservations, booking_target_type, booking_target_id, step.start_time
                     )
                     if reserved:
                         _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
@@ -497,7 +509,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                             )
                             continue
 
-                        b_combo = _find_combo(restaurants, b_id)
+                        b_combo, b_restaurant = _find_combo_with_restaurant(restaurants, b_id)
                         if not b_combo:
                             logger.info(f"phase=execute_mock | action=fallback_skip | execution_id={execution_id} | backup_id={b_id} | reason=combo_not_found")
                             logger.info(
@@ -557,11 +569,12 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                             break
 
                         b_requires_booking = bool(b_combo.get("requires_booking", False))
+                        b_booking_target_id = (b_restaurant or {}).get("id") or (b_restaurant or {}).get("restaurant_id") or str(b_id)
                         b_reserved = False
                         b_detail: dict[str, Any] | None = None
                         if b_requires_booking:
                             b_reserved, b_detail = _reserve_capacity(
-                                reservations, "combo", b_id, step.start_time
+                                reservations, "restaurant", b_booking_target_id, step.start_time
                             )
                             if b_reserved:
                                 _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
@@ -592,6 +605,8 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                             "attempt": attempt_index,
                             "new_combo_id": b_id,
                             "new_combo_name": new_item_name,
+                            "booking_target_type": "restaurant",
+                            "booking_target_id": b_booking_target_id,
                             "replacement_detail": b_detail,
                         }
                         break

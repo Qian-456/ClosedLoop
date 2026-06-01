@@ -166,7 +166,7 @@ class ReservationTimeSlot(BaseModel):
 
 
 class ReservationRecord(BaseModel):
-    target_type: Literal["combo", "package"]
+    target_type: Literal["restaurant", "package"]
     target_id: str
     time_slots: List[ReservationTimeSlot]
 
@@ -199,20 +199,10 @@ def verify_schema():
 
         reservation_records = [ReservationRecord(**x) for x in reservations]
 
-        booking_combo_ids = {
-            c.combo_id
-            for r in db.restaurants
-            for c in r.combos
-            if c.requires_booking is True
-        }
-        booking_package_ids = {
-            p.package_id
-            for v in db.activity_venues
-            for p in v.packages
-            if p.requires_booking is True
-        }
+        restaurant_ids = {r.id for r in db.restaurants}
+        package_ids = {p.package_id for v in db.activity_venues for p in v.packages}
 
-        seen_combo_ids: set[str] = set()
+        seen_restaurant_ids: set[str] = set()
         seen_package_ids: set[str] = set()
 
         for rec in reservation_records:
@@ -222,24 +212,24 @@ def verify_schema():
                 if slot.capacity_remaining < 0 or slot.capacity_remaining > slot.capacity_total:
                     raise ValueError(f"Invalid capacity_remaining for {rec.target_type}:{rec.target_id}")
 
-            if rec.target_type == "combo":
-                if rec.target_id not in booking_combo_ids:
-                    raise ValueError(f"Unknown or non-booking combo target_id: {rec.target_id}")
-                if rec.target_id in seen_combo_ids:
-                    raise ValueError(f"Duplicate reservation record for combo: {rec.target_id}")
-                seen_combo_ids.add(rec.target_id)
+            if rec.target_type == "restaurant":
+                if rec.target_id not in restaurant_ids:
+                    raise ValueError(f"Unknown restaurant target_id: {rec.target_id}")
+                if rec.target_id in seen_restaurant_ids:
+                    raise ValueError(f"Duplicate reservation record for restaurant: {rec.target_id}")
+                seen_restaurant_ids.add(rec.target_id)
             else:
-                if rec.target_id not in booking_package_ids:
-                    raise ValueError(f"Unknown or non-booking package target_id: {rec.target_id}")
+                if rec.target_id not in package_ids:
+                    raise ValueError(f"Unknown package target_id: {rec.target_id}")
                 if rec.target_id in seen_package_ids:
                     raise ValueError(f"Duplicate reservation record for package: {rec.target_id}")
                 seen_package_ids.add(rec.target_id)
 
-        if seen_combo_ids != booking_combo_ids:
-            missing = booking_combo_ids - seen_combo_ids
-            raise ValueError(f"Missing reservation records for combos: {sorted(missing)[:10]}")
-        if seen_package_ids != booking_package_ids:
-            missing = booking_package_ids - seen_package_ids
+        if seen_restaurant_ids != restaurant_ids:
+            missing = restaurant_ids - seen_restaurant_ids
+            raise ValueError(f"Missing reservation records for restaurants: {sorted(missing)[:10]}")
+        if seen_package_ids != package_ids:
+            missing = package_ids - seen_package_ids
             raise ValueError(f"Missing reservation records for packages: {sorted(missing)[:10]}")
 
         print(f"预约校验通过！records={len(reservation_records)}")

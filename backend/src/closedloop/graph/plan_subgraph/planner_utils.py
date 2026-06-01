@@ -451,6 +451,9 @@ def generate_and_score_combinations(
                 else:
                     duration_mins = 60
 
+                expected_wait_minutes = selected_item.get("expected_wait_minutes", 0)
+                duration_mins += expected_wait_minutes
+
                 if step_type == "gift_shop":
                     gift_shop_pos = get_coords(selected_item)
                     delivery_distance_km = calculate_distance(current_pos, gift_shop_pos)
