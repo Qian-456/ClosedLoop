@@ -9,1227 +9,138 @@ class Pattern(TypedDict):
     desc: str
     start_time_pref: list[str]
 
-PATTERNS: list[Pattern] = [
-    {
-        "id": "FAM-S-01",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "先玩后歇脚 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-S-02-A",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "activity",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "畅玩 + 小惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-S-02-D",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "activity",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "畅玩 + 小惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FAM-S-03-L",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity_light",
-            "gift_shop"
-        ],
-        "desc": "午餐 + 轻玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-S-03-D",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity_light",
-            "gift_shop"
-        ],
-        "desc": "晚餐 + 轻玩 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FAM-S-04",
-        "group": "family_kids",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "activity_light",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "轻玩 + 晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-M-01",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "标准下午亲子 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-M-02",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "玩 + 歇脚 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-M-03",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "gift_shop",
-            "restaurant:dinner"
-        ],
-        "desc": "玩 + 惊喜 + 晚餐",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-M-04-L",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "午餐 + 玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-M-04-D",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "晚餐 + 玩 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FAM-M-05-L",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity_light",
-            "gift_shop"
-        ],
-        "desc": "玩 + 午餐 + 轻玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-M-05-A",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "activity_light",
-            "gift_shop"
-        ],
-        "desc": "玩 + 晚餐 + 轻玩 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-M-06",
-        "group": "family_kids",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "玩 + 歇脚 + 晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-L-01",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "完整亲子下午",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-L-02",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "玩歇玩晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-L-03",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "restaurant:dinner"
-        ],
-        "desc": "玩歇惊喜晚餐",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-L-04-L",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩午餐轻玩惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-L-04-A",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩晚餐轻玩惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-L-05-L",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "午餐玩歇惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-L-05-D",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "晚餐玩歇惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FAM-L-06",
-        "group": "family_kids",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "增强型",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-XL-01",
-        "group": "family_kids",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "完整闭环",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FAM-XL-02",
-        "group": "family_kids",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "午餐玩歇玩午餐(含晚餐) + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FAM-XL-03",
-        "group": "family_kids",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "玩午餐玩歇惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "TEEN-S-01",
-        "group": "family_teens",
-        "duration_range": [
-            2.5,
-            4.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩歇玩 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "TEEN-S-02-L",
-        "group": "family_teens",
-        "duration_range": [
-            2.5,
-            4.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "午餐玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "TEEN-S-02-D",
-        "group": "family_teens",
-        "duration_range": [
-            2.5,
-            4.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "晚餐玩 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "TEEN-S-03",
-        "group": "family_teens",
-        "duration_range": [
-            2.5,
-            4.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "玩晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "TEEN-M-01",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "午餐玩歇玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "TEEN-M-02-L",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩午餐玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "TEEN-M-02-A",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩晚餐玩 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "TEEN-M-03",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩歇玩礼物",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "TEEN-M-04",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "gift_shop",
-            "restaurant:dinner",
-            "activity"
-        ],
-        "desc": "玩礼物晚餐玩",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "TEEN-M-05",
-        "group": "family_teens",
-        "duration_range": [
-            4.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "完整社交型家庭",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-S-01-L",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "午餐为主 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-S-01-D",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "晚餐为主 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-S-02",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "玩乐为主 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-S-03",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "下午茶社交 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-S-04-A",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "惊喜小聚",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-S-04-D",
-        "group": "friends",
-        "duration_range": [
-            2.5,
-            3.5
-        ],
-        "steps": [
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "惊喜小聚",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-M-01-A",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "先玩后晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-M-01-D",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "先玩后晚餐 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-M-02-L",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "先午餐后玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-M-02-D",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "先晚餐后玩 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-M-03",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩 + 歇 + 玩 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-M-04-L",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩 + 午餐 + 续摊 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-M-04-A",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩 + 晚餐 + 续摊 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-M-05-L",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "午餐 + 玩 + 甜品 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-M-05-D",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "晚餐 + 玩 + 甜品 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-M-06",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "activity",
-            "gift_shop",
-            "restaurant:dinner"
-        ],
-        "desc": "玩 + 惊喜 + 晚餐",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-M-07-L",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "午餐 + 惊喜 + 玩",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-M-07-D",
-        "group": "friends",
-        "duration_range": [
-            3.5,
-            5.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "晚餐 + 惊喜 + 玩",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-L-01",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "玩歇玩晚餐 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-L-02-L",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "午餐玩歇玩 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-L-02-D",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "晚餐玩歇玩 + 惊喜",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-L-03-L",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "玩午餐玩歇 + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-L-03-A",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:dinner",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop"
-        ],
-        "desc": "玩晚餐玩歇 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-L-04",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "gift_shop",
-            "restaurant:dinner",
-            "activity"
-        ],
-        "desc": "玩惊喜晚餐玩",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-L-05-L",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop",
-            "restaurant:afternoon_tea"
-        ],
-        "desc": "午餐玩惊喜歇",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-L-05-D",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop",
-            "restaurant:afternoon_tea"
-        ],
-        "desc": "晚餐玩惊喜歇",
-        "start_time_pref": [
-            "dinner"
-        ]
-    },
-    {
-        "id": "FRD-L-06",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "restaurant:dinner"
-        ],
-        "desc": "玩歇惊喜晚餐",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-L-07",
-        "group": "friends",
-        "duration_range": [
-            5.0,
-            6.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "gift_shop",
-            "activity"
-        ],
-        "desc": "增强型",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-XL-01",
-        "group": "friends",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "gift_shop"
-        ],
-        "desc": "午餐玩歇玩午餐(含晚餐) + 惊喜",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-XL-02",
-        "group": "friends",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:afternoon_tea",
-            "activity",
-            "restaurant:dinner",
-            "activity",
-            "gift_shop"
-        ],
-        "desc": "玩歇玩晚餐续摊 + 惊喜",
-        "start_time_pref": [
-            "afternoon_tea"
-        ]
-    },
-    {
-        "id": "FRD-XL-03",
-        "group": "friends",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "activity",
-            "restaurant:lunch",
-            "activity",
-            "gift_shop",
-            "restaurant:afternoon_tea"
-        ],
-        "desc": "玩午餐玩惊喜歇",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-XL-04-L",
-        "group": "friends",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "restaurant:lunch",
-            "activity",
-            "gift_shop",
-            "restaurant:afternoon_tea",
-            "activity"
-        ],
-        "desc": "午餐玩惊喜甜品玩",
-        "start_time_pref": [
-            "lunch"
-        ]
-    },
-    {
-        "id": "FRD-XL-04-D",
-        "group": "friends",
-        "duration_range": [
-            6.0,
-            24.0
-        ],
-        "steps": [
-            "restaurant:dinner",
-            "activity",
-            "gift_shop",
-            "restaurant:afternoon_tea",
-            "activity"
-        ],
-        "desc": "晚餐玩惊喜甜品玩",
-        "start_time_pref": [
-            "dinner"
-        ]
-    }
-]
+PATTERNS: list[Pattern] = []
+_groups = ["family_kids", "family_mild", "friends"]
+
+for g in _groups:
+    # --- Short (3.5 - 4.5) ---
+    # 2-3 steps + gift
+    # Lunch starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-L1", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["restaurant:lunch", "activity", "gift_shop"],
+        "desc": "午餐+主活动+惊喜", "start_time_pref": ["lunch"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-L2", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["activity", "restaurant:lunch", "gift_shop"],
+        "desc": "主活动+午餐+惊喜", "start_time_pref": ["lunch"]
+    })
+    # Afternoon starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-A1", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["activity", "restaurant:afternoon_tea", "gift_shop"],
+        "desc": "主活动+下午茶+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-A2", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["activity", "activity_light", "gift_shop"],
+        "desc": "主活动+轻活动+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    # Dinner starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-D1", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["activity", "restaurant:dinner", "gift_shop"],
+        "desc": "主活动+晚餐+惊喜", "start_time_pref": ["dinner"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-S-D2", "group": g, "duration_range": [3.5, 4.5],
+        "steps": ["restaurant:dinner", "activity_light", "gift_shop"],
+        "desc": "晚餐+轻活动+惊喜", "start_time_pref": ["dinner"]
+    })
+
+    # --- Medium (4.5 - 5.5) ---
+    # 3-4 steps + gift
+    # Lunch starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-L1", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["restaurant:lunch", "activity", "activity_light", "gift_shop"],
+        "desc": "午餐+主活动+轻活动+惊喜", "start_time_pref": ["lunch"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-L2", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity_light", "restaurant:lunch", "activity", "gift_shop"],
+        "desc": "轻活动+午餐+主活动+惊喜", "start_time_pref": ["lunch"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-L3", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["restaurant:lunch", "activity", "restaurant:afternoon_tea", "gift_shop"],
+        "desc": "午餐+主活动+下午茶+惊喜", "start_time_pref": ["lunch"]
+    })
+    # Afternoon starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-A1", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity", "restaurant:afternoon_tea", "activity_light", "gift_shop"],
+        "desc": "主活动+下午茶+轻活动+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-A2", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity", "activity", "gift_shop"],
+        "desc": "双主活动+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-A3", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity", "restaurant:dinner", "activity_light", "gift_shop"],
+        "desc": "主活动+晚餐+轻活动+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-A4", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity", "restaurant:afternoon_tea", "activity", "gift_shop"],
+        "desc": "主活动+下午茶+主活动+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    # Dinner starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-D1", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["activity", "restaurant:dinner", "activity_light", "gift_shop"],
+        "desc": "主活动+晚餐+轻活动+惊喜", "start_time_pref": ["dinner"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-M-D2", "group": g, "duration_range": [4.5, 5.5],
+        "steps": ["restaurant:dinner", "activity", "activity_light", "gift_shop"],
+        "desc": "晚餐+主活动+轻活动+惊喜", "start_time_pref": ["dinner"]
+    })
+
+    # --- Long (5.5 - 6.5) ---
+    # 4-5 steps + gift
+    # Lunch starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-L1", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["restaurant:lunch", "activity", "restaurant:afternoon_tea", "activity_light", "gift_shop"],
+        "desc": "午餐+主活动+下午茶+轻活动+惊喜", "start_time_pref": ["lunch"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-L2", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity_light", "restaurant:lunch", "activity", "restaurant:afternoon_tea", "gift_shop"],
+        "desc": "轻活动+午餐+主活动+下午茶+惊喜", "start_time_pref": ["lunch"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-L3", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["restaurant:lunch", "activity", "activity", "gift_shop"],
+        "desc": "午餐+双主活动+惊喜", "start_time_pref": ["lunch"]
+    })
+    # Afternoon starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-A1", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity", "restaurant:afternoon_tea", "activity_light", "restaurant:dinner", "gift_shop"],
+        "desc": "主活动+下午茶+轻活动+晚餐+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-A2", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity", "activity", "restaurant:dinner", "gift_shop"],
+        "desc": "双主活动+晚餐+惊喜", "start_time_pref": ["afternoon_tea"]
+    })
+    # Dinner starts
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-D1", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity", "restaurant:dinner", "activity", "gift_shop"],
+        "desc": "主活动+晚餐+主活动+惊喜", "start_time_pref": ["dinner"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-D2", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity_light", "activity", "restaurant:dinner", "activity_light", "gift_shop"],
+        "desc": "轻活动+主活动+晚餐+轻活动+惊喜", "start_time_pref": ["dinner"]
+    })
+
 
 def parse_time_period(time_period: str) -> tuple[float, float]:
     """
@@ -1258,6 +169,7 @@ def parse_time_period(time_period: str) -> tuple[float, float]:
     # 理论上不会走到这里，作为容错返回默认值
     return 14.0, 6.0
 
+
 def parse_target_start_time(time_period: str) -> float:
     if not isinstance(time_period, str):
         return 14.0
@@ -1269,18 +181,20 @@ def parse_target_start_time(time_period: str) -> float:
         return 14.0
     return int(match.group(1)) + int(match.group(2)) / 60.0
 
+
 def get_time_of_day(start_time_hours: float) -> str:
     """根据开始时间归类时段：breakfast, lunch, afternoon_tea, dinner, late_night"""
     if start_time_hours < 10.5:
         return "breakfast"
-    elif start_time_hours < 14.0:
+    elif start_time_hours < 13.0:
         return "lunch"
     elif start_time_hours < 17.0:
         return "afternoon_tea"
-    elif start_time_hours < 21.0:
+    elif start_time_hours < 20.0:
         return "dinner"
     else:
         return "late_night"
+
 
 def match_patterns(
     group_type: str, 
@@ -1297,6 +211,8 @@ def match_patterns(
         child_ages = [age for _, age in (child_profiles or []) if isinstance(age, int)]
         if child_ages and max(child_ages) >= 10:
             group_category = "family_teens"
+        elif child_ages and max(child_ages) <= 3:
+            group_category = "family_mild"
         else:
             group_category = "family_kids"
             
@@ -1311,8 +227,14 @@ def match_patterns(
 
     candidates = []
     for p in PATTERNS:
-        if p["group"] != group_category:
-            continue
+        # Compatibility fallback if group_category isn't directly matched
+        # (Since we just generated family_kids, family_mild, friends explicitly, we map teens to kids if missing)
+        p_group = p["group"]
+        if p_group != group_category:
+            if group_category == "family_teens" and p_group == "family_kids":
+                pass # Allow fallback
+            else:
+                continue
         
         min_d, max_d = p["duration_range"]
         # 容差范围
@@ -1324,25 +246,24 @@ def match_patterns(
     # 如果没有找到匹配时长的，放宽时长限制
     if not candidates:
         for p in PATTERNS:
-            if p["group"] == group_category:
+            p_group = p["group"]
+            if p_group == group_category or (group_category == "family_teens" and p_group == "family_kids"):
                 candidates.append(p)
                 
     if not candidates:
         # Fallback to a safe default
         return [PATTERNS[0]]
         
-    # 4. 优先匹配 time_of_day
-    preferred = [p for p in candidates if time_of_day in p["start_time_pref"]]
+    # 4. 优先匹配 time_of_day，但保留所有候选进行降级
+    for p in candidates:
+        p["_is_preferred_time"] = time_of_day in p["start_time_pref"]
+        p["_duration_diff"] = abs((p["duration_range"][0] + p["duration_range"][1]) / 2 - duration_mid)
+        
+    candidates.sort(key=lambda p: (not p["_is_preferred_time"], p["_duration_diff"]))
     
-    # 返回所有满足条件的候选，如果有 preferred 则优先使用 preferred 集合，否则使用所有 candidates
-    # 按时长差值升序排列
-    if preferred:
-        if is_range:
-            return preferred
-        preferred.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1]) / 2 - duration_mid))
-        return preferred
-    else:
-        if is_range:
-            return candidates
-        candidates.sort(key=lambda p: abs((p["duration_range"][0] + p["duration_range"][1]) / 2 - duration_mid))
-        return candidates
+    # 清理临时字段
+    for p in candidates:
+        p.pop("_is_preferred_time", None)
+        p.pop("_duration_diff", None)
+        
+    return candidates

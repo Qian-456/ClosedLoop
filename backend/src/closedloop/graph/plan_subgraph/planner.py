@@ -394,6 +394,7 @@ def planner_node(state: PlanState) -> PlanState:
         "prune_gift_delivery_radius": 0,
         "prune_final_duration_too_short": 0,
         "prune_final_duration_too_long": 0,
+        "prune_meal_time_invalid": 0,
     }
 
     valid_plans_info, valid_count_before_topk, missing_types_set = generate_and_score_combinations(
@@ -403,6 +404,7 @@ def planner_node(state: PlanState) -> PlanState:
         required_duration_range_mins,
         commute_preference=commute_preference_for_dfs,
         dfs_global_prune_stats=dfs_global_prune_stats,
+        start_time=start_time,
     )
     missing_types = list(missing_types_set)
     
@@ -830,13 +832,15 @@ def planner_node(state: PlanState) -> PlanState:
             time_short_pruned = dfs_global_prune_stats.get("prune_final_duration_too_short", 0)
             dist_pruned = dfs_global_prune_stats.get("prune_walk_leg_over_2km", 0) + dfs_global_prune_stats.get("prune_walk_home_over_2km", 0)
             gift_pruned = dfs_global_prune_stats.get("prune_gift_delivery_radius", 0)
+            meal_time_pruned = dfs_global_prune_stats.get("prune_meal_time_invalid", 0)
             
             reasons = [
                 (budget_pruned, "因为超出预算限制"),
                 (time_long_pruned, "因为行程耗时过长(超出预期上限)"),
                 (time_short_pruned, "因为行程耗时过短(达不到预期下限)"),
                 (dist_pruned, "因为步行距离超限(>2km)"),
-                (gift_pruned, "因为礼品配送距离超限")
+                (gift_pruned, "因为礼品配送距离超限"),
+                (meal_time_pruned, "因为用餐时间不在合理饭点内")
             ]
             
             # 过滤掉为 0 的项，并按占比(即数量)降序排序

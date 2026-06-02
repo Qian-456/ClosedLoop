@@ -173,6 +173,7 @@ def generate_and_score_combinations(
     required_duration_range_mins: tuple[float, float],
     commute_preference: str = "auto",
     dfs_global_prune_stats: dict = None,
+    start_time: float = 0.0,
 ) -> tuple[list[dict], int, set[str]]:
     """
     使用 DFS 回溯算法生成、剪枝并对组合进行打分。
@@ -217,6 +218,7 @@ def generate_and_score_combinations(
             "prune_gift_delivery_radius": 0,
             "prune_final_duration_too_short": 0,
             "prune_final_duration_too_long": 0,
+            "prune_meal_time_invalid": 0,
         }
         
         for step_type in pattern_steps:
@@ -522,6 +524,22 @@ def generate_and_score_combinations(
                 time_min, cost_val, mode = calculate_commute_info(
                     dist, commute_preference=commute_preference
                 )
+
+                # 饭点硬约束校验
+                item_start_time_hours = start_time + (total_duration_minutes + time_min) / 60.0
+                item_start_time_hours_mod24 = item_start_time_hours % 24
+                if meal_category == "lunch":
+                    if not (11.0 <= item_start_time_hours_mod24 <= 13.0):
+                        prune_counts["prune_meal_time_invalid"] += 1
+                        continue
+                elif meal_category == "afternoon_tea":
+                    if not (13.0 <= item_start_time_hours_mod24 <= 17.0):
+                        prune_counts["prune_meal_time_invalid"] += 1
+                        continue
+                elif meal_category == "dinner":
+                    if not (17.0 <= item_start_time_hours_mod24 <= 20.0):
+                        prune_counts["prune_meal_time_invalid"] += 1
+                        continue
 
                 # 通勤步骤(1个)和活动/餐饮步骤(1个)，分别在各自结束后加 5 分钟缓冲，共计 10 分钟
                 new_total_duration = total_duration_minutes + duration_mins + int(math.ceil(time_min)) + 10
