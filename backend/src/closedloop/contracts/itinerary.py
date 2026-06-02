@@ -33,6 +33,7 @@ class ItineraryItem(BaseModel):
     )
     expected_wait_minutes: Optional[int] = Field(default=None, description="预计等待/排队时长")
     queue_required: Optional[bool] = Field(default=None, description="是否预计需要排队")
+    seating_risk_prob: Optional[float] = Field(default=None, description="无座风险概率（0.0-1.0），与排队和热度相关")
     requires_booking: Optional[bool] = Field(default=None, description="是否需要预约")
     booking_target_type: Optional[Literal["restaurant", "package"]] = Field(
         default=None, description="预约扣减目标类型"

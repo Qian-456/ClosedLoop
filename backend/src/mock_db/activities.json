@@ -49,7 +49,8 @@
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.86
       }
     ],
     "suitable_groups": [
@@ -148,7 +149,8 @@
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.7
       }
     ],
     "suitable_groups": [
@@ -235,7 +237,8 @@
         "available_stock": 37,
         "duration_mins": 45,
         "duration_std_dev": 30.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_003_2",
@@ -247,7 +250,8 @@
         "available_stock": 185,
         "duration_mins": 60,
         "duration_std_dev": 45.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_003_3",
@@ -255,7 +259,7 @@
         "price": 150.77,
         "description": "适合一家人花更长时间慢慢玩的周末方案",
         "features": "更省心，适合家庭一起消磨半天。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 122,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
@@ -340,7 +344,7 @@
         "price": 86.93,
         "description": "轻量体验项目，适合临时起意安排一段轻松时光",
         "features": "节奏舒适，适合不想太折腾的亲子出行。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 362,
         "duration_mins": 105,
         "duration_std_dev": 10.0,
@@ -352,7 +356,7 @@
         "price": 157.24,
         "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
         "features": "更适合周末安排，整体节奏稳定。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 301,
         "duration_mins": 120,
         "duration_std_dev": 30.0,
@@ -364,7 +368,7 @@
         "price": 194.0,
         "description": "适合一家人花更长时间慢慢玩的周末方案",
         "features": "更省心，适合家庭一起消磨半天。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 223,
         "duration_mins": 150,
         "duration_std_dev": 60.0,
@@ -454,7 +458,8 @@
         "available_stock": 307,
         "duration_mins": 105,
         "duration_std_dev": 30.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.74
       },
       {
         "package_id": "package_005_2",
@@ -466,7 +471,8 @@
         "available_stock": 221,
         "duration_mins": 120,
         "duration_std_dev": 15.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.74
       },
       {
         "package_id": "package_005_3",
@@ -474,7 +480,7 @@
         "price": 155.05,
         "description": "适合一家人花更长时间慢慢玩的周末方案",
         "features": "更省心，适合家庭一起消磨半天。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 102,
         "duration_mins": 150,
         "duration_std_dev": 20.0,
@@ -565,7 +571,8 @@
         "available_stock": 122,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_006_2",
@@ -573,7 +580,7 @@
         "price": 78.89,
         "description": "更完整的家庭向体验内容，兼顾轻松和参与感",
         "features": "更适合周末安排，整体节奏稳定。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 30,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
@@ -589,7 +596,8 @@
         "available_stock": 136,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.7
       }
     ],
     "suitable_groups": [
@@ -673,7 +681,7 @@
         "price": 84.4,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 177,
         "duration_mins": 105,
         "duration_std_dev": 20.0,
@@ -689,7 +697,8 @@
         "available_stock": 221,
         "duration_mins": 120,
         "duration_std_dev": 45.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.82
       },
       {
         "package_id": "package_007_3",
@@ -701,7 +710,8 @@
         "available_stock": 131,
         "duration_mins": 150,
         "duration_std_dev": 30.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.82
       }
     ],
     "suitable_groups": [
@@ -788,7 +798,8 @@
         "available_stock": 266,
         "duration_mins": 45,
         "duration_std_dev": 45.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_008_2",
@@ -796,7 +807,7 @@
         "price": 113.71,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 284,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
@@ -808,7 +819,7 @@
         "price": 193.39,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 111,
         "duration_mins": 90,
         "duration_std_dev": 45.0,
@@ -896,7 +907,8 @@
         "available_stock": 206,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.54
       },
       {
         "package_id": "package_009_2",
@@ -904,7 +916,7 @@
         "price": 147.34,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 275,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
@@ -916,7 +928,7 @@
         "price": 160.33,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 168,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
@@ -1004,7 +1016,8 @@
         "available_stock": 171,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_010_2",
@@ -1012,7 +1025,7 @@
         "price": 111.73,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 131,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
@@ -1024,7 +1037,7 @@
         "price": 188.78,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 132,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
@@ -1124,7 +1137,8 @@
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.78
       }
     ],
     "suitable_groups": [
@@ -1216,7 +1230,7 @@
         "price": 0.0,
         "description": "场馆/公园内定时的免费互动活动",
         "features": "有引导员带领，适合家庭/朋友参与。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
@@ -1302,7 +1316,8 @@
         "available_stock": 84,
         "duration_mins": 45,
         "duration_std_dev": 45.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_013_2",
@@ -1314,7 +1329,8 @@
         "available_stock": 154,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_013_3",
@@ -1326,7 +1342,8 @@
         "available_stock": 253,
         "duration_mins": 90,
         "duration_std_dev": 45.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.66
       }
     ],
     "suitable_groups": [
@@ -1412,7 +1429,8 @@
         "available_stock": 313,
         "duration_mins": 120,
         "duration_std_dev": 20.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_014_2",
@@ -1424,7 +1442,8 @@
         "available_stock": 64,
         "duration_mins": 150,
         "duration_std_dev": 45.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_014_3",
@@ -1436,7 +1455,8 @@
         "available_stock": 245,
         "duration_mins": 180,
         "duration_std_dev": 30.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.66
       }
     ],
     "suitable_groups": [
@@ -1521,7 +1541,8 @@
         "available_stock": 143,
         "duration_mins": 120,
         "duration_std_dev": 30.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_015_2",
@@ -1533,7 +1554,8 @@
         "available_stock": 140,
         "duration_mins": 150,
         "duration_std_dev": 30.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_015_3",
@@ -1545,7 +1567,8 @@
         "available_stock": 46,
         "duration_mins": 180,
         "duration_std_dev": 30.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.7
       }
     ],
     "suitable_groups": [
@@ -1630,7 +1653,8 @@
         "available_stock": 60,
         "duration_mins": 45,
         "duration_std_dev": 10.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_016_2",
@@ -1638,7 +1662,7 @@
         "price": 152.48,
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 169,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
@@ -1650,7 +1674,7 @@
         "price": 119.48,
         "description": "更适合多孩子家庭的畅玩方案，时长更足",
         "features": "更省心，适合把孩子电量放空。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 156,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
@@ -1740,7 +1764,8 @@
         "available_stock": 322,
         "duration_mins": 45,
         "duration_std_dev": 30.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.58
       },
       {
         "package_id": "package_017_2",
@@ -1752,7 +1777,8 @@
         "available_stock": 182,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.58
       },
       {
         "package_id": "package_017_3",
@@ -1760,7 +1786,7 @@
         "price": 165.96,
         "description": "更适合多孩子家庭的畅玩方案，时长更足",
         "features": "更省心，适合把孩子电量放空。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 35,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
@@ -1857,7 +1883,7 @@
         "price": 0.0,
         "description": "场馆/公园内定时的免费互动活动",
         "features": "有引导员带领，适合家庭/朋友参与。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
@@ -1942,7 +1968,7 @@
         "price": 83.02,
         "description": "更轻量更短时的亲子体验，避免孩子疲惫",
         "features": "节奏更友好，适合带娃不费脑。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 70,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
@@ -1954,7 +1980,7 @@
         "price": 139.87,
         "description": "更完整的亲子项目内容，适合家庭一起参与",
         "features": "更适合周末安排，孩子更容易投入。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 84,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
@@ -1966,7 +1992,7 @@
         "price": 209.29,
         "description": "更适合多孩子家庭的畅玩方案，时长更足",
         "features": "更省心，适合把孩子电量放空。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 114,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
@@ -2050,7 +2076,7 @@
         "price": 115.66,
         "description": "更适合大孩子参与的轻互动体验，动手感更强",
         "features": "参与感更足，适合亲子一起上手。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 70,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
@@ -2066,7 +2092,8 @@
         "available_stock": 319,
         "duration_mins": 120,
         "duration_std_dev": 20.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.9
       },
       {
         "package_id": "package_020_3",
@@ -2078,7 +2105,8 @@
         "available_stock": 24,
         "duration_mins": 150,
         "duration_std_dev": 60.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.9
       }
     ],
     "suitable_groups": [
@@ -2162,7 +2190,8 @@
         "available_stock": 380,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.86
       },
       {
         "package_id": "package_021_2",
@@ -2174,7 +2203,8 @@
         "available_stock": 223,
         "duration_mins": 60,
         "duration_std_dev": 15.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.86
       },
       {
         "package_id": "package_021_3",
@@ -2186,7 +2216,8 @@
         "available_stock": 137,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.86
       }
     ],
     "suitable_groups": [
@@ -2270,7 +2301,8 @@
         "available_stock": 263,
         "duration_mins": 45,
         "duration_std_dev": 20.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_022_2",
@@ -2282,7 +2314,8 @@
         "available_stock": 154,
         "duration_mins": 60,
         "duration_std_dev": 15.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.66
       },
       {
         "package_id": "package_022_3",
@@ -2294,7 +2327,8 @@
         "available_stock": 253,
         "duration_mins": 90,
         "duration_std_dev": 30.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.66
       }
     ],
     "suitable_groups": [
@@ -2374,7 +2408,7 @@
         "price": 104.77,
         "description": "更适合大孩子参与的轻互动体验，动手感更强",
         "features": "参与感更足，适合亲子一起上手。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 113,
         "duration_mins": 45,
         "duration_std_dev": 20.0,
@@ -2390,7 +2424,8 @@
         "available_stock": 123,
         "duration_mins": 60,
         "duration_std_dev": 15.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_023_3",
@@ -2398,7 +2433,7 @@
         "price": 194.2,
         "description": "更适合家庭一起投入更长时间体验的畅玩方案",
         "features": "更省心，适合把孩子电量放空。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 94,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
@@ -2487,7 +2522,8 @@
         "available_stock": 39,
         "duration_mins": 45,
         "duration_std_dev": 10.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_024_2",
@@ -2499,7 +2535,8 @@
         "available_stock": 168,
         "duration_mins": 60,
         "duration_std_dev": 15.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_024_3",
@@ -2511,7 +2548,8 @@
         "available_stock": 68,
         "duration_mins": 90,
         "duration_std_dev": 60.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.62
       }
     ],
     "suitable_groups": [
@@ -2591,7 +2629,7 @@
         "price": 105.38,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 112,
         "duration_mins": 45,
         "duration_std_dev": 45.0,
@@ -2603,7 +2641,7 @@
         "price": 175.09,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 174,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
@@ -2615,7 +2653,7 @@
         "price": 208.77,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 24,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
@@ -2704,7 +2742,8 @@
         "available_stock": 219,
         "duration_mins": 105,
         "duration_std_dev": 45.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.54
       },
       {
         "package_id": "package_026_2",
@@ -2716,7 +2755,8 @@
         "available_stock": 38,
         "duration_mins": 120,
         "duration_std_dev": 20.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.54
       },
       {
         "package_id": "package_026_3",
@@ -2728,7 +2768,8 @@
         "available_stock": 216,
         "duration_mins": 150,
         "duration_std_dev": 20.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.54
       }
     ],
     "suitable_groups": [
@@ -2809,7 +2850,7 @@
         "price": 80.62,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 355,
         "duration_mins": 105,
         "duration_std_dev": 45.0,
@@ -2821,7 +2862,7 @@
         "price": 87.74,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 54,
         "duration_mins": 120,
         "duration_std_dev": 30.0,
@@ -2837,7 +2878,8 @@
         "available_stock": 109,
         "duration_mins": 150,
         "duration_std_dev": 20.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.58
       }
     ],
     "suitable_groups": [
@@ -2918,7 +2960,7 @@
         "price": 91.04,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 140,
         "duration_mins": 45,
         "duration_std_dev": 30.0,
@@ -2934,7 +2976,8 @@
         "available_stock": 158,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.58
       },
       {
         "package_id": "package_028_3",
@@ -2946,7 +2989,8 @@
         "available_stock": 266,
         "duration_mins": 90,
         "duration_std_dev": 45.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.58
       }
     ],
     "suitable_groups": [
@@ -3135,7 +3179,7 @@
         "price": 118.25,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 187,
         "duration_mins": 45,
         "duration_std_dev": 20.0,
@@ -3151,7 +3195,8 @@
         "available_stock": 121,
         "duration_mins": 60,
         "duration_std_dev": 20.0,
-        "start_time": null
+        "start_time": null,
+        "seating_risk_prob": 0.74
       },
       {
         "package_id": "package_030_3",
@@ -3159,7 +3204,7 @@
         "price": 160.59,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 294,
         "duration_mins": 90,
         "duration_std_dev": 60.0,
@@ -3243,7 +3288,7 @@
         "price": 93.92,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 287,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
@@ -3259,7 +3304,8 @@
         "available_stock": 167,
         "duration_mins": 60,
         "duration_std_dev": 30.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.7
       },
       {
         "package_id": "package_031_3",
@@ -3271,7 +3317,8 @@
         "available_stock": 99,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.7
       }
     ],
     "suitable_groups": [
@@ -3351,7 +3398,7 @@
         "price": 59.44,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 391,
         "duration_mins": 165,
         "duration_std_dev": 45.0,
@@ -3363,7 +3410,7 @@
         "price": 96.53,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 235,
         "duration_mins": 180,
         "duration_std_dev": 30.0,
@@ -3379,7 +3426,8 @@
         "available_stock": 71,
         "duration_mins": 210,
         "duration_std_dev": 45.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.5
       }
     ],
     "suitable_groups": [
@@ -3463,7 +3511,8 @@
         "available_stock": 145,
         "duration_mins": 105,
         "duration_std_dev": 20.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.82
       },
       {
         "package_id": "package_033_2",
@@ -3475,7 +3524,8 @@
         "available_stock": 262,
         "duration_mins": 120,
         "duration_std_dev": 60.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.82
       },
       {
         "package_id": "package_033_3",
@@ -3487,7 +3537,8 @@
         "available_stock": 37,
         "duration_mins": 150,
         "duration_std_dev": 20.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.82
       }
     ],
     "suitable_groups": [
@@ -3571,7 +3622,8 @@
         "available_stock": 407,
         "duration_mins": 105,
         "duration_std_dev": 15.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.78
       },
       {
         "package_id": "package_034_2",
@@ -3583,7 +3635,8 @@
         "available_stock": 112,
         "duration_mins": 120,
         "duration_std_dev": 60.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.78
       },
       {
         "package_id": "package_034_3",
@@ -3595,7 +3648,8 @@
         "available_stock": 145,
         "duration_mins": 150,
         "duration_std_dev": 45.0,
-        "start_time": "20:00"
+        "start_time": "20:00",
+        "seating_risk_prob": 0.78
       }
     ],
     "suitable_groups": [
@@ -3680,7 +3734,8 @@
         "available_stock": 335,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
-        "start_time": "14:00"
+        "start_time": "14:00",
+        "seating_risk_prob": 0.9
       },
       {
         "package_id": "package_035_2",
@@ -3692,7 +3747,8 @@
         "available_stock": 204,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.9
       },
       {
         "package_id": "package_035_3",
@@ -3704,7 +3760,8 @@
         "available_stock": 230,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
-        "start_time": "18:00"
+        "start_time": "18:00",
+        "seating_risk_prob": 0.9
       }
     ],
     "suitable_groups": [
@@ -3784,7 +3841,7 @@
         "price": 91.22,
         "description": "适合两个人结伴体验的轻量方案，进入门槛更低",
         "features": "更适合朋友朋友搭子局，轻松不尴尬。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 296,
         "duration_mins": 45,
         "duration_std_dev": 15.0,
@@ -3796,7 +3853,7 @@
         "price": 185.36,
         "description": "适合小团体结伴体验，氛围更自然，互动更轻松",
         "features": "更容易成局，适合朋友临时约一场。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 222,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
@@ -3808,7 +3865,7 @@
         "price": 171.85,
         "description": "更适合四人一起玩的畅玩方案，内容更丰富",
         "features": "更热闹但不费脑，适合组局。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 264,
         "duration_mins": 90,
         "duration_std_dev": 60.0,
@@ -3904,7 +3961,7 @@
         "price": 0.0,
         "description": "场馆/公园内定时的免费互动活动",
         "features": "有引导员带领，适合家庭/朋友参与。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
@@ -3999,7 +4056,7 @@
         "price": 0.0,
         "description": "场馆/公园内定时的免费互动活动",
         "features": "有引导员带领，适合家庭/朋友参与。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 20,
         "duration_mins": 120,
         "duration_std_dev": 10.0,
@@ -4094,7 +4151,7 @@
         "price": 0.0,
         "description": "场馆/公园内定时的免费互动活动",
         "features": "有引导员带领，适合家庭/朋友参与。",
-        "requires_booking": true,
+        "requires_booking": false,
         "available_stock": 20,
         "duration_mins": 30,
         "duration_std_dev": 10.0,
@@ -4183,7 +4240,8 @@
         "available_stock": 204,
         "duration_mins": 45,
         "duration_std_dev": 45.0,
-        "start_time": "15:00"
+        "start_time": "15:00",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_040_2",
@@ -4195,7 +4253,8 @@
         "available_stock": 252,
         "duration_mins": 60,
         "duration_std_dev": 60.0,
-        "start_time": "16:30"
+        "start_time": "16:30",
+        "seating_risk_prob": 0.62
       },
       {
         "package_id": "package_040_3",
@@ -4207,7 +4266,8 @@
         "available_stock": 276,
         "duration_mins": 90,
         "duration_std_dev": 20.0,
-        "start_time": "19:00"
+        "start_time": "19:00",
+        "seating_risk_prob": 0.62
       }
     ],
     "suitable_groups": [

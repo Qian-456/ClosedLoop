@@ -61,7 +61,6 @@ def _build_time_slots_for_package(*, package: dict, business_hours: str) -> list
             }
         ]
 
-    k = random.randint(3, 6)
     start_candidates: list[int] = []
     cursor = open_min
     while cursor + duration_mins <= close_min:
@@ -76,13 +75,12 @@ def _build_time_slots_for_package(*, package: dict, business_hours: str) -> list
             }
         ]
 
-    chosen = sorted(random.sample(start_candidates, k=min(k, len(start_candidates))))
     return [
         {
             "start_time": _format_minutes_to_hhmm(s),
             "end_time": _format_minutes_to_hhmm(min(s + duration_mins, close_min)),
         }
-        for s in chosen
+        for s in start_candidates
     ]
 
 
@@ -112,10 +110,8 @@ def _build_time_slots_for_combo(*, combo: dict) -> list[dict]:
     if not candidate_starts:
         candidate_starts = [11 * 60, 12 * 60, 18 * 60]
 
-    k = random.randint(2, 4)
-    chosen = sorted(random.sample(candidate_starts, k=min(k, len(candidate_starts))))
     slots_out: list[dict] = []
-    for s in chosen:
+    for s in candidate_starts:
         end_min = s + duration_mins
         slots_out.append(
             {
@@ -140,15 +136,21 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
             duration_mins = int(p.get("duration_mins") or 60)
             capacity_total = _pick_capacity_total(target_type="package", duration_mins=duration_mins)
             time_slots: list[dict] = []
+            prob = p.get("seating_risk_prob")
             for s in raw_slots:
-                remaining = random.randint(0, capacity_total)
-                if random.random() < 0.15:
-                    remaining = 0
+                remaining = random.randint(1, capacity_total)
+                if prob is not None:
+                    if random.random() < prob:
+                        remaining = 0
+                else:
+                    # If random randint was 0, it shouldn't be full if prob is None
+                    pass # We used randint(1, capacity_total) above
+                
                 fullness = 1.0 - (remaining / max(1, capacity_total))
                 queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.08)
                 wait_minutes = 0
                 if queue_required:
-                    wait_minutes = int(round(10 + 80 * fullness))
+                    wait_minutes = int(round(5 + 35 * fullness))
                 time_slots.append(
                     {
                         "start_time": s["start_time"],
@@ -178,28 +180,42 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
         raw_slot_map: dict[tuple[str, str], dict] = {}
         duration_values: list[int] = []
         force_full = False
+        restaurant_probs = []
         for c in combos:
             combo_id = c.get("combo_id")
             if combo_id in demo_full_combo_ids:
                 force_full = True
             duration_values.append(int(c.get("duration_mins") or 60))
+            if "seating_risk_prob" in c:
+                restaurant_probs.append(c["seating_risk_prob"])
             for s in _build_time_slots_for_combo(combo=c):
                 raw_slot_map[(s["start_time"], s["end_time"])] = s
+
+        restaurant_prob = max(restaurant_probs) if restaurant_probs else None
 
         raw_slots = sorted(raw_slot_map.values(), key=lambda x: (x["start_time"], x["end_time"]))
         if not raw_slots:
             raw_slots = [{"start_time": "11:00", "end_time": "13:00"}, {"start_time": "17:00", "end_time": "20:00"}]
-        if len(raw_slots) > 6:
-            raw_slots = random.sample(raw_slots, k=6)
-            raw_slots.sort(key=lambda x: (x["start_time"], x["end_time"]))
 
         duration_mins = int(sum(duration_values) / max(1, len(duration_values))) if duration_values else 60
         capacity_total = _pick_capacity_total(target_type="restaurant", duration_mins=duration_mins)
         time_slots: list[dict] = []
         for s in raw_slots:
-            remaining = random.randint(0, capacity_total)
-            if random.random() < 0.18:
-                remaining = 0
+            remaining = random.randint(1, capacity_total)
+            
+            # Check if time overlaps with meal times (10:00-13:00 or 16:00-19:00)
+            start_m = _parse_hhmm_to_minutes(s["start_time"])
+            end_m = _parse_hhmm_to_minutes(s["end_time"])
+            
+            is_meal_time = False
+            # 10:00 = 600, 13:00 = 780
+            # 16:00 = 960, 19:00 = 1140
+            if (start_m < 780 and end_m > 600) or (start_m < 1140 and end_m > 960):
+                is_meal_time = True
+
+            if is_meal_time and restaurant_prob is not None:
+                if random.random() < restaurant_prob:
+                    remaining = 0
 
             # 为特定演示餐厅固定满位，方便触发 fallback 逻辑。
             if force_full:
@@ -209,7 +225,7 @@ def generate_reservations_from_mock_db(mock_db: dict[str, Any]) -> list[dict]:
             queue_required = remaining == 0 or fullness >= 0.8 or (random.random() < 0.06)
             wait_minutes = 0
             if queue_required:
-                wait_minutes = int(round(5 + 60 * fullness))
+                wait_minutes = int(round(5 + 45 * fullness))
             time_slots.append(
                 {
                     "start_time": s["start_time"],

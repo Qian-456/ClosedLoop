@@ -599,6 +599,7 @@ def planner_node(state: PlanState) -> PlanState:
                     ),
                     expected_wait_minutes=expected_wait_minutes,
                     queue_required=expected_wait_minutes > 0,
+                    seating_risk_prob=selected_item.get("seating_risk_prob"),
                     requires_booking=requires_booking,
                     booking_target_type=booking_target_type,
                     booking_target_id=booking_target_id,
@@ -696,6 +697,23 @@ def planner_node(state: PlanState) -> PlanState:
                     cand_list = candidates.get("ranked_light_packages", [])
                 elif step_type == "gift_shop":
                     cand_list = candidates.get("ranked_gifts", [])
+                
+                queue_pref = getattr(constraints, "queue_preference", "neutral")
+                activity_prefs = getattr(constraints, "activity_preferences", [])
+                
+                is_hot_preferred = (queue_pref == "accept_hot")
+                if not is_hot_preferred:
+                    for p in activity_prefs:
+                        if isinstance(p, str) and any(k in p for k in ("热闹", "聚会", "网红", "派对")):
+                            is_hot_preferred = True
+                            break
+                            
+                if not is_hot_preferred and cand_list:
+                    cand_list = sorted(
+                        cand_list,
+                        key=lambda c: c.get("score", 0) - ((c.get("seating_risk_prob") or 0.0) * 50),
+                        reverse=True
+                    )
                 
                 backup_candidates = []
                 old_cost = _money((step.item.price_breakdown or {}).get("total") if step.item.price_breakdown else step.item.cost)

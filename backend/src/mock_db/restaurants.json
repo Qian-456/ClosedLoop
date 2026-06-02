@@ -198,7 +198,8 @@
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.82
       },
       {
         "combo_id": "combo_002_3",
@@ -226,7 +227,8 @@
           "dinner",
           "afternoon_tea"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.82
       },
       {
         "combo_id": "combo_002_5",
@@ -542,7 +544,8 @@
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.62
       }
     ],
     "tags": [
@@ -1575,7 +1578,8 @@
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.82
       },
       {
         "combo_id": "combo_011_3",
@@ -1714,7 +1718,7 @@
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_012_2",
@@ -1908,7 +1912,8 @@
           "dinner",
           "afternoon_tea"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.78
       },
       {
         "combo_id": "combo_013_5",
@@ -2212,7 +2217,7 @@
           "dinner",
           "afternoon_tea"
         ],
-        "requires_booking": true
+        "requires_booking": false
       },
       {
         "combo_id": "combo_015_5",
@@ -2682,7 +2687,8 @@
           "dinner",
           "late_night"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.74
       }
     ],
     "tags": [
@@ -2775,7 +2781,8 @@
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.7
       },
       {
         "combo_id": "combo_019_2",
@@ -2954,7 +2961,8 @@
           "dinner",
           "late_night"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.86
       },
       {
         "combo_id": "combo_020_4",
@@ -3549,7 +3557,8 @@
           "dinner",
           "late_night"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.86
       },
       {
         "combo_id": "combo_024_4",
@@ -3695,7 +3704,8 @@
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.62
       },
       {
         "combo_id": "combo_025_4",
@@ -3723,7 +3733,8 @@
           "lunch",
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.62
       }
     ],
     "tags": [
@@ -3833,7 +3844,8 @@
         "suitable_time_slots": [
           "afternoon_tea"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.86
       },
       {
         "combo_id": "combo_026_3",
@@ -3846,7 +3858,8 @@
         "suitable_time_slots": [
           "dinner"
         ],
-        "requires_booking": true
+        "requires_booking": true,
+        "seating_risk_prob": 0.86
       },
       {
         "combo_id": "combo_026_4",

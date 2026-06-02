@@ -326,6 +326,8 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
                 "child_facility_tags": rest.get("child_facility_tags", []),
                 "child_friendly_score_derived": rest.get("child_friendly_score_derived"),
             }
+            if "seating_risk_prob" in combo:
+                rc["seating_risk_prob"] = combo["seating_risk_prob"]
             
             # 分类逻辑：根据套餐自带的时间段标签进行分流
             suitable_slots = combo.get("suitable_time_slots", [])
@@ -376,6 +378,8 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
                 "longitude": act.get("longitude"),
                 "location": act.get("location", {}),
             }
+            if "seating_risk_prob" in pkg:
+                rp["seating_risk_prob"] = pkg["seating_risk_prob"]
             ranked_packages.append(rp)
 
     # 处理礼品

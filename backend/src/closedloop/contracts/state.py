@@ -145,6 +145,7 @@ class RankedCombo(TypedDict, total=False):
     stroller_friendly_status: NotRequired[str]
     child_facility_tags: NotRequired[list]
     child_friendly_score_derived: NotRequired[dict]
+    seating_risk_prob: NotRequired[float]
 
 class RankedPackage(TypedDict, total=False):
     """重排序阶段：扁平化的活动套餐条目，包含活动场地上下文。"""
@@ -177,7 +178,7 @@ class RankedPackage(TypedDict, total=False):
     latitude: NotRequired[float]
     longitude: NotRequired[float]
     location: NotRequired[dict]
-
+    seating_risk_prob: NotRequired[float]
 
 class RankedGift(TypedDict, total=False):
     """重排序阶段：扁平化的礼品条目，包含礼品店上下文。"""
@@ -210,6 +211,7 @@ class RankedGift(TypedDict, total=False):
     latitude: NotRequired[float]
     longitude: NotRequired[float]
     location: NotRequired[dict]
+    seating_risk_prob: NotRequired[float]
 
 
 class Candidates(TypedDict):

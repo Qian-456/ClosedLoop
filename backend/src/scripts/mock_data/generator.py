@@ -848,6 +848,12 @@ def _load_catalog_json(catalog_dir: str, filename: str) -> list[dict] | None:
 
 
 
+def _calc_seating_risk_prob(rating: float) -> float:
+    if rating < 3.0:
+        return 0.1
+    prob = 0.1 + ((rating - 3.0) / 2.0) * 0.8
+    return round(min(0.95, prob), 2)
+
 if __name__ == "__main__":
     from closedloop.core.config import REPO_ROOT_DIR, get_config
     from closedloop.core.logger import LoggerManager, logger
@@ -864,6 +870,45 @@ if __name__ == "__main__":
         return os.path.abspath(os.path.join(REPO_ROOT_DIR, v))
 
     data = generate_mock_db()
+
+    # --- Apply seating risk prob and adjust requires_booking ---
+    for rest in data.get("restaurants", []):
+        rating = float(rest.get("rating", 0.0))
+        prob = _calc_seating_risk_prob(rating)
+        for combo in rest.get("combos", []):
+            if combo.get("requires_booking"):
+                if random.random() < prob:
+                    combo["requires_booking"] = True
+                    combo["seating_risk_prob"] = prob
+                else:
+                    combo["requires_booking"] = False
+                    combo.pop("seating_risk_prob", None)
+            else:
+                combo.pop("seating_risk_prob", None)
+
+    for act in data.get("activity_venues", []):
+        sub_cat = act.get("sub_category", "")
+        # 免票公共场所
+        is_free_public = sub_cat in ("城市公园/湖边步道", "大型书城", "商场综合体", "商场亲子互动区", "复古街区")
+        rating = float(act.get("rating", 0.0))
+        prob = _calc_seating_risk_prob(rating)
+        
+        for pkg in act.get("packages", []):
+            if is_free_public:
+                pkg["requires_booking"] = False
+                pkg.pop("seating_risk_prob", None)
+            else:
+                if pkg.get("requires_booking"):
+                    if random.random() < prob:
+                        pkg["requires_booking"] = True
+                        pkg["seating_risk_prob"] = prob
+                    else:
+                        pkg["requires_booking"] = False
+                        pkg.pop("seating_risk_prob", None)
+                else:
+                    pkg.pop("seating_risk_prob", None)
+
+    # --- End modification ---
 
     mock_db_dir = _resolve_dir(config.data.MOCK_DB_REPO_DIR)
     os.makedirs(mock_db_dir, exist_ok=True)
