@@ -232,6 +232,22 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
 
 from langchain_core.runnables import RunnableConfig
 
+def _estimate_wait_minutes(rating: float) -> int:
+    """
+    预估排队时间（不读取真实的 reservations.json 上帝视角）。
+    评分越高，预估排队时间越长。
+    """
+    if rating < 3.5:
+        return 0
+    elif rating < 4.0:
+        return 10
+    elif rating < 4.5:
+        return 20
+    elif rating < 4.8:
+        return 30
+    else:
+        return 45
+
 def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     """
     对 filter 节点输出的候选列表进行打分并重新排序。
@@ -263,20 +279,6 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     if isinstance(constraints, dict):
         constraints = Constraints(**constraints)
 
-    try:
-        reservations = load_mock_data("reservations.json")
-    except Exception as e:
-        logger.warning(f"phase=rerank_node | msg=failed_to_load_reservations | error={e}")
-        reservations = []
-
-    wait_time_map = {}
-    for res in reservations:
-        target_id = res.get("target_id")
-        slots = res.get("time_slots", [])
-        if target_id and slots:
-            max_wait = max((s.get("wait_minutes", 0) for s in slots), default=0)
-            wait_time_map[target_id] = max_wait
-
     ranked_combos: list[RankedCombo] = []
     ranked_breakfast_combos: list[RankedCombo] = []
     ranked_lunch_combos: list[RankedCombo] = []
@@ -290,7 +292,7 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
     # 处理餐厅
     for rest in candidates.get("nearby_restaurants", []):
         restaurant_id = rest.get("id", "") or rest.get("restaurant_id", "")
-        restaurant_expected_wait = wait_time_map.get(restaurant_id, 0)
+        restaurant_expected_wait = _estimate_wait_minutes(float(rest.get("rating", 0.0)))
         for combo in rest.get("combos", []):
             combo_id = combo.get("combo_id") or combo.get("id", "")
             expected_wait = restaurant_expected_wait
@@ -345,9 +347,10 @@ def rerank_node(state: PlanState, config: RunnableConfig = None) -> PlanState:
             
     # 处理活动
     for act in candidates.get("nearby_activities", []):
+        act_expected_wait = _estimate_wait_minutes(float(act.get("rating", 0.0)))
         for pkg in act.get("packages", []):
             package_id = pkg.get("package_id") or pkg.get("id", "")
-            expected_wait = wait_time_map.get(package_id, 0)
+            expected_wait = act_expected_wait
             rp: RankedPackage = {
                 "package_id": package_id,
                 "name": pkg.get("name", ""),

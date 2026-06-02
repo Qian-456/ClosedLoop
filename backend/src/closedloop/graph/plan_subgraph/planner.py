@@ -711,7 +711,7 @@ def planner_node(state: PlanState) -> PlanState:
                 if not is_hot_preferred and cand_list:
                     cand_list = sorted(
                         cand_list,
-                        key=lambda c: c.get("score", 0) - ((c.get("seating_risk_prob") or 0.0) * 50),
+                        key=lambda c: c.get("score", 0) - ((c.get("seating_risk_prob") or 0.0) ** 2) * 50,
                         reverse=True
                     )
                 
