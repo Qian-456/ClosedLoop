@@ -256,12 +256,15 @@ function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: 
   const isCommute = item.type === 'commute'
   const cost = getStepCost(step)
   const mode = item.commute_recommended_mode || item.commute_mode
+  const waitMinutes = toNumber(item.duration_breakdown?.wait_minutes ?? item.expected_wait_minutes)
+  const baseMinutes = toNumber(item.duration_breakdown?.base_minutes)
+  const durationLabel = waitMinutes > 0 && baseMinutes > 0 ? `${baseMinutes}分钟` : `${step.duration_minutes}分钟`
 
   return (
     <div className="grid grid-cols-[70px_1fr] border-b border-slate-100 last:border-b-0">
       <div className="relative px-3 py-4 text-right">
         <div className="whitespace-pre-line text-sm font-bold leading-5 text-slate-950">{getStepTimeRange(step)}</div>
-        <div className="mt-1 text-xs text-slate-500">{step.duration_minutes}分钟</div>
+        <div className="mt-1 text-xs text-slate-500">{durationLabel}</div>
         <div className="absolute bottom-0 right-[-1px] top-0 w-px bg-slate-200" />
         <div className={clsx('absolute right-[-5px] top-8 h-2.5 w-2.5 rounded-full ring-4 ring-white', style.dot)} />
       </div>
@@ -284,14 +287,21 @@ function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: 
               getSubName(item) || step.note || `第 ${index + 1} 站`
             )}
           </div>
+          {waitMinutes > 0 && !isCommute ? (
+            <div className="mt-1.5 inline-flex items-center gap-1 rounded-[6px] bg-rose-50 px-2 py-0.5 text-[11px] font-semibold text-rose-600">
+              <span className="text-[10px]">🔥</span> 预估等位 {waitMinutes} 分钟
+            </div>
+          ) : null}
           {!isCommute ? (
-            <button
-              type="button"
-              className="mt-3 h-9 min-w-[112px] rounded-full border border-blue-100 bg-white px-5 text-sm font-semibold text-blue-600"
-              onClick={() => onOpenStep(step)}
-            >
-              详情
-            </button>
+            <div className="mt-3">
+              <button
+                type="button"
+                className="h-9 min-w-[112px] rounded-full border border-blue-100 bg-white px-5 text-sm font-semibold text-blue-600"
+                onClick={() => onOpenStep(step)}
+              >
+                详情
+              </button>
+            </div>
           ) : null}
         </div>
         <div className="flex items-start gap-2">
