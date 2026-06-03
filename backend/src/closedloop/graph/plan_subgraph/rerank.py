@@ -204,16 +204,17 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
     if expected_wait_minutes > 0:
         queue_pref = getattr(constraints, "queue_preference", "neutral")
         if queue_pref == "avoid_queues":
-            scene_fit_score -= (expected_wait_minutes / 10.0) * 10
+            scene_fit_score += float(expected_wait_minutes) * -1.0
         elif queue_pref == "accept_hot":
-            scene_fit_score += (expected_wait_minutes / 10.0) * 2
+            scene_fit_score += float(expected_wait_minutes) * 0.2
         else:
-            scene_fit_score -= (expected_wait_minutes / 10.0) * 2
+            scene_fit_score += float(expected_wait_minutes) * -0.3
 
     # 奖励短时长活动（针对活动类型，1.25-1.75小时/75-105分钟）
     if "package_id" in inner_item:
         duration_mins = inner_item.get("duration_mins", 0)
-        if 75 <= duration_mins <= 105:
+        effective_duration_mins = int(duration_mins or 0) + int(expected_wait_minutes or 0)
+        if 75 <= effective_duration_mins <= 105:
             scene_fit_score += 15  # 给予较短时长活动额外加分，促使系统乐意推荐
 
     # 2. 质量热度分 (Quality & Popularity Mock)

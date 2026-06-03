@@ -512,7 +512,16 @@ def generate_and_score_combinations(
                 theme_score = 80.0
                 
                 # 计算核心项目的平均时长（排除礼品和通勤）
-                core_durations = [i.get("duration_mins", 60) for i in current_combo if i.get("_step_type") != "gift_shop"]
+                core_durations = []
+                for i in current_combo:
+                    st = i.get("_step_type")
+                    is_restaurant = isinstance(st, str) and st.startswith("restaurant:")
+                    is_activity = st in ("activity", "activity_light")
+                    if not (is_restaurant or is_activity):
+                        continue
+                    base_minutes = int(i.get("duration_mins") or 60)
+                    wait_minutes = int(i.get("expected_wait_minutes") or 0)
+                    core_durations.append(base_minutes + wait_minutes)
                 avg_core_dur = sum(core_durations) / len(core_durations) if core_durations else 0.0
                 
                 # 如果核心项目平均时长在 1.25 - 1.75 小时（75 - 105 分钟），给予额外加分

@@ -137,11 +137,14 @@ describe('PlanPanel', () => {
     expect(screen.getByText('午餐 + 玩 + 惊喜行程方案 A')).toBeInTheDocument()
     expect(screen.getByText('推荐指数 87')).toBeInTheDocument()
     expect(screen.getByText('¥311')).toBeInTheDocument()
+    expect(screen.queryByText(/平均等位/)).not.toBeInTheDocument()
     expect(screen.queryByText('莲香茶餐厅（老城文化街区）')).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByText('午餐 + 玩 + 惊喜行程方案 A'))
     expect(screen.getByText('返回方案列表')).toBeInTheDocument()
     expect(screen.getByText('莲香茶餐厅（老城文化街区）')).toBeInTheDocument()
+    expect(screen.getByText('平均等位 65 分钟')).toBeInTheDocument()
+    expect(screen.getByText('总时长 123分钟（含等位65分钟）')).toBeInTheDocument()
   })
 
   it('展开后可以从把手一键收回到只剩展开条', () => {

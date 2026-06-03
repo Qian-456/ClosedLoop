@@ -105,6 +105,33 @@ const getStepTimeRange = (step: ItineraryStep) => {
 const compactRows = (rows: Array<[string, number]>): Array<[string, number]> =>
   rows.filter(([, value]) => Number.isFinite(value) && value > 0)
 
+const getStepWaitMinutes = (step: ItineraryStep) => toNumber(step.item.duration_breakdown?.wait_minutes ?? step.item.expected_wait_minutes)
+
+const getStepBaseMinutes = (step: ItineraryStep) => toNumber(step.item.duration_breakdown?.base_minutes)
+
+const getStepTotalMinutesForDisplay = (step: ItineraryStep) => {
+  const waitMinutes = getStepWaitMinutes(step)
+  const baseMinutes = getStepBaseMinutes(step)
+  if (waitMinutes > 0 && baseMinutes > 0) return baseMinutes + waitMinutes
+
+  const totalFromBreakdown = toNumber(step.item.duration_breakdown?.total_minutes)
+  if (totalFromBreakdown > 0) return totalFromBreakdown
+
+  return toNumber(step.duration_minutes)
+}
+
+const getAverageWaitMinutes = (steps: ItineraryStep[]) => {
+  const waitMinutes = steps
+    .filter((step) => step.item.type === 'restaurant' || step.item.type === 'activity')
+    .map((step) => getStepWaitMinutes(step))
+    .filter((value) => value > 0)
+
+  if (waitMinutes.length === 0) return null
+
+  const sum = waitMinutes.reduce((acc, value) => acc + value, 0)
+  return Math.round(sum / waitMinutes.length)
+}
+
 function DetailRow({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className={clsx('flex items-center justify-between gap-4 text-sm leading-7', strong && 'border-t border-dashed border-slate-200 pt-2')}>
@@ -256,9 +283,9 @@ function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: 
   const isCommute = item.type === 'commute'
   const cost = getStepCost(step)
   const mode = item.commute_recommended_mode || item.commute_mode
-  const waitMinutes = toNumber(item.duration_breakdown?.wait_minutes ?? item.expected_wait_minutes)
-  const baseMinutes = toNumber(item.duration_breakdown?.base_minutes)
-  const durationLabel = waitMinutes > 0 && baseMinutes > 0 ? `${baseMinutes}分钟` : `${step.duration_minutes}分钟`
+  const waitMinutes = getStepWaitMinutes(step)
+  const totalMinutes = getStepTotalMinutesForDisplay(step)
+  const durationLabel = waitMinutes > 0 && !isCommute ? `总时长 ${totalMinutes}分钟（含等位${waitMinutes}分钟）` : `${toNumber(step.duration_minutes)}分钟`
 
   return (
     <div className="grid grid-cols-[70px_1fr] border-b border-slate-100 last:border-b-0">
@@ -323,6 +350,7 @@ export function PlanCard({
 }: PlanCardProps) {
   const reasons = copywriting?.pros_cons ?? []
   const score = Math.round(plan.experience_score ?? plan.average_score ?? 0)
+  const averageWaitMinutes = getAverageWaitMinutes(plan.steps)
 
   return (
     <>
@@ -338,6 +366,7 @@ export function PlanCard({
                 <Clock3 className="h-4 w-4" />
                 总时长 <b className="text-slate-700">{formatDuration(toNumber(plan.total_duration_minutes))}</b>
               </span>
+              {typeof averageWaitMinutes === 'number' ? <span>平均等位 {averageWaitMinutes} 分钟</span> : null}
             </div>
           </div>
           <div className="rounded-full bg-emerald-50 px-4 py-2 text-lg font-bold text-emerald-700">
