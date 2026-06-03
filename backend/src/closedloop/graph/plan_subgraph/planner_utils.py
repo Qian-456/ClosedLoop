@@ -1,13 +1,122 @@
 import itertools
 import math
 import heapq
+import re
 
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
+from closedloop.contracts.state import Constraints
+from closedloop.utils.capacity import _get_effective_people
 
 DELIVERY_BASE_FEE = 3.0
 DELIVERY_PER_KM_FEE = 2.0
 DELIVERY_MAX_FEE = 15.0
+
+_PEOPLE_RANGE_PATTERN = re.compile(r"(\d+)\s*[-~到]\s*(\d+)\s*人")
+
+
+def _derive_family_combo_preferences(constraints: Constraints | None) -> dict | None:
+    """
+    Derive family combo matching preferences from structured constraints.
+    """
+    if constraints is None:
+        return None
+    if getattr(constraints, "group_type", None) != "family":
+        return None
+    if int(getattr(constraints, "child_count", 0) or 0) <= 0:
+        return None
+
+    adult_count = int(getattr(constraints, "adult_count", 0) or 0)
+    child_count = int(getattr(constraints, "child_count", 0) or 0)
+
+    exact = f"{adult_count}大{child_count}小"
+    aliases: list[str] = []
+    if adult_count == 2 and child_count == 1:
+        aliases.append("三口之家")
+    if adult_count == 2 and child_count == 2:
+        aliases.append("四口之家")
+
+    return {
+        "exact_or_aliases": [exact] + aliases,
+        "generic_keywords": ["亲子", "儿童", "宝宝", "家庭"],
+        "effective_people": float(_get_effective_people(constraints)),
+    }
+
+
+def _combo_text(item: dict) -> str:
+    name = item.get("name", "") or ""
+    features = item.get("features", "") or ""
+    desc = item.get("description", "") or ""
+    return f"{name} {features} {desc}"
+
+
+def _match_people_range(name: str, effective_people: float) -> bool:
+    if not isinstance(name, str) or not name:
+        return False
+    m = _PEOPLE_RANGE_PATTERN.search(name)
+    if not m:
+        return False
+    try:
+        a = int(m.group(1))
+        b = int(m.group(2))
+    except Exception:
+        return False
+    lo, hi = (a, b) if a <= b else (b, a)
+    return float(lo) <= float(effective_people) <= float(hi)
+
+
+def _select_best_restaurant_combo(combos: list[dict], prefs: dict | None) -> dict | None:
+    """
+    Select the best combo for a restaurant deterministically using priority rules.
+    """
+    if not combos:
+        return None
+    if prefs is None:
+        return combos[0]
+
+    exact_or_aliases = [s for s in (prefs.get("exact_or_aliases") or []) if isinstance(s, str) and s]
+    generic_keywords = [s for s in (prefs.get("generic_keywords") or []) if isinstance(s, str) and s]
+    effective_people = float(prefs.get("effective_people") or 0.0)
+
+    for c in combos:
+        t = _combo_text(c)
+        if any(k in t for k in exact_or_aliases):
+            return c
+
+    for c in combos:
+        t = _combo_text(c)
+        if any(k in t for k in generic_keywords):
+            return c
+
+    for c in combos:
+        if _match_people_range(str(c.get("name", "") or ""), effective_people):
+            return c
+
+    return combos[0]
+
+
+def _collapse_restaurant_pool_by_id(pool: list[dict], constraints: Constraints | None) -> list[dict]:
+    prefs = _derive_family_combo_preferences(constraints)
+    if not prefs:
+        return pool
+
+    grouped: dict[str, list[dict]] = {}
+    order: list[str] = []
+    for item in pool:
+        restaurant_id = str(item.get("restaurant_id") or "")
+        combo_id = str(item.get("combo_id") or item.get("id") or "")
+        key = restaurant_id or f"__combo__{combo_id}"
+        if key not in grouped:
+            grouped[key] = []
+            order.append(key)
+        grouped[key].append(item)
+
+    collapsed: list[dict] = []
+    for key in order:
+        selected = _select_best_restaurant_combo(grouped.get(key, []), prefs)
+        if selected is not None:
+            collapsed.append(selected)
+    return collapsed
 
 
 def calculate_delivery_fee(delivery_distance_km: float) -> float:
@@ -174,6 +283,7 @@ def generate_and_score_combinations(
     commute_preference: str = "auto",
     dfs_global_prune_stats: dict = None,
     start_time: float = 0.0,
+    constraints: Constraints | dict | None = None,
 ) -> tuple[list[dict], int, set[str]]:
     """
     使用 DFS 回溯算法生成、剪枝并对组合进行打分。
@@ -183,6 +293,14 @@ def generate_and_score_combinations(
     config = get_config()
     LoggerManager.setup(config)
     log_stats = bool(getattr(config.logging, "LOG_PLANNER_STATS", False))
+    normalized_constraints: Constraints | None = None
+    if isinstance(constraints, Constraints):
+        normalized_constraints = constraints
+    elif isinstance(constraints, dict):
+        try:
+            normalized_constraints = Constraints(**constraints)
+        except Exception:
+            normalized_constraints = None
 
     TOP_K_PER_STEP = 10
     grouped_plans = []
@@ -219,6 +337,7 @@ def generate_and_score_combinations(
             "prune_final_duration_too_short": 0,
             "prune_final_duration_too_long": 0,
             "prune_meal_time_invalid": 0,
+            "repeat_place_fallback_count": 0,
         }
         
         for step_type in pattern_steps:
@@ -250,6 +369,8 @@ def generate_and_score_combinations(
                             pool = queues[f][:TOP_K_PER_STEP]
                             fallback_used[step_type] = f"restaurant:{f}"
                             break
+                if pool:
+                    pool = _collapse_restaurant_pool_by_id(pool, normalized_constraints)
                             
             step_pool_sizes[step_type] = len(pool)
             if not pool:
@@ -321,7 +442,8 @@ def generate_and_score_combinations(
         # 开始 DFS 回溯生成组合
         def dfs(step_idx, current_combo, current_pos, cost_without_gift, cost_with_gift, 
                 total_duration_minutes, total_score_raw, total_score_clamped_100, total_premium_bonus,
-                total_commute_distance, commutes_info, used_item_ids):
+                total_commute_distance, commutes_info, used_item_ids,
+                used_restaurant_ids, used_venue_ids, used_shop_ids, repeat_place_fallback_count):
             nonlocal valid_count_before_topk
             nonlocal pattern_valid_leaf_count
             
@@ -389,12 +511,20 @@ def generate_and_score_combinations(
                 budget_score = max(0.0, 100.0 - abs(budget_ratio - 0.85) * 100.0)
                 theme_score = 80.0
                 
+                # 计算核心项目的平均时长（排除礼品和通勤）
+                core_durations = [i.get("duration_mins", 60) for i in current_combo if i.get("_step_type") != "gift_shop"]
+                avg_core_dur = sum(core_durations) / len(core_durations) if core_durations else 0.0
+                
+                # 如果核心项目平均时长在 1.25 - 1.75 小时（75 - 105 分钟），给予额外加分
+                duration_bonus_score = 5.0 if 75 <= avg_core_dur <= 105 else 0.0
+                
                 final_score = (
                     base_score_100 * 0.35 +
                     spatial_score * 0.25 +
                     time_score * 0.20 +
                     budget_score * 0.10 +
-                    theme_score * 0.10
+                    theme_score * 0.10 +
+                    duration_bonus_score
                 )
 
                 avg_item_score_clamped = (total_score_clamped_100 / len(current_combo)) if current_combo else 0.0
@@ -403,7 +533,8 @@ def generate_and_score_combinations(
                     avg_item_score_clamped * 0.65 +
                     spatial_score * 0.25 +
                     theme_score * 0.10 +
-                    avg_premium_bonus
+                    avg_premium_bonus +
+                    duration_bonus_score
                 )
                 experience_score = min(100.0, max(0.0, experience_score))
                 
@@ -418,6 +549,7 @@ def generate_and_score_combinations(
                 
                 valid_count_before_topk += 1
                 pattern_valid_leaf_count += 1
+                prune_counts["repeat_place_fallback_count"] += repeat_place_fallback_count
                 
                 pattern_plans.append({
                     "pattern": pattern,
@@ -426,15 +558,56 @@ def generate_and_score_combinations(
                     "average_score": round(final_score, 2),
                     "experience_score": round(experience_score, 2),
                     "total_cost": round(final_cost_with_gift, 2),
-                    "total_duration_minutes": final_total_duration
+                    "total_duration_minutes": final_total_duration,
+                    "repeat_place_fallback_count": repeat_place_fallback_count,
                 })
                 return
 
             # 继续下一步
-            for selected_item in step_pools[step_idx]:
+            step_pool = step_pools[step_idx]
+            step_type = pattern_steps[step_idx] if step_idx < len(pattern_steps) else None
+            candidates = []
+            has_non_used_item = False
+
+            def _is_used_place(item: dict) -> bool:
+                st = item.get("_step_type") or step_type
+                if st == "activity" or st == "activity_light":
+                    venue_id = item.get("venue_id")
+                    if venue_id:
+                        return venue_id in used_venue_ids
+                    return False
+                if st == "gift_shop":
+                    shop_id = item.get("shop_id")
+                    if shop_id:
+                        return shop_id in used_shop_ids
+                    return False
+                if isinstance(st, str) and st.startswith("restaurant:"):
+                    restaurant_id = item.get("restaurant_id")
+                    if restaurant_id:
+                        return restaurant_id in used_restaurant_ids
+                    return False
+                return False
+
+            for it in step_pool:
+                item_id = it.get("combo_id") or it.get("package_id") or it.get("gift_id", "unknown")
+                if item_id in used_item_ids:
+                    continue
+                has_non_used_item = True
+                if _is_used_place(it):
+                    continue
+                candidates.append(it)
+
+            allow_repeat_place = False
+            if not candidates and has_non_used_item:
+                allow_repeat_place = True
+                candidates = [it for it in step_pool if (it.get("combo_id") or it.get("package_id") or it.get("gift_id", "unknown")) not in used_item_ids]
+
+            for selected_item in candidates:
                 item_id = selected_item.get("combo_id") or selected_item.get("package_id") or selected_item.get("gift_id", "unknown")
                 if item_id in used_item_ids:
                     continue
+
+                is_repeat_place = allow_repeat_place and _is_used_place(selected_item)
                     
                 step_type = selected_item["_step_type"]
                 meal_category = selected_item.get("_meal_category")
@@ -497,6 +670,18 @@ def generate_and_score_combinations(
                     item_for_combo["gift_price"] = gift_price
                     item_for_combo["delivery_fee"] = delivery_fee
                     item_for_combo["delivery_distance_km"] = float(round(delivery_distance_km, 2))
+                    if is_repeat_place:
+                        item_for_combo["repeat_place_fallback"] = True
+
+                    used_set_to_restore = None
+                    used_set_value = None
+                    if step_type == "gift_shop":
+                        used_set_to_restore = used_shop_ids
+                        used_set_value = selected_item.get("shop_id")
+                    added_place_id = False
+                    if used_set_to_restore is not None and used_set_value and used_set_value not in used_set_to_restore:
+                        used_set_to_restore.add(used_set_value)
+                        added_place_id = True
 
                     current_combo.append(item_for_combo)
                     used_item_ids.add(item_id)
@@ -509,11 +694,15 @@ def generate_and_score_combinations(
 
                     dfs(step_idx + 1, current_combo, current_pos, new_cost_without_gift, new_cost_with_gift,
                         new_total_duration, new_total_score_raw, new_total_score_clamped_100, new_total_premium_bonus,
-                        new_total_commute_distance, commutes_info, used_item_ids)
+                        new_total_commute_distance, commutes_info, used_item_ids,
+                        used_restaurant_ids, used_venue_ids, used_shop_ids,
+                        repeat_place_fallback_count + (1 if is_repeat_place else 0))
 
                     current_combo.pop()
                     used_item_ids.remove(item_id)
                     commutes_info.pop()
+                    if added_place_id and used_set_to_restore is not None and used_set_value:
+                        used_set_to_restore.remove(used_set_value)
                     continue
 
                 next_pos = get_coords(selected_item)
@@ -569,8 +758,27 @@ def generate_and_score_combinations(
                 new_total_score_clamped_100 = total_score_clamped_100 + score_clamped
                 new_total_premium_bonus = total_premium_bonus + float(premium_bonus)
                 new_total_commute_distance = total_commute_distance + dist
-                
-                current_combo.append(selected_item)
+
+                used_set_to_restore = None
+                used_set_value = None
+                if step_type == "activity" or step_type == "activity_light":
+                    used_set_to_restore = used_venue_ids
+                    used_set_value = selected_item.get("venue_id")
+                elif step_type.startswith("restaurant:"):
+                    used_set_to_restore = used_restaurant_ids
+                    used_set_value = selected_item.get("restaurant_id")
+                added_place_id = False
+                if used_set_to_restore is not None and used_set_value and used_set_value not in used_set_to_restore:
+                    used_set_to_restore.add(used_set_value)
+                    added_place_id = True
+
+                if is_repeat_place:
+                    item_for_combo = selected_item.copy()
+                    item_for_combo["repeat_place_fallback"] = True
+                else:
+                    item_for_combo = selected_item
+
+                current_combo.append(item_for_combo)
                 used_item_ids.add(item_id)
                 commutes_info.append({
                     "time": time_min,
@@ -581,15 +789,19 @@ def generate_and_score_combinations(
                 
                 dfs(step_idx + 1, current_combo, next_pos, new_cost_without_gift, new_cost_with_gift,
                     new_total_duration, new_total_score_raw, new_total_score_clamped_100, new_total_premium_bonus,
-                    new_total_commute_distance, commutes_info, used_item_ids)
+                    new_total_commute_distance, commutes_info, used_item_ids,
+                    used_restaurant_ids, used_venue_ids, used_shop_ids,
+                    repeat_place_fallback_count + (1 if is_repeat_place else 0))
                     
                 # 回溯
                 current_combo.pop()
                 used_item_ids.remove(item_id)
                 commutes_info.pop()
+                if added_place_id and used_set_to_restore is not None and used_set_value:
+                    used_set_to_restore.remove(used_set_value)
                 
         # 从起始点(0.0, 0.0) 开始 DFS
-        dfs(0, [], (0.0, 0.0), 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0, [], set())
+        dfs(0, [], (0.0, 0.0), 0.0, 0.0, 0, 0.0, 0.0, 0.0, 0.0, [], set(), set(), set(), set(), 0)
         
         if pattern_plans:
             # 不再限制 Top N，保留所有合法方案，以最大化后续去重/多样性选择的空间

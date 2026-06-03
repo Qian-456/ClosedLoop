@@ -210,6 +210,12 @@ def score_item(item: dict, inner_item: dict, constraints: Constraints, expected_
         else:
             scene_fit_score -= (expected_wait_minutes / 10.0) * 2
 
+    # 奖励短时长活动（针对活动类型，1.25-1.75小时/75-105分钟）
+    if "package_id" in inner_item:
+        duration_mins = inner_item.get("duration_mins", 0)
+        if 75 <= duration_mins <= 105:
+            scene_fit_score += 15  # 给予较短时长活动额外加分，促使系统乐意推荐
+
     # 2. 质量热度分 (Quality & Popularity Mock)
     # 放大利差，让高分店铺更具优势，假设底分为 3.0
     rating = float(item.get("rating", 0.0) or 0.0)

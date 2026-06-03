@@ -52,21 +52,43 @@ for g in _groups:
     # --- Medium (4.5 - 5.5) ---
     # 3-4 steps + gift
     # Lunch starts
-    PATTERNS.append({
-        "id": f"{g.upper()}-M-L1", "group": g, "duration_range": [4.5, 5.5],
-        "steps": ["restaurant:lunch", "activity", "activity_light", "gift_shop"],
-        "desc": "午餐+主活动+轻活动+惊喜", "start_time_pref": ["lunch"]
-    })
-    PATTERNS.append({
-        "id": f"{g.upper()}-M-L2", "group": g, "duration_range": [4.5, 5.5],
-        "steps": ["activity_light", "restaurant:lunch", "activity", "gift_shop"],
-        "desc": "轻活动+午餐+主活动+惊喜", "start_time_pref": ["lunch"]
-    })
-    PATTERNS.append({
-        "id": f"{g.upper()}-M-L3", "group": g, "duration_range": [4.5, 5.5],
-        "steps": ["restaurant:lunch", "activity", "restaurant:afternoon_tea", "gift_shop"],
-        "desc": "午餐+主活动+下午茶+惊喜", "start_time_pref": ["lunch"]
-    })
+    if g == "family_kids":
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L1", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["activity_light", "restaurant:lunch", "activity_light", "gift_shop"],
+            "desc": "轻活动+午餐+轻活动+惊喜", "start_time_pref": ["lunch"]
+        })
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L2", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["activity_light", "restaurant:lunch", "gift_shop", "activity_light"],
+            "desc": "轻活动+午餐+惊喜+轻活动", "start_time_pref": ["lunch"]
+        })
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L3", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["activity", "restaurant:lunch", "gift_shop", "activity_light"],
+            "desc": "主活动+午餐+惊喜+轻活动", "start_time_pref": ["lunch"]
+        })
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L4", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["activity", "restaurant:lunch", "activity_light", "gift_shop"],
+            "desc": "主活动+午餐+轻活动+惊喜", "start_time_pref": ["lunch"]
+        })
+    else:
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L1", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["restaurant:lunch", "activity", "activity_light", "gift_shop"],
+            "desc": "午餐+主活动+轻活动+惊喜", "start_time_pref": ["lunch"]
+        })
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L2", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["activity_light", "restaurant:lunch", "activity", "gift_shop"],
+            "desc": "轻活动+午餐+主活动+惊喜", "start_time_pref": ["lunch"]
+        })
+        PATTERNS.append({
+            "id": f"{g.upper()}-M-L3", "group": g, "duration_range": [4.5, 5.5],
+            "steps": ["restaurant:lunch", "activity", "restaurant:afternoon_tea", "gift_shop"],
+            "desc": "午餐+主活动+下午茶+惊喜", "start_time_pref": ["lunch"]
+        })
     # Afternoon starts
     PATTERNS.append({
         "id": f"{g.upper()}-M-A1", "group": g, "duration_range": [4.5, 5.5],
@@ -132,13 +154,23 @@ for g in _groups:
     # Dinner starts
     PATTERNS.append({
         "id": f"{g.upper()}-L-D1", "group": g, "duration_range": [5.5, 6.5],
-        "steps": ["activity", "restaurant:dinner", "activity", "gift_shop"],
-        "desc": "主活动+晚餐+主活动+惊喜", "start_time_pref": ["dinner"]
+        "steps": ["restaurant:afternoon_tea", "activity", "restaurant:dinner", "gift_shop"],
+        "desc": "下午茶+主活动+晚餐+惊喜", "start_time_pref": ["dinner"]
     })
     PATTERNS.append({
         "id": f"{g.upper()}-L-D2", "group": g, "duration_range": [5.5, 6.5],
-        "steps": ["activity_light", "activity", "restaurant:dinner", "activity_light", "gift_shop"],
-        "desc": "轻活动+主活动+晚餐+轻活动+惊喜", "start_time_pref": ["dinner"]
+        "steps": ["activity_light", "restaurant:afternoon_tea", "activity_light", "restaurant:dinner", "gift_shop"],
+        "desc": "轻活动+下午茶+轻活动+晚餐+惊喜", "start_time_pref": ["dinner"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-D3", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["restaurant:afternoon_tea", "activity_light", "activity_light", "restaurant:dinner", "gift_shop"],
+        "desc": "下午茶+轻活动+轻活动+晚餐+惊喜", "start_time_pref": ["dinner"]
+    })
+    PATTERNS.append({
+        "id": f"{g.upper()}-L-D4", "group": g, "duration_range": [5.5, 6.5],
+        "steps": ["activity_light", "restaurant:afternoon_tea", "activity", "restaurant:dinner", "gift_shop"],
+        "desc": "轻活动+下午茶+主活动+晚餐+惊喜", "start_time_pref": ["dinner"]
     })
 
 

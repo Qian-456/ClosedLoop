@@ -405,6 +405,7 @@ def planner_node(state: PlanState) -> PlanState:
         commute_preference=commute_preference_for_dfs,
         dfs_global_prune_stats=dfs_global_prune_stats,
         start_time=start_time,
+        constraints=constraints,
     )
     missing_types = list(missing_types_set)
     

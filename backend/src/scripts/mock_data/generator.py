@@ -28,6 +28,10 @@ def generate_mock_db() -> dict[str, Any]:
         "gift_shops": []
     }
     
+    def _is_strict_afternoon_tea_restaurant(sub_category: str) -> bool:
+        s = str(sub_category or "")
+        return any(k in s for k in ("甜品", "下午茶", "咖啡", "奶茶", "烘焙", "面包"))
+
     restaurant_plan: list[dict] = (
         [
             {"sub_category": "粤菜", "name": "点都德", "profile": "family_mild", "tags": ["少辣", "家庭", "亲子"]},
@@ -96,14 +100,22 @@ def generate_mock_db() -> dict[str, Any]:
                 c["duration_mins"] = int(max(60, int(c.get("duration_mins") or 60) - 20))
             return c
 
-        if plan["profile"] == "family_mild":
+        if _is_strict_afternoon_tea_restaurant(sub_category):
+            combos += [
+                _build_combo(sub_category=sub_category, people_expr="1人", title_style="1人咖啡+甜点组合", slots=["afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人下午茶甜点拼盘", slots=["afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="2大1小亲子下午茶点心", slots=["afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人下午茶分享拼盘", slots=["afternoon_tea"], is_western=is_western),
+                _build_low_price_combo(people_expr="双人", title_style="双人下午茶性价比套餐", slots=["afternoon_tea"]),
+            ]
+        elif plan["profile"] == "family_mild":
             combos += [
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人清淡分享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="2大1小家庭套餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人家庭聚餐", slots=["dinner"], is_western=is_western),
             ]
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人家常共享餐", slots=["lunch", "dinner", "afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人家常共享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="2大2小", title_style="2大2小家庭聚餐", slots=["lunch", "dinner"], is_western=is_western),
             ]
         elif plan["profile"] == "couple_photo" or plan["profile"] == "solo_light":
@@ -111,10 +123,10 @@ def generate_mock_db() -> dict[str, Any]:
             combos += [
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人推荐餐", slots=["dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人分享餐", slots=["lunch", "dinner"], is_western=is_western),
-                _build_combo(sub_category=sub_category, people_expr="六人", title_style="六人聚会餐", slots=["lunch", "afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="六人", title_style="六人聚会餐", slots=["lunch"], is_western=is_western),
             ]
             combos += [
-                _build_low_price_combo(people_expr="2-4人", title_style="2-4人小份共享", slots=["afternoon_tea", "dinner"]),
+                _build_low_price_combo(people_expr="2-4人", title_style="2-4人小份共享", slots=["dinner"]),
                 _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="家庭套餐", slots=["dinner"], is_western=is_western),
             ]
         elif plan["profile"] == "friends_lively":
@@ -124,7 +136,7 @@ def generate_mock_db() -> dict[str, Any]:
                 _build_combo(sub_category=sub_category, people_expr="六人", title_style="六人热闹派对餐", slots=["dinner", "late_night"], is_western=is_western),
             ]
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人共享餐", slots=["lunch", "dinner", "afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人共享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_low_price_combo(people_expr="3-5人", title_style="3-5人平价便饭", slots=["lunch", "dinner", "late_night"]),
             ]
         elif plan["profile"] == "kids_friendly":
@@ -137,14 +149,11 @@ def generate_mock_db() -> dict[str, Any]:
                 _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人家庭共享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_low_price_combo(people_expr="2大1小", title_style="2大1小家常便饭", slots=["lunch", "dinner"]),
             ]
-            if len(combos) >= 2:
-                combos[0] = _build_combo(sub_category=sub_category, people_expr="1大1小", title_style="1大1小下午茶亲子点心", slots=["afternoon_tea"], is_western=is_western)
-                combos[1] = _build_combo(sub_category=sub_category, people_expr="2大1小", title_style="2大1小下午茶亲子点心", slots=["afternoon_tea"], is_western=is_western)
         else:
             combos += [
-                _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人分享餐", slots=["lunch", "dinner", "afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="四人", title_style="四人分享餐", slots=["lunch", "dinner"], is_western=is_western),
                 _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人随享套餐", slots=["lunch", "dinner"], is_western=is_western),
-                _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人下午轻食", slots=["afternoon_tea"], is_western=is_western),
+                _build_combo(sub_category=sub_category, people_expr="双人", title_style="双人随享轻食", slots=["lunch", "dinner"], is_western=is_western),
             ]
             combos += [
                 _build_combo(sub_category=sub_category, people_expr="2-4人", title_style="2-4人共享餐", slots=["lunch", "dinner"], is_western=is_western),
