@@ -34,6 +34,7 @@ class _ExecutionContext:
 
 _executions: dict[str, _ExecutionContext] = {}
 _execution_keys: dict[str, str] = {}
+_payment_commands: dict[str, ExecuteRequest] = {}
 _executions_guard = asyncio.Lock()
 
 
@@ -214,6 +215,8 @@ def _reserve_capacity(
     target_type: Literal["restaurant", "package"],
     target_id: str,
     start_time: str,
+    *,
+    commit: bool = True,
 ) -> tuple[bool, dict[str, Any] | None]:
     record = None
     for r in reservations:
@@ -236,12 +239,14 @@ def _reserve_capacity(
                 "capacity_remaining_after": before,
             }
         after = before - 1
-        slot["capacity_remaining"] = after
+        if commit:
+            slot["capacity_remaining"] = after
         return True, {
             "slot_start_time": slot.get("start_time"),
             "slot_end_time": slot.get("end_time"),
             "capacity_remaining_before": before,
             "capacity_remaining_after": after,
+            "payment_gate": "committed" if commit else "pending",
         }
     return False, None
 
@@ -269,6 +274,8 @@ async def start_execution(request: ExecuteRequest) -> str:
         )
         _executions[execution_id] = ctx
         _execution_keys[execution_key] = execution_id
+        if getattr(request, "mode", "commit") == "preview":
+            _payment_commands[execution_id] = request
 
     asyncio.create_task(_run_execution(execution_id, ctx))
     return execution_id
@@ -301,6 +308,79 @@ async def iter_events(execution_id: str) -> AsyncIterator[dict[str, Any]]:
                         _execution_keys.pop(removed.execution_key, None)
 
 
+async def commit_execution_payment(execution_id: str, payment_password: str) -> dict[str, Any]:
+    """校验 Mock 支付密码，并在支付成功后提交执行命令。"""
+
+    logger.info(
+        f"phase=execute_mock | action=mock_payment_verify | execution_id={execution_id} | password_length={len(payment_password or '')}"
+    )
+    if payment_password != "111111":
+        logger.warning(
+            f"phase=execute_mock | action=mock_payment_verify_failed | execution_id={execution_id}"
+        )
+        return {
+            "execution_id": execution_id,
+            "payment_status": "failed",
+            "commit_status": "not_started",
+            "message": "Mock 支付密码错误",
+        }
+
+    async with _executions_guard:
+        preview_request = _payment_commands.get(execution_id)
+
+    if preview_request is None:
+        logger.warning(
+            f"phase=execute_mock | action=mock_payment_command_missing | execution_id={execution_id}"
+        )
+        return {
+            "execution_id": execution_id,
+            "payment_status": "paid",
+            "commit_status": "not_found",
+            "message": "未找到待支付执行命令",
+        }
+
+    commit_request = ExecuteRequest(
+        plan_id=preview_request.plan_id,
+        steps=preview_request.steps,
+        mode="commit",
+    )
+    commit_execution_id = await start_execution(commit_request)
+    items: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+
+    async for event in iter_events(commit_execution_id):
+        if not isinstance(event, dict):
+            continue
+        if event.get("type") != "item_update":
+            continue
+        data = event.get("data") or {}
+        if not isinstance(data, dict):
+            continue
+        if data.get("phase") != "done":
+            continue
+        items.append(data)
+        if data.get("reserved") is False:
+            failures.append(data)
+
+    commit_status = "failed" if failures else "success"
+    if commit_status == "success":
+        async with _executions_guard:
+            _payment_commands.pop(execution_id, None)
+
+    logger.info(
+        f"phase=execute_mock | action=payment_commit_done | execution_id={execution_id} | commit_execution_id={commit_execution_id} | commit_status={commit_status} | failures={len(failures)}"
+    )
+    return {
+        "execution_id": execution_id,
+        "commit_execution_id": commit_execution_id,
+        "payment_status": "paid",
+        "commit_status": commit_status,
+        "items": items,
+        "failures": failures,
+        "message": "Mock 执行已完成" if commit_status == "success" else "Mock 执行提交失败",
+    }
+
+
 async def _emit(ctx: _ExecutionContext, event: ExecuteEvent) -> None:
     await ctx.queue.put(event.model_dump())
 
@@ -317,12 +397,12 @@ def _checking_message(step: ExecuteStep) -> str:
 
 def _reserving_message(step: ExecuteStep) -> str:
     if step.item_type == "restaurant":
-        return "正在锁定餐厅预约位置…"
+        return "正在生成餐厅待支付预约命令…"
     if step.item_type == "activity":
-        return "正在预定门票并扣减库存…"
+        return "正在生成活动待支付购票命令…"
     if step.item_type == "gift_shop":
-        return "正在预定礼物并安排配送…"
-    return "正在预定…"
+        return "正在生成礼物待支付配送命令…"
+    return "正在生成执行命令…"
 
 
 async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step: ExecuteStep) -> None:
@@ -380,6 +460,8 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
     new_item_name = None
     repo_dir = _resolve_repo_dir()
     forced_ids = _forced_out_of_stock_ids()
+    commit_mode = getattr(ctx.request, "mode", "commit") == "commit"
+    payment_gate = "committed" if commit_mode else "pending"
 
     try:
         if step.item_type == "gift_shop":
@@ -398,18 +480,20 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                         reserved_detail = {"stock_before": before_stock, "stock_after": before_stock, "delivery_time": delivery_time}
                     elif step.item_id not in forced_ids:
                         after_stock = before_stock - 1
-                        gift["stock"] = after_stock
+                        if commit_mode:
+                            gift["stock"] = after_stock
                         reserved = True
                         reserved_detail = {
                             "stock_before": before_stock,
                             "stock_after": after_stock,
                             "delivery_time": delivery_time,
+                            "payment_gate": payment_gate,
                         }
-                        modified = True
-                if modified:
+                        modified = commit_mode
+                if commit_mode and modified:
                     _atomic_write_json(os.path.join(repo_dir, "add_ons.json"), add_ons)
             logger.info(
-                f"phase=execute_mock | action=reserve_gift | execution_id={execution_id} | gift_id={step.item_id} | reserved={reserved} | detail={reserved_detail}"
+                f"phase=execute_mock | action={'commit_gift' if commit_mode else 'generate_gift_command'} | execution_id={execution_id} | gift_id={step.item_id} | reserved={reserved} | payment_gate={payment_gate} | detail={reserved_detail}"
             )
 
         elif step.item_type == "activity":
@@ -426,7 +510,7 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                     async with _reservations_lock:
                         reservations = _read_list_json(repo_dir, "reservations.json")
                         ok, detail = _reserve_capacity(
-                            reservations, "package", step.item_id, step.start_time
+                            reservations, "package", step.item_id, step.start_time, commit=commit_mode
                         )
                         if not ok:
                             reserved = False
@@ -441,15 +525,18 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                                     "available_stock_after": before_stock,
                                 }
                             else:
-                                pkg["available_stock"] = before_stock - 1
+                                if commit_mode:
+                                    pkg["available_stock"] = before_stock - 1
                                 reserved = True
                                 reserved_detail = {
                                     **(detail or {}),
                                     "available_stock_before": before_stock,
                                     "available_stock_after": before_stock - 1,
+                                    "payment_gate": payment_gate,
                                 }
-                                modified = True
-                                _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
+                                modified = commit_mode
+                                if commit_mode:
+                                    _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
                 else:
                     if pkg and isinstance(pkg.get("available_stock"), int):
                         before_stock = int(pkg["available_stock"])
@@ -457,15 +544,16 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                             reserved = False
                             reserved_detail = {"available_stock_before": before_stock, "available_stock_after": before_stock}
                         else:
-                            pkg["available_stock"] = before_stock - 1
+                            if commit_mode:
+                                pkg["available_stock"] = before_stock - 1
                             reserved = True
-                            reserved_detail = {"available_stock_before": before_stock, "available_stock_after": before_stock - 1}
-                            modified = True
+                            reserved_detail = {"available_stock_before": before_stock, "available_stock_after": before_stock - 1, "payment_gate": payment_gate}
+                            modified = commit_mode
 
-                if modified:
+                if commit_mode and modified:
                     _atomic_write_json(os.path.join(repo_dir, "activities.json"), activities)
             logger.info(
-                f"phase=execute_mock | action=reserve_package | execution_id={execution_id} | package_id={step.item_id} | reserved={reserved} | start_time={step.start_time} | detail={reserved_detail}"
+                f"phase=execute_mock | action={'commit_package' if commit_mode else 'generate_package_command'} | execution_id={execution_id} | package_id={step.item_id} | reserved={reserved} | payment_gate={payment_gate} | start_time={step.start_time} | detail={reserved_detail}"
             )
 
         elif step.item_type == "restaurant":
@@ -485,13 +573,13 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                 async with _reservations_lock:
                     reservations = _read_list_json(repo_dir, "reservations.json")
                     reserved, reserved_detail = _reserve_capacity(
-                        reservations, booking_target_type, booking_target_id, step.start_time
+                        reservations, booking_target_type, booking_target_id, step.start_time, commit=commit_mode
                     )
-                    if reserved:
+                    if commit_mode and reserved:
                         _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
             else:
                 reserved = True
-                reserved_detail = {"requires_booking": False}
+                reserved_detail = {"requires_booking": False, "payment_gate": payment_gate}
 
             if not reserved and step.replacement_policy != "strict" and not step.user_touched:
                 logger.info(f"phase=execute_mock | action=fallback_start | execution_id={execution_id} | original_id={step.item_id} | backups={len(step.backup_candidates or [])}")
@@ -574,9 +662,9 @@ async def _check_and_reserve_one(execution_id: str, ctx: _ExecutionContext, step
                         b_detail: dict[str, Any] | None = None
                         if b_requires_booking:
                             b_reserved, b_detail = _reserve_capacity(
-                                reservations, "restaurant", b_booking_target_id, step.start_time
+                                reservations, "restaurant", b_booking_target_id, step.start_time, commit=commit_mode
                             )
-                            if b_reserved:
+                            if commit_mode and b_reserved:
                                 _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)
                         else:
                             b_reserved = True

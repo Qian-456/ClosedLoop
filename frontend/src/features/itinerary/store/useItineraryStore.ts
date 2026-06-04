@@ -6,6 +6,7 @@ import type {
   Message,
   InvokeStreamEvent,
 } from '../model/types'
+import type { MockPaymentCommitResponse } from '../api/invoke'
 
 export type InvokeStatus = 'idle' | 'running' | 'success' | 'error'
 
@@ -26,6 +27,7 @@ type ItineraryStore = {
   setInvokeRunning: (relatedUserMessageId?: string) => void
   setInvokeSuccess: (state: ClosedLoopState) => void
   applyInvokeStreamEvent: (event: InvokeStreamEvent) => void
+  applyPaymentCommit: (result: MockPaymentCommitResponse) => void
   setInvokeError: (message: string) => void
   reset: () => void
 }
@@ -299,6 +301,33 @@ export const useItineraryStore = create<ItineraryStore>()(
         return {
           invokeStatus: 'error',
           errorMessage: event.data.message,
+        }
+      }),
+
+      applyPaymentCommit: (result) => set((state) => {
+        return {
+          sessions: updateCurrentSession(state.sessions, state.currentSessionId, (session) => ({
+            ...session,
+            confirmation: {
+              ...(session.confirmation ?? { status: 'executed' }),
+              status: result.commit_status === 'success' ? 'executed' : 'failed',
+              execution_id: result.execution_id,
+              payment_status: result.payment_status,
+              commit_status: result.commit_status,
+              reason: result.message,
+              execution_summary: {
+                ...(session.confirmation?.execution_summary ?? {}),
+                execution_id: result.commit_execution_id ?? result.execution_id,
+                items: result.items ?? [],
+                failures: (result.failures ?? []).filter(
+                  (item): item is { item_id?: string; item_name?: string; item_type?: string } =>
+                    typeof item === 'object' && item !== null,
+                ),
+                replacements: session.confirmation?.execution_summary?.replacements ?? [],
+              },
+            },
+            updatedAt: Date.now(),
+          })),
         }
       }),
       

@@ -85,6 +85,20 @@ export type ThreePlansCopywriting = {
 export type Confirmation = {
   status: 'ok' | 'skipped' | 'fallback_rules' | string
   execution_id?: string
+  payment_required?: boolean
+  payment_status?: 'pending' | 'paid' | 'failed' | string
+  commit_status?: 'not_started' | 'success' | 'failed' | 'not_found' | string
+  execution_command?: {
+    execution_id?: string
+    plan_id?: string
+    payment_required?: boolean
+    payment_status?: string
+    commit_status?: string
+    pricing_summary?: {
+      expected_charge_cost?: number
+      currency?: string
+    } | null
+  }
   reason?: string
   plans?: Partial<ThreePlansCopywriting>
   interrupt?: unknown

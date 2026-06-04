@@ -12,7 +12,7 @@
 | 先搜再换（模拟推荐/搜索） | `search_candidates` | 在当前候选池内按用户关键词做二次检索（子服务可选） | 搜索服务超时/无结果 |
 | 指定替换某一条目 | `adjust_plan_item` | 替换条目并触发确定性冲突修复（5 级） | 替换导致超窗/超预算、无可修复 |
 | 执行失败后补齐并继续 | `adjust_and_execute_plan_item` + `fixup_agent` 路由 | fixup 阶段一次性完成“替换 + 重试执行” | 备选不安全/仍失败 |
-| 确认后执行（Mock） | `execute_itinerary` + `mock_executor` | 以 Mock 方式预订/排队/扣减库存，并生成事件与总结 | 无座/无票/库存不足、执行超时、一致性校验失败 |
+| 确认后执行（Mock） | `execute_itinerary` + `mock_executor` + `/execution/{id}/commit` | 先生成待支付执行命令，输入 `111111` 后 Mock commit | 无座/无票/库存不足、支付失败、执行超时、一致性校验失败 |
 
 ## 1) 规划/再规划：plan_trip（同一入口）
 
@@ -167,28 +167,30 @@ def repair_plan(plan: dict, target_item_id: str, new_item: dict, budget: float, 
         return {"status": "need_user_choice", "report": {"reason": f"在方案中找不到要替换的条目: {target_item_id}"}}
 ```
 
-## 4) 执行（Mock）：execute_itinerary + mock_executor（含可回滚一致性校验）
+## 4) 执行（Mock）：execute_itinerary + mock_executor（付款门控后 commit）
 
 ### 4.1 功能边界
 
 - 输入：plan_id + 通勤预约策略（first_only/all）。
-- 输出：逐步执行事件汇总（execution_summary）+ 最终 confirmation（executed / needs_fixup / timeout / failed）。
-- Mock 行为：不会真实下单；仅在本地运行时数据中模拟“扣库存/扣预约容量/排队事件/替换兜底”。
+- 输出：待支付执行命令（`confirmation.status=pending_payment`）或 fixup/timeout/failed。
+- Mock 行为：不会真实下单；`execute_itinerary` 只做可用性检查与命令生成，输入 Mock 支付密码 `111111` 后调用 `/execution/{id}/commit` 才写入运行时数据。
 
 ### 4.2 Mock 行为（Side Effects，可验收）
 
-- **礼品**：扣减 `stock` 并写回运行时数据。
-- **活动票**：扣减 `available_stock`；若需预约则同时扣减对应时段 `capacity_remaining`。
-- **餐厅预约**：扣减对应时段 `capacity_remaining`；若无座且允许替换，则尝试备选替换；如备选需要用户确认则进入 `needs_fixup`。
+- **付款前**：只生成待支付命令，不扣减 `stock / available_stock / capacity_remaining`。
+- **付款失败**：密码不是 `111111` 时返回 `payment_status=failed`，不进入 commit。
+- **付款成功**：`payment_status=paid` 后进入 commit，礼品扣 `stock`，活动扣 `available_stock`，餐厅/活动预约扣对应时段 `capacity_remaining`。
+- **失败兜底**：若无座且允许替换，则尝试备选替换；如备选需要用户确认则进入 `needs_fixup`。
 
-### 4.3 稳定性证据：执行一致性校验 + 快照回滚
+### 4.3 稳定性证据：付款门控 + 一致性校验
 
-- 执行前对运行时数据做快照；当一致性校验失败（缺步骤、超预算等）时，回滚运行时数据并给出可重试错误码，保证演示可复现、状态不污染。
+- 付款前无运行时写入；一致性校验用于守住执行命令与付款金额，commit 阶段才产生 Mock 副作用，保证演示可复现、状态不污染。
 
 ### 4.4 验收动作（How to Verify）
 
-- 执行一次方案后，观察运行时数据中的库存/容量字段发生变化（以及 execution_summary.detail 中的 before/after）。
-- 人为制造“缺步骤/超预算”等不一致（或触发执行失败），确认系统回滚并返回 `EXECUTION_INCONSISTENT_NEEDS_RETRY`。
+- 执行一次方案后，先观察运行时数据中的库存/容量字段不变，并看到 `pending_payment` 与执行命令。
+- 输入错误密码，确认返回支付失败且库存/容量仍不变。
+- 输入 `111111`，确认 commit 后库存/容量字段发生变化（以及 execution_summary.detail 中的 before/after）。
 - 人为制造无座（capacity=0 或删除时段记录），确认进入备选替换或 `needs_fixup`。
 
 ### 4.5 实现索引与代码片段（节选）

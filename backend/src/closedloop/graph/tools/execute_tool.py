@@ -298,8 +298,8 @@ async def _do_execute_itinerary(
                             {
                                 "id": item_id,
                                 "name": name,
-                                "status": "booked",
-                                "message": "已为您预约出发地到第一目的地的车",
+                                "status": "pending_payment",
+                                "message": "已生成出发地到第一目的地的待支付交通命令",
                             }
                         )
                         execute_steps.append(ExecuteStep(
@@ -331,8 +331,8 @@ async def _do_execute_itinerary(
                             {
                                 "id": item_id,
                                 "name": name,
-                                "status": "booked",
-                                "message": "已为您预约此段车程",
+                                "status": "pending_payment",
+                                "message": "已生成此段车程的待支付交通命令",
                             }
                         )
                         execute_steps.append(ExecuteStep(
@@ -360,14 +360,14 @@ async def _do_execute_itinerary(
                         }
                     )
                     continue
-                # 餐厅、活动、礼品等直接预订
+                # 餐厅、活动、礼品等先生成待支付执行命令，付款后再提交 Mock 扣减。
                 booked_items.append(
                     {
                         "id": item_id,
                         "name": name,
                         "type": item_type,
-                        "status": "booked",
-                        "message": "预订成功",
+                        "status": "pending_payment",
+                        "message": "已生成待支付执行命令",
                     }
                 )
                 execute_steps.append(ExecuteStep(
@@ -412,7 +412,7 @@ async def _do_execute_itinerary(
         result: dict | None = None
 
         if execute_steps:
-            execute_request = ExecuteRequest(plan_id=plan_id, steps=execute_steps)
+            execute_request = ExecuteRequest(plan_id=plan_id, steps=execute_steps, mode="preview")
             execution_id = await start_execution(execute_request)
             execution_summary["execution_id"] = execution_id
 
@@ -736,7 +736,7 @@ async def _do_execute_itinerary(
                     }
                     status = "failed"
                 else:
-                    result_message = "执行完成：失败 0 项。"
+                    result_message = "一致性校验已通过，已生成待支付执行命令，请在下方支付面板输入支付密码完成最后一步。"
                     result = {
                         "plan_id": plan_id,
                         "execution_id": execution_id,
@@ -775,7 +775,27 @@ async def _do_execute_itinerary(
     if status == "needs_fixup":
         update_dict["active_agent"] = "fixup_agent"
         update_dict["current_step"] = "needs_fixup"
-    
+
+    if status == "success" and isinstance(result, dict):
+        result["payment_required"] = True
+        result["payment_status"] = "pending"
+        result["commit_status"] = "not_started"
+        result["execution_command"] = {
+            "execution_id": result.get("execution_id"),
+            "plan_id": plan_id,
+            "payment_required": True,
+            "payment_status": "pending",
+            "commit_status": "not_started",
+            "pricing_summary": result.get("pricing_summary"),
+        }
+        confirmation_val = update_dict.get("confirmation") if isinstance(update_dict, dict) else None
+        if isinstance(confirmation_val, dict):
+            confirmation_val["status"] = "pending_payment"
+            confirmation_val["payment_required"] = True
+            confirmation_val["payment_status"] = "pending"
+            confirmation_val["execution_command"] = result["execution_command"]
+            result["confirmation"] = confirmation_val
+            update_dict["current_step"] = "pending_payment"
     return status, result, update_dict
 
 @tool(args_schema=ExecuteItineraryInput)

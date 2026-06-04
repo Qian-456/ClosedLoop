@@ -37,7 +37,11 @@ def _build_adjust_execute_update(
     if updated_itinerary is not None:
         update_dict["itinerary"] = updated_itinerary
 
-    if exec_status != "needs_fixup":
+    confirmation = update_dict.get("confirmation") if isinstance(update_dict.get("confirmation"), dict) else {}
+    if isinstance(confirmation, dict) and confirmation.get("status") == "pending_payment":
+        update_dict["current_step"] = "pending_payment"
+        update_dict["active_agent"] = "execute_agent"
+    elif exec_status != "needs_fixup":
         update_dict["current_step"] = "adjust_and_execute_plan_item"
         update_dict["active_agent"] = "plan_agent"
 

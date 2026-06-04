@@ -306,7 +306,12 @@ class TestExecuteToolConsistencyPaymentGate(unittest.TestCase):
 
             update = getattr(cmd, "update", None) or {}
             confirmation = update.get("confirmation") or {}
-            self.assertEqual(confirmation.get("status"), "executed")
+            self.assertEqual(confirmation.get("status"), "pending_payment")
+            self.assertEqual(confirmation.get("payment_status"), "pending")
+            self.assertTrue(confirmation.get("payment_required"))
+            execution_command = confirmation.get("execution_command") or {}
+            self.assertEqual(execution_command.get("execution_id"), "exe_test_1")
+            self.assertEqual(execution_command.get("payment_status"), "pending")
 
         asyncio.run(_run())
 

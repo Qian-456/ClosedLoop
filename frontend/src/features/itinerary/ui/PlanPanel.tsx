@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronLeft, Clock3 } from 'lucide-react'
+import { ChevronDown, ChevronLeft, Clock3, CreditCard, LockKeyhole } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { PlanCard } from './PlanCard'
+import { commitMockPayment } from '../api/invoke'
 
 import type { Confirmation, ItineraryPlan, ItineraryPlanVariant, ItineraryStep, ThreePlansCopywriting } from '../model/types'
 
@@ -62,6 +63,90 @@ function PlanSummaryCard({
   )
 }
 
+function MockPaymentPanel({ confirmation }: { confirmation: Confirmation }) {
+  const applyPaymentCommit = useItineraryStore((s) => s.applyPaymentCommit)
+  const [password, setPassword] = useState('')
+  const [statusText, setStatusText] = useState('输入 111111 完成 Mock 支付')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const command = confirmation.execution_command ?? null
+  const executionId = command?.execution_id ?? confirmation.execution_id ?? ''
+  const amount = command?.pricing_summary?.expected_charge_cost
+
+  const submitPayment = async () => {
+    if (!executionId || password.length !== 6 || isSubmitting) return
+    setIsSubmitting(true)
+    setStatusText('正在校验 Mock 支付')
+    try {
+      const result = await commitMockPayment(executionId, password)
+      if (result.payment_status !== 'paid' || result.commit_status !== 'success') {
+        setStatusText(result.message || 'Mock 支付失败')
+        return
+      }
+      setStatusText(result.message || '已付款，Mock 执行完成')
+      applyPaymentCommit(result)
+    } catch (error) {
+      setStatusText(error instanceof Error ? error.message : 'Mock 支付失败')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="mb-4 rounded-[8px] border border-sky-200 bg-sky-50 px-4 py-4 text-sm text-sky-950">
+      <div className="flex items-center gap-2 font-bold">
+        <CreditCard className="h-4 w-4" />
+        模拟支付
+      </div>
+      <div className="mt-2 text-xs text-sky-800">
+        已生成待付款执行命令{amount ? `，应付 ${formatCost(amount)}` : ''}。
+      </div>
+      <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
+        <label className="relative block">
+          <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sky-400" />
+          <input
+            value={password}
+            inputMode="numeric"
+            maxLength={6}
+            pattern="[0-9]*"
+            aria-label="Mock 支付密码"
+            className="h-11 w-full rounded-[8px] border border-sky-200 bg-white pl-9 pr-3 text-base font-semibold tracking-[0.2em] text-slate-950 outline-none focus:border-sky-400"
+            placeholder="111111"
+            onChange={(event) => setPassword(event.target.value.replace(/\D/g, '').slice(0, 6))}
+          />
+        </label>
+        <button
+          type="button"
+          className="h-11 rounded-[8px] bg-sky-600 px-4 text-sm font-bold text-white disabled:bg-slate-300"
+          disabled={password.length !== 6 || isSubmitting}
+          onClick={submitPayment}
+        >
+          {isSubmitting ? '支付中' : '支付'}
+        </button>
+      </div>
+      <div className="mt-2 text-xs text-sky-700">{statusText}</div>
+    </div>
+  )
+}
+
+function PendingPaymentNotice({ confirmation, onOpen }: { confirmation: Confirmation; onOpen: () => void }) {
+  const amount = confirmation.execution_command?.pricing_summary?.expected_charge_cost
+  return (
+    <button
+      type="button"
+      className="mb-2 flex w-full items-center justify-between gap-3 rounded-[8px] border border-sky-200 bg-sky-50 px-4 py-3 text-left text-sm text-sky-950 shadow-sm"
+      onClick={onOpen}
+    >
+      <span className="flex min-w-0 items-center gap-2 font-bold">
+        <CreditCard className="h-4 w-4 shrink-0" />
+        <span className="truncate">待支付执行命令</span>
+      </span>
+      <span className="shrink-0 text-xs font-semibold text-sky-700">
+        {amount ? `${formatCost(amount)} · ` : ''}输入 111111
+      </span>
+    </button>
+  )
+}
+
 export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const invokeStatus = useItineraryStore((s) => s.invokeStatus)
   const [selectedStep, setSelectedStep] = useState<ItineraryStep | null>(null)
@@ -70,6 +155,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
   const selectedPlan = plans.find((plan) => plan.plan_id === selectedPlanId) ?? null
+  const isPendingPayment = confirmation?.status === 'pending_payment'
 
   const summaryText = useMemo(() => {
     if (hasPlans) return `已生成 ${plans.length} 套可执行方案`
@@ -125,6 +211,9 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   if (hasPlans && !isExpanded) {
     return (
       <div className="px-4 pb-2">
+        {isPendingPayment && confirmation ? (
+          <PendingPaymentNotice confirmation={confirmation} onOpen={openPanel} />
+        ) : null}
         <button
           type="button"
           className="mx-auto flex h-9 w-32 items-center justify-center rounded-t-[22px] border border-b-0 border-slate-200 bg-white shadow-[0_-8px_28px_rgba(15,23,42,0.10)]"
@@ -172,6 +261,10 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
               ))}
             </div>
           </div>
+        ) : null}
+
+        {isPendingPayment ? (
+          <MockPaymentPanel confirmation={confirmation} />
         ) : null}
 
         <div className="flex items-start justify-between gap-3">

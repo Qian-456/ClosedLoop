@@ -153,7 +153,7 @@ def render_markdown_to_html(markdown_text: str) -> str:
             raw_html_lines = []
             if auto_wrapped_svg:
                 raw_html_lines.append(
-                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" role="img" style="max-width: 100%; height: auto; display: block; margin: 10px 0 12px;">'
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 520" role="img" style="max-width: 100%; height: auto; display: block; margin: 10px 0 12px;">'
                 )
             raw_html_lines.append(line)
             if "</svg>" in line:

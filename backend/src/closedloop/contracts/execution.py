@@ -35,6 +35,11 @@ class ExecuteStep(BaseModel):
 class ExecuteRequest(BaseModel):
     """开始执行的请求。"""
 
+    mode: Literal["preview", "commit"] = Field(
+        default="commit",
+        description="preview only generates a pending-payment command; commit writes Mock deductions",
+    )
+
     plan_id: str = Field(..., description="方案 id，例如 plan_1")
     steps: list[ExecuteStep] = Field(default_factory=list, description="时间轴步骤")
 

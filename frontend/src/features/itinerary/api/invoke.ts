@@ -1,8 +1,41 @@
 import type { InvokeResponse, InvokeStreamEvent } from '../model/types'
 import { buildApiUrl } from '../../../shared/lib/url'
 
+export type MockPaymentCommitResponse = {
+  execution_id: string
+  commit_execution_id?: string
+  payment_status: 'paid' | 'failed' | string
+  commit_status: 'success' | 'failed' | 'not_started' | 'not_found' | string
+  items?: unknown[]
+  failures?: unknown[]
+  message?: string
+}
+
+function getApiBase() {
+  const configured = (import.meta.env.VITE_API_BASE as string | undefined)?.trim()
+  if (configured) return configured
+  if (typeof window !== 'undefined' && window.location.port === '5173') {
+    return 'http://127.0.0.1:8000'
+  }
+  return ''
+}
+
+async function readJsonResponse<T>(response: Response, fallbackMessage: string): Promise<T> {
+  const contentType = response.headers.get('content-type') ?? ''
+  if (contentType.includes('application/json')) {
+    return (await response.json()) as T
+  }
+
+  const bodyText = await response.text()
+  const looksLikeHtml = bodyText.trimStart().startsWith('<')
+  const message = looksLikeHtml
+    ? '请求没有命中后端接口，请检查 VITE_API_BASE 是否指向 FastAPI 服务。'
+    : bodyText || fallbackMessage
+  throw new Error(message)
+}
+
 export async function invoke(userInput: string, threadId: string): Promise<InvokeResponse> {
-  const base = (import.meta.env.VITE_API_BASE as string | undefined) ?? ''
+  const base = getApiBase()
   const url = buildApiUrl('/invoke', base)
   
   const response = await fetch(url, {
@@ -16,6 +49,26 @@ export async function invoke(userInput: string, threadId: string): Promise<Invok
   }
 
   return response.json()
+}
+
+export async function commitMockPayment(
+  executionId: string,
+  paymentPassword: string,
+): Promise<MockPaymentCommitResponse> {
+  const base = getApiBase()
+  const url = buildApiUrl(`/execution/${encodeURIComponent(executionId)}/commit`, base)
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ payment_password: paymentPassword }),
+  })
+
+  const payload = await readJsonResponse<MockPaymentCommitResponse>(response, 'Mock 支付提交失败')
+  if (!response.ok) {
+    throw new Error(payload?.message || 'Mock 支付提交失败')
+  }
+  return payload
 }
 
 type InvokeStreamOptions = {
@@ -63,7 +116,7 @@ export async function invokeStream(
   threadId: string,
   options: InvokeStreamOptions,
 ): Promise<void> {
-  const base = (import.meta.env.VITE_API_BASE as string | undefined) ?? ''
+  const base = getApiBase()
   const url = buildApiUrl('/invoke/stream', base)
 
   const response = await fetch(url, {
@@ -121,7 +174,7 @@ export async function invokeStreamResume(
   resume: Record<string, unknown>,
   options: InvokeStreamOptions,
 ): Promise<void> {
-  const base = (import.meta.env.VITE_API_BASE as string | undefined) ?? ''
+  const base = getApiBase()
   const url = buildApiUrl('/invoke/stream', base)
 
   const controller = new AbortController()

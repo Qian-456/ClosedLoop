@@ -10,6 +10,7 @@ import time
 from typing import Any, AsyncIterator, Optional
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessageChunk
 from pydantic import BaseModel
@@ -19,7 +20,7 @@ from langgraph.types import Command
 from closedloop.core.config import get_config
 from closedloop.core.logger import LoggerManager, logger
 from closedloop.contracts.execution import ExecuteRequest, ExecutionStartResponse
-from closedloop.execution.mock_executor import iter_events, start_execution
+from closedloop.execution.mock_executor import commit_execution_payment, iter_events, start_execution
 from closedloop.graph.agent import build_agent_with_async_checkpointer
 from closedloop.contracts.state import ClosedLoopState
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
@@ -33,6 +34,26 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(title=config.PROJECT_NAME, lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
+    ],
+    allow_origin_regex=(
+        r"https?://("
+        r"localhost|127\.0\.0\.1|0\.0\.0\.0|"
+        r"10\.\d+\.\d+\.\d+|"
+        r"172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+|"
+        r"192\.168\.\d+\.\d+"
+        r")(:\d+)?"
+    ),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class ChatRequest(BaseModel):
     user_input: str = ""
@@ -41,6 +62,10 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     status: str
     state: dict
+
+
+class MockPaymentCommitRequest(BaseModel):
+    payment_password: str
 
 
 def _get_sessions_db_path() -> str:
@@ -97,6 +122,22 @@ def format_sse_event(event_name: str, data: dict[str, Any]) -> str:
     """Format one SSE event block."""
     payload = json.dumps(data, ensure_ascii=False)
     return f"event: {event_name}\ndata: {payload}\n\n"
+
+
+@app.post("/execution/{execution_id}/commit")
+async def commit_mock_payment(
+    execution_id: str,
+    request: MockPaymentCommitRequest,
+) -> dict[str, Any]:
+    """提交 Mock 支付，密码正确后才执行 Mock 扣减。"""
+
+    result = await commit_execution_payment(
+        execution_id=execution_id,
+        payment_password=request.payment_password,
+    )
+    if result.get("commit_status") == "not_found":
+        raise HTTPException(status_code=404, detail=result)
+    return result
 
 
 def _get_block_type(block: Any) -> str:
@@ -187,6 +228,8 @@ def _build_process_summary(tool_payload: dict[str, Any]) -> str:
 
     if tool_name == "execute_itinerary":
         if isinstance(result, dict):
+            if result.get("payment_status") == "pending" or result.get("payment_required") is True:
+                return "已生成待支付执行命令"
             execution_summary = result.get("execution_summary")
             if isinstance(execution_summary, dict):
                 replacements = execution_summary.get("replacements") or []
