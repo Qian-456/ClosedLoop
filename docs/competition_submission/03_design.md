@@ -1,4 +1,4 @@
-# 设计文档：ClosedLoop 执行型本地生活 Agent（真实链路口径）
+# 设计文档：ClosedLoop 执行型本地生活 Agent
 
 ## TL;DR
 

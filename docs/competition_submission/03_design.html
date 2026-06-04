@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>设计文档：ClosedLoop 执行型本地生活 Agent（真实链路口径）</title>
+    <title>设计文档：ClosedLoop 执行型本地生活 Agent</title>
     <style>
       :root {
         --fg: #111827;
@@ -89,7 +89,7 @@
   </head>
   <body>
     <main class="page">
-<h1>设计文档：ClosedLoop 执行型本地生活 Agent（真实链路口径）</h1>
+<h1>设计文档：ClosedLoop 执行型本地生活 Agent</h1>
 <h2>TL;DR</h2>
 <p>ClosedLoop 是一个执行型本地生活 Agent：用户一句话 → 生成 4–6 小时行程（玩→吃→后续）→ 用户确认 → Mock 执行预约/排队/库存扣减 → 关键失败进入补齐（fixup）继续把事情做完。 <br /> 设计目标不是“最炫”，而是<strong>响应快、稳定可复现、能落地</strong>（单工具 ≤ 3s，规划 ≤ 30s，端到端 ≤ 2min；失败可恢复且状态不污染）。</p>
 <h2>背景（S）</h2>
