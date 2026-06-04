@@ -223,36 +223,37 @@ _HTML_TEMPLATE = """<!doctype html>
         color: var(--fg);
         font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans SC",
           "Microsoft YaHei", sans-serif;
-        line-height: 1.6;
+        line-height: 1.45;
+        font-size: 14px;
       }}
       body {{
         margin: 0;
-        padding: 24px 14px;
+        padding: 16px 12px;
       }}
       .page {{
         max-width: 980px;
         margin: 0 auto;
       }}
       h1 {{
-        font-size: 28px;
-        margin: 0 0 10px;
+        font-size: 24px;
+        margin: 0 0 8px;
         letter-spacing: 0.2px;
       }}
       h2 {{
-        font-size: 18px;
-        margin: 18px 0 8px;
-        padding-top: 4px;
+        font-size: 16px;
+        margin: 12px 0 6px;
+        padding-top: 2px;
         border-top: 1px solid var(--border);
       }}
       p {{
-        margin: 8px 0;
+        margin: 6px 0;
       }}
       ul {{
-        margin: 6px 0 10px 18px;
+        margin: 4px 0 8px 18px;
         padding: 0;
       }}
       li {{
-        margin: 4px 0;
+        margin: 2px 0;
       }}
       code {{
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
@@ -261,12 +262,12 @@ _HTML_TEMPLATE = """<!doctype html>
       pre {{
         background: var(--code-bg);
         color: var(--code-fg);
-        padding: 12px 14px;
-        border-radius: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
         overflow: auto;
-        line-height: 1.5;
-        font-size: 13px;
-        margin: 10px 0 14px;
+        line-height: 1.35;
+        font-size: 12px;
+        margin: 6px 0 10px;
       }}
       pre code {{
         color: inherit;
@@ -282,6 +283,11 @@ _HTML_TEMPLATE = """<!doctype html>
         font-size: 12px;
         color: var(--muted);
         margin-right: 6px;
+      }}
+      @media print {{
+        body {{
+          padding: 0;
+        }}
       }}
     </style>
   </head>

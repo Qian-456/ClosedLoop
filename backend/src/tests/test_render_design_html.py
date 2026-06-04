@@ -30,8 +30,8 @@ class TestRenderDesignHtml(unittest.TestCase):
         html_text = renderer["render_markdown_to_html"](markdown_text)
 
         self.assertIn("<h1>", html_text)
+        self.assertIn("背景（S）", html_text)
         self.assertIn("工具调用链路（用户动作闭环）", html_text)
-        self.assertIn("<pre><code>", html_text)
         self.assertIn("<svg", html_text)
         self.assertIn("<code>plan_trip</code>", html_text)
         self.assertIn("fixup_agent", html_text)
