@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronLeft, Clock3, CreditCard, LockKeyhole } from 'lucide-react'
+import { CheckCircle2, ChevronDown, ChevronLeft, Clock3, CreditCard, Delete, ShieldCheck, Ticket } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { PlanCard } from './PlanCard'
 import { commitMockPayment } from '../api/invoke'
@@ -66,64 +66,169 @@ function PlanSummaryCard({
 function MockPaymentPanel({ confirmation }: { confirmation: Confirmation }) {
   const applyPaymentCommit = useItineraryStore((s) => s.applyPaymentCommit)
   const [password, setPassword] = useState('')
-  const [statusText, setStatusText] = useState('输入 111111 完成 Mock 支付')
+  const [statusText, setStatusText] = useState('请输入支付密码')
+  const [statusTone, setStatusTone] = useState<'neutral' | 'error' | 'success'>('neutral')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const command = confirmation.execution_command ?? null
   const executionId = command?.execution_id ?? confirmation.execution_id ?? ''
   const amount = command?.pricing_summary?.expected_charge_cost
+  const planLabel = command?.plan_id ? `行程方案 ${command.plan_id.replace(/^plan_?/i, '').toUpperCase()}` : '已确认行程方案'
+
+  const pushDigit = (digit: string) => {
+    if (isSubmitting) return
+    setPassword((current) => {
+      if (current.length >= 6) return current
+      return `${current}${digit}`.slice(0, 6)
+    })
+    setStatusText('请输入支付密码')
+    setStatusTone('neutral')
+  }
+
+  const deleteDigit = () => {
+    if (isSubmitting) return
+    setPassword((current) => current.slice(0, -1))
+    setStatusText('请输入支付密码')
+    setStatusTone('neutral')
+  }
 
   const submitPayment = async () => {
     if (!executionId || password.length !== 6 || isSubmitting) return
     setIsSubmitting(true)
     setStatusText('正在校验 Mock 支付')
+    setStatusTone('neutral')
     try {
       const result = await commitMockPayment(executionId, password)
       if (result.payment_status !== 'paid' || result.commit_status !== 'success') {
         setStatusText(result.message || 'Mock 支付失败')
+        setStatusTone('error')
         return
       }
       setStatusText(result.message || '已付款，Mock 执行完成')
+      setStatusTone('success')
       applyPaymentCommit(result)
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : 'Mock 支付失败')
+      setStatusTone('error')
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const keypad = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+
   return (
-    <div className="mb-4 rounded-[8px] border border-sky-200 bg-sky-50 px-4 py-4 text-sm text-sky-950">
-      <div className="flex items-center gap-2 font-bold">
-        <CreditCard className="h-4 w-4" />
-        模拟支付
+    <div className="mb-4 overflow-hidden rounded-[18px] border border-blue-100 bg-gradient-to-b from-white to-blue-50/70 px-4 pb-4 pt-3 text-sm text-slate-950 shadow-[0_14px_42px_rgba(37,99,235,0.14)]">
+      <div className="mx-auto mb-4 h-1.5 w-14 rounded-full bg-blue-100" />
+
+      <div className="mb-4 flex items-start justify-between gap-4">
+        <div className="flex min-w-0 gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-blue-600 text-white shadow-sm">
+            <CreditCard className="h-6 w-6" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-lg font-bold leading-6 text-slate-950">支付订单</div>
+            <div className="mt-1 truncate text-xs font-semibold text-slate-500">{planLabel}</div>
+          </div>
+        </div>
+        <div className="shrink-0 pt-1 text-2xl font-black text-blue-600">{amount ? formatCost(amount) : '¥0'}</div>
       </div>
-      <div className="mt-2 text-xs text-sky-800">
-        已生成待付款执行命令{amount ? `，应付 ${formatCost(amount)}` : ''}。
+
+      <div className="space-y-2">
+        <div className="flex h-12 items-center justify-between rounded-[8px] border border-amber-100 bg-amber-50/70 px-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-white text-amber-500">
+              <Ticket className="h-4 w-4" />
+            </span>
+            <span className="font-bold text-slate-800">优惠券</span>
+            <span className="text-xs font-semibold text-amber-600">演示券可用</span>
+          </div>
+          <span className="text-sm font-bold text-amber-600">-¥30</span>
+        </div>
+
+        <div className="flex h-12 items-center justify-between rounded-[8px] border border-blue-100 bg-blue-50 px-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-[8px] bg-white text-blue-600">
+              <CreditCard className="h-4 w-4" />
+            </span>
+            <span className="font-bold text-slate-800">支付方式</span>
+            <span className="text-xs font-semibold text-blue-500">Mock 支付</span>
+          </div>
+          <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+        </div>
       </div>
-      <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
-        <label className="relative block">
-          <LockKeyhole className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sky-400" />
-          <input
-            value={password}
-            inputMode="numeric"
-            maxLength={6}
-            pattern="[0-9]*"
-            aria-label="Mock 支付密码"
-            className="h-11 w-full rounded-[8px] border border-sky-200 bg-white pl-9 pr-3 text-base font-semibold tracking-[0.2em] text-slate-950 outline-none focus:border-sky-400"
-            placeholder="111111"
-            onChange={(event) => setPassword(event.target.value.replace(/\D/g, '').slice(0, 6))}
-          />
-        </label>
+
+      <div className="mt-5 text-center">
+        <div className="text-sm font-bold text-slate-800">请输入支付密码</div>
+        <div className="mt-3 grid grid-cols-6 gap-2">
+          {Array.from({ length: 6 }).map((_, index) => {
+            const filled = password.length > index
+            const active = password.length === index && password.length < 6
+            return (
+              <div
+                key={index}
+                className={[
+                  'flex aspect-square min-h-[42px] items-center justify-center rounded-[8px] border bg-white text-xl font-black shadow-sm',
+                  active ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200',
+                  filled ? 'text-blue-600' : 'text-transparent',
+                ].join(' ')}
+              >
+                {filled ? '•' : '0'}
+              </div>
+            )
+          })}
+        </div>
+        <div className="mt-3 flex items-center justify-center gap-1 text-xs font-semibold text-slate-400">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          演示密码 111111，仅用于本次 Mock 验证
+        </div>
+        <div
+          className={[
+            'mt-2 min-h-5 text-xs font-semibold',
+            statusTone === 'error' ? 'text-rose-600' : statusTone === 'success' ? 'text-emerald-600' : 'text-blue-500',
+          ].join(' ')}
+        >
+          {statusText}
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {keypad.map((digit) => (
+          <button
+            key={digit}
+            type="button"
+            className="h-12 rounded-[8px] border border-blue-50 bg-white text-2xl font-black text-blue-950 shadow-sm transition active:scale-[0.98] disabled:text-slate-300"
+            disabled={isSubmitting || password.length >= 6}
+            onClick={() => pushDigit(digit)}
+          >
+            {digit}
+          </button>
+        ))}
         <button
           type="button"
-          className="h-11 rounded-[8px] bg-sky-600 px-4 text-sm font-bold text-white disabled:bg-slate-300"
+          className="flex h-12 items-center justify-center rounded-[8px] border border-blue-50 bg-white text-blue-700 shadow-sm transition active:scale-[0.98]"
+          disabled={isSubmitting}
+          onClick={deleteDigit}
+          aria-label="删除一位密码"
+        >
+          <Delete className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          className="h-12 rounded-[8px] border border-blue-50 bg-white text-2xl font-black text-blue-950 shadow-sm transition active:scale-[0.98] disabled:text-slate-300"
+          disabled={isSubmitting || password.length >= 6}
+          onClick={() => pushDigit('0')}
+        >
+          0
+        </button>
+        <button
+          type="button"
+          className="h-12 rounded-[8px] bg-blue-600 px-2 text-sm font-black text-white shadow-sm transition active:scale-[0.98] disabled:bg-slate-300"
           disabled={password.length !== 6 || isSubmitting}
           onClick={submitPayment}
         >
-          {isSubmitting ? '支付中' : '支付'}
+          {isSubmitting ? '支付中' : '确认支付'}
         </button>
       </div>
-      <div className="mt-2 text-xs text-sky-700">{statusText}</div>
     </div>
   )
 }
