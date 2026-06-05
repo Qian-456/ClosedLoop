@@ -257,7 +257,7 @@ def adjust_plan_item(
     config_runnable: RunnableConfig,
 ) -> Command:
     """
-    替换行程中的指定条目，并自动处理引发的时间和预算冲突（5级修复策略）。
+    替换行程中的指定条目，并自动处理引发的时间和预算冲突（确定性 2–3 层最小改动修复）。
     """
     config = get_config()
     LoggerManager.setup(config)

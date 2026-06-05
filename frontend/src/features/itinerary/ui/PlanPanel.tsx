@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import { CheckCircle2, ChevronDown, ChevronLeft, Clock3, CreditCard, Delete, ShieldCheck, Ticket } from 'lucide-react'
+import { CheckCircle2, ChevronDown, ChevronLeft, Clock3, Copy, CreditCard, Delete, Flag, MapPinned, Play, Share2, ShieldCheck, Ticket, X } from 'lucide-react'
 import { useItineraryStore } from '../store/useItineraryStore'
 import { PlanCard } from './PlanCard'
+import { JourneyView } from './JourneyView'
 import { commitMockPayment } from '../api/invoke'
 
 import type { Confirmation, ItineraryPlan, ItineraryPlanVariant, ItineraryStep, ThreePlansCopywriting } from '../model/types'
@@ -252,15 +253,166 @@ function PendingPaymentNotice({ confirmation, onOpen }: { confirmation: Confirma
   )
 }
 
+function getStepName(step: ItineraryStep) {
+  const item = step.item
+  if (item.type === 'commute') return `前往 ${item.commute_to || item.name || '下一站'}`
+  return item.display_name || item.parent_name || item.name || '行程项目'
+}
+
+function getShareStorageKey(shareId: string) {
+  return `closedloop-share-${shareId}`
+}
+
+function saveShareSnapshot(plan: ItineraryPlanVariant) {
+  const shareId = `share_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`
+  const snapshot = {
+    id: shareId,
+    title: plan.title,
+    total_cost: plan.total_cost,
+    total_duration_minutes: plan.total_duration_minutes,
+    steps: plan.steps,
+    selected_item_ids: plan.selected_item_ids,
+    average_score: plan.average_score,
+    experience_score: plan.experience_score,
+    created_at: new Date().toISOString(),
+  }
+  window.localStorage.setItem(getShareStorageKey(shareId), JSON.stringify(snapshot))
+  return `${window.location.origin}/share/${shareId}`
+}
+
+function JourneyProgressSheet({ plan, onClose }: { plan: ItineraryPlanVariant; onClose: () => void }) {
+  const [stepIndex, setStepIndex] = useState(0)
+  const [phase, setPhase] = useState<'heading' | 'arrived'>('heading')
+  const [actionText, setActionText] = useState('')
+  const currentStep = plan.steps[stepIndex] ?? null
+  const isFinished = !currentStep
+  const isLastStep = stepIndex >= plan.steps.length - 1
+  const isCommute = currentStep?.item.type === 'commute'
+  const from = currentStep?.item.commute_from || '当前位置'
+  const to = currentStep?.item.commute_to || (currentStep ? getStepName(currentStep) : '目的地')
+  const mode = currentStep?.item.commute_recommended_mode || currentStep?.item.commute_mode || 'walking'
+  const actionLabel = mode === 'taxi' ? '一键打车' : mode === 'driving' ? '驾车导航' : '步行导航'
+
+  const goNext = () => {
+    setActionText('')
+    setPhase('heading')
+    setStepIndex((value) => value + 1)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/50 backdrop-blur-[2px]" onClick={onClose}>
+      <div
+        className="max-h-[86vh] w-full overflow-y-auto rounded-t-[28px] bg-white px-5 pb-6 pt-4 shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="mx-auto mb-5 block h-6 w-20 rounded-full" onClick={onClose} aria-label="关闭开始行程">
+          <span className="mx-auto block h-1.5 w-14 rounded-full bg-slate-300" />
+        </button>
+        <button
+          type="button"
+          className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500"
+          onClick={onClose}
+          aria-label="关闭"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="pr-12">
+          <div className="text-xl font-black text-slate-950">开始行程</div>
+          <div className="mt-1 text-sm font-semibold text-blue-600">{plan.title}</div>
+        </div>
+
+        {isFinished ? (
+          <div className="mt-6 rounded-[12px] border border-emerald-100 bg-emerald-50 px-4 py-5 text-center">
+            <Flag className="mx-auto h-8 w-8 text-emerald-500" />
+            <div className="mt-3 text-lg font-black text-emerald-700">今日行程完成</div>
+            <div className="mt-1 text-sm text-emerald-600">所有站点都已经走完，辛苦啦。</div>
+          </div>
+        ) : (
+          <div className="mt-5 space-y-4">
+            <div className="rounded-[12px] border border-blue-100 bg-blue-50 px-4 py-4">
+              <div className="text-xs font-bold text-blue-500">
+                第 {stepIndex + 1} / {plan.steps.length} 步
+              </div>
+              <div className="mt-2 text-xl font-black text-slate-950">{getStepName(currentStep)}</div>
+              <div className="mt-2 text-sm leading-6 text-slate-600">
+                {isCommute
+                  ? phase === 'heading'
+                    ? `准备从 ${from} 前往 ${to}`
+                    : `已到达 ${to}`
+                  : `建议体验 ${Math.round(Number(currentStep.duration_minutes || 0))} 分钟`}
+              </div>
+              {currentStep.start_time || currentStep.end_time ? (
+                <div className="mt-2 text-xs font-semibold text-blue-600">
+                  {currentStep.start_time || '--:--'} - {currentStep.end_time || '--:--'}
+                </div>
+              ) : null}
+            </div>
+
+            {isCommute ? (
+              <div className="rounded-[12px] border border-slate-200 bg-white px-4 py-4">
+                <div className="mb-3 flex items-center gap-2 text-sm font-black text-slate-900">
+                  <MapPinned className="h-4 w-4 text-blue-500" />
+                  转场助手
+                </div>
+                <button
+                  type="button"
+                  className="h-11 w-full rounded-[8px] bg-blue-600 text-sm font-black text-white"
+                  onClick={() =>
+                    setActionText(
+                      mode === 'taxi' ? '已生成 Mock 打车单，司机预计 3 分钟后到达' : `已打开 Mock 导航：从 ${from} 前往 ${to}`,
+                    )
+                  }
+                >
+                  {actionLabel}
+                </button>
+                {actionText ? (
+                  <div className="mt-3 rounded-[8px] bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+                    {actionText}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            <button
+              type="button"
+              className="h-12 w-full rounded-[8px] bg-blue-600 text-base font-black text-white shadow-lg shadow-blue-100"
+              onClick={() => {
+                if (isCommute && phase === 'heading') {
+                  setPhase('arrived')
+                  return
+                }
+                if (isLastStep) {
+                  setStepIndex(plan.steps.length)
+                  return
+                }
+                goNext()
+              }}
+            >
+              {isCommute && phase === 'heading' ? '已到达' : isLastStep ? '完成行程' : '完成本项，下一站'}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+void JourneyProgressSheet
+
 export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
   const invokeStatus = useItineraryStore((s) => s.invokeStatus)
   const [selectedStep, setSelectedStep] = useState<ItineraryStep | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
+  const [journeyPlan, setJourneyPlan] = useState<ItineraryPlanVariant | null>(null)
+  const [shareStatus, setShareStatus] = useState('')
   const plans = Array.isArray(itinerary?.plans) ? itinerary.plans : []
   const hasPlans = plans.length > 0
   const selectedPlan = plans.find((plan) => plan.plan_id === selectedPlanId) ?? null
   const isPendingPayment = confirmation?.status === 'pending_payment'
+  const executedPlanId = confirmation?.execution_command?.plan_id
+  const actionPlan = plans.find((plan) => plan.plan_id === executedPlanId) ?? selectedPlan ?? plans[0] ?? null
 
   const summaryText = useMemo(() => {
     if (hasPlans) return `已生成 ${plans.length} 套可执行方案`
@@ -291,6 +443,17 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
     setSelectedStep(null)
     setSelectedPlanId(null)
     setIsExpanded(true)
+  }
+
+  const sharePlan = async () => {
+    if (!actionPlan) return
+    const shareUrl = saveShareSnapshot(actionPlan)
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setShareStatus('分享链接已复制')
+    } catch {
+      setShareStatus(shareUrl)
+    }
   }
 
   if (!itinerary && !confirmation && !errorMessage) {
@@ -370,6 +533,35 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
 
         {isPendingPayment ? (
           <MockPaymentPanel confirmation={confirmation} />
+        ) : null}
+
+        {confirmation?.status === 'executed' && actionPlan ? (
+          <div className="mb-4 rounded-[8px] border border-blue-100 bg-blue-50 px-4 py-3">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                className="flex h-11 items-center justify-center gap-2 rounded-[8px] bg-blue-600 text-sm font-black text-white shadow-sm"
+                onClick={() => setJourneyPlan(actionPlan)}
+              >
+                <Play className="h-4 w-4" />
+                开始执行
+              </button>
+              <button
+                type="button"
+                className="flex h-11 items-center justify-center gap-2 rounded-[8px] border border-blue-200 bg-white text-sm font-black text-blue-600"
+                onClick={sharePlan}
+              >
+                <Share2 className="h-4 w-4" />
+                分享行程
+              </button>
+            </div>
+            {shareStatus ? (
+              <div className="mt-2 flex items-center gap-1 text-xs font-semibold text-blue-600">
+                <Copy className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate">{shareStatus}</span>
+              </div>
+            ) : null}
+          </div>
         ) : null}
 
         <div className="flex items-start justify-between gap-3">
@@ -464,6 +656,11 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
           </div>
         ) : null}
       </section>
+      {journeyPlan ? (
+        <div className="fixed inset-0 z-50 bg-[#F6F7FB]">
+          <JourneyView plan={journeyPlan} mode="active" title="开始执行" onClose={() => setJourneyPlan(null)} />
+        </div>
+      ) : null}
     </div>
   )
 }

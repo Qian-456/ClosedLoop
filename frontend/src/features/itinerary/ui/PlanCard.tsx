@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { Check, ChevronRight, Clock3, Footprints, Gift, Timer, Utensils, Wallet, X } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { Car, Check, ChevronRight, Clock3, Footprints, Gift, MapPinned, Navigation, Timer, Utensils, Wallet, X } from 'lucide-react'
 import clsx from 'clsx'
 import type { ItineraryItem, ItineraryItemType, ItineraryPlanVariant, ItineraryStep, PlanCopywriting } from '../model/types'
 
@@ -88,6 +88,25 @@ const getModeLabel = (mode?: string | null) => {
       return '打车'
     default:
       return '自动'
+  }
+}
+
+const getCommuteActionLabel = (mode?: string | null) => {
+  if (mode === 'taxi') return '一键打车'
+  if (mode === 'driving') return '驾车导航'
+  return '步行导航'
+}
+
+const getCommuteActionMessage = (mode: string, from: string, to: string) => {
+  if (mode === 'taxi') return `已生成 Mock 打车单，司机预计 3 分钟后到达`
+  return `已打开 Mock 导航：从 ${from} 前往 ${to}`
+}
+
+const getCommuteOptionMeta = (step: ItineraryStep, mode: 'walking' | 'taxi' | 'driving') => {
+  const option = step.item.commute_options?.find((x) => x.mode === mode)
+  return {
+    minutes: option?.time_minutes ?? toNumber(step.duration_minutes),
+    cost: option?.cost ?? (mode === 'taxi' || mode === 'driving' ? getStepCost(step) : 0),
   }
 }
 
@@ -189,6 +208,14 @@ function StepDetailSheet({
   const recommendation = item.features || intro
   const Icon = style.Icon
   const collapsePanel = onCollapsePanel ?? onClose
+  const isCommute = item.type === 'commute'
+  const [commuteMode, setCommuteMode] = useState<'walking' | 'taxi' | 'driving'>(
+    (item.commute_recommended_mode || item.commute_mode || 'walking') as 'walking' | 'taxi' | 'driving',
+  )
+  const [commuteStatus, setCommuteStatus] = useState('')
+  const commuteFrom = item.commute_from || '当前位置'
+  const commuteTo = item.commute_to || getDisplayName(step)
+  const commuteMeta = getCommuteOptionMeta(step, commuteMode)
 
   return (
     <div className="fixed inset-0 z-50 flex items-end bg-slate-950/55 backdrop-blur-[2px]" onClick={onClose}>
@@ -229,6 +256,63 @@ function StepDetailSheet({
         </div>
 
         <div className="mt-6 space-y-4">
+          {isCommute ? (
+            <DetailSection icon={<MapPinned className="h-4 w-4 text-blue-500" />} title="转场操作">
+              <div className="space-y-3">
+                <div className="rounded-[8px] bg-blue-50 px-3 py-3 text-sm leading-6 text-slate-700">
+                  <div>
+                    <span className="font-semibold text-slate-950">出发：</span>
+                    {commuteFrom}
+                  </div>
+                  <div>
+                    <span className="font-semibold text-slate-950">到达：</span>
+                    {commuteTo}
+                  </div>
+                  <div className="text-xs font-semibold text-blue-600">
+                    预计 {Math.round(commuteMeta.minutes)} 分钟
+                    {commuteMeta.cost > 0 ? ` · ${formatCost(commuteMeta.cost)}` : ''}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2">
+                  {(['walking', 'taxi', 'driving'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      className={clsx(
+                        'h-10 rounded-[8px] border text-sm font-bold',
+                        commuteMode === mode
+                          ? 'border-blue-500 bg-blue-600 text-white'
+                          : 'border-blue-100 bg-white text-blue-600',
+                      )}
+                      onClick={() => {
+                        setCommuteMode(mode)
+                        setCommuteStatus('')
+                      }}
+                    >
+                      {getModeLabel(mode)}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-[8px] bg-blue-600 text-base font-bold text-white shadow-lg shadow-blue-100"
+                  onClick={() => setCommuteStatus(getCommuteActionMessage(commuteMode, commuteFrom, commuteTo))}
+                >
+                  {commuteMode === 'taxi' ? <Car className="h-5 w-5" /> : <Navigation className="h-5 w-5" />}
+                  {getCommuteActionLabel(commuteMode)}
+                </button>
+
+                {commuteStatus ? (
+                  <div className="rounded-[8px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
+                    {commuteStatus}
+                  </div>
+                ) : null}
+              </div>
+            </DetailSection>
+          ) : null}
+
           {recommendation ? (
             <DetailSection icon={<Check className="h-4 w-4 text-amber-500" />} title="推荐理由">
               <p className="text-sm leading-7 text-slate-600">{recommendation}</p>
@@ -266,7 +350,7 @@ function StepDetailSheet({
 
         <button
           type="button"
-          className="mt-6 h-14 w-full rounded-full bg-orange-500 text-base font-bold text-white shadow-lg shadow-orange-200"
+          className="mt-6 h-14 w-full rounded-full bg-blue-600 text-base font-bold text-white shadow-lg shadow-blue-100"
           onClick={onClose}
         >
           返回行程
@@ -319,17 +403,18 @@ function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: 
               <span className="text-[10px]">🔥</span> 预估等位 {waitMinutes} 分钟
             </div>
           ) : null}
-          {!isCommute ? (
-            <div className="mt-3">
-              <button
-                type="button"
-                className="h-9 min-w-[112px] rounded-full border border-blue-100 bg-white px-5 text-sm font-semibold text-blue-600"
-                onClick={() => onOpenStep(step)}
-              >
-                详情
-              </button>
-            </div>
-          ) : null}
+          <div className="mt-3">
+            <button
+              type="button"
+              className={clsx(
+                'h-9 min-w-[112px] rounded-full border px-5 text-sm font-semibold',
+                isCommute ? 'border-blue-100 bg-blue-50 text-blue-600' : 'border-blue-100 bg-white text-blue-600',
+              )}
+              onClick={() => onOpenStep(step)}
+            >
+              {isCommute ? getCommuteActionLabel(mode) : '详情'}
+            </button>
+          </div>
         </div>
         <div className="flex items-start gap-2">
           {cost > 0 && !isCommute ? <div className="pt-12 text-base font-bold text-emerald-600">{formatCost(cost)}</div> : null}
