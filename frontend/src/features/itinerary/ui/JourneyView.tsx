@@ -98,11 +98,62 @@ export function JourneyView({
   showHeader = true,
 }: JourneyViewProps) {
   const scrollRef = useRef<HTMLElement | null>(null)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [phase, setPhase] = useState<'heading' | 'arrived'>('heading')
+  const storageKey = `journey_progress_${plan.plan_id}`
+
+  const [currentIndex, setCurrentIndex] = useState<number>(() => {
+    if (mode === 'share') return 0
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) return Number(JSON.parse(saved).currentIndex) || 0
+    } catch {}
+    return 0
+  })
+
+  const [phase, setPhase] = useState<'heading' | 'arrived'>(() => {
+    if (mode === 'share') return 'heading'
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) return JSON.parse(saved).phase || 'heading'
+    } catch {}
+    return 'heading'
+  })
+
   const [viewMode, setViewMode] = useState<'active' | 'share'>(mode)
-  const [modeByIndex, setModeByIndex] = useState<Record<number, CommuteMode>>({})
-  const [statusByIndex, setStatusByIndex] = useState<Record<number, string>>({})
+
+  const [modeByIndex, setModeByIndex] = useState<Record<number, CommuteMode>>(() => {
+    if (mode === 'share') return {}
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) return JSON.parse(saved).modeByIndex || {}
+    } catch {}
+    return {}
+  })
+
+  const [statusByIndex, setStatusByIndex] = useState<Record<number, string>>(() => {
+    if (mode === 'share') return {}
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) return JSON.parse(saved).statusByIndex || {}
+    } catch {}
+    return {}
+  })
+
+  useEffect(() => {
+    if (viewMode !== 'active') return
+    const data = { currentIndex, phase, modeByIndex, statusByIndex }
+    localStorage.setItem(storageKey, JSON.stringify(data))
+  }, [currentIndex, phase, modeByIndex, statusByIndex, viewMode, storageKey])
+
+  const handleReset = () => {
+    if (window.confirm('确认重置当前行程进度？')) {
+      setCurrentIndex(0)
+      setPhase('heading')
+      setModeByIndex({})
+      setStatusByIndex({})
+      localStorage.removeItem(storageKey)
+    }
+  }
+
   const [scrollThumb, setScrollThumb] = useState({ top: 16, height: 60, visible: false })
   const averageWait = useMemo(() => getAverageWaitMinutes(plan.steps), [plan.steps])
   const isActive = viewMode === 'active'
@@ -171,13 +222,24 @@ export function JourneyView({
             <div className="h-9 w-9" />
           )}
           <div className="text-[15px] font-black text-slate-950">{headerTitle}</div>
-          {onClose ? (
-            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500" onClick={onClose} aria-label="关闭">
-              <X className="h-5 w-5" />
-            </button>
-          ) : (
-            <div className="h-9 w-9" />
-          )}
+          <div className="flex items-center gap-1">
+            {isActive && (currentIndex > 0 || phase !== 'heading' || Object.keys(modeByIndex).length > 0 || Object.keys(statusByIndex).length > 0) ? (
+              <button 
+                type="button" 
+                className="flex h-8 items-center justify-center rounded-full bg-slate-100 px-3 text-xs font-bold text-slate-600 hover:bg-slate-200"
+                onClick={handleReset}
+              >
+                重置
+              </button>
+            ) : null}
+            {onClose ? (
+              <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500" onClick={onClose} aria-label="关闭">
+                <X className="h-5 w-5" />
+              </button>
+            ) : (
+              <div className="h-9 w-9" />
+            )}
+          </div>
         </div>
       ) : null}
 

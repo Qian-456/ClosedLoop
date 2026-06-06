@@ -4,7 +4,6 @@ import { useItineraryStore } from '../store/useItineraryStore'
 import { PlanCard } from './PlanCard'
 import { JourneyView } from './JourneyView'
 import { commitMockPayment } from '../api/invoke'
-import { PhoneShell } from '../../../shared/ui/PhoneShell'
 
 import type { Confirmation, ItineraryPlan, ItineraryPlanVariant, ItineraryStep, ThreePlansCopywriting } from '../model/types'
 
@@ -658,10 +657,8 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
         ) : null}
       </section>
       {journeyPlan ? (
-        <div className="fixed inset-0 z-50 flex h-screen items-center justify-center overflow-hidden bg-[#EEF2F7] px-3 py-3">
-          <PhoneShell onBack={() => setJourneyPlan(null)} onClose={() => setJourneyPlan(null)}>
-            <JourneyView plan={journeyPlan} mode="active" title="开始执行" fitContainer showHeader={false} />
-          </PhoneShell>
+        <div className="fixed inset-0 z-50 flex flex-col bg-[#EEF2F7]">
+          <JourneyView plan={journeyPlan} mode="active" title="开始执行" fitContainer showHeader={true} onClose={() => setJourneyPlan(null)} />
         </div>
       ) : null}
     </div>
