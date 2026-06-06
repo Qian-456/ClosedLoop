@@ -10,10 +10,10 @@ from closedloop.graph.plan_subgraph.planner import _select_top_k_diverse_plans
 class TestPlanSelection(unittest.TestCase):
     def test_select_top_k_diverse_plans(self):
         plans = [
-            {"average_score": 60.0, "combo": [{"id": "p1"}]},
-            {"average_score": 85.0, "combo": [{"id": "p2"}]},
-            {"average_score": 95.0, "combo": [{"id": "p2_alt"}]},
-            {"average_score": 90.0, "combo": [{"id": "p3"}]},
+            {"_sort_score": 60.0, "combo": [{"id": "p1"}]},
+            {"_sort_score": 85.0, "combo": [{"id": "p2"}]},
+            {"_sort_score": 95.0, "combo": [{"id": "p2_alt"}]},
+            {"_sort_score": 90.0, "combo": [{"id": "p3"}]},
         ]
 
         selected = _select_top_k_diverse_plans(plans, 2, [])

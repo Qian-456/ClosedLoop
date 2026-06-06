@@ -121,7 +121,7 @@ class TestMainAPI(unittest.TestCase):
                                 "selected_item_ids": [],
                                 "total_duration_minutes": 240,
                                 "total_cost": 320,
-                                "average_score": 88,
+                                "_sort_score": 88,
                             }
                         ],
                         "messages": [

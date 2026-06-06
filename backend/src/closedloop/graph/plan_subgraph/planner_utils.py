@@ -585,8 +585,7 @@ def generate_and_score_combinations(
                     "pattern": pattern,
                     "combo": current_combo.copy(),
                     "commutes": final_commutes_info,
-                    "average_score": round(final_score, 2),
-                    "experience_score": round(experience_score, 2),
+                    "_sort_score": round(final_score, 2),
                     "total_cost": round(final_cost_with_gift, 2),
                     "total_duration_minutes": final_total_duration,
                     "repeat_place_fallback_count": repeat_place_fallback_count,
@@ -874,7 +873,7 @@ def generate_and_score_combinations(
     seen_sigs = set()
     
     # 按照分数整体降序排序，保证高分方案优先
-    candidate_pool.sort(key=lambda x: x["average_score"], reverse=True)
+    candidate_pool.sort(key=lambda x: x["_sort_score"], reverse=True)
     
     for p in candidate_pool:
         sig = get_combo_signature(p)

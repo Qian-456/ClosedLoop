@@ -89,7 +89,6 @@ describe('useItineraryStore stream actions', () => {
               selected_item_ids: [],
               total_duration_minutes: 240,
               total_cost: 300,
-              average_score: 86,
             },
           ],
         },

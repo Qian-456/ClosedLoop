@@ -87,8 +87,6 @@ class ItineraryPlanVariant(BaseModel):
     )
     total_duration_minutes: int = Field(..., description="该方案预计总时长（分钟）")
     total_cost: float = Field(default=0.0, description="该方案的总花费")
-    average_score: float = Field(default=0.0, description="该方案的平均得分")
-    experience_score: float = Field(default=0.0, description="该方案的体验分（用于前端展示，0-100）")
 
 
 class ItineraryPlan(BaseModel):

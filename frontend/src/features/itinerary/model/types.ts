@@ -60,8 +60,6 @@ export type ItineraryPlanVariant = {
   selected_item_ids: string[]
   total_duration_minutes: number
   total_cost: number
-  average_score: number
-  experience_score?: number
 }
 
 export type ItineraryPlan = {

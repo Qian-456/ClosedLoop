@@ -44,9 +44,6 @@ function PlanSummaryCard({
         <div className="min-w-0">
           <div className="text-lg font-bold leading-7 text-slate-950">{plan.title}</div>
           <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
-            <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 font-semibold text-blue-600">
-              推荐指数 {Math.round(plan.experience_score ?? plan.average_score ?? 0)}
-            </span>
             <span className="inline-flex items-center gap-1">
               <Clock3 className="h-4 w-4" />
               总时长 <b className="text-slate-700">{formatDuration(plan.total_duration_minutes)}</b>
@@ -272,8 +269,6 @@ function saveShareSnapshot(plan: ItineraryPlanVariant) {
     total_duration_minutes: plan.total_duration_minutes,
     steps: plan.steps,
     selected_item_ids: plan.selected_item_ids,
-    average_score: plan.average_score,
-    experience_score: plan.experience_score,
     created_at: new Date().toISOString(),
   }
   window.localStorage.setItem(getShareStorageKey(shareId), JSON.stringify(snapshot))

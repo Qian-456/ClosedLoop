@@ -107,7 +107,7 @@ def _select_top_k_diverse_plans(plan_infos: list[dict], top_k: int, past_itinera
         return []
 
     def safe_score(p: dict) -> float:
-        v = p.get("average_score", 0.0)
+        v = p.get("_sort_score", 0.0)
         return float(v) if isinstance(v, (int, float)) else 0.0
 
     unique: list[dict] = []
@@ -775,8 +775,6 @@ def planner_node(state: PlanState) -> PlanState:
                 selected_item_ids=item_ids,
                 total_duration_minutes=total_duration_minutes,
                 total_cost=float(round(total_cost, 2)),
-                average_score=plan_info.get("average_score", 0.0),
-                experience_score=plan_info.get("experience_score", plan_info.get("average_score", 0.0)),
             )
             plans.append(plan_variant)
 

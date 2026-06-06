@@ -248,9 +248,6 @@ export function JourneyView({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <h1 className="text-2xl font-black leading-8 text-slate-950">{plan.title}</h1>
-              <div className="mt-4 inline-flex rounded-full bg-blue-50 px-3 py-1 text-sm font-black text-blue-600">
-                推荐指数 {Math.round(plan.experience_score ?? plan.average_score ?? 0)}
-              </div>
             </div>
             <div className="rounded-full bg-emerald-50 px-5 py-3 text-2xl font-black text-emerald-700">
               {formatCost(plan.total_cost)}

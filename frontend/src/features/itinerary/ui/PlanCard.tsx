@@ -434,7 +434,6 @@ export function PlanCard({
   onCollapsePanel,
 }: PlanCardProps) {
   const reasons = copywriting?.pros_cons ?? []
-  const score = Math.round(plan.experience_score ?? plan.average_score ?? 0)
   const averageWaitMinutes = getAverageWaitMinutes(plan.steps)
 
   return (
@@ -444,9 +443,6 @@ export function PlanCard({
           <div className="min-w-0 flex-1">
             <h3 className="text-lg font-bold leading-7 text-slate-950">{plan.title}</h3>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 font-semibold text-blue-600">
-                推荐指数 {score}
-              </span>
               <span className="inline-flex items-center gap-1">
                 <Clock3 className="h-4 w-4" />
                 总时长 <b className="text-slate-700">{formatDuration(toNumber(plan.total_duration_minutes))}</b>

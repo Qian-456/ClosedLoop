@@ -114,10 +114,8 @@ class TestPlannerNode(unittest.TestCase):
         self.assertTrue(270 <= matched["total_duration_minutes"] <= 320, f"Expected total_duration_minutes between 270 and 320, got {matched['total_duration_minutes']}")
         # total_cost 包含 gift 配送费：base_fee=3
         self.assertEqual(matched["total_cost"], 383.0) # 100+150+80+(50+3)
-        # 打分体系变化了，我们只要确保它是大于 0 的数字
-        self.assertTrue(matched["average_score"] > 0)
-        self.assertTrue(matched["experience_score"] > 0)
-
+        # 打分体系变化了，已移除前端打分展示
+        
         gift_step = steps[6]
         self.assertEqual(gift_step["item"]["gift_price"], 50.0)
         self.assertEqual(gift_step["item"]["delivery_fee"], 3.0)
@@ -182,8 +180,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 25.0, "cost": 0.0, "mode": "driving", "distance": 10.0},
                     {"time": 25.0, "cost": 0.0, "mode": "driving", "distance": 10.0},
                 ],
-                "average_score": 90.0,
-                "experience_score": 90.0,
+                "_sort_score": 90.0,
+                "_sort_score": 90.0,
                 "total_cost": 100.0,
                 "total_duration_minutes": 60,
             },
@@ -203,8 +201,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 8.0, "cost": 0.0, "mode": "walking", "distance": 0.5},
                     {"time": 8.0, "cost": 0.0, "mode": "walking", "distance": 0.5},
                 ],
-                "average_score": 80.0,
-                "experience_score": 80.0,
+                "_sort_score": 80.0,
+                "_sort_score": 80.0,
                 "total_cost": 110.0,
                 "total_duration_minutes": 60,
             },
@@ -224,8 +222,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 22.0, "cost": 0.0, "mode": "driving", "distance": 8.0},
                     {"time": 22.0, "cost": 0.0, "mode": "driving", "distance": 8.0},
                 ],
-                "average_score": 70.0,
-                "experience_score": 70.0,
+                "_sort_score": 70.0,
+                "_sort_score": 70.0,
                 "total_cost": 200.0,
                 "total_duration_minutes": 60,
             },
@@ -264,8 +262,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 3.0, "cost": 0.0, "mode": "walking", "distance": 1.0},
                     {"time": 3.0, "cost": 0.0, "mode": "walking", "distance": 1.0},
                 ],
-                "average_score": 50.0,
-                "experience_score": 50.0,
+                "_sort_score": 50.0,
+                "_sort_score": 50.0,
                 "total_cost": 30.0,
                 "total_duration_minutes": 45,
             }
@@ -308,8 +306,8 @@ class TestPlannerNode(unittest.TestCase):
                     {"time": 3.0, "cost": 0.0, "mode": "walking", "distance": 1.0},
                     {"time": 3.0, "cost": 0.0, "mode": "walking", "distance": 1.0},
                 ],
-                "average_score": 50.0,
-                "experience_score": 50.0,
+                "_sort_score": 50.0,
+                "_sort_score": 50.0,
                 "total_cost": 100.0,
                 "total_duration_minutes": 60,
             }

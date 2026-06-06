@@ -10,8 +10,6 @@ type ShareSnapshot = {
   total_cost: number
   total_duration_minutes: number
   selected_item_ids?: string[]
-  average_score?: number
-  experience_score?: number
   steps: ItineraryStep[]
   created_at: string
 }
@@ -24,8 +22,6 @@ function snapshotToPlan(snapshot: ShareSnapshot): ItineraryPlanVariant {
     selected_item_ids: snapshot.selected_item_ids ?? snapshot.steps.map((step) => step.item.id),
     total_duration_minutes: snapshot.total_duration_minutes,
     total_cost: snapshot.total_cost,
-    average_score: snapshot.average_score ?? 0,
-    experience_score: snapshot.experience_score,
   }
 }
 

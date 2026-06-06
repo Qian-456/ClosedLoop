@@ -37,9 +37,9 @@ class TestPlannerUtilsSelection(unittest.TestCase):
         self.assertEqual(missing_types, set())
         self.assertEqual(len(plans), 3)
         for p in plans:
-            self.assertIn("experience_score", p)
-            self.assertGreaterEqual(p["experience_score"], 0)
-            self.assertLessEqual(p["experience_score"], 100)
+            self.assertIn("_sort_score", p)
+            self.assertGreaterEqual(p["_sort_score"], 0)
+            self.assertLessEqual(p["_sort_score"], 100)
 
         selected = _select_top_k_diverse_plans(plans, 3, [])
         self.assertEqual(len(selected), 3)

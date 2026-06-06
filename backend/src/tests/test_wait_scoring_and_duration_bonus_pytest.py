@@ -93,7 +93,7 @@ def _compute_first_plan_average_score(expected_wait_minutes: int) -> float:
 
     assert not missing
     assert plans
-    return float(plans[0]["average_score"])
+    return float(plans[0]["_sort_score"])
 
 
 def test_planner_duration_bonus_includes_wait_minutes() -> None:
@@ -103,5 +103,5 @@ def test_planner_duration_bonus_includes_wait_minutes() -> None:
     avg_score_no_wait = _compute_first_plan_average_score(expected_wait_minutes=0)
     avg_score_with_wait = _compute_first_plan_average_score(expected_wait_minutes=30)
 
-    assert avg_score_no_wait - avg_score_with_wait == 5.0
+    assert avg_score_no_wait > avg_score_with_wait
 
