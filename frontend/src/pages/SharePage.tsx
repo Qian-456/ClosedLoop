@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { JourneyView } from '../features/itinerary/ui/JourneyView'
+import { PhoneShell } from '../shared/ui/PhoneShell'
 import type { ItineraryPlanVariant, ItineraryStep } from '../features/itinerary/model/types'
 
 type ShareSnapshot = {
@@ -43,14 +44,24 @@ export default function SharePage() {
 
   if (!snapshot) {
     return (
-      <main className="min-h-screen bg-[#F6F7FB] px-5 py-8">
-        <div className="mx-auto max-w-[430px] rounded-[16px] border border-slate-200 bg-white px-5 py-8 text-center shadow-sm">
-          <div className="text-lg font-black text-slate-950">分享内容不存在或已过期</div>
-          <div className="mt-2 text-sm text-slate-500">请确认链接来自当前演示设备。</div>
-        </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#EEF2F7] px-3 py-3">
+        <PhoneShell onBack={() => window.history.back()} onClose={() => window.history.back()}>
+          <div className="flex h-full items-center justify-center bg-[#F6F7FB] px-5">
+            <div className="w-full rounded-[8px] border border-slate-200 bg-white px-5 py-8 text-center shadow-sm">
+              <div className="text-lg font-black text-slate-950">分享内容不存在或已过期</div>
+              <div className="mt-2 text-sm text-slate-500">请确认链接来自当前演示设备。</div>
+            </div>
+          </div>
+        </PhoneShell>
       </main>
     )
   }
 
-  return <JourneyView plan={snapshotToPlan(snapshot)} mode="share" title="分享行程" />
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#EEF2F7] px-3 py-3">
+      <PhoneShell onBack={() => window.history.back()} onClose={() => window.history.back()}>
+        <JourneyView plan={snapshotToPlan(snapshot)} mode="share" title="分享行程" fitContainer showHeader={false} />
+      </PhoneShell>
+    </main>
+  )
 }

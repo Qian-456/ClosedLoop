@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CheckCircle2, ChevronLeft, Clock3, Flag, Footprints, Gift, Timer, Utensils, X } from 'lucide-react'
 import type { ItineraryPlanVariant, ItineraryStep } from '../model/types'
 
@@ -7,6 +7,8 @@ type JourneyViewProps = {
   mode: 'active' | 'share'
   title?: string
   onClose?: () => void
+  fitContainer?: boolean
+  showHeader?: boolean
 }
 
 type CommuteMode = 'walking' | 'taxi' | 'driving'
@@ -87,14 +89,51 @@ function getAverageWaitMinutes(steps: ItineraryStep[]) {
   return Math.round(waits.reduce((sum, value) => sum + value, 0) / waits.length)
 }
 
-export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执行' : '分享行程', onClose }: JourneyViewProps) {
+export function JourneyView({
+  plan,
+  mode,
+  title = mode === 'active' ? '开始执行' : '分享行程',
+  onClose,
+  fitContainer = false,
+  showHeader = true,
+}: JourneyViewProps) {
+  const scrollRef = useRef<HTMLElement | null>(null)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [phase, setPhase] = useState<'heading' | 'arrived'>('heading')
+  const [viewMode, setViewMode] = useState<'active' | 'share'>(mode)
   const [modeByIndex, setModeByIndex] = useState<Record<number, CommuteMode>>({})
   const [statusByIndex, setStatusByIndex] = useState<Record<number, string>>({})
+  const [scrollThumb, setScrollThumb] = useState({ top: 16, height: 60, visible: false })
   const averageWait = useMemo(() => getAverageWaitMinutes(plan.steps), [plan.steps])
-  const isActive = mode === 'active'
+  const isActive = viewMode === 'active'
   const isDone = currentIndex >= plan.steps.length
+  const headerTitle = viewMode === 'active' ? '开始执行' : title
+
+  const syncScrollThumb = () => {
+    const el = scrollRef.current
+    if (!el) return
+    const scrollable = el.scrollHeight > el.clientHeight + 8
+    if (!scrollable) {
+      setScrollThumb((current) => ({ ...current, visible: false }))
+      return
+    }
+    const trackTop = 18
+    const trackHeight = Math.max(80, el.clientHeight - 36)
+    const height = Math.max(46, Math.round((el.clientHeight / el.scrollHeight) * trackHeight))
+    const maxTop = trackTop + trackHeight - height
+    const progress = el.scrollTop / Math.max(1, el.scrollHeight - el.clientHeight)
+    setScrollThumb({ top: Math.round(trackTop + (maxTop - trackTop) * progress), height, visible: true })
+  }
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    syncScrollThumb()
+    const resizeObserver = new ResizeObserver(syncScrollThumb)
+    resizeObserver.observe(el)
+    resizeObserver.observe(el.firstElementChild ?? el)
+    return () => resizeObserver.disconnect()
+  }, [plan.steps.length, viewMode, isDone])
 
   const updateMode = (index: number, nextMode: CommuteMode) => {
     setModeByIndex((current) => ({ ...current, [index]: nextMode }))
@@ -113,26 +152,36 @@ export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执
   }
 
   return (
-    <main className="min-h-screen bg-[#F6F7FB]">
-      <div className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-white/70 bg-white/80 px-4 backdrop-blur">
-        {onClose ? (
-          <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600" onClick={onClose} aria-label="返回">
-            <ChevronLeft className="h-5 w-5" />
-          </button>
-        ) : (
-          <div className="h-9 w-9" />
-        )}
-        <div className="text-[15px] font-black text-slate-950">{title}</div>
-        {onClose ? (
-          <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500" onClick={onClose} aria-label="关闭">
-            <X className="h-5 w-5" />
-          </button>
-        ) : (
-          <div className="h-9 w-9" />
-        )}
-      </div>
+    <div className={['relative overflow-hidden bg-[#F6F7FB]', fitContainer ? 'h-full' : 'h-full min-h-screen'].join(' ')}>
+      <main
+        ref={scrollRef}
+        className={[
+          'h-full overflow-y-auto bg-[#F6F7FB] [scrollbar-color:#CBD5E1_transparent] [scrollbar-width:thin]',
+          fitContainer ? '' : 'min-h-screen',
+        ].join(' ')}
+        onScroll={syncScrollThumb}
+      >
+      {showHeader ? (
+        <div className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-white/70 bg-white/80 px-4 backdrop-blur">
+          {onClose ? (
+            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600" onClick={onClose} aria-label="返回">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+          ) : (
+            <div className="h-9 w-9" />
+          )}
+          <div className="text-[15px] font-black text-slate-950">{headerTitle}</div>
+          {onClose ? (
+            <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-500" onClick={onClose} aria-label="关闭">
+              <X className="h-5 w-5" />
+            </button>
+          ) : (
+            <div className="h-9 w-9" />
+          )}
+        </div>
+      ) : null}
 
-      <div className="mx-auto max-w-[430px] px-5 pb-8 pt-4">
+      <div className="mx-auto max-w-[430px] px-5 pb-32 pt-4">
         <section className="rounded-[8px] border border-blue-100 bg-white px-5 py-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
@@ -153,6 +202,20 @@ export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执
             {averageWait !== null ? <div>平均等位 {averageWait} 分钟</div> : null}
           </div>
         </section>
+
+        {viewMode === 'share' ? (
+          <button
+            type="button"
+            className="mt-4 flex h-12 w-full items-center justify-center rounded-[8px] bg-blue-600 text-base font-black text-white shadow-lg shadow-blue-100"
+            onClick={() => {
+              setViewMode('active')
+              setCurrentIndex(0)
+              setPhase('heading')
+            }}
+          >
+            开始执行
+          </button>
+        ) : null}
 
         {isActive && isDone ? (
           <section className="mt-5 rounded-[8px] border border-emerald-100 bg-emerald-50 px-5 py-5 text-center">
@@ -177,11 +240,15 @@ export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执
                 key={step.order_id || `${step.item.id}-${index}`}
                 className={[
                   'grid grid-cols-[84px_1fr] border-b border-slate-100 last:border-b-0',
-                  isCurrent ? 'bg-blue-50/60' : isPast ? 'bg-slate-50/70 opacity-70' : 'bg-white',
+                  isCurrent
+                    ? 'bg-blue-50/80 ring-1 ring-inset ring-blue-200'
+                    : isPast
+                      ? 'bg-slate-50 text-slate-400 opacity-65'
+                      : 'bg-white',
                 ].join(' ')}
               >
                 <div className="relative px-3 py-5 text-right">
-                  <div className="whitespace-pre-line text-base font-black leading-5 text-slate-950">
+                  <div className={['whitespace-pre-line text-base font-black leading-5', isPast ? 'text-slate-400' : 'text-slate-950'].join(' ')}>
                     {step.start_time || '--:--'}
                     {step.end_time ? `\n${step.end_time}` : ''}
                   </div>
@@ -189,21 +256,40 @@ export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执
                     {Math.round(toNumber(step.duration_minutes))}分钟
                   </div>
                   <div className="absolute bottom-0 right-[-1px] top-0 w-px bg-slate-200" />
-                  <div className="absolute right-[-6px] top-8 h-3 w-3 rounded-full bg-blue-200 ring-4 ring-white" />
+                  <div
+                    className={[
+                      'absolute right-[-6px] top-8 flex h-3 w-3 items-center justify-center rounded-full ring-4 ring-white',
+                      isPast ? 'bg-slate-300' : isCurrent ? 'bg-blue-600' : 'bg-blue-200',
+                    ].join(' ')}
+                  />
                 </div>
 
                 <div className="px-4 py-5">
                   <div className="grid grid-cols-[42px_1fr_auto] items-start gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                      <Icon className="h-5 w-5" />
+                    <div
+                      className={[
+                        'flex h-11 w-11 items-center justify-center rounded-full',
+                        isPast ? 'bg-slate-100 text-slate-400' : isCurrent ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600',
+                      ].join(' ')}
+                    >
+                      {isPast ? <CheckCircle2 className="h-5 w-5" /> : <Icon className="h-5 w-5" />}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-lg font-black leading-6 text-slate-950">{getStepTitle(step)}</div>
-                      <div className="mt-1 text-sm leading-5 text-slate-500">{getStepSubtitle(step, selectedMode)}</div>
+                      <div className={['text-lg font-black leading-6', isPast ? 'text-slate-500' : 'text-slate-950'].join(' ')}>
+                        {getStepTitle(step)}
+                      </div>
+                      <div className={['mt-1 text-sm leading-5', isPast ? 'text-slate-400' : 'text-slate-500'].join(' ')}>
+                        {getStepSubtitle(step, selectedMode)}
+                      </div>
                       {isCurrent ? (
                         <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-xs font-black text-blue-600">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           {isCommute ? (phase === 'heading' ? '准备前往' : '已到达') : '开始体验'}
+                        </div>
+                      ) : isPast ? (
+                        <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-1 text-xs font-black text-slate-500">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          已完成
                         </div>
                       ) : null}
                     </div>
@@ -261,6 +347,15 @@ export function JourneyView({ plan, mode, title = mode === 'active' ? '开始执
           </div>
         ) : null}
       </div>
-    </main>
+      </main>
+      {scrollThumb.visible ? (
+        <div className="pointer-events-none absolute right-1.5 top-0 z-40 h-full w-2">
+          <div
+            className="absolute right-0 w-1.5 rounded-full bg-slate-400/75 shadow-sm"
+            style={{ top: scrollThumb.top, height: scrollThumb.height }}
+          />
+        </div>
+      ) : null}
+    </div>
   )
 }
