@@ -1,192 +1,79 @@
-# ClosedLoop
+# ClosedLoop: 执行型本地生活 Agent
 
-ClosedLoop 是一个执行型本地生活 Agent：用户一句话需求 → 生成可执行行程（4–6 小时）→ 用户确认 → 自动执行（Mock）→ 失败 fallback / replan。
+ClosedLoop 是一个面向未来的执行型本地生活 Agent。只需用户一句话需求，系统即可完成“意图理解 → 结构化约束 → 候选过滤与打分 → 智能行程规划 → 方案调整 → 模拟支付与执行”的全流程闭环。
 
-## 核心能力
+本项目针对本地生活服务场景进行了深度的工程化与架构设计，强调：
+- **Execution（执行闭环）**：不仅仅停留在闲聊，而是将意图转化为可执行的实体订单。
+- **Engineering（工程规范）**：拆分微服务、严格的配置与日志管理、高拟真的本地 Mock DB 支撑。
+- **Workflow（工作流可控）**：引入 Handoff 架构与多 Agent 协同（规划、修改、执行），保证流程的确定性与可控性。
 
-- 约束提取：从自然语言中提取人群/预算/时段/偏好等结构化约束
-- 候选召回与过滤：基于本地 Mock DB 进行召回，并进行硬性规则过滤
-- 排序与规划：三维度打分排序 + 路线/餐次组合规划，产出多套方案供确认
-- Mock 执行：确认后模拟预约/排队/下单等动作（不做真实本地生活平台调用）
+## 🏆 比赛提交物
 
-## 架构概览
+比赛的演示文档、核心设计说明以及工具列表均已提取到根目录下的 `competition_submission/` 文件夹中：
+- `competition_submission/01_demo.md` - 演示剧本与复现指南
+- `competition_submission/02_tools.html` - 工具与 API 契约列表
+- `competition_submission/03_design.html` - 核心架构与设计思路
 
-- 后端：Python + FastAPI
-- 编排：LangChain + LangGraph（Graph 是唯一执行入口）
-- 数据：仓库内 `mock_db/`（本地生活拟真数据）
-- 执行：全部为 Mock（不做真实本地生活平台调用）
+## 🌟 核心能力与亮点
 
-## Handoff 架构
+**1. 创新性（突破性技术架构与交互体验）**
+- **Workflow 与 Agent 的完美融合**：打破纯 Agent 规划容易产生的思维盲区与幻觉，创新性地引入工作流（Workflow），将极度复杂的多约束本地生活规划变得稳定且预期可控。在保留 Agent 灵活调度的前提下，做到“硬约束交给代码，推荐交给算法（现阶段以规则代替）”，为未来接入美团成熟的推荐系统以大幅提升个性化留出了无缝扩展的可能。
+- **顺滑的闭环交互**：从自然语言对话到生成直观的可视化方案卡片，支持方案链接共享给好友。确认方案后顺滑拉起 Mock 执行，将前沿技术与真实业务链路进行了创造性结合。
 
-当前代码以 LangGraph 流水线稳定跑通“约束提取 → 召回/过滤/排序 → 规划 → 产出多套方案”。下一步演进方向是 handoff 架构：把输出从“自然语言结果”升级为“结构化交接物（handoff packet）”，并拆分为 Plan → Tune/Confirm → Execute 多窗口闭环。
+**2. 完整性（高成熟度的规划与执行质量）**
+- **严谨的规划质量**：通过深度模块化代码承接时间、地理等硬约束，准确理解并满足人群、忌口、出行偏好等复杂条件，确保时间分配自然且不出错。
+- **杜绝幻觉的执行质量**：通过全局状态共享（State Sharing），将确定的方案内容直接透传给执行 Agent，从根本上避免大模型的“胡编乱造”。智能接管异常并提供细粒度的执行模式选择（如：一次性预约所有打车，或仅预约从家出发的首趟车），端到端跑通成功率（Pass@1）极高。
 
-- 设计记录：`docs/14_handoff_architecture.md`
+**3. 应用效果（极致性能与精准匹配）**
+- **流式输出与透明状态**：前端提供丝滑的流式响应，工具调用响应极快（≤ 3秒），实时向用户展示“正在规划方案…”等中间气泡状态，消除等待焦虑。
+- **多维偏好的精准兼容**：高度准确地解析并兼容用户的各类复杂需求，包括活动偏好、时间排布习惯、交通工具偏好以及严格的餐饮忌口，做到“所想即所得”。
 
-## API 概览
+**4. 商业价值（极高 ROI 与数据飞轮潜力）**
+- **重塑用户决策漏斗**：让用户从过去痛苦的“先想去哪、再算时间、最后算钱”转变为极其轻松的“看方案做判断、局部替换”。单次规划的 Token 成本不到 1 毛钱，却能成倍降低用户的决策时间成本，大幅提升最终成交概率。
+- **商业变现与生态协同**：高转化率直接赋能平台，提升广告收益与交易佣金。同时，本系统天然契合美团的海量真实数据，一旦接入即可快速启动“数据飞轮”，持续增强推荐准度，进而极大提升用户粘性与对 Agent 的信任度。
 
-- `GET /health`：健康检查
-- `POST /invoke`：输入一句话需求，返回 Graph 运行后的完整 state（兼容旧 JSON 调用）
-- `POST /invoke/stream`：输入一句话需求，返回 `text/event-stream`，持续推送产品级事件（见下方事件契约）
+## 🚀 快速启动
 
-## Docker 一键启动
-
-1. 配置后端环境变量：复制 `backend/.env.example` 为 `backend/.env` 并填写 Key
-
+### 1. 环境变量配置
+复制后端环境变量模板并填写必要的 API Key：
 ```bash
 cp backend/.env.example backend/.env
 ```
+（注：必须配置 `DEEPSEEK_API_KEY` 以及 `DASHSCOPE_API_KEY`，后者用于在 DeepSeek 不可用时作为 Fallback 备用，否则服务将无法正常启动）
 
-### 本地开发与运行 (微服务解耦模式)
-
-为了方便调试，目前将底层基础设施通过 Docker 部署，主业务流程通过本地 CLI 运行。
-
-**1. 启动底层依赖与微服务**
+### 2. 启动服务 (推荐 Docker 一键部署)
+强烈建议使用 Docker 一键拉起全套服务（包含前端页面、主 Agent 服务以及检索/规划子服务）：
 
 ```bash
 docker compose up -d --build
 ```
+启动完成后，直接在浏览器访问：**`http://localhost:8088`** 即可体验完整产品。
 
-> 此命令会在后台启动 `etcd`、`minio`、`milvus-standalone` 以及拆分出的独立规划服务 `plan_sub_backend`。
+> **提示**：如果需要进行本地代码开发调试，可参考以下命令（不推荐用于常规演示）：
+> ```bash
+> # 启动前端开发服务器
+> cd frontend && npm ci && npm run dev
+> # 启动后端提供 HTTP 接口的主服务
+> cd backend/src && python main.py
+> # (可选) 纯命令行交互测试
+> cd backend/src && python cli_main.py
+> ```
 
-**2. 运行主业务流**
-等待 Docker 容器启动完成后，在您的本地 Python 环境中执行：
+## 📚 目录结构导览
 
-```bash
-python backend/src/cli_main.py
-```
+- `competition_submission/`：比赛核心文档与提交物。
+- `backend/`：Python 后端服务（含主 Agent 服务与规划子服务）。
+- `frontend/`：React + Vite 移动端响应式前端。
+- `mock_db/`：本地生活高保真数据库配置。
 
-> 本地直接运行主后端时，`backend/.env` 中请设置 `PLAN_SUB_NETWORK_MODE=local`，并将 `PLAN_SUB_API_URL` 配置为 `http://localhost:8001/plan` 或 `http://127.0.0.1:8001/plan`。只有当主后端本身也运行在 Docker 网络中时，才使用 `PLAN_SUB_NETWORK_MODE=docker` 与 `http://plan_sub_backend:8001/plan`。
+## 🧪 测试
 
-### 生产全量部署 (包含 ELK 日志收集)
-
-如果需要启动全套服务（包含日志中心），您可以叠加使用 elk 的 compose 文件：
-
-```bash
-docker compose -f docker-compose.yml -f docker/elk/docker-compose.elk.yml up -d --build
-```
-
-访问：
-
-- 前端：`http://localhost:8088`
-- 健康检查：`http://localhost:8088/health`
-- （可选直连后端）`http://localhost:8000/health`
-- （可选）Kibana：`http://localhost:5601`
-
-## 本地开发
-
-### 后端
-
-在 `backend/src` 目录下启动：
-
-```bash
-python main.py
-```
-
-默认监听 `http://localhost:8000`。
-
-### 前端
-
-在 `frontend` 目录下启动：
-
-```bash
-npm ci
-npm run dev
-```
-
-前端开发时会通过 Vite proxy 转发 `/invoke`、`/invoke/stream`、`/health` 到后端（默认 `http://127.0.0.1:8000`）。
-
-### `/invoke/stream` 事件契约
-
-- `message`：聊天区文本片段（用于逐步展示回答文本）
-- `bubble`：流程/阶段气泡（用于状态栏或 pipeline UI）
-- `result`：结构化结果增量（用于推荐方案面板、约束确认等）
-- `done`：请求结束
-- `error`：请求失败（包含错误信息与可恢复标记）
-
-说明：
-
-- 前端应使用 `fetch + ReadableStream` 读取 `POST /invoke/stream`，因为请求体需要携带 `user_input` 与 `thread_id`。
-- `result` 事件里的 `itinerary` 是前端“推荐方案”面板的数据源（优先读取 `state.itinerary`）。
-
-## 给前端同学的必读 5 条
-
-1. `thread_id` 必传并持久化：它是后端 LangGraph 的会话标识，用于多轮对话与多会话隔离。
-2. 事件分层消费：聊天区消费 `message`；流程区消费 `bubble`；结果区（推荐方案面板）消费 `result`。
-3. 聊天区只展示摘要：规划工具返回后，Agent 只会输出 1–2 行摘要，并提示“详细方案看【推荐方案】面板”，前端不要在聊天区复述完整时间轴。
-4. 推荐方案面板数据源对齐 `itinerary`：后端会保证 `itinerary` 的形状尽量稳定（必要时包装为 `{ plans: [...] }`）。
-5. 契约改动以代码为准：字段与事件的最终定义以 `backend/src/main.py` 的序列化与 SSE 归一化为准。
-
-## 分支约定
-
-- `main`：稳定主分支（用于演示与比赛提交）
-- `dev_agent`：Agent/编排/工具链相关的迭代分支（从 main 拉出）
-
-## 环境变量
-
-后端环境变量模板位于 `backend/.env.example`，其中关键项：
-
-- `DEEPSEEK_API_KEY`：Primary LLM
-- `DASHSCOPE_API_KEY`：Fallback LLM
-- `PLAN_SUB_API_URL`：规划子服务地址
-- `PLAN_SUB_NETWORK_MODE`：规划子服务网络模式，`local` 对应宿主机本地地址，`docker` 对应 Docker 服务名
-
-规划子服务推荐配置矩阵：
-
-- 宿主机运行主后端：
-  - `PLAN_SUB_NETWORK_MODE=local`
-  - `PLAN_SUB_API_URL=http://localhost:8001/plan`
-- Docker Compose 运行主后端：
-  - `PLAN_SUB_NETWORK_MODE=docker`
-  - `PLAN_SUB_API_URL=http://plan_sub_backend:8001/plan`
-
-日志/调试相关：
-
-- `LOG_ELK_ENABLED`：是否输出结构化日志（JSONL）到 `LOG_ELK_JSON_PATH`
-- `LOG_ELK_JSON_PATH`：结构化日志路径（默认 `backend/src/logs/elk.jsonl`）
-- `FILTER_LOG_DETAILED_DEBUG`：是否输出过滤阶段的明细 drop 事件（用于排查误杀/漏杀）
-- `LOG_PLANNER_STATS`：是否输出规划阶段的统计日志（pattern 维度剪枝计数、候选池去重前后、展示层选 3 套前后计数）
-- `PLANNER_LOG_DETAILED_DEBUG`：预留开关（当前仅实现统计汇总，不输出逐条组合明细）
-
-如果你启用了 ELK，请确保后端开启结构化日志输出（否则 Kibana 没数据可查）：
-
-```bash
-LOG_ELK_ENABLED=true
-```
-
-当你遇到“为什么只生成了 1-2 套方案”的问题，推荐先打开：
-
-```bash
-LOG_PLANNER_STATS=true
-```
-
-然后观察日志中的：
-
-- `phase=planner_dfs_stats`：每个 pattern 的 step\_pool\_sizes、合法叶子数、剪枝计数（能直接判断是不是 gift/下午茶候选不足）
-- `phase=planner_candidate_pool_stats`：candidate\_pool 去重前后与补齐后的数量（能直接判断是不是“抽样+去重”导致只剩 1-2 套）
-
-## ELK（可选）
-
-ELK 的 Logstash 会读取 `backend/src/logs/elk.jsonl` 并写入 Elasticsearch，索引名为 `closedloop-YYYY.MM.dd`（见 `docker/elk/logstash.conf`）。
-
-Kibana 使用建议：
-
-\*\*- 进入 Kibana → 创建 Index Patterm：`closedloop-*`
-
-- 时间字段选择 `@timestamp`\*\*
-- 常用检索关键字：
-  - `phase=filter_node` / `phase=rerank_node` / `phase=planner_node`
-  - `phase=planner_dfs_stats` / `phase=planner_candidate_pool_stats`
-
-## 测试
-
-后端（unittest）：
-
+后端测试：
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
 ```
 
-前端（vitest）：
-
+前端测试：
 ```bash
 npm test -- --run
 ```

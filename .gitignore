@@ -68,3 +68,7 @@ mock_data/runtime/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Exclude internal dev docs for competition submission
+docs/
+AGENTS.md
