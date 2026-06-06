@@ -268,6 +268,11 @@ def match_patterns(
             else:
                 continue
         
+        # 超过4个小时的方案都要有吃饭约束：如果预期下限 > 4.0，剔除无吃饭的 pattern
+        has_restaurant = any(step.startswith("restaurant:") for step in p["steps"])
+        if duration_hours_range[0] > 4.0 and not has_restaurant:
+            continue
+        
         min_d, max_d = p["duration_range"]
         # 容差范围
         p_min = min_d - 0.5

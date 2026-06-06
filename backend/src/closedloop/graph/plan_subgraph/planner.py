@@ -321,42 +321,45 @@ def planner_node(state: PlanState) -> PlanState:
             it = iter(full)
             return all(x in it for x in sub)
 
+        max_duration = duration_hours_range[1]
+        use_subset_match = (len(preferred_pattern_steps) * 1.5) < max_duration
+
         matching_patterns = [p for p in patterns if is_subsequence(preferred_pattern_steps, p.get("steps", []))]
 
-        if matching_patterns:
+        custom_patterns = []
+        base_desc = "用户自定义顺序"
+        start_pref = [get_time_of_day(start_time)]
+
+        # 无论如何先放入原始指定的 pattern
+        custom_patterns.append({
+            "id": "CUSTOM-00",
+            "group": group_type,
+            "duration_range": duration_hours_range,
+            "steps": preferred_pattern_steps,
+            "desc": base_desc,
+            "start_time_pref": start_pref
+        })
+
+        # 如果允许礼品，则在每个步骤之后尝试插入 gift_shop
+        if include_gift:
+            for i in range(len(preferred_pattern_steps)):
+                new_steps = preferred_pattern_steps[:]
+                new_steps.insert(i + 1, "gift_shop")
+                custom_patterns.append({
+                    "id": f"CUSTOM-GIFT-{i+1}",
+                    "group": group_type,
+                    "duration_range": duration_hours_range,
+                    "steps": new_steps,
+                    "desc": f"{base_desc}(含礼品)",
+                    "start_time_pref": start_pref
+                })
+
+        if use_subset_match and matching_patterns:
             # 存在子集匹配的 pattern，将其排到最前面（优先短的，即包含额外步骤最少的）
             patterns.sort(key=lambda p: (not is_subsequence(preferred_pattern_steps, p.get("steps", [])), len(p.get("steps", []))))
             logger.info(f"phase=planner_node | patterns_matched={len(patterns)} (sorted by subset match)")
         else:
-            # 没有任何 pattern 包含该子集，构造自定义 pattern
-            custom_patterns = []
-            base_desc = "用户自定义顺序"
-            start_pref = [get_time_of_day(start_time)]
-
-            # 无论如何先放入原始指定的 pattern
-            custom_patterns.append({
-                "id": "CUSTOM-00",
-                "group": group_type,
-                "duration_range": duration_hours_range,
-                "steps": preferred_pattern_steps,
-                "desc": base_desc,
-                "start_time_pref": start_pref
-            })
-
-            # 如果允许礼品，则在每个步骤之后尝试插入 gift_shop
-            if include_gift:
-                for i in range(len(preferred_pattern_steps)):
-                    new_steps = preferred_pattern_steps[:]
-                    new_steps.insert(i + 1, "gift_shop")
-                    custom_patterns.append({
-                        "id": f"CUSTOM-GIFT-{i+1}",
-                        "group": group_type,
-                        "duration_range": duration_hours_range,
-                        "steps": new_steps,
-                        "desc": f"{base_desc}(含礼品)",
-                        "start_time_pref": start_pref
-                    })
-
+            # 不需要子集匹配，或者没有任何 pattern 包含该子集，构造自定义 pattern 并放在最前
             patterns = custom_patterns + patterns
             logger.info(f"phase=planner_node | patterns_matched={len(patterns)} (generated {len(custom_patterns)} custom patterns)")
     else:
@@ -395,6 +398,7 @@ def planner_node(state: PlanState) -> PlanState:
         "prune_final_duration_too_short": 0,
         "prune_final_duration_too_long": 0,
         "prune_meal_time_invalid": 0,
+        "prune_no_restaurant_over_4h": 0,
     }
 
     valid_plans_info, valid_count_before_topk, missing_types_set = generate_and_score_combinations(
@@ -834,6 +838,7 @@ def planner_node(state: PlanState) -> PlanState:
             dist_pruned = dfs_global_prune_stats.get("prune_walk_leg_over_2km", 0) + dfs_global_prune_stats.get("prune_walk_home_over_2km", 0)
             gift_pruned = dfs_global_prune_stats.get("prune_gift_delivery_radius", 0)
             meal_time_pruned = dfs_global_prune_stats.get("prune_meal_time_invalid", 0)
+            no_restaurant_pruned = dfs_global_prune_stats.get("prune_no_restaurant_over_4h", 0)
             
             reasons = [
                 (budget_pruned, "因为超出预算限制"),
@@ -841,7 +846,8 @@ def planner_node(state: PlanState) -> PlanState:
                 (time_short_pruned, "因为行程耗时过短(达不到预期下限)"),
                 (dist_pruned, "因为步行距离超限(>2km)"),
                 (gift_pruned, "因为礼品配送距离超限"),
-                (meal_time_pruned, "因为用餐时间不在合理饭点内")
+                (meal_time_pruned, "因为用餐时间不在合理饭点内"),
+                (no_restaurant_pruned, "因为行程超过4小时但无餐饮安排")
             ]
             
             # 过滤掉为 0 的项，并按占比(即数量)降序排序

@@ -337,6 +337,7 @@ def generate_and_score_combinations(
             "prune_final_duration_too_short": 0,
             "prune_final_duration_too_long": 0,
             "prune_meal_time_invalid": 0,
+            "prune_no_restaurant_over_4h": 0,
             "repeat_place_fallback_count": 0,
         }
         
@@ -502,6 +503,15 @@ def generate_and_score_combinations(
                         prune_counts["prune_final_duration_too_long"] += 1
                         return
                     
+                # 新增约束：超过4个小时的方案都要有吃饭
+                if final_total_duration > 240:
+                    has_restaurant = any(
+                        item.get("_step_type", "").startswith("restaurant:") for item in current_combo
+                    )
+                    if not has_restaurant:
+                        prune_counts["prune_no_restaurant_over_4h"] += 1
+                        return
+
                 # 计算打分
                 avg_item_score_raw = (total_score_raw / len(current_combo)) if current_combo else 0.0
                 base_score_100 = min(100.0, avg_item_score_raw)
@@ -527,13 +537,23 @@ def generate_and_score_combinations(
                 # 如果核心项目平均时长在 1.25 - 1.75 小时（75 - 105 分钟），给予额外加分
                 duration_bonus_score = 5.0 if 75 <= avg_core_dur <= 105 else 0.0
                 
+                # 新增：如果用户给的时间范围比较大，在范围内时间越长有加分plan
+                long_duration_bonus = 0.0
+                if is_range and time_params.get("range_len_mins", 0.0) >= 60.0:
+                    full_min = float(time_params.get("full_min_mins", 0.0))
+                    full_max = float(time_params.get("full_max_mins", 0.0))
+                    if full_min < full_max and full_min <= final_total_duration <= full_max:
+                        ratio = (final_total_duration - full_min) / (full_max - full_min)
+                        long_duration_bonus = ratio * 10.0  # 最高加 10 分
+                
                 final_score = (
                     base_score_100 * 0.35 +
                     spatial_score * 0.25 +
                     time_score * 0.20 +
                     budget_score * 0.10 +
                     theme_score * 0.10 +
-                    duration_bonus_score
+                    duration_bonus_score +
+                    long_duration_bonus
                 )
 
                 avg_item_score_clamped = (total_score_clamped_100 / len(current_combo)) if current_combo else 0.0
@@ -543,7 +563,8 @@ def generate_and_score_combinations(
                     spatial_score * 0.25 +
                     theme_score * 0.10 +
                     avg_premium_bonus +
-                    duration_bonus_score
+                    duration_bonus_score +
+                    long_duration_bonus
                 )
                 experience_score = min(100.0, max(0.0, experience_score))
                 
