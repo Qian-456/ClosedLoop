@@ -10,6 +10,7 @@ type PlanCardProps = {
   onOpenStep: (step: ItineraryStep) => void
   onCloseStep: () => void
   onCollapsePanel?: () => void
+  paidCommuteStepKeys?: Set<string>
 }
 
 type TypeStyle = {
@@ -77,6 +78,8 @@ const getStepCost = (step: ItineraryStep) => {
   if (total > 0) return total
   return toNumber(step.item.cost)
 }
+
+const getStepKey = (step: ItineraryStep, index: number) => step.order_id || `${step.item.id}-${index}`
 
 const getModeLabel = (mode?: string | null) => {
   switch (mode) {
@@ -184,10 +187,12 @@ function StepDetailSheet({
   step,
   onClose,
   onCollapsePanel,
+  isPaidCommute,
 }: {
   step: ItineraryStep
   onClose: () => void
   onCollapsePanel?: () => void
+  isPaidCommute?: boolean
 }) {
   const item = step.item
   const style = TYPE_STYLES[item.type]
@@ -274,7 +279,7 @@ function StepDetailSheet({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                {!isPaidCommute ? <div className="grid grid-cols-3 gap-2">
                   {(['walking', 'taxi', 'driving'] as const).map((mode) => (
                     <button
                       key={mode}
@@ -293,15 +298,15 @@ function StepDetailSheet({
                       {getModeLabel(mode)}
                     </button>
                   ))}
-                </div>
+                </div> : null}
 
                 <button
                   type="button"
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-[8px] bg-blue-600 text-base font-bold text-white shadow-lg shadow-blue-100"
-                  onClick={() => setCommuteStatus(getCommuteActionMessage(commuteMode, commuteFrom, commuteTo))}
+                  onClick={() => setCommuteStatus(isPaidCommute ? '该通勤订单已支付，可在支付订单中查看当前订单状态。' : getCommuteActionMessage(commuteMode, commuteFrom, commuteTo))}
                 >
                   {commuteMode === 'taxi' ? <Car className="h-5 w-5" /> : <Navigation className="h-5 w-5" />}
-                  {getCommuteActionLabel(commuteMode)}
+                  {isPaidCommute ? '查看订单状态' : getCommuteActionLabel(commuteMode)}
                 </button>
 
                 {commuteStatus ? (
@@ -360,13 +365,24 @@ function StepDetailSheet({
   )
 }
 
-function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: number; onOpenStep: (step: ItineraryStep) => void }) {
+function TimelineRow({
+  step,
+  index,
+  isPaidCommute,
+  onOpenStep,
+}: {
+  step: ItineraryStep
+  index: number
+  isPaidCommute?: boolean
+  onOpenStep: (step: ItineraryStep) => void
+}) {
   const item = step.item
   const style = TYPE_STYLES[item.type]
   const Icon = style.Icon
   const isCommute = item.type === 'commute'
   const cost = getStepCost(step)
   const mode = item.commute_recommended_mode || item.commute_mode
+  const [paidCommuteStatus, setPaidCommuteStatus] = useState('')
   const waitMinutes = getStepWaitMinutes(step)
   const totalMinutes = getStepTotalMinutesForDisplay(step)
   const durationLabel = waitMinutes > 0 && !isCommute ? `总时长 ${totalMinutes}分钟（含等位${waitMinutes}分钟）` : `${toNumber(step.duration_minutes)}分钟`
@@ -410,10 +426,19 @@ function TimelineRow({ step, index, onOpenStep }: { step: ItineraryStep; index: 
                 'h-9 min-w-[112px] rounded-full border px-5 text-sm font-semibold',
                 isCommute ? 'border-blue-100 bg-blue-50 text-blue-600' : 'border-blue-100 bg-white text-blue-600',
               )}
-              onClick={() => onOpenStep(step)}
+              onClick={() => {
+                if (isPaidCommute) {
+                  setPaidCommuteStatus('订单已支付')
+                  return
+                }
+                onOpenStep(step)
+              }}
             >
-              {isCommute ? getCommuteActionLabel(mode) : '详情'}
+              {isCommute ? (isPaidCommute ? '查看订单状态' : getCommuteActionLabel(mode)) : '详情'}
             </button>
+            {paidCommuteStatus ? (
+              <div className="mt-2 text-xs font-semibold text-emerald-600">{paidCommuteStatus}</div>
+            ) : null}
           </div>
         </div>
         <div className="flex items-start gap-2">
@@ -432,9 +457,13 @@ export function PlanCard({
   onOpenStep,
   onCloseStep,
   onCollapsePanel,
+  paidCommuteStepKeys,
 }: PlanCardProps) {
   const reasons = copywriting?.pros_cons ?? []
   const averageWaitMinutes = getAverageWaitMinutes(plan.steps)
+  const selectedStepIndex = selectedStep ? plan.steps.findIndex((step) => step === selectedStep) : -1
+  const selectedStepIsPaidCommute =
+    selectedStep && selectedStepIndex >= 0 ? paidCommuteStepKeys?.has(getStepKey(selectedStep, selectedStepIndex)) : false
 
   return (
     <>
@@ -469,12 +498,23 @@ export function PlanCard({
 
       <div className="mt-4 overflow-hidden rounded-[8px] border border-slate-200 bg-white">
         {plan.steps.map((step, index) => (
-          <TimelineRow key={step.order_id || `${step.item.id}-${index}`} step={step} index={index} onOpenStep={onOpenStep} />
+          <TimelineRow
+            key={getStepKey(step, index)}
+            step={step}
+            index={index}
+            isPaidCommute={paidCommuteStepKeys?.has(getStepKey(step, index))}
+            onOpenStep={onOpenStep}
+          />
         ))}
       </div>
 
       {selectedStep ? (
-        <StepDetailSheet step={selectedStep} onClose={onCloseStep} onCollapsePanel={onCollapsePanel} />
+        <StepDetailSheet
+          step={selectedStep}
+          isPaidCommute={selectedStepIsPaidCommute}
+          onClose={onCloseStep}
+          onCollapsePanel={onCollapsePanel}
+        />
       ) : null}
     </>
   )

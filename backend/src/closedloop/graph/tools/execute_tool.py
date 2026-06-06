@@ -206,6 +206,70 @@ def _lookup_item_cost(
         return 0.0
 
 
+def _commute_mode(item: dict[str, Any]) -> str | None:
+    """读取通勤方式，优先兼容规划侧的推荐字段。"""
+    mode = item.get("commute_recommended_mode") or item.get("commute_mode")
+    return str(mode) if mode is not None else None
+
+
+def _candidate_id(item: dict[str, Any]) -> str:
+    """提取候选条目的稳定 ID。"""
+    if not isinstance(item, dict):
+        return ""
+    return str(
+        item.get("combo_id")
+        or item.get("package_id")
+        or item.get("gift_id")
+        or item.get("id")
+        or ""
+    )
+
+
+def _fallback_backup_candidates(state: dict, target_plan: dict, target_item_id: str | None) -> list[dict[str, Any]]:
+    """当执行器未直接给出候选时，从计划条目和全局候选池补齐 fixup 候选。"""
+    if not isinstance(target_item_id, str) or not target_item_id:
+        return []
+
+    target_type = ""
+    for step in target_plan.get("steps", []) or []:
+        item = step.get("item", {}) if isinstance(step, dict) else {}
+        if not isinstance(item, dict) or item.get("id") != target_item_id:
+            continue
+        target_type = str(item.get("type") or "")
+        backups = item.get("backup_candidates")
+        if isinstance(backups, list) and backups:
+            return [x for x in backups if isinstance(x, dict)][:3]
+        break
+
+    candidates = state.get("candidates", {}) if isinstance(state, dict) else {}
+    if not isinstance(candidates, dict):
+        return []
+
+    keys_by_type = {
+        "restaurant": [
+            "ranked_breakfast_combos",
+            "ranked_lunch_combos",
+            "ranked_afternoon_tea_combos",
+            "ranked_dinner_combos",
+            "ranked_late_night_combos",
+        ],
+        "activity": ["ranked_light_packages", "ranked_packages"],
+        "gift_shop": ["ranked_gifts"],
+    }
+    backups: list[dict[str, Any]] = []
+    for key in keys_by_type.get(target_type, []):
+        for candidate in candidates.get(key, []) or []:
+            if not isinstance(candidate, dict):
+                continue
+            candidate_id = _candidate_id(candidate)
+            if not candidate_id or candidate_id == target_item_id:
+                continue
+            backups.append(candidate)
+            if len(backups) >= 3:
+                return backups
+    return backups
+
+
 @tool(args_schema=ExecuteItineraryInput)
 async def execute_itinerary(
     plan_id: str,
@@ -291,7 +355,7 @@ async def _do_execute_itinerary(
 
             if item_type == "commute":
                 # 通勤逻辑
-                commute_mode = item.get("commute_mode")
+                commute_mode = _commute_mode(item)
                 if is_first_commute:
                     if commute_mode == "taxi":
                         commute_status.append(
@@ -503,11 +567,13 @@ async def _do_execute_itinerary(
                                 "plan_id": plan_id,
                                 "target_item_id": data.get("item_id"),
                                 "reason": data.get("violation_reason") or data.get("message") or "需要你确认备选替换",
+                                "book_commutes_policy": book_commutes_policy,
                                 "backup_candidates": backup_candidates if isinstance(backup_candidates, list) else [],
                             }
                             confirmation = {
                                 "status": "needs_fixup",
                                 "execution_id": execution_id,
+                                "book_commutes_policy": book_commutes_policy,
                                 "fixup": fixup,
                             }
                             result = {
@@ -684,15 +750,19 @@ async def _do_execute_itinerary(
                     f"| plan_id={plan_id} | failures_count={failures_count} | missing_count={missing_count} | target_item_id={target_item_id}"
                 )
 
+                backup_candidates = _fallback_backup_candidates(state, target_plan, target_item_id)
+
                 fixup = {
                     "plan_id": plan_id,
                     "target_item_id": target_item_id,
                     "reason": fixup_reason,
-                    "backup_candidates": [],
+                    "book_commutes_policy": book_commutes_policy,
+                    "backup_candidates": backup_candidates,
                 }
                 confirmation = {
                     "status": "needs_fixup",
                     "execution_id": execution_id,
+                    "book_commutes_policy": book_commutes_policy,
                     "fixup": fixup,
                 }
                 result = {
@@ -783,6 +853,8 @@ async def _do_execute_itinerary(
         result["execution_command"] = {
             "execution_id": result.get("execution_id"),
             "plan_id": plan_id,
+            "book_commutes_policy": book_commutes_policy,
+            "scope": "all" if book_commutes_policy == "all" else "first_only",
             "payment_required": True,
             "payment_status": "pending",
             "commit_status": "not_started",

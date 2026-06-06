@@ -94,6 +94,10 @@ export type Confirmation = {
     commit_status?: string
     pricing_summary?: {
       expected_charge_cost?: number
+      original_amount?: number
+      discount_amount?: number
+      payable_amount?: number
+      coupon?: string
       currency?: string
     } | null
   }

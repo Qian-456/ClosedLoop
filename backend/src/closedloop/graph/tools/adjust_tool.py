@@ -102,6 +102,24 @@ def _validate_active_fixup_target(plan_id: str, target_item_id: str, state: dict
     return None
 
 
+def _resolve_book_commutes_policy(state: dict, requested_policy: str) -> Literal["first_only", "all"]:
+    """补齐执行默认策略：fixup 阶段优先继承上一轮执行选择。"""
+    if requested_policy == "all":
+        return "all"
+    confirmation = state.get("confirmation") if isinstance(state, dict) else None
+    if isinstance(confirmation, dict):
+        command = confirmation.get("execution_command")
+        fixup = confirmation.get("fixup")
+        for source in (confirmation, command, fixup):
+            if not isinstance(source, dict):
+                continue
+            policy = source.get("book_commutes_policy")
+            scope = source.get("scope")
+            if policy == "all" or scope == "all":
+                return "all"
+    return "first_only"
+
+
 class AdjustAndExecutePlanItemInput(BaseModel):
     plan_id: str = Field(..., description="要修改的方案 ID")
     target_item_id: str = Field(..., description="方案中需要被替换的旧条目 ID")
@@ -321,6 +339,7 @@ async def adjust_and_execute_plan_item(
     LoggerManager.setup(config)
     tool_budget_secs = float(getattr(config, "TOOL_MAX_RUNTIME_SECS", 3.0))
     started_at = time.perf_counter()
+    book_commutes_policy = _resolve_book_commutes_policy(state, book_commutes_policy)
     
     logger.info(f"phase=adjust_and_execute_plan_item | plan_id={plan_id} | target={target_item_id} | new={new_item_id}")
 

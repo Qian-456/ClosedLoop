@@ -9,6 +9,7 @@ type JourneyViewProps = {
   onClose?: () => void
   fitContainer?: boolean
   showHeader?: boolean
+  paidCommuteStepKeys?: Set<string>
 }
 
 type CommuteMode = 'walking' | 'taxi' | 'driving'
@@ -60,6 +61,16 @@ function getStepCost(step: ItineraryStep) {
   return toNumber(step.item.cost)
 }
 
+function getStepKey(step: ItineraryStep, index: number) {
+  return step.order_id || `${step.item.id}-${index}`
+}
+
+function isPayableCommute(step: ItineraryStep) {
+  if (step.item.type !== 'commute') return false
+  const mode = step.item.commute_recommended_mode || step.item.commute_mode
+  return (mode === 'taxi' || mode === 'driving') && getStepCost(step) > 0
+}
+
 function getMode(step: ItineraryStep, selected?: CommuteMode): CommuteMode {
   if (selected) return selected
   const raw = step.item.commute_recommended_mode || step.item.commute_mode || 'walking'
@@ -96,6 +107,7 @@ export function JourneyView({
   onClose,
   fitContainer = false,
   showHeader = true,
+  paidCommuteStepKeys,
 }: JourneyViewProps) {
   const scrollRef = useRef<HTMLElement | null>(null)
   const storageKey = `journey_progress_${plan.plan_id}`
@@ -158,6 +170,20 @@ export function JourneyView({
   const averageWait = useMemo(() => getAverageWaitMinutes(plan.steps), [plan.steps])
   const isActive = viewMode === 'active'
   const isDone = currentIndex >= plan.steps.length
+  const effectivePaidCommuteStepKeys =
+    paidCommuteStepKeys ??
+    (isActive
+      ? new Set(
+          plan.steps
+            .map((step, index) => ({ step, index }))
+            .filter(({ step }) => isPayableCommute(step))
+            .map(({ step, index }) => getStepKey(step, index)),
+        )
+      : undefined)
+  const currentStep = plan.steps[currentIndex] ?? null
+  const currentStepIsPaidCommute = currentStep
+    ? effectivePaidCommuteStepKeys?.has(getStepKey(currentStep, currentIndex)) ?? false
+    : false
   const headerTitle = viewMode === 'active' ? '开始执行' : title
 
   const syncScrollThumb = () => {
@@ -187,6 +213,8 @@ export function JourneyView({
   }, [plan.steps.length, viewMode, isDone])
 
   const updateMode = (index: number, nextMode: CommuteMode) => {
+    const step = plan.steps[index]
+    if (step && effectivePaidCommuteStepKeys?.has(getStepKey(step, index))) return
     setModeByIndex((current) => ({ ...current, [index]: nextMode }))
     setStatusByIndex((current) => ({ ...current, [index]: '' }))
   }
@@ -194,6 +222,10 @@ export function JourneyView({
   const advance = () => {
     const step = plan.steps[currentIndex]
     if (!step) return
+    if (currentStepIsPaidCommute && phase === 'heading') {
+      setStatusByIndex((current) => ({ ...current, [currentIndex]: '该通勤订单已支付，可在支付订单中查看当前订单状态。' }))
+      return
+    }
     if (step.item.type === 'commute' && phase === 'heading') {
       setPhase('arrived')
       return
