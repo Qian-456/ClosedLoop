@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tool 实现能力清单（含 Mock 行为 + 工程证据）</title>
+    <style>
+      :root {
+        --fg: #111827;
+        --muted: #374151;
+        --bg: #ffffff;
+        --code-bg: #0b1020;
+        --code-fg: #e5e7eb;
+        --border: #e5e7eb;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans SC",
+          "Microsoft YaHei", sans-serif;
+        line-height: 1.45;
+        font-size: 14px;
+      }
+      body {
+        margin: 0;
+        padding: 16px 12px;
+      }
+      .page {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px;
+        letter-spacing: 0.2px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 12px 0 6px;
+        padding-top: 2px;
+        border-top: 1px solid var(--border);
+      }
+      p {
+        margin: 6px 0;
+      }
+      ul {
+        margin: 4px 0 8px 18px;
+        padding: 0;
+      }
+      li {
+        margin: 2px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        vertical-align: top;
+        text-align: left;
+        font-size: 13px;
+      }
+      th {
+        background: #f9fafb;
+        font-weight: 600;
+      }
+      pre {
+        background: var(--code-bg);
+        color: var(--code-fg);
+        padding: 10px 12px;
+        border-radius: 10px;
+        overflow: auto;
+        margin: 8px 0 10px;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        font-size: 12px;
+        background: rgba(17, 24, 39, 0.06);
+        padding: 0 4px;
+        border-radius: 6px;
+      }
+      pre code {
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Tool 实现能力清单（含 Mock 行为 + 工程证据）</h1>
+<p>本文件用于满足赛题交付物要求：说明系统在“把事情做完”链路中已落地的工具能力，并提供可验收的工程证据。 <br /> 说明：为便于评委快速验收，本文件正文不写绝对路径；仅提供<strong>相对路径 + 函数名索引</strong>，并贴出少量关键实现片段（节选），用于证明链路真实可复现。</p>
+<h2>Tool 总览（按用户动作闭环）</h2>
+<table>
+<thead><tr>
+<th>用户动作</th>
+<th>对应工具/机制</th>
+<th>目的</th>
+<th>常见失败模式（摘要）</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>一句话生成方案（首次/再规划）</td>
+<td><code>plan_trip</code></td>
+<td>将结构化约束发送至规划子服务并落盘到 state（方案 + 候选池）</td>
+<td>子服务不可用/超时（≤3s）</td>
+</tr>
+<tr>
+<td>想多看备选</td>
+<td><code>generate_alternative_plans</code></td>
+<td>在不改约束前提下扩展备选列表</td>
+<td>子服务不可用/超时</td>
+</tr>
+<tr>
+<td>先搜再换（模拟推荐/搜索）</td>
+<td><code>search_candidates</code></td>
+<td>在当前候选池内按用户关键词做二次检索</td>
+<td>搜索服务超时/无结果</td>
+</tr>
+<tr>
+<td>指定替换某一条目</td>
+<td><code>adjust_plan_item</code></td>
+<td>替换条目并触发确定性冲突修复（2 层最小改动：吃 buffer → 压缩；不允许删项）</td>
+<td>替换导致超窗/超预算、无可修复</td>
+</tr>
+<tr>
+<td>执行失败后补齐并继续</td>
+<td><code>adjust_and_execute_plan_item</code> + <code>fixup_agent</code> 路由</td>
+<td>fixup 阶段一次性完成“替换 + 重试执行”</td>
+<td>备选不安全/仍失败</td>
+</tr>
+<tr>
+<td>确认后执行（Mock）</td>
+<td><code>execute_itinerary</code> + <code>mock_executor</code> + <code>/execution/{id}/commit</code></td>
+<td>先生成待支付执行命令，输入 <code>111111</code> 后 Mock commit</td>
+<td>无座/无票/库存不足、支付失败、执行超时、一致性校验失败</td>
+</tr>
+</tbody></table>
+<h2>1) 规划/再规划：plan_trip（同一入口）</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1.1 功能边界</h3>
+<ul>
+<li>输入：结构化约束（群体 family/friends、预算、开始时间、4–6h 窗口、距离偏好、活动偏好、忌口、排队偏好等）。</li>
+<li>输出：结构化方案（默认 1 个最优方案）+ 候选池（用于后续搜索/替换）。</li>
+<li>性能约束：工具预算默认 ≤3s；超时会返回可恢复错误，引导用户重试或调整输入（保证端到端稳定）。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1.2 工程证据点（评委验收关注）</h3>
+<ul>
+<li><strong>内部 HTTP 调用规划子服务（8001）</strong>：多地址候选 + 总超时 budget 控制。</li>
+<li><strong>状态落盘</strong>：<code>constraints / candidates / itinerary / latest_plan_result</code> 写回 state，后续 search/replace 都基于该 state。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1.3 失败模式</h3>
+<ul>
+<li><strong>规划子服务超时/不可用</strong>：返回 <code>TOOL_TIMEOUT</code>（可恢复），不阻塞后续对话。</li>
+<li><strong>上游异常</strong>：返回 <code>UPSTREAM_ERROR</code>（可恢复），并回传当前约束用于用户修改。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1.4 验收动作（How to Verify）</h3>
+<ul>
+<li>关闭规划子服务或设置极短超时，触发 <code>TOOL_TIMEOUT</code>，确认工具返回可恢复错误且不崩溃。</li>
+<li>恢复子服务后再次调用，能正常产出方案并写回 <code>itinerary/latest_plan_result</code>。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1.5 实现索引与代码片段（节选）</h3>
+<ul>
+<li>实现索引：</li>
+<li><code>backend/src/closedloop/graph/tools/plan_tool.py::plan_trip</code></li>
+<li><code>backend/src/closedloop/graph/tools/plan_sub_api.py::request_plan_sub_json</code></li>
+</ul>
+<p>片段 1：工具预算 + 内部调用 + 可恢复失败码（节选）</p>
+<pre><code># backend/src/closedloop/graph/tools/plan_tool.py::plan_trip (节选)
+tool_budget_secs = float(getattr(config, "TOOL_MAX_RUNTIME_SECS", 3.0))
+started_at = time.perf_counter()
+
+remaining_secs = tool_budget_secs - (time.perf_counter() - started_at)
+if remaining_secs &lt;= 0:
+    raise TimeoutError("tool_budget_exhausted")
+
+subgraph_output = request_plan_sub_json(
+    method="POST",
+    configured_url=getattr(config, "PLAN_SUB_API_URL", "http://localhost:8001/plan"),
+    target_path="/plan",
+    phase="plan_trip",
+    json=payload,
+    timeout=remaining_secs,
+    network_mode=getattr(config, "PLAN_SUB_NETWORK_MODE", "local"),
+)</code></pre>
+<p>片段 2：多地址候选 + 总超时 budget（节选）</p>
+<pre><code># backend/src/closedloop/graph/tools/plan_sub_api.py::request_plan_sub_json (节选)
+candidate_urls = build_plan_sub_candidate_urls(configured_url, target_path, network_mode=network_mode)
+deadline = started_at + float(timeout)
+
+for attempt_index, candidate_url in enumerate(candidate_urls, start=1):
+    remaining_secs = deadline - time.perf_counter()
+    if remaining_secs &lt;= 0:
+        raise TimeoutError("plan_sub_api_total_timeout")
+    response = client.request(
+        request_method,
+        candidate_url,
+        json=json,
+        params=params,
+        timeout=remaining_secs,
+    )</code></pre>
+<h2>2) 候选搜索：search_candidates（模拟推荐/搜索）</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2.1 功能边界</h3>
+<ul>
+<li>输入：类目（restaurant/activity/gift_shop）+ 用户关键词（user_request）+ top_k。</li>
+<li>输出：基于当前候选池的搜索结果列表（并返回命中原因，用于解释）。</li>
+<li>设计取舍：优先保证响应时间与稳定性；搜索子服务不可用时，工具返回可恢复错误，引导用户“换词/放宽/改用再规划”。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2.2 失败模式</h3>
+<ul>
+<li><strong>搜索服务超时</strong>：返回 <code>TOOL_TIMEOUT</code>（可恢复）。</li>
+<li><strong>无结果</strong>：返回“没有找到结果”，提示换词/放宽/重新规划。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2.3 验收动作（How to Verify）</h3>
+<ul>
+<li>输入一个明显不相关的关键词，稳定触发“无结果”分支，并确认不会破坏当前方案。</li>
+<li>停止搜索服务（若启用）或制造超时，触发 <code>TOOL_TIMEOUT</code>，确认错误可恢复且能回到再规划流程。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2.4 实现索引与代码片段（节选）</h3>
+<ul>
+<li>实现索引：<code>backend/src/closedloop/graph/tools/search_tool.py::search_candidates</code></li>
+</ul>
+<pre><code># backend/src/closedloop/graph/tools/search_tool.py::search_candidates (节选)
+tool_http_timeout_secs = float(getattr(config_app, "TOOL_HTTP_TIMEOUT_SECS", 3.0))
+configured_url = getattr(config_app, "SEARCH_SUB_API_URL", "http://127.0.0.1:8002/search")
+payload = {"category": category, "user_request": user_request, "top_k": top_k, "candidates": ranked_candidates}
+
+try:
+    with httpx.Client(timeout=tool_http_timeout_secs, trust_env=False, proxy=None) as client:
+        response = client.post(configured_url, json=payload)
+        response.raise_for_status()
+        res_json = response.json()
+except httpx.TimeoutException:
+    return Command(update={"messages": [fail_msg]})</code></pre>
+<h2>3) 替换与冲突修复：adjust_plan_item（确定性修复：2 层最小改动）</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3.1 功能边界</h3>
+<ul>
+<li>输入：plan_id、target_item_id、new_item_id（通常来自 search_candidates 的结果）。</li>
+<li>输出：替换后的新方案（尽量保持整体不变），并更新 <code>itinerary/latest_plan_result</code>。</li>
+<li>冲突修复：确定性 2 层最小改动（只改时长与通勤重算，不改“项目集合”，更不会删项）。</li>
+<li>L1 吃 buffer：对非锁定条目，最多吃掉该条目的 <code>duration_std_dev</code>（将超出的分钟数优先从浮动里拿回来）。</li>
+<li>L2 压缩可压缩条目：仅对 <code>activity/gift_shop</code> 的非锁定条目做压缩，最低压到原始 <code>duration_mins</code> 的 60%（正餐不压缩）。</li>
+<li>通过条件（与实现一致）：<code>total_cost &amp;lt;= budget * 1.2</code> 且 <code>total_duration_minutes &amp;lt;= duration_max + 45min 宽容度</code>。</li>
+<li>说明：更“近/更短/更便宜”的邻近项替换（L3）为预留策略，当前实现未启用；一旦需要删项或仍无法修复，工具直接失败交由 Agent 协商（避免静默破坏体验）。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3.2 失败模式</h3>
+<ul>
+<li><strong>替换导致严重超窗/超预算</strong>：当自动修复需要“删项/破坏体验”或无法确定性修复时，工具返回失败消息；由 Plan Agent 基于失败原因引导用户“换备选/放弃替换/改约束再规划”。</li>
+<li><strong>无可替换候选/找不到 plan_id</strong>：返回错误并提示重新搜索或再规划。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3.3 验收动作（How to Verify）</h3>
+<ul>
+<li>对某个条目替换为明显更贵/更远的选项，触发“不能静默执行”的失败提示，确认工具返回失败并由 Plan Agent 引导用户“换备选/放弃替换”（而不是强行删项）。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3.4 实现索引与代码片段（节选）</h3>
+<ul>
+<li>实现索引：</li>
+<li><code>backend/src/closedloop/graph/tools/adjust_tool.py::adjust_plan_item</code></li>
+<li><code>backend/src/closedloop/graph/plan_subgraph/repairer.py::repair_plan</code></li>
+</ul>
+<p>片段 1：禁止静默“破坏性修复”（节选）</p>
+<pre><code># backend/src/closedloop/graph/tools/adjust_tool.py::_do_adjust_plan_item (节选)
+if status == "success" and "plan" in result:
+    original_steps_count = len([s for s in target_plan.get("steps", []) if s.get("item", {}).get("type") != "commute"])
+    new_steps_count = len([s for s in result["plan"].get("steps", []) if s.get("item", {}).get("type") != "commute"])
+    if new_steps_count &lt; original_steps_count:
+        return "failed", {}, "替换该备选会导致总时间或总预算严重超标，系统尝试删除了您的其他活动...请您选择其他备选。"</code></pre>
+<p>片段 2：修复器入口 + “需要用户选择”的结构化输出（节选）</p>
+<pre><code># backend/src/closedloop/graph/plan_subgraph/repairer.py::repair_plan (节选)
+def repair_plan(plan: dict, target_item_id: str, new_item: dict, budget: float, duration_range_mins: tuple[float, float], candidates: dict, commute_preference: str = "auto") -&gt; dict:
+    logger.info(f"phase=repairer | plan_id={plan.get('plan_id')} | target={target_item_id} | new_item={new_item.get('name')}")
+    ...
+    if target_index == -1:
+        return {"status": "need_user_choice", "report": {"reason": f"在方案中找不到要替换的条目: {target_item_id}"}}</code></pre>
+<h2>4) 执行（Mock）：execute_itinerary + mock_executor（付款门控后 commit）</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4.1 功能边界</h3>
+<ul>
+<li>输入：plan_id + 通勤预约策略（first_only/all）。</li>
+<li>输出：待支付执行命令（<code>confirmation.status=pending_payment</code>）或 needs_fixup/timeout/failed。</li>
+<li>Mock 行为：不会真实下单；<code>execute_itinerary</code> 只做可用性检查与命令生成，输入 Mock 支付密码 <code>111111</code> 后调用 <code>/execution/{id}/commit</code> 才写入运行时数据。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4.2 Mock 行为（Side Effects，可验收）</h3>
+<ul>
+<li><strong>付款前</strong>：只生成待支付命令，不扣减 <code>stock / available_stock / capacity_remaining</code>。</li>
+<li><strong>付款失败</strong>：密码不是 <code>111111</code> 时返回 <code>payment_status=failed</code>，不进入 commit。</li>
+<li><strong>付款成功</strong>：调用 <code>/execution/{id}/commit</code> 且密码正确后返回 <code>payment_status=paid</code>；在 commit 阶段才会写入运行时数据（礼品扣 <code>stock</code>，活动扣 <code>available_stock</code>，餐厅/活动预约扣对应时段 <code>capacity_remaining</code>）。</li>
+<li><strong>失败兜底</strong>：仅对“允许自动替换”的餐厅条目尝试备选替换；如备选需要用户确认则进入 <code>needs_fixup</code>。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4.3 稳定性证据：付款门控 + 一致性校验</h3>
+<ul>
+<li>付款前无运行时写入；一致性校验用于守住执行命令与付款金额，commit 阶段才产生 Mock 副作用，保证演示可复现、状态不污染。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4.4 验收动作（How to Verify）</h3>
+<ul>
+<li>执行一次方案后，先观察运行时数据中的库存/容量字段不变，并看到 <code>pending_payment</code> 与执行命令。</li>
+<li>输入错误密码，确认返回支付失败且库存/容量仍不变。</li>
+<li>输入 <code>111111</code>，确认 commit 后库存/容量字段发生变化（commit 返回 items/failures 中包含 stock/capacity 的 before/after）。</li>
+<li>人为制造无座（capacity=0 或删除时段记录），确认进入备选替换或 <code>needs_fixup</code>。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4.5 实现索引与代码片段（节选）</h3>
+<ul>
+<li>实现索引：</li>
+<li><code>backend/src/closedloop/graph/tools/execute_tool.py::_snapshot_runtime_jsons / _restore_runtime_jsons</code></li>
+<li><code>backend/src/closedloop/graph/tools/execute_tool.py::execute_itinerary / _do_execute_itinerary</code></li>
+<li><code>backend/src/closedloop/execution/mock_executor.py</code></li>
+</ul>
+<p>片段 1：运行时快照/回滚（节选）</p>
+<pre><code># backend/src/closedloop/graph/tools/execute_tool.py (节选)
+def _snapshot_runtime_jsons(rw_dir: str, filenames: list[str]) -&gt; dict[str, Any]:
+    snapshot: dict[str, Any] = {}
+    for name in filenames:
+        path = os.path.join(rw_dir, name)
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            snapshot[name] = json.load(f)
+    return snapshot
+
+def _restore_runtime_jsons(rw_dir: str, snapshot: dict[str, Any]) -&gt; None:
+    for name, content in (snapshot or {}).items():
+        path = os.path.join(rw_dir, name)
+        tmp_path = f"{path}.tmp"
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(content, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, path)</code></pre>
+<p>片段 2：一致性校验失败回滚与错误码（节选）</p>
+<pre><code># backend/src/closedloop/graph/tools/execute_tool.py::_do_execute_itinerary (节选)
+if overpay:
+    _restore_runtime_jsons(rw_dir, runtime_snapshot)
+    message = "执行一致性校验失败（预算超标或行程不匹配）：已回滚本次执行，请重新调整您的行程方案。"
+    result = {"code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": message}
+    confirmation = {"status": "failed", "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": message}</code></pre>
+<p>片段 3：Mock 扣库存/扣容量（节选）</p>
+<pre><code># backend/src/closedloop/execution/mock_executor.py (节选)
+elif gift and isinstance(gift.get("stock"), int):
+    before_stock = int(gift["stock"])
+    if before_stock &gt; 0:
+        gift["stock"] = before_stock - 1
+        reserved = True
+        _atomic_write_json(os.path.join(repo_dir, "add_ons.json"), add_ons)
+
+elif requires_booking:
+    ok, detail = _reserve_capacity(reservations, "package", step.item_id, step.start_time)
+    if ok and isinstance(pkg.get("available_stock"), int) and int(pkg["available_stock"]) &gt; 0:
+        pkg["available_stock"] = int(pkg["available_stock"]) - 1
+        _atomic_write_json(os.path.join(repo_dir, "reservations.json"), reservations)</code></pre>
+<h2>5) 执行失败后的补齐（fixup_agent）：路由与工具边界</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">5.1 功能边界</h3>
+<ul>
+<li>触发条件：<code>execute_itinerary</code> 返回 <code>confirmation.status == needs_fixup</code>。</li>
+<li>fixup_agent 的职责：向用户展示候选1/2（或引导搜索），用户选择后调用 <code>adjust_and_execute_plan_item</code> 完成“替换 + 重试执行”。</li>
+<li>取舍说明（口径A）：采用“轻量协同”保证闭环成功率与响应稳定；只在关键失败点请求用户明确选择，其余尽量自动兜底。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">5.2 实现索引与代码片段（节选）</h3>
+<ul>
+<li>实现索引：<code>backend/src/closedloop/graph/agent.py::resolve_active_agent / apply_step_config</code></li>
+</ul>
+<pre><code># backend/src/closedloop/graph/agent.py (节选)
+def resolve_active_agent(state: dict) -&gt; str:
+    confirmation = state.get("confirmation", {})
+    if isinstance(confirmation, dict) and confirmation.get("status") == "needs_fixup":
+        return "fixup_agent"
+    return state.get("active_agent", "plan_agent")
+
+configs = {
+    "fixup_agent": {
+        "tools": [search_candidates, adjust_and_execute_plan_item]
+    }
+}</code></pre>
+<h2>6) 数据依赖（Mock DB）</h2>
+<ul>
+<li>静态数据（规划期读取）：餐厅/活动/礼物/预约数据（用于召回、过滤、排序与备选生成）。</li>
+<li>运行时数据（执行期写入）：库存与预约容量扣减写入运行时目录，用于稳定复现“执行副作用”与“失败兜底”。</li>
+</ul>
+    </div>
+  </body>
+</html>

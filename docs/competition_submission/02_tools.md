@@ -10,7 +10,7 @@
 | 一句话生成方案（首次/再规划） | `plan_trip` | 将结构化约束发送至规划子服务并落盘到 state（方案 + 候选池） | 子服务不可用/超时（≤3s） |
 | 想多看备选 | `generate_alternative_plans` | 在不改约束前提下扩展备选列表 | 子服务不可用/超时 |
 | 先搜再换（模拟推荐/搜索） | `search_candidates` | 在当前候选池内按用户关键词做二次检索 | 搜索服务超时/无结果 |
-| 指定替换某一条目 | `adjust_plan_item` | 替换条目并触发确定性冲突修复（2–3 层最小改动） | 替换导致超窗/超预算、无可修复 |
+| 指定替换某一条目 | `adjust_plan_item` | 替换条目并触发确定性冲突修复（2 层最小改动：吃 buffer → 压缩；不允许删项） | 替换导致超窗/超预算、无可修复 |
 | 执行失败后补齐并继续 | `adjust_and_execute_plan_item` + `fixup_agent` 路由 | fixup 阶段一次性完成“替换 + 重试执行” | 备选不安全/仍失败 |
 | 确认后执行（Mock） | `execute_itinerary` + `mock_executor` + `/execution/{id}/commit` | 先生成待支付执行命令，输入 `111111` 后 Mock commit | 无座/无票/库存不足、支付失败、执行超时、一致性校验失败 |
 
@@ -122,22 +122,26 @@ except httpx.TimeoutException:
     return Command(update={"messages": [fail_msg]})
 ```
 
-## 3) 替换与冲突修复：adjust_plan_item（确定性修复：2–3 层最小改动）
+## 3) 替换与冲突修复：adjust_plan_item（确定性修复：2 层最小改动）
 
 ### 3.1 功能边界
 
 - 输入：plan_id、target_item_id、new_item_id（通常来自 search_candidates 的结果）。
 - 输出：替换后的新方案（尽量保持整体不变），并更新 `itinerary/latest_plan_result`。
-- 冲突修复：确定性 2–3 层最小改动（吃 buffer / 压缩可压缩项目 / 更近更短替换）。若仍无法修复或需要删项，则返回失败交由 Agent 协商（避免静默破坏体验）。
+- 冲突修复：确定性 2 层最小改动（只改时长与通勤重算，不改“项目集合”，更不会删项）。
+  - L1 吃 buffer：对非锁定条目，最多吃掉该条目的 `duration_std_dev`（将超出的分钟数优先从浮动里拿回来）。
+  - L2 压缩可压缩条目：仅对 `activity/gift_shop` 的非锁定条目做压缩，最低压到原始 `duration_mins` 的 60%（正餐不压缩）。
+- 通过条件（与实现一致）：`total_cost <= budget * 1.2` 且 `total_duration_minutes <= duration_max + 45min 宽容度`。
+- 说明：更“近/更短/更便宜”的邻近项替换（L3）为预留策略，当前实现未启用；一旦需要删项或仍无法修复，工具直接失败交由 Agent 协商（避免静默破坏体验）。
 
 ### 3.2 失败模式
 
-- **替换导致严重超窗/超预算**：当自动修复需要“删项/破坏体验”或无法确定性修复时，工具返回失败消息，进入协商流程。
+- **替换导致严重超窗/超预算**：当自动修复需要“删项/破坏体验”或无法确定性修复时，工具返回失败消息；由 Plan Agent 基于失败原因引导用户“换备选/放弃替换/改约束再规划”。
 - **无可替换候选/找不到 plan_id**：返回错误并提示重新搜索或再规划。
 
 ### 3.3 验收动作（How to Verify）
 
-- 对某个条目替换为明显更贵/更远的选项，触发“不能静默执行”的失败提示，确认系统进入协商流程而不是强行删项。
+ - 对某个条目替换为明显更贵/更远的选项，触发“不能静默执行”的失败提示，确认工具返回失败并由 Plan Agent 引导用户“换备选/放弃替换”（而不是强行删项）。
 
 ### 3.4 实现索引与代码片段（节选）
 
@@ -172,15 +176,15 @@ def repair_plan(plan: dict, target_item_id: str, new_item: dict, budget: float, 
 ### 4.1 功能边界
 
 - 输入：plan_id + 通勤预约策略（first_only/all）。
-- 输出：待支付执行命令（`confirmation.status=pending_payment`）或 fixup/timeout/failed。
+- 输出：待支付执行命令（`confirmation.status=pending_payment`）或 needs_fixup/timeout/failed。
 - Mock 行为：不会真实下单；`execute_itinerary` 只做可用性检查与命令生成，输入 Mock 支付密码 `111111` 后调用 `/execution/{id}/commit` 才写入运行时数据。
 
 ### 4.2 Mock 行为（Side Effects，可验收）
 
 - **付款前**：只生成待支付命令，不扣减 `stock / available_stock / capacity_remaining`。
 - **付款失败**：密码不是 `111111` 时返回 `payment_status=failed`，不进入 commit。
-- **付款成功**：`payment_status=paid` 后进入 commit，礼品扣 `stock`，活动扣 `available_stock`，餐厅/活动预约扣对应时段 `capacity_remaining`。
-- **失败兜底**：若无座且允许替换，则尝试备选替换；如备选需要用户确认则进入 `needs_fixup`。
+- **付款成功**：调用 `/execution/{id}/commit` 且密码正确后返回 `payment_status=paid`；在 commit 阶段才会写入运行时数据（礼品扣 `stock`，活动扣 `available_stock`，餐厅/活动预约扣对应时段 `capacity_remaining`）。
+- **失败兜底**：仅对“允许自动替换”的餐厅条目尝试备选替换；如备选需要用户确认则进入 `needs_fixup`。
 
 ### 4.3 稳定性证据：付款门控 + 一致性校验
 
@@ -190,7 +194,7 @@ def repair_plan(plan: dict, target_item_id: str, new_item: dict, budget: float, 
 
 - 执行一次方案后，先观察运行时数据中的库存/容量字段不变，并看到 `pending_payment` 与执行命令。
 - 输入错误密码，确认返回支付失败且库存/容量仍不变。
-- 输入 `111111`，确认 commit 后库存/容量字段发生变化（以及 execution_summary.detail 中的 before/after）。
+- 输入 `111111`，确认 commit 后库存/容量字段发生变化（commit 返回 items/failures 中包含 stock/capacity 的 before/after）。
 - 人为制造无座（capacity=0 或删除时段记录），确认进入备选替换或 `needs_fixup`。
 
 ### 4.5 实现索引与代码片段（节选）
@@ -208,15 +212,18 @@ def _snapshot_runtime_jsons(rw_dir: str, filenames: list[str]) -> dict[str, Any]
     snapshot: dict[str, Any] = {}
     for name in filenames:
         path = os.path.join(rw_dir, name)
-        if os.path.exists(path):
-            snapshot[name] = json.load(open(path, "r", encoding="utf-8"))
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            snapshot[name] = json.load(f)
     return snapshot
 
 def _restore_runtime_jsons(rw_dir: str, snapshot: dict[str, Any]) -> None:
     for name, content in (snapshot or {}).items():
         path = os.path.join(rw_dir, name)
         tmp_path = f"{path}.tmp"
-        json.dump(content, open(tmp_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump(content, f, ensure_ascii=False, indent=2)
         os.replace(tmp_path, path)
 ```
 
@@ -226,8 +233,9 @@ def _restore_runtime_jsons(rw_dir: str, snapshot: dict[str, Any]) -> None:
 # backend/src/closedloop/graph/tools/execute_tool.py::_do_execute_itinerary (节选)
 if overpay:
     _restore_runtime_jsons(rw_dir, runtime_snapshot)
-    result = {"code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": "执行一致性校验失败：已回滚本次执行，请重新调整行程方案。"}
-    confirmation = {"status": "failed", "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": result["message"]}
+    message = "执行一致性校验失败（预算超标或行程不匹配）：已回滚本次执行，请重新调整您的行程方案。"
+    result = {"code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": message}
+    confirmation = {"status": "failed", "code": "EXECUTION_INCONSISTENT_NEEDS_RETRY", "message": message}
 ```
 
 片段 3：Mock 扣库存/扣容量（节选）
