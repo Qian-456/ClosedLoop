@@ -132,7 +132,7 @@ export type Confirmation = {
 }
 
 export type Constraints = {
-  group_type?: 'solo' | 'couple' | 'family' | 'friends' | 'business'
+  group_type?: 'family' | 'friends' | 'business'
   budget?: number
   dietary_restrictions?: string[]
   preferred_distance?: '<2km' | '2km-5km' | '>5km'

@@ -26,18 +26,22 @@ function QuickCard({
   icon,
   label,
   subtitle,
+  disabled,
   onClick,
 }: {
   icon: React.ReactNode
   label: string
   subtitle: string
+  disabled?: boolean
   onClick: () => void
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-sm px-3 py-4 text-left hover:bg-white"
+      className={`rounded-2xl bg-white/70 backdrop-blur border border-white/60 shadow-sm px-3 py-4 text-left hover:bg-white ${
+        disabled ? 'opacity-60 cursor-not-allowed hover:bg-white/70' : ''
+      }`}
     >
       <div className="h-11 w-11 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center">
         {icon}
@@ -74,6 +78,7 @@ export default function HomePage() {
         icon: <User className="h-5 w-5 text-indigo-600" />,
         prompt:
           '今天下午我一个人想出去放松一下，时间大概 14:00-19:00，预算 200 元以内。不吃辣，想找点安静的活动（比如咖啡/书店/展览），路程别太远，帮我安排一下。',
+        unsupported: true,
       },
       {
         key: 'couple' as const,
@@ -82,6 +87,7 @@ export default function HomePage() {
         icon: <Users className="h-5 w-5 text-emerald-600" />,
         prompt:
           '今天傍晚我和对象两个人想出去约会，时间 17:30-22:00，预算 500 元以内。不要太辣，想要浪漫一点、能拍照打卡的地方，最好顺便安排一顿饭，行程别太赶。',
+        unsupported: true,
       },
       {
         key: 'family' as const,
@@ -226,7 +232,14 @@ export default function HomePage() {
                     label={c.label}
                     icon={c.icon}
                     subtitle={c.subtitle}
-                    onClick={() => setUserInput(c.prompt)}
+                    disabled={'unsupported' in c ? c.unsupported : false}
+                    onClick={() => {
+                      if ('unsupported' in c && c.unsupported) {
+                        alert('仅占位，暂时不支持')
+                      } else {
+                        setUserInput(c.prompt)
+                      }
+                    }}
                   />
                 ))}
               </div>
