@@ -41,13 +41,39 @@ cp backend/.env.example backend/.env
 ```
 （注：必须配置 `DEEPSEEK_API_KEY` 以及 `DASHSCOPE_API_KEY`，后者用于在 DeepSeek 不可用时作为 Fallback 备用，否则服务将无法正常启动）
 
+如果你想稳定复现执行阶段的异常处理链路，可以在 `backend/.env` 里配置 `FORCE_OUT_OF_STOCK_IDS`，把某些餐厅套餐、活动包或礼品条目标记为强制不可预约 / 不可下单。例如：
+
+```bash
+FORCE_OUT_OF_STOCK_IDS=(gift_011_6)
+```
+
+这样在执行阶段，系统会稳定触发库存不足或预约失败，并进入 fixup / 替换流程，便于演示“失败后继续完成任务”的能力。若不需要这个演示场景，可将其改回：
+
+```bash
+FORCE_OUT_OF_STOCK_IDS=()
+```
+
+如果你想自己指定某个服务来测试候选修复流程，建议先完整跑通一次成功执行并完成 Mock 扣款，然后查看后端日志中的执行记录。重点关注 `phase=execute_mock` 下的这些日志：
+
+- `action=reserve_combo`：会带出 `combo_id`
+- `action=commit_package`：会带出 `package_id`
+- `action=commit_gift`：会带出 `gift_id`
+
+如果过程中发生了自动替换，日志里还会带出 `new_id`。拿到这些 `id` 之后，把它们填进 `FORCE_OUT_OF_STOCK_IDS=(...)`，重启服务，再复现同一类请求，就可以稳定测试 fixup / 候选替换能力。
+
+当前仓库自带的 `backend/.env` 已经预置了一个强制失败 `id`，默认用于让首页点击“一家三口”这张卡片后，较稳定地进入无座 / 需修复流程，方便直接演示异常处理闭环。
+
 ### 2. 启动服务 (推荐 Docker 一键部署)
 强烈建议使用 Docker 一键拉起全套服务（包含前端页面、主 Agent 服务以及检索/规划子服务）：
 
 ```bash
 docker compose up -d --build
 ```
-启动完成后，直接在浏览器访问：**`http://localhost:8088`** 即可体验完整产品。
+启动完成后，直接在浏览器访问：**`http://localhost:8088/demo`** 即可进入手机壳 Demo（推荐入口），并通过内嵌页面体验完整产品能力。
+
+补充说明：
+- `http://localhost:8088/` 会自动跳转到 `/demo`
+- `http://localhost:8088/app` 为真实产品页（无手机壳外框）
 
 > **提示**：如果需要进行本地代码开发调试，可参考以下命令（不推荐用于常规演示）：
 > ```bash

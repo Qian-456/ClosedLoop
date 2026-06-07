@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import html as _html
+import os
 import re
 from typing import Iterable, List, Optional, Tuple
 
@@ -379,26 +380,40 @@ _HTML_TEMPLATE = """<!doctype html>
 def main() -> None:
     """Render markdown file into HTML file."""
 
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--input",
-        default="docs/competition_submission/02_tools.md",
+        default="02_tools.md",
         help="Markdown input file path.",
     )
     parser.add_argument(
         "--output",
-        default="docs/competition_submission/02_tools.html",
+        default="02_tools.html",
         help="HTML output file path.",
     )
     args = parser.parse_args()
 
-    with open(args.input, "r", encoding="utf-8") as f:
+    input_path = args.input
+    if not os.path.isabs(input_path):
+        input_path = os.path.join(base_dir, input_path)
+        if not os.path.exists(input_path):
+            input_path = args.input
+
+    output_path = args.output
+    if not os.path.isabs(output_path):
+        output_path = os.path.join(base_dir, output_path)
+
+    with open(input_path, "r", encoding="utf-8") as f:
         markdown_text = f.read()
     html_text = render_markdown_to_html(markdown_text)
-    with open(args.output, "w", encoding="utf-8") as f:
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_text)
 
 
 if __name__ == "__main__":
     main()
-

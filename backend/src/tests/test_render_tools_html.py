@@ -1,4 +1,6 @@
 import os
+import sys
+import tempfile
 import unittest
 
 
@@ -6,10 +8,8 @@ def _load_renderer_module():
     """Load the tools markdown renderer module for testing."""
 
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-    file_path = os.path.join(
-        repo_root, "docs", "competition_submission", "render_tools_html.py"
-    )
-    namespace = {}
+    file_path = os.path.join(repo_root, "competition_submission", "render_tools_html.py")
+    namespace = {"__file__": file_path, "__name__": "render_tools_html"}
     with open(file_path, "r", encoding="utf-8") as f:
         code = f.read()
     exec(compile(code, file_path, "exec"), namespace)
@@ -39,7 +39,7 @@ class TestRenderToolsHtml(unittest.TestCase):
 
         renderer = _load_renderer_module()
         repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
-        md_path = os.path.join(repo_root, "docs", "competition_submission", "02_tools.md")
+        md_path = os.path.join(repo_root, "competition_submission", "02_tools.md")
         with open(md_path, "r", encoding="utf-8") as f:
             markdown_text = f.read()
         html_text = renderer["render_markdown_to_html"](markdown_text)
@@ -47,7 +47,29 @@ class TestRenderToolsHtml(unittest.TestCase):
         self.assertIn("<table>", html_text)
         self.assertIn("<code>adjust_plan_item</code>", html_text)
 
+    def test_main_uses_script_dir_defaults(self):
+        """main() should locate default input relative to script directory, not current working directory."""
+
+        renderer = _load_renderer_module()
+        original_argv = sys.argv[:]
+        original_cwd = os.getcwd()
+        try:
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                out_path = os.path.join(tmp_dir, "out.html")
+                sys.argv = ["render_tools_html.py", "--output", out_path]
+                try:
+                    os.chdir(tmp_dir)
+                    renderer["main"]()
+                finally:
+                    os.chdir(original_cwd)
+                with open(out_path, "r", encoding="utf-8") as f:
+                    html_text = f.read()
+                self.assertIn("<!doctype html>", html_text)
+                self.assertIn("<table>", html_text)
+        finally:
+            sys.argv = original_argv
+            os.chdir(original_cwd)
+
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -28,12 +28,29 @@ def _unescape_markdown(text: str) -> str:
 def _render_inlines(text: str) -> str:
     text = _unescape_markdown(text)
 
+    code_fragments: List[str] = []
+
     def _code_sub(match: re.Match[str]) -> str:
-        return f"<code>{_html.escape(match.group(1), quote=False)}</code>"
+        code_fragments.append(f"<code>{_html.escape(match.group(1), quote=False)}</code>")
+        return f"__INLINE_CODE_{len(code_fragments) - 1}__"
 
     text = _INLINE_CODE_RE.sub(_code_sub, text)
-    text = _BOLD_RE.sub(lambda m: f"<strong>{_html.escape(m.group(1), quote=False)}</strong>", text)
-    return _html.escape(text, quote=False).replace("&lt;code&gt;", "<code>").replace("&lt;/code&gt;", "</code>").replace("&lt;strong&gt;", "<strong>").replace("&lt;/strong&gt;", "</strong>")
+
+    strong_fragments: List[str] = []
+
+    def _strong_sub(match: re.Match[str]) -> str:
+        strong_fragments.append(f"<strong>{_html.escape(match.group(1), quote=False)}</strong>")
+        return f"__INLINE_STRONG_{len(strong_fragments) - 1}__"
+
+    text = _BOLD_RE.sub(_strong_sub, text)
+    escaped = _html.escape(text, quote=False)
+
+    for i, fragment in enumerate(code_fragments):
+        escaped = escaped.replace(f"__INLINE_CODE_{i}__", fragment)
+    for i, fragment in enumerate(strong_fragments):
+        escaped = escaped.replace(f"__INLINE_STRONG_{i}__", fragment)
+
+    return escaped
 
 
 def _normalize_title(title: str) -> str:

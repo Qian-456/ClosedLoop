@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo 视频录制剧本（5 分钟评委导向版）</title>
+    <style>
+      :root {
+        --fg: #111827;
+        --muted: #374151;
+        --bg: #ffffff;
+        --code-bg: #0b1020;
+        --code-fg: #e5e7eb;
+        --border: #e5e7eb;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans SC",
+          "Microsoft YaHei", sans-serif;
+        line-height: 1.45;
+        font-size: 14px;
+      }
+      body {
+        margin: 0;
+        padding: 16px 12px;
+      }
+      .page {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px;
+        letter-spacing: 0.2px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 12px 0 6px;
+        padding-top: 2px;
+        border-top: 1px solid var(--border);
+      }
+      p {
+        margin: 6px 0;
+      }
+      ul {
+        margin: 4px 0 8px 18px;
+        padding: 0;
+      }
+      li {
+        margin: 2px 0;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+      }
+      pre {
+        background: var(--code-bg);
+        color: var(--code-fg);
+        padding: 8px 10px;
+        border-radius: 8px;
+        overflow: auto;
+        line-height: 1.35;
+        font-size: 12px;
+        margin: 6px 0 10px;
+      }
+      pre code {
+        color: inherit;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--muted);
+        margin-right: 6px;
+      }
+      @media print {
+        body {
+          padding: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+<h1>Demo 视频录制剧本（5 分钟评委导向版）</h1>
+<h2>一句话目标</h2>
+<p>用 5 分钟视频向评委清晰证明：ClosedLoop 不是一个只会聊天推荐的助手，而是一个能把“用户一句话需求”推进到“可执行方案、可控调整、异常补救、Mock 支付与执行结果”的执行型本地生活 Agent。</p>
+<p>---</p>
+<h2>使用说明</h2>
+<ul>
+<li>本文档面向 <code>Demo 视频录制</code>，不是纯复现手册。</li>
+<li>建议录制方式：<code>真实操作录屏 + 后期加速 Docker 启动过程 + 保留逐句口播</code>。</li>
+<li>视频基调：<code>先讲后演</code>，先把你对评分标准的理解讲给评委，再进入正式演示。</li>
+<li>本项目所有执行均为 Mock：不会真实下单、不会真实扣款、不会真实调用外部业务系统。</li>
+</ul>
+<p>---</p>
+<h2>视频总节奏</h2>
+<p>建议总时长控制在 <code>5 分钟</code> 左右，分配如下：</p>
+<p>1. 开场与评分理解：<code>35 秒</code> 2. 项目范围与提交材料：<code>20 秒</code> 3. Docker 启动与工程可信度：<code>20 秒</code> 4. 生成首版方案 A：<code>55 秒</code> 5. 执行中的异常与候选修复：<code>65 秒</code> 6. 支付、执行结果与分享：<code>40 秒</code> 7. 结尾总结：<code>15 秒</code></p>
+<p>---</p>
+<h2>录制前准备</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1. 环境准备</h3>
+<ul>
+<li>推荐使用 Docker 方式运行，录制时执行：</li>
+</ul>
+<pre><code>docker compose up -d --build</code></pre>
+<ul>
+<li>若只做开发调试，可本地分别启动主服务与规划子服务。</li>
+<li>录制前建议先确认前端、主服务、规划子服务都能正常访问，避免视频里出现长时间等待。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2. 录屏准备</h3>
+<ul>
+<li>浏览器建议提前打开项目首页与前端页面。</li>
+<li>终端字号适当放大，保证 <code>docker compose up -d --build</code> 可被看清。</li>
+<li>若使用剪辑软件加速启动过程，建议保留“命令输入”和“服务启动完成”两个关键画面。</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3. 故障注入准备</h3>
+<p>为了稳定展示 fixup / 候选修复能力，建议提前准备一个可复现的“无座或容量告急”场景。</p>
+<p>推荐方式：在 <code>mock_db/reservations.json</code> 中，将目标晚餐时段的 <code>capacity_remaining</code> 改为 <code>0</code>。</p>
+<p>参考示例：</p>
+<pre><code>{
+  "target_type": "combo",
+  "target_id": "combo_xxx",
+  "time_slots": [
+    {
+      "start_time": "17:00",
+      "end_time": "19:00",
+      "capacity_total": 30,
+      "capacity_remaining": 0,
+      "queue_required": true,
+      "wait_minutes": 90
+    }
+  ]
+}</code></pre>
+<p>说明：</p>
+<ul>
+<li><code>capacity_remaining = 0</code> 表示目标时段满员或无座。</li>
+<li><code>queue_required / wait_minutes</code> 可用于增强排队拟真感，但不是必须。</li>
+</ul>
+<p>---</p>
+<h2>正式口播稿</h2>
+<h2>第一段：开场与评分理解</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>先用最短时间把评委注意力对齐到“执行闭环”上，而不是一开始就让评委把它理解成普通推荐助手。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>35 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>打开 <code>README.md</code></li>
+<li>快速展示“创新性 / 完整性 / 应用效果 / 商业价值”四个维度</li>
+<li>不细读正文，停留 3 到 5 秒即可</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>大家好，我是 ClosedLoop 团队的钱惊尘。接下来由我来展示我们的项目 ClosedLoop。</p>
+<p>它的定位不是一个只会给建议的聊天助手，而是一个执行型本地生活 Agent。</p>
+<p>正式开始之前，我先用 README 里的四个维度对齐一下这次演示的观察重点，也就是创新性、完整性、应用效果和商业价值。</p>
+<p>这里也欢迎评委老师在这一页稍微停一下，看一下我们希望重点证明的几个方向。</p>
+<p>我理解这道题评委真正关心的，不只是它能不能生成一个看起来不错的方案，而是三件事。</p>
+<p>第一，它能不能把用户一句自然语言需求，变成一个完整、时间自洽、4 到 6 小时的可执行行程。</p>
+<p>第二，这个方案在用户确认之后，能不能继续往下执行，而不是停留在文本建议。</p>
+<p>第三，当执行中遇到真实世界里常见的问题，比如无座、容量不足、需要替换时，它能不能低打扰地继续把事情做完。</p>
+<p>所以接下来这 5 分钟里，我不会逐条念材料，而是直接围绕创新性、完整性、应用效果和商业价值这四个维度，用一条真实链路去证明我们的系统到底做到了什么。</p>
+<p>---</p>
+<h2>第二段：项目范围与提交材料</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>明确当前 Agent 系统支持的边界，同时顺手建立工程可信度。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>25 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>展示 <code>README.md</code></li>
+<li>展示 <code>competition_submission/01_demo.md</code></li>
+<li>展示 <code>competition_submission/02_tools.md</code></li>
+<li>展示 <code>competition_submission/03_design.md</code></li>
+<li>只切画面，不停留细读</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>在正式演示之前，我先用十几秒说明一下当前系统支持的范围。</p>
+<p>ClosedLoop 当前聚焦的是本地生活聚会场景下的闭环链路。用户给出一句需求之后，系统会完成意图理解、结构化约束抽取、候选召回与排序、行程规划，以及后续的局部替换和 Mock 执行。</p>
+<p>从当前实现来看，它主要覆盖 <code>family</code> 和 <code>friends</code> 两类常见群体，适合 4 到 6 小时窗口下的常见预算、距离、饮食和活动偏好组合。</p>
+<p>其中一部分约束是显式离散支持的，比如群体类型、距离偏好、出行方式、排队偏好和是否包含礼品；像饮食偏好、活动偏好这类信息，系统会优先按当前支持的常见标签去理解，超出部分再保留原词继续处理。</p>
+<p>这些约束边界和支持范围，我也在设计文档里做了更细的展开，视频里这里就只先说明最核心的结论。</p>
+<p>所以它不是一个无边界的开放域万能 Agent。约束过强或者候选不足时，系统会明确告诉你当前无解或者需要放宽条件，而不是伪造一个看起来合理的结果。</p>
+<p>这里也提前说明一下，当前所有执行都是 Mock，不会真实扣款，也不会真实对外下单。</p>
+<p>这次提交里，我把项目说明、工具能力说明和设计说明都整理成了独立文档。视频里我只展示它们的存在，不展开逐页讲解，因为今天的重点是把整条链路真实走通。</p>
+<p>这一段主要想说明，这不是一个临时拼出来的 prompt demo，而是一个边界清晰、有配套材料、可以复现的系统化方案。</p>
+<p>---</p>
+<h2>第三段：Docker 启动与工程可信度</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>证明系统是可启动、可运行、可复现的，而不是静态页面或预制结果。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>20 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>切到终端</li>
+<li>输入并执行：</li>
+</ul>
+<pre><code>docker compose up -d --build</code></pre>
+<ul>
+<li>后期可对等待过程加速</li>
+<li>最终停留在服务启动成功的画面</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>接下来我用 Docker 一键启动整个系统。</p>
+<p>这里我保留启动过程，是想证明这套演示不是提前剪好的静态结果，而是可以现场拉起、真实运行的完整系统。</p>
+<p>当前系统是多服务协同架构，我这里重点讲两个核心的后端服务：主 Agent 服务负责对话状态和总控逻辑，规划子服务负责候选检索、过滤、排序和路线规划。</p>
+<p>所以这个项目不是单次 prompt 直接吐一个 itinerary，而是把重逻辑拆进了明确的工程工作流里。</p>
+<p>服务启动完成之后，我会直接进入前端，开始一次完整的用户闭环演示。</p>
+<p>这一段主要想说明，我们不是只做了一个会说话的 Agent，而是做了一个可运行、可拆分、可解释、可复现的工程化系统。</p>
+<p>---</p>
+<h2>第四段：生成首版方案 A</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>先证明系统能从自然语言生成一个完整的、可继续执行的方案 A。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>55 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>打开前端页面</li>
+<li>输入自然语言需求</li>
+<li>等待聊天区摘要与方案卡片出现</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议输入</h3>
+<pre><code>今天下午我们一家三口（2 个大人 + 1 个 5 岁小朋友）想出去玩，时间 13:00-19:00，预算 600 元以内。不吃海鲜，想要亲子友好、少走路、最好室内为主，帮我规划一个 4-6 小时的行程。</code></pre>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>现在我先发起一个真实的用户请求。</p>
+<p>这里我直接使用前端首页里“一家三口”这个入口对应的真实提示词，保证演示输入和前端体验是完全对齐的。</p>
+<p>这个输入我故意保持自然语言，而不是结构化表单，因为我想证明系统第一步具备的是对真实用户表达的理解能力。</p>
+<p>同时这个例子也落在当前系统比较稳定的支持范围内。比如一家三口会落到当前支持的 <code>family</code> 群体类型里，4 到 6 小时和预算约束都比较明确，亲子友好、少走路、室内为主、不吃海鲜这些偏好，也能对应到当前这版系统重点覆盖的约束组合。</p>
+<p>也就是说，我这里不是在用一条只适合演示的固定样例，而是在用一个真实、并且落在当前系统支持范围内的自然请求来做演示。后面如果评委老师自己试用，也可以直接从前端的家庭或朋友快捷提示词出发，再在原提示词上做一点微调，这样最容易体验到当前系统真正稳定的能力边界。</p>
+<p>现在系统开始生成方案。这里大家可以看到，它不是只回复一句推荐话术，而是在聊天区给摘要，同时在方案卡片区域给出结构化结果。</p>
+<p>这个方案里包含活动、晚餐和后续安排，每个步骤都有时间段、地点、时长，以及后续是否涉及预约或者排队的执行属性。</p>
+<p>到这里，我想证明的是第一件事：它已经不是在告诉你“可以去哪”，而是在输出一个可以继续往下执行的方案 A。</p>
+<p>这一段更主要对应完整性和应用效果，因为系统不仅理解了自然语言，还把结果稳定落成了一个用户能看、也能继续执行的结构化方案。</p>
+<p>---</p>
+<h2>第五段：执行中的异常与候选修复</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>证明系统在执行阶段遇到问题时，不是简单报错退出，而是能把用户继续带回可完成路径。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>65 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>在首版方案 A 上直接发起执行</li>
+<li>触发已准备好的“无座 / 容量告急”场景</li>
+<li>展示界面出现候选 1 / 候选 2</li>
+<li>直接选择候选 1</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议输入</h3>
+<pre><code>就按这个方案执行。</code></pre>
+<p>若系统进入 fixup 候选选择，可直接选择：</p>
+<pre><code>选候选1</code></pre>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>接下来我直接开始执行当前方案。</p>
+<p>这里的重点就从规划切换到执行了。系统会逐步展示当前在做什么，比如预约、排队、通知，或者进入待支付状态。</p>
+<p>如果用户在执行前还想继续微调，这里其实也支持按偏好继续调整，或者通过 search 和 adjust 做局部替换。</p>
+<p>不过这次视频里，我优先展示更关键的执行闭环。</p>
+<p>为了稳定演示异常处理能力，我这里通过 <code>.env</code> 里的强制失败配置，预先打开了一个可复现的告急场景。也就是说，这次执行不会一路顺滑到底，而是会在关键步骤上遇到真实世界里常见的库存或预约失败。</p>
+<p>现在我们看到，系统已经识别到当前目标不可继续执行，并给出了候选修复方案。</p>
+<p>这里我要特别说明一下，系统其实支持两种路径。第一种是继续 search，搜更多替代候选；第二种是直接从当前候选里做选择。</p>
+<p>为了让视频节奏更紧凑，我这里直接选择候选 1。</p>
+<p>这个步骤想证明的是，系统遇到失败时不是简单报错退出，而是能把用户继续带回可完成路径上。</p>
+<p>如果用评分视角来看，这一段最核心对应的就是完整性，因为真正的执行型 Agent 不是第一次给出答案就结束了，而是在失败出现之后还能继续把事情做完。</p>
+<p>---</p>
+<h2>第六段：支付、执行结果与分享</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>把整条链路真正收尾，证明它不是“会规划”，而是“能执行到结果”。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>40 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>展示 <code>pending_payment</code></li>
+<li>输入 Mock 支付密码</li>
+<li>展示执行结果摘要</li>
+<li>展示分享文案或分享功能入口</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议输入</h3>
+<p>若界面进入待支付状态，输入 Mock 支付密码：</p>
+<pre><code>111111</code></pre>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>候选确认之后，系统会继续推进到支付和执行阶段。</p>
+<p>这里我也说明一下，当前项目为了保证演示安全和可复现，支付和执行都采用 Mock 方式，不会产生真实扣款。</p>
+<p>现在界面已经进入待支付状态。我输入 Mock 支付密码之后，系统继续提交执行。</p>
+<p>到这里，整个链路已经从一句自然语言需求，走到了方案确认、局部调整、异常修复、支付和执行结果回传。</p>
+<p>最后我再展示一下分享能力。系统可以把最终方案整理成一段适合分享给朋友的内容，这一点在聚会场景里非常自然，因为真实用户通常不是自己一个人消费这个结果，而是需要把安排同步给同行人。</p>
+<p>这一段更对应应用效果和商业价值，因为结果不再停留在建议层，而是自然连接到了执行、决策同步和后续转化。</p>
+<p>---</p>
+<h2>第七段：结尾总结</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">目标</h3>
+<p>用一句收束话把评委的注意力重新拉回评分点。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">建议时长</h3>
+<p><code>15 秒</code></p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">画面</h3>
+<ul>
+<li>停留在执行结果页或分享页</li>
+</ul>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">口播稿</h3>
+<p>最后我用一句话总结 ClosedLoop。</p>
+<p>它的重点不是让模型生成一段看起来聪明的话，而是把本地生活里原本需要用户自己反复比较、调整、确认和补救的过程，收敛成一条真正可以走完的闭环链路。</p>
+<p>如果用四个评分维度来收束的话，创新性体现在 workflow 和 agent 的工程化融合，完整性体现在从规划到执行再到异常补救的闭环能力，应用效果体现在结构化方案和流式交互体验，商业价值体现在它把一次建议真正推进到了可执行、可分享、可转化的链路里。</p>
+<p>这就是我这次项目演示的全部内容。</p>
+<p>---</p>
+<h2>录制时的关键观察点</h2>
+<p>评委最容易感知、你也最应该主动点出来的观察点如下：</p>
+<ul>
+<li>规划质量：是否把一句自然语言真正落成了 4–6 小时窗口内的完整链路。</li>
+<li>结构化结果：是否不是只给聊天文本，而是有可消费的方案卡片和步骤信息。</li>
+<li>调整能力：是否可以围绕当前方案继续改约束、改偏好，而不是每次推翻重来。</li>
+<li>执行能力：是否在确认后进入真实的 Mock 执行流程，而不是停留在建议层。</li>
+<li>异常覆盖：是否在无座或容量不足时给出补救，而不是简单报错。</li>
+<li>低打扰：是否尽量自己做决策，只有必要时才让用户选候选。</li>
+<li>工程可信度：是否通过 Docker、服务拆分、Mock 支付与结构化材料证明系统是可复现、可解释的。</li>
+</ul>
+<p>---</p>
+<h2>备用台词</h2>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">1. 如果 Docker 启动稍慢</h3>
+<p>这里我保留等待过程，是想让大家看到这是实时启动的完整系统，而不是提前准备好的静态页面。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">2. 如果方案生成稍慢</h3>
+<p>这里我保留一点等待时间，是想证明这个结果不是预设文案，而是系统正在实时完成约束理解和方案生成。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">3. 如果 fixup 切换稍慢</h3>
+<p>这里系统正在把替换后的结果重新落回整体行程，而不是只替换一行文字，所以会有一个短暂的重算过程。</p>
+<h3 style="margin: 10px 0 6px; font-size: 15px;">4. 如果支付过程稍慢</h3>
+<p>这里进入的是待支付后的 Mock commit 阶段，所以会比纯文本返回多一步执行确认。</p>
+<p>---</p>
+<h2>常见问题</h2>
+<ul>
+<li>现象：主服务报“连接失败”或“超时”</li>
+<li>处理：确认规划子服务也已启动，两个服务都需要就绪。</li>
+<li>现象：首次启动较慢</li>
+<li>处理：等待服务启动完成后再开始演示，剪辑时可对等待过程加速。</li>
+<li>现象：fixup 没有稳定触发</li>
+<li>处理：提前检查 <code>mock_db/reservations.json</code> 中目标时段的容量配置，确保无座场景能稳定复现。</li>
+</ul>
+    </main>
+  </body>
+</html>

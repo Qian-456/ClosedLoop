@@ -108,109 +108,24 @@
 <li>单一入口 + 轻量补齐：首次规划/改约束统一走 <code>plan_trip</code>；执行失败优先静默等价替换，必须打扰时进入 <code>fixup_agent</code> 给 1–2 个选项继续推进。</li>
 <li>可复现工程化：付款前只做可用性检查与命令生成；输入 Mock 支付密码 <code>111111</code> 后才提交 Mock commit，避免付款前副作用污染（工程证据详见 02_tools.md）。</li>
 </ul>
-<h2>真实架构图</h2>
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 980 410"
-  role="img"
-  aria-label="ClosedLoop真实架构图：execute_agent 直接进入 pending_payment，fixup 为异常回路"
-  style="max-width: 100%; height: 330px; display: block; margin: 8px 0 12px;"
->
-  <defs>
-    <marker id="arrow-flow-v4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L9,3 L0,6 Z" fill="#111827" />
-    </marker>
-    <style>
-      .b4 { fill: #fff; stroke: #111827; stroke-width: 2; rx: 12; }
-      .s4 { fill: #f9fafb; stroke: #111827; stroke-width: 2; rx: 12; }
-      .d4 { fill: #fff; stroke: #111827; stroke-width: 2; }
-      .t4 { font: 700 15px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial; fill: #111827; }
-      .x4 { font: 11px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial; fill: #111827; }
-      .h4 { font: 700 13px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial; fill: #111827; }
-      .m4 { fill: #374151; }
-      .a4 { stroke: #111827; stroke-width: 2.2; fill: none; marker-end: url(#arrow-flow-v4); }
-      .q4 { stroke: #111827; stroke-width: 1.8; fill: none; stroke-dasharray: 5 5; marker-end: url(#arrow-flow-v4); }
-      .g4 { stroke: #9ca3af; stroke-width: 1.3; stroke-dasharray: 6 6; }
-      .l4 { font: 10px ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial; fill: #111827; }
-    </style>
-  </defs>
-
-  <text x="34" y="28" class="h4">规划阶段</text>
-  <line x1="30" y1="42" x2="945" y2="42" class="g4" />
-  <text x="34" y="210" class="h4">执行阶段</text>
-  <line x1="30" y1="224" x2="945" y2="224" class="g4" />
-
-  <rect x="40" y="68" width="145" height="58" class="b4" />
-  <text x="58" y="92" class="t4">用户输入需求</text>
-  <text x="58" y="114" class="x4 m4">玩 / 吃 / 后续 / 约束</text>
-
-  <rect x="220" y="56" width="200" height="82" class="b4" />
-  <text x="240" y="82" class="t4">plan_agent</text>
-  <text x="240" y="106" class="x4">plan_trip / alternatives</text>
-  <text x="240" y="126" class="x4">search / adjust plan item</text>
-
-  <rect x="460" y="62" width="200" height="58" class="s4" />
-  <text x="480" y="88" class="t4">Plan 子服务 8001</text>
-  <text x="480" y="110" class="x4 m4">retrieve / filter / rerank / planner</text>
-
-  <rect x="460" y="146" width="200" height="52" class="s4" />
-  <text x="480" y="168" class="t4">Search 子服务 8002</text>
-  <text x="480" y="188" class="x4 m4">候选检索 / search / fixup</text>
-
-  <rect x="705" y="64" width="205" height="70" class="b4" />
-  <text x="725" y="90" class="t4">itinerary + candidates</text>
-  <text x="725" y="114" class="x4">推荐方案 + 候选池</text>
-  <text x="725" y="130" class="x4 m4">确认后进入执行</text>
-
-  <rect x="40" y="282" width="145" height="58" class="b4" />
-  <text x="58" y="306" class="t4">用户确认方案</text>
-  <text x="58" y="328" class="x4 m4">transfer_to_execute</text>
-
-  <rect x="220" y="272" width="200" height="76" class="b4" />
-  <text x="240" y="298" class="t4">execute_agent</text>
-  <text x="240" y="322" class="x4">execute_itinerary</text>
-  <text x="240" y="340" class="x4 m4">execute_itinerary / check core</text>
-
-  <polygon points="520,260 610,310 520,360 430,310" class="d4" />
-  <text x="477" y="306" class="t4">需要 fixup?</text>
-  <text x="490" y="328" class="x4 m4">库存 / 座位 / 备选</text>
-
-  <rect x="670" y="238" width="200" height="76" class="s4" />
-  <text x="690" y="264" class="t4">fixup_agent</text>
-  <text x="690" y="288" class="x4">search_candidates</text>
-  <text x="690" y="306" class="x4">adjust_and_execute_plan_item</text>
-
-  <rect x="670" y="340" width="160" height="56" class="b4" />
-  <text x="690" y="364" class="t4">pending_payment</text>
-  <text x="690" y="386" class="x4 m4">待支付执行命令</text>
-
-  <rect x="855" y="340" width="82" height="56" class="b4" />
-  <text x="872" y="364" class="t4">Mock</text>
-  <text x="872" y="386" class="x4 m4">commit</text>
-
-  <path d="M185 97 L220 97" class="a4" />
-  <path d="M420 91 L460 91" class="a4" />
-  <path d="M660 91 L705 91" class="a4" />
-  <path d="M320 138 L320 172 L460 172" class="q4" />
-  <text x="332" y="162" class="l4">search / adjust</text>
-  <path d="M660 172 L705 126" class="q4" />
-  <path d="M808 134 L808 212 L112 212 L112 282" class="a4" />
-  <text x="690" y="204" class="l4">用户确认后进入执行</text>
-
-  <path d="M185 311 L220 311" class="a4" />
-  <path d="M420 310 L430 310" class="a4" />
-  <path d="M610 310 L670 368" class="a4" />
-  <text x="612" y="352" class="l4">否，直接付款</text>
-  <path d="M520 260 L520 226 L770 226 L770 238" class="a4" />
-  <text x="560" y="218" class="l4">是，进入补齐</text>
-  <path d="M770 238 L770 198 L660 172" class="q4" />
-  <text x="782" y="210" class="l4">可搜索候选</text>
-  <path d="M670 276 L640 276 L640 238 L320 238 L320 272" class="a4" />
-  <text x="432" y="232" class="l4">补齐后复用 execute_itinerary 校验</text>
-  <path d="M830 368 L855 368" class="a4" />
-  <text x="838" y="358" class="l4">支付后</text>
-</svg>
-<p>说明：这里保留最关键的一张架构图，并把 <code>plan / search / adjust / execute / fixup</code> 放进同一条闭环链路。上半部分是规划阶段：<code>plan_agent</code> 负责 <code>plan_trip / generate_alternative_plans / search_candidates / adjust_plan_item</code>，并可调用 Plan 子服务与可选 Search 子服务，最终产出 <code>itinerary + candidates</code>。下半部分是执行阶段：用户确认后进入 <code>execute_agent</code>；如果执行前检查与一致性校验直接通过，<code>execute_itinerary</code> 会生成共享的 <code>pending_payment</code>；如果发现库存、座位或备选问题，则进入 <code>fixup_agent</code>，通过 <code>search_candidates / adjust_and_execute_plan_item</code> 补齐，并在工具层复用 <code>execute_itinerary</code> 的确定性校验，通过后进入同一个 <code>pending_payment</code>，最后才是用户支付与 Mock commit。</p>
+<h2>适用范围与能力边界</h2>
+<p>当前 Demo 聚焦于本地生活聚会场景下的“意图理解 → 结构化约束 → 候选召回/过滤/重排 → 行程规划 → Mock 执行”闭环展示。系统当前更适合处理 <code>family / friends</code> 两类常见群体、4–6 小时窗口以及常见预算、距离、饮食、活动偏好组合下的问题。</p>
+<p>需要明确的是，当前实现并不承诺所有输入都存在可行解，也不承诺所有忌口、偏好与极端限制能够同时满足。代码层面，<code>plan_trip</code> 接收的是结构化约束而非开放域自由规划；规划子图也采用确定性的召回、过滤、重排与组合剪枝流程，因此当候选不足、预算过紧、时长冲突或约束组合过强时，系统会明确返回无可行方案或可恢复错误，而不是伪造结果。</p>
+<p>当前版本中，若从 <code>plan_trip</code> 的结构化输入契约来看，已经显式离散支持的关键约束包括：</p>
+<ul>
+<li>群体类型：<code>family</code>、<code>friends</code></li>
+<li>距离偏好：<code>&lt;2km</code>、<code>2km-5km</code>、<code>&gt;5km</code></li>
+<li>出行偏好：<code>auto</code>、<code>walking</code>、<code>taxi</code>、<code>driving</code></li>
+<li>排队偏好：<code>avoid_queues</code>、<code>accept_hot</code>、<code>neutral</code></li>
+<li>礼品开关：<code>include_gift = true / false</code></li>
+</ul>
+<p>同时，当前版本也支持若干半结构化或有限开放集合的约束输入，例如：</p>
+<ul>
+<li>饮食禁忌与偏好：优先归类到 <code>辣 / 海鲜 / 生冷 / 甜 / 快餐 / 牛</code>，不在集合内时可保留原词</li>
+<li>活动偏好：通过 <code>activity_preferences</code> 传入，如 <code>餐饮 / 电影 / 打卡点 / 安静</code></li>
+<li>行程顺序偏好：通过 <code>preferred_pattern_steps</code> 指定步骤序列，系统会优先尝试匹配或构造对应 pattern</li>
+</ul>
+<p>在当前版本中，部分推荐、规划与语义理解能力采用规则、契约归一化和工作流编排进行可复现近似。这一选择并不否认相关问题的复杂性，而是为了在比赛 Demo 的抽象层级下，把真实业务中已被广泛验证的搜索、推荐、语义提取与执行编排能力，以可解释、可验收、可复现的方式映射到闭环系统中。</p>
 <h2>工具调用链路（用户动作闭环）</h2>
 <ul>
 <li>规划：<code>plan_trip</code> → itinerary + candidates（候选池用于后续搜索/替换）。</li>
