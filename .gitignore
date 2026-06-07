@@ -72,3 +72,6 @@ Thumbs.db
 # Exclude internal dev docs for competition submission
 docs/
 AGENTS.md
+
+# Competition submission
+competition_submission/

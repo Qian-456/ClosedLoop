@@ -806,7 +806,7 @@ async def _do_execute_itinerary(
                     }
                     status = "failed"
                 else:
-                    result_message = "一致性校验已通过，已生成待支付执行命令，请在下方支付面板输入支付密码完成最后一步。"
+                    result_message = "已生成待支付执行命令，在下方支付面板输入密码，我们就会为您完成下列活动、餐厅还有车的预约～"
                     result = {
                         "plan_id": plan_id,
                         "execution_id": execution_id,

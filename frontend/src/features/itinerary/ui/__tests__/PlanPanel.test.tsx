@@ -135,8 +135,9 @@ describe('PlanPanel', () => {
     fireEvent.click(screen.getByLabelText('展开推荐方案'))
     expect(screen.getByText('推荐方案')).toBeInTheDocument()
     expect(screen.getByText('午餐 + 玩 + 惊喜行程方案 A')).toBeInTheDocument()
-    expect(screen.getByText('推荐指数 87')).toBeInTheDocument()
-    expect(screen.getByText('¥311')).toBeInTheDocument()
+    expect(screen.getByText('总时长')).toBeInTheDocument()
+    expect(screen.getByText('6h2m')).toBeInTheDocument()
+    expect(screen.getByText('¥311.00')).toBeInTheDocument()
     expect(screen.queryByText(/平均等位/)).not.toBeInTheDocument()
     expect(screen.queryByText('莲香茶餐厅（老城文化街区）')).not.toBeInTheDocument()
 

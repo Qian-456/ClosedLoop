@@ -184,13 +184,13 @@ except httpx.TimeoutException:
 ### 3.1 功能边界
 
 - 输入：plan_id、target_item_id、new_item_id（通常来自 search_candidates 的结果）。
-- 输出：替换后的新方案（尽量保持整体不变），生成权衡报告 `tradeoff_report` 附加到 `ToolMessage` 中返回，并更新 `itinerary/latest_plan_result`。
+- 输出：替换后的新方案（尽量保持整体不变）。当替换可能导致时间或预算超标时，系统会尽可能的权衡进而不超出相关约束，此时才会生成权衡报告 `tradeoff_report` 附加到 `ToolMessage` 中返回，并更新 `itinerary/latest_plan_result`。
 - 冲突修复：多层降级与冲突修复（动态消化超标时间）。
-  - L1 吃 buffer：对非锁定条目，最多吃掉该条目的 `duration_std_dev`（将超出的分钟数优先从弹性浮动里拿回来）。
-  - L2 极限压缩：仅对 `activity/gift_shop` 的非锁定条目做压缩，最低压到原始 `duration_mins` 的 60%（正餐不参与压缩）。
-  - L3 删项降级：如果 L1 和 L2 耗尽后仍然超标，则按 `gift_shop -> afternoon_tea -> activity` 的优先级逐个删除次要组件，直到满足约束。
-- 通过条件（与实现一致）：`total_cost <= budget * 1.2` 且 `total_duration_minutes <= duration_max + 45min 宽容度`。
-- 说明：Agent 会解析返回的 `tradeoff_report`，用自然语言向用户如实转达时间轴和预算的“权衡（降级）影响”，让调整后果完全透明。如果自动修复过程中触发了 L3 删项，系统会判定为“破坏性修复”，直接返回失败并交由 Agent 引导用户重新决策，避免静默删项破坏体验。
+    - L1 吃 buffer：对非锁定条目，最多吃掉该条目的 `duration_std_dev`（将超出的分钟数优先从弹性浮动里拿回来）。
+    - L2 极限压缩：对非正餐活动（如 activity, gift_shop），强制压缩体验时间（最多缩至原时长的 60%）。
+    - L3 替换与 L4 删项：作为未来体验优化方向，当前版本未启用。若 L1/L2 耗尽后仍超标，系统将直接返回失败并交由 Agent 引导用户重新决策，避免静默删项破坏体验。
+  - 通过条件（与实现一致）：`total_cost <= budget * 1.2` 且 `total_duration_minutes <= duration_max + 45min 宽容度`。
+  - 说明：如果工具返回了 `tradeoff_report`（意味着发生了降级），Agent 会解析该报告，用自然语言向用户如实转达时间轴和预算的“权衡（降级）影响”，让调整后果完全透明。对于未超出预期的普通替换，不会产生权衡报告。
 
 ### 3.2 失败模式
 
@@ -208,15 +208,14 @@ except httpx.TimeoutException:
   - `backend/src/closedloop/graph/tools/adjust_tool.py::adjust_plan_item`
   - `backend/src/closedloop/graph/plan_subgraph/repairer.py::repair_plan`
 
-片段 1：禁止静默“破坏性修复”（节选）
+片段 1：超出约束无法修复的拦截（节选）
 
 ```python
 # backend/src/closedloop/graph/tools/adjust_tool.py::_do_adjust_plan_item (节选)
-if status == "success" and "plan" in result:
-    original_steps_count = len([s for s in target_plan.get("steps", []) if s.get("item", {}).get("type") != "commute"])
-    new_steps_count = len([s for s in result["plan"].get("steps", []) if s.get("item", {}).get("type") != "commute"])
-    if new_steps_count < original_steps_count:
-        return "failed", {}, "替换该备选会导致总时间或总预算严重超标，系统尝试删除了您的其他活动...请您选择其他备选。"
+# 之前拦截删项的逻辑已移除，因为 repairer.py 中的 L4 删项已被标记为未来规划，
+# 现在只要 status == "success"，就代表方案只是被吃缓冲或极限压缩了（未删项），可以直接返回。
+if status == "need_user_choice":
+    return "failed", {}, "替换该备选会导致总时间或总预算严重超标，且无法自动修复。请您选择其他不会严重超标的备选，或者放弃替换。"
 ```
 
 片段 2：修复器入口 + “需要用户选择”的结构化输出（节选）

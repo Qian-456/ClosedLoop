@@ -9,10 +9,9 @@ ClosedLoop 是一个面向未来的执行型本地生活 Agent。只需用户一
 
 ## 🏆 比赛提交物
 
-比赛的演示文档、核心设计说明以及工具列表均已提取到根目录下的 `competition_submission/` 文件夹中：
-- `competition_submission/01_demo.md` - 演示剧本与复现指南
-- `competition_submission/02_tools.html` - 工具与 API 契约列表
-- `competition_submission/03_design.html` - 核心架构与设计思路
+比赛提交的核心材料如下（均在项目根目录）：
+- `Tool 实现能力清单（含 Mock 行为 + 工程证据）.md` - 工具能力与工程证据（含关键代码片段）
+- `设计文档：ClosedLoop 执行型本地生活 Agent.pdf` - 核心架构与设计思路
 
 ## 🌟 核心能力与亮点
 

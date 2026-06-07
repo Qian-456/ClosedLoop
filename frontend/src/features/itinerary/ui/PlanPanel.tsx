@@ -292,7 +292,6 @@ function OrderDetailsSheet({
                       <div className="flex items-center gap-2">
                         <span className={`font-mono font-semibold shrink-0 w-10 ${isBooked ? 'text-blue-500' : 'text-slate-400'}`}>{step.start_time || '--:--'}</span>
                         <span className="font-semibold">{getStepName(step)}</span>
-                        {isPaidCommute && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1 rounded">已支付</span>}
                         {!isBooked && <span className="text-[10px] bg-slate-200/60 text-slate-500 px-1 rounded">线下支付</span>}
                       </div>
                       <span className="font-semibold">{formatCost(cost)}</span>

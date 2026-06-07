@@ -102,7 +102,7 @@ def repair_plan(
     commute_preference: str = "auto"
 ) -> dict:
     """
-    5级冲突修复策略
+    多层降级与冲突修复策略（当前仅启用 L1/L2，L3/L4 暂未启用）
     """
     logger.info(f"phase=repairer | plan_id={plan.get('plan_id')} | target={target_item_id} | new_item={new_item.get('name')}")
     
@@ -383,77 +383,8 @@ def repair_plan(
         else:
             failed_repairs.append(f"已尝试压缩时间，但仍超出限制 (耗时: {dur}分钟)")
 
-    # Level 3: 替换可替换项目 (为简化，MVP只做 Level 1/2/4/5)
-    # TODO: Implement Level 3
-
-    # Level 4: 删除低优先级组件
-    if dur > max_dur or cost > budget * 1.2:
-        logger.info(f"phase=repairer | level=4 | dur={dur}, cost={cost}")
-        # 优先级：gift_shop -> afternoon_tea -> activity
-        priority_to_delete = ["gift_shop", "afternoon_tea", "activity"]
-        
-        for p_type in priority_to_delete:
-            to_remove = None
-            removed_name = ""
-            for idx, item_obj in enumerate(physical_items):
-                if item_obj["is_locked"]:
-                    continue
-                raw = item_obj["raw"]
-                item_type = raw.get("type", "")
-                meal_cat = raw.get("_meal_category", "")
-                
-                if p_type == "gift_shop" and item_type == "gift_shop":
-                    to_remove = idx
-                    removed_name = raw.get("name", "礼品店")
-                    break
-                if p_type == "afternoon_tea" and meal_cat == "afternoon_tea":
-                    to_remove = idx
-                    removed_name = raw.get("name", "下午茶")
-                    break
-                if p_type == "activity" and item_type == "activity":
-                    to_remove = idx
-                    removed_name = raw.get("name", "活动")
-                    break
-                    
-            if to_remove is not None:
-                removed_item = physical_items.pop(to_remove)
-                tradeoff_events.append(f"删除了低优先级项目：{removed_name}")
-                cost, dur, steps = _calc_plan_metrics(physical_items, original_start_time)
-                if cost <= budget * 1.2 and dur <= max_dur:
-                    updated_plan = deepcopy(plan)
-                    updated_plan["steps"] = steps
-                    updated_plan["total_duration_minutes"] = dur
-                    updated_plan["total_cost"] = cost
-                    updated_plan["selected_item_ids"] = [it["it_item"].get("id") if isinstance(it["it_item"], dict) else it["it_item"].id for it in physical_items]
-                    
-                    report_str = "由于严重超时或超预算，已触发深度降级：" + "；".join(tradeoff_events)
-                    return {"status": "success", "plan": updated_plan, "tradeoff_report": report_str}
-                
-        failed_repairs.append(f"已尝试删除低优先级项目，仍不满足约束 (花费: {cost}, 耗时: {dur}分钟)")
-
-    # Level 5: 系统无法自动修复，交给 Agent 生成解释和选择项
-    reason = []
-    if dur > max_dur:
-        reason.append(f"修改后超出原定结束时间约 {int(dur - max_dur)} 分钟")
-    if cost > budget * 1.2:
-        reason.append(f"修改后超出预算约 {int(cost - budget)} 元")
-
-    report = {
-        "status": "need_user_choice",
-        "reason": "，".join(reason),
-        "locked_items": locked_items,
-        "failed_repairs": failed_repairs,
-        "options": [
-            {
-                "label": "保留全部并延长",
-                "action": "无视超出的时间和预算，强制保留替换后的方案",
-            },
-            {
-                "label": "撤销替换",
-                "action": "放弃本次替换，保留原有行程",
-            }
-        ]
-    }
+    # Level 3/4: 替换可替换项目/删除低优组件 (未来优化方向，当前直接返回需要用户决策)
+    # TODO: Implement Level 3 and 4 in the future
     
-    return {"status": "need_user_choice", "report": report}
+    return {"status": "need_user_choice", "report": {"reason": f"即使极限压缩后，依然严重超标 (耗时: {dur}分钟, 花费: {cost}元)。为避免破坏原定体验，请您选择其他备选，或者放弃替换。"}}
 
