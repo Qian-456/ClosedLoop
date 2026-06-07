@@ -106,6 +106,48 @@ function getPaidCommuteStepKeys(plan: ItineraryPlanVariant | null, confirmation:
   return keys
 }
 
+type PaymentPricing = {
+  originalAmount: number
+  discountAmount: number
+  commuteDeductionAmount: number
+  payableAmount: number
+  couponName: string | null
+}
+
+function buildPaymentPricing(
+  actionPlan: ItineraryPlanVariant | null,
+  confirmation: Confirmation,
+  paidCommuteStepKeys: Set<string>,
+): PaymentPricing {
+  const command = confirmation.execution_command ?? null
+  const pricing = command?.pricing_summary ?? {}
+  const originalAmount = toCentAmount(pricing.original_amount ?? actionPlan?.total_cost ?? 0)
+  let commuteDeductionAmount = 0
+
+  actionPlan?.steps.forEach((step, index) => {
+    if (!paidCommuteStepKeys.has(getStepKey(step, index))) {
+      commuteDeductionAmount += getDeferredCommuteCharge(step)
+    }
+  })
+  commuteDeductionAmount = toCentAmount(commuteDeductionAmount)
+
+  if (commuteDeductionAmount > originalAmount) {
+    commuteDeductionAmount = originalAmount
+  }
+
+  const discountAmount = toCentAmount(pricing.discount_amount ?? 0)
+  const couponName = pricing.coupon ?? null
+  const payableAmount = toCentAmount(Math.max(0, originalAmount - discountAmount - commuteDeductionAmount))
+
+  return {
+    originalAmount,
+    discountAmount,
+    commuteDeductionAmount,
+    payableAmount,
+    couponName,
+  }
+}
+
 function PlanSummaryCard({
   plan,
   onOpen,
@@ -145,12 +187,14 @@ function OrderDetailsSheet({
   pricing,
   paymentStatusLabel,
   executionId,
+  paidCommuteStepKeys,
   onClose,
 }: {
   actionPlan: ItineraryPlanVariant | null
   pricing: { originalAmount: number; discountAmount: number; commuteDeductionAmount: number; payableAmount: number; couponName: string | null }
   paymentStatusLabel: string
   executionId: string
+  paidCommuteStepKeys: Set<string>
   onClose: () => void
 }) {
   return createPortal(
@@ -221,13 +265,15 @@ function OrderDetailsSheet({
               <div className="space-y-2 border-t border-slate-200 pt-3">
                 {actionPlan.steps.map((step, idx) => {
                   const deferredCommuteCharge = getDeferredCommuteCharge(step)
-                  const isBooked = deferredCommuteCharge <= 0
+                  const isPaidCommute = paidCommuteStepKeys.has(getStepKey(step, idx))
+                  const isBooked = deferredCommuteCharge <= 0 || isPaidCommute
                   const cost = getStepCost(step)
                   return (
                     <div key={idx} className={`flex justify-between text-xs ${isBooked ? 'text-slate-700' : 'text-slate-400'}`}>
                       <div className="flex items-center gap-2">
                         <span className={`font-mono font-semibold shrink-0 w-10 ${isBooked ? 'text-blue-500' : 'text-slate-400'}`}>{step.start_time || '--:--'}</span>
                         <span className="font-semibold">{getStepName(step)}</span>
+                        {isPaidCommute && <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1 rounded">已支付</span>}
                         {!isBooked && <span className="text-[10px] bg-slate-200/60 text-slate-500 px-1 rounded">线下支付</span>}
                       </div>
                       <span className="font-semibold">{formatCost(cost)}</span>
@@ -257,7 +303,8 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
   const pricing = command?.pricing_summary ?? {}
   const paidCommuteStepKeys = getPaidCommuteStepKeys(actionPlan, confirmation)
 
-  const originalAmount = toCentAmount(pricing.original_amount ?? actionPlan?.total_cost ?? 0)
+  const paymentPricing = buildPaymentPricing(actionPlan, confirmation, paidCommuteStepKeys)
+  const originalAmount = paymentPricing.originalAmount
   let commuteDeductionAmount = 0
   actionPlan?.steps.forEach((step, index) => {
     if (!paidCommuteStepKeys.has(getStepKey(step, index))) {
@@ -488,6 +535,7 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
           pricing={{ originalAmount, discountAmount, commuteDeductionAmount, payableAmount, couponName }}
           paymentStatusLabel={paymentStatusLabel}
           executionId={executionId}
+          paidCommuteStepKeys={paidCommuteStepKeys}
           onClose={() => setShowOrderDetails(false)}
         />
       )}
@@ -504,22 +552,8 @@ function PendingPaymentNotice({
   actionPlan: ItineraryPlanVariant | null
   onOpen: () => void
 }) {
-  const command = confirmation.execution_command ?? null
-  const pricing = command?.pricing_summary ?? {}
-  const originalAmount = toCentAmount(pricing.original_amount ?? actionPlan?.total_cost ?? 0)
-  
-  let commuteDeductionAmount = 0
-  actionPlan?.steps.forEach(step => {
-    commuteDeductionAmount += getDeferredCommuteCharge(step)
-  })
-  commuteDeductionAmount = toCentAmount(commuteDeductionAmount)
-  
-  if (commuteDeductionAmount > originalAmount) {
-    commuteDeductionAmount = originalAmount
-  }
-
-  const discountAmount = toCentAmount(pricing.discount_amount ?? 0)
-  const payableAmount = toCentAmount(Math.max(0, originalAmount - discountAmount - commuteDeductionAmount))
+  const paidCommuteStepKeys = getPaidCommuteStepKeys(actionPlan, confirmation)
+  const { payableAmount } = buildPaymentPricing(actionPlan, confirmation, paidCommuteStepKeys)
 
   return (
     <button

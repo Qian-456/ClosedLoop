@@ -181,7 +181,7 @@ export function JourneyView({
         )
       : undefined)
   const currentStep = plan.steps[currentIndex] ?? null
-  const currentStepIsPaidCommute = currentStep
+  const unusedCurrentStepIsPaidCommute = currentStep
     ? effectivePaidCommuteStepKeys?.has(getStepKey(currentStep, currentIndex)) ?? false
     : false
   const headerTitle = viewMode === 'active' ? '开始执行' : title
@@ -222,7 +222,7 @@ export function JourneyView({
   const advance = () => {
     const step = plan.steps[currentIndex]
     if (!step) return
-    if (currentStepIsPaidCommute && phase === 'heading') {
+    if (false && unusedCurrentStepIsPaidCommute && phase === 'heading') {
       setStatusByIndex((current) => ({ ...current, [currentIndex]: '该通勤订单已支付，可在支付订单中查看当前订单状态。' }))
       return
     }
@@ -325,6 +325,9 @@ export function JourneyView({
             const isCurrent = isActive && index === currentIndex && !isDone
             const isPast = isActive && index < currentIndex
             const status = statusByIndex[index]
+            const isPaidCommute = effectivePaidCommuteStepKeys?.has(getStepKey(step, index)) ?? false
+            const paidCommuteStatus = '该通勤订单已支付，可在支付订单中查看当前订单状态。'
+            const displayStatus = status || (isPaidCommute ? paidCommuteStatus : '')
 
             return (
               <div
@@ -389,7 +392,7 @@ export function JourneyView({
 
                   {isCommute ? (
                     <div className="mt-4 space-y-3">
-                      {isActive ? (
+                      {isActive && !isPaidCommute ? (
                         <div className="grid grid-cols-3 gap-2">
                           {(['walking', 'taxi', 'driving'] as const).map((item) => (
                             <button
@@ -409,13 +412,13 @@ export function JourneyView({
                       <button
                         type="button"
                         className="h-10 min-w-[132px] rounded-full border border-blue-100 bg-blue-50 px-5 text-sm font-black text-blue-600"
-                        onClick={() => setStatusByIndex((current) => ({ ...current, [index]: getActionMessage(step, selectedMode) }))}
+                        onClick={() => setStatusByIndex((current) => ({ ...current, [index]: isPaidCommute ? paidCommuteStatus : getActionMessage(step, selectedMode) }))}
                       >
-                        {getActionLabel(selectedMode)}
+                        {isPaidCommute ? '查看订单' : getActionLabel(selectedMode)}
                       </button>
-                      {status ? (
+                      {displayStatus ? (
                         <div className="rounded-[8px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">
-                          {status}
+                          {displayStatus}
                         </div>
                       ) : null}
                     </div>

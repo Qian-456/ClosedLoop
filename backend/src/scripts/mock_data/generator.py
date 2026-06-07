@@ -284,8 +284,11 @@ def generate_mock_db() -> dict[str, Any]:
             available_stock: int,
             duration_mins: int,
             duration_std_dev: float,
-            start_time: str | None,
+            start_time: str | None = None,
         ) -> dict:
+            if start_time == "AUTO":
+                start_time = _start_time(name, description)
+                
             return {
                 "package_id": f"package_{idx:03d}_{k}",
                 "name": name,
@@ -330,7 +333,7 @@ def generate_mock_db() -> dict[str, Any]:
                 ),
             ]
 
-        start_times = [None, "14:00", "15:00", "16:30", "18:00", "19:00", "20:00"]
+        start_times = ["14:00", "15:00", "16:30", "18:00", "19:00", "20:00"]
 
         def _price(lo: float, hi: float) -> float:
             return float(rng.uniform(lo, hi))
@@ -341,8 +344,11 @@ def generate_mock_db() -> dict[str, Any]:
         def _std(options: list[float]) -> float:
             return float(rng.choice(options))
 
-        def _start_time() -> str | None:
-            return rng.choice(start_times)
+        def _start_time(name: str, desc: str) -> str | None:
+            text = (name + desc).lower()
+            if '演出' in text or '话剧' in text or '音乐会' in text:
+                return rng.choice(start_times)
+            return None
 
         if profile in ("family_3_6", "kids_friendly"):
             return [
@@ -356,7 +362,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 420),
                     duration_mins=max(45, base_duration - 30),
                     duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -368,7 +374,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 320),
                     duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -380,7 +386,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 260),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 
@@ -396,7 +402,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(40, 520),
                     duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -408,7 +414,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 320),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -420,7 +426,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 420),
                     duration_mins=base_duration + 15,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 
@@ -436,7 +442,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 420),
                     duration_mins=max(45, base_duration - 30),
                     duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -448,7 +454,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 320),
                     duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -460,7 +466,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 260),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 
@@ -476,7 +482,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(35, 460),
                     duration_mins=max(45, base_duration - 15),
                     duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -488,7 +494,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 360),
                     duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -500,7 +506,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 260),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 
@@ -516,7 +522,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 420),
                     duration_mins=max(45, base_duration - 15),
                     duration_std_dev=_std([10.0, 15.0, 20.0, 30.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -528,7 +534,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 280),
                     duration_mins=base_duration,
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -540,7 +546,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 240),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 
@@ -556,7 +562,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(30, 460),
                     duration_mins=max(45, base_duration - 15),
                     duration_std_dev=_std([15.0, 20.0, 30.0, 45.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=2,
@@ -568,7 +574,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(24, 360),
                     duration_mins=base_duration,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
                 _mk(
                     k=3,
@@ -580,7 +586,7 @@ def generate_mock_db() -> dict[str, Any]:
                     available_stock=_stock(20, 320),
                     duration_mins=base_duration + 30,
                     duration_std_dev=_std([20.0, 30.0, 45.0, 60.0]),
-                    start_time=_start_time(),
+                    start_time="AUTO",
                 ),
             ]
 

@@ -58,11 +58,9 @@ def _build_time_slots_for_package(*, package: dict, business_hours: str) -> list
         end_min = min(close_min, open_min + max(60, duration_mins))
         return [{"start_time": _format_minutes_to_hhmm(open_min), "end_time": _format_minutes_to_hhmm(end_min)}]
 
-    k = random.randint(3, 6)
-    chosen = sorted(random.sample(start_candidates, k=min(k, len(start_candidates))))
     return [
         {"start_time": _format_minutes_to_hhmm(s), "end_time": _format_minutes_to_hhmm(min(s + duration_mins, close_min))}
-        for s in chosen
+        for s in start_candidates
     ]
 
 
@@ -92,11 +90,9 @@ def _build_time_slots_for_combo(*, combo: dict) -> list[dict]:
     if not candidate_starts:
         candidate_starts = [11 * 60, 12 * 60, 18 * 60]
 
-    k = random.randint(2, 4)
-    chosen = sorted(random.sample(candidate_starts, k=min(k, len(candidate_starts))))
     return [
         {"start_time": _format_minutes_to_hhmm(s), "end_time": _format_minutes_to_hhmm(s + duration_mins)}
-        for s in chosen
+        for s in candidate_starts
     ]
 
 
@@ -119,11 +115,9 @@ def _build_time_slots_for_restaurant(*, restaurant: dict) -> list[dict]:
         end_min = min(close_min, open_min + duration_mins)
         return [{"start_time": _format_minutes_to_hhmm(open_min), "end_time": _format_minutes_to_hhmm(end_min)}]
 
-    k = random.randint(4, 7)
-    chosen = sorted(random.sample(start_candidates, k=min(k, len(start_candidates))))
     return [
         {"start_time": _format_minutes_to_hhmm(s), "end_time": _format_minutes_to_hhmm(min(s + duration_mins, close_min))}
-        for s in chosen
+        for s in start_candidates
     ]
 
 

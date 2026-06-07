@@ -249,6 +249,7 @@ def _do_adjust_plan_item(
     )
 
     status = result.get("status", "failed")
+    tradeoff_report = result.get("tradeoff_report", "")
     
     # 【新增限制】如果在 Adjust & Execute 过程中触发了 L4（删项）或者 L5（修不好）
     # 我们认为这种“破坏性”的修复不能被静默执行，必须返回失败，交由 Agent 处理
@@ -258,7 +259,7 @@ def _do_adjust_plan_item(
         
         if new_steps_count < original_steps_count:
             # 说明触发了 L4 删除了项目
-            return "failed", {}, "替换该备选会导致总时间或总预算严重超标，系统尝试删除了您的其他活动（如礼品或下午茶）来弥补，但这会破坏您的原定体验。请您选择其他备选，或者放弃替换。"
+            return "failed", {}, f"替换该备选会导致总时间或总预算严重超标，系统触发了深度降级（{tradeoff_report}），但这会破坏您的原定体验。请您选择其他备选，或者放弃替换。"
             
     if status == "need_user_choice":
         return "failed", {}, "替换该备选会导致总时间或总预算严重超标，且无法自动修复。请您选择其他不会严重超标的备选，或者放弃替换。"
@@ -294,6 +295,7 @@ def adjust_plan_item(
         content=json.dumps({
             "tool": "adjust_plan_item",
             "status": status,
+            "tradeoff_report": result.get("tradeoff_report", ""),
             "result": result,
         }, ensure_ascii=False),
         tool_call_id=tool_call_id,
@@ -408,7 +410,7 @@ async def adjust_and_execute_plan_item(
     
     execute_message = ToolMessage(
         content=json.dumps(
-            {"tool": "adjust_and_execute_plan_item", "status": exec_status, "result": exec_result},
+            {"tool": "adjust_and_execute_plan_item", "status": exec_status, "tradeoff_report": result.get("tradeoff_report", ""), "result": exec_result},
             ensure_ascii=False,
         ),
         tool_call_id=tool_call_id,

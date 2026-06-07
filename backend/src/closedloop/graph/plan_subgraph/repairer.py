@@ -322,6 +322,8 @@ def repair_plan(
     cost, dur, steps = _calc_plan_metrics(physical_items, original_start_time)
     max_dur = duration_range_mins[1] + 45.0 # 加上一定的宽容度
     
+    tradeoff_events = []
+    
     if cost <= budget * 1.2 and dur <= max_dur:
         # No conflict
         updated_plan = deepcopy(plan)
@@ -329,7 +331,7 @@ def repair_plan(
         updated_plan["total_duration_minutes"] = dur
         updated_plan["total_cost"] = cost
         updated_plan["selected_item_ids"] = [it["it_item"].get("id") if isinstance(it["it_item"], dict) else it["it_item"].id for it in physical_items]
-        return {"status": "success", "plan": updated_plan}
+        return {"status": "success", "plan": updated_plan, "tradeoff_report": "时间与预算均在合理范围内，已直接替换。"}
 
     # Level 1 & 2: 吃 buffer + 压缩可压缩项目
     if dur > max_dur:
@@ -339,6 +341,7 @@ def repair_plan(
                 continue
             
             raw = item_obj["raw"]
+            item_name = raw.get("name", "未知活动")
             std_dev = float(raw.get("duration_std_dev") or raw.get("receive_duration_std_dev") or 0.0)
             
             # 吃 buffer
@@ -347,6 +350,7 @@ def repair_plan(
                 if shrink > 0:
                     item_obj["duration"] -= int(shrink)
                     dur -= int(shrink)
+                    tradeoff_events.append(f"消耗了 {item_name} 的弹性缓冲 {int(shrink)} 分钟")
             
             if dur <= max_dur:
                 break
@@ -361,18 +365,21 @@ def repair_plan(
                     if shrink > 0:
                         item_obj["duration"] -= int(shrink)
                         dur -= int(shrink)
+                        tradeoff_events.append(f"极限压缩了 {item_name} 的体验时间 {int(shrink)} 分钟")
                         
             if dur <= max_dur:
                 break
                 
-        cost, dur, steps = _calc_plan_metrics(physical_items)
+        cost, dur, steps = _calc_plan_metrics(physical_items, original_start_time)
         if cost <= budget * 1.2 and dur <= max_dur:
             updated_plan = deepcopy(plan)
             updated_plan["steps"] = steps
             updated_plan["total_duration_minutes"] = dur
             updated_plan["total_cost"] = cost
             updated_plan["selected_item_ids"] = [it["it_item"].get("id") if isinstance(it["it_item"], dict) else it["it_item"].id for it in physical_items]
-            return {"status": "success", "plan": updated_plan}
+            
+            report_str = "由于替换导致原行程超时，已自动执行降级：" + "；".join(tradeoff_events)
+            return {"status": "success", "plan": updated_plan, "tradeoff_report": report_str}
         else:
             failed_repairs.append(f"已尝试压缩时间，但仍超出限制 (耗时: {dur}分钟)")
 
@@ -387,6 +394,7 @@ def repair_plan(
         
         for p_type in priority_to_delete:
             to_remove = None
+            removed_name = ""
             for idx, item_obj in enumerate(physical_items):
                 if item_obj["is_locked"]:
                     continue
@@ -396,24 +404,30 @@ def repair_plan(
                 
                 if p_type == "gift_shop" and item_type == "gift_shop":
                     to_remove = idx
+                    removed_name = raw.get("name", "礼品店")
                     break
                 if p_type == "afternoon_tea" and meal_cat == "afternoon_tea":
                     to_remove = idx
+                    removed_name = raw.get("name", "下午茶")
                     break
                 if p_type == "activity" and item_type == "activity":
                     to_remove = idx
+                    removed_name = raw.get("name", "活动")
                     break
                     
             if to_remove is not None:
                 removed_item = physical_items.pop(to_remove)
-                cost, dur, steps = _calc_plan_metrics(physical_items)
+                tradeoff_events.append(f"删除了低优先级项目：{removed_name}")
+                cost, dur, steps = _calc_plan_metrics(physical_items, original_start_time)
                 if cost <= budget * 1.2 and dur <= max_dur:
                     updated_plan = deepcopy(plan)
                     updated_plan["steps"] = steps
                     updated_plan["total_duration_minutes"] = dur
                     updated_plan["total_cost"] = cost
                     updated_plan["selected_item_ids"] = [it["it_item"].get("id") if isinstance(it["it_item"], dict) else it["it_item"].id for it in physical_items]
-                    return {"status": "success", "plan": updated_plan}
+                    
+                    report_str = "由于严重超时或超预算，已触发深度降级：" + "；".join(tradeoff_events)
+                    return {"status": "success", "plan": updated_plan, "tradeoff_report": report_str}
                 
         failed_repairs.append(f"已尝试删除低优先级项目，仍不满足约束 (花费: {cost}, 耗时: {dur}分钟)")
 

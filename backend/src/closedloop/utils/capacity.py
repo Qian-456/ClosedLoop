@@ -68,20 +68,20 @@ def _get_capacity_from_name(name: str) -> float:
     ) or re.search(r"1\s*[-~到]\s*2\s*人", name):
         return 1.5
     
-    # 1. 优先匹配明确的“X大Y小”结构 (例如：2大1小 -> 2.4 人)
+    # 1. 优先匹配明确的“X大Y小”结构 (例如：2大1小 -> 2.6 人)
     match = re.search(r'(\d+)\s*[大小]\s*(\d+)\s*[大小]', name)
     if match:
         adults = int(match.group(1))
         kids = int(match.group(2))
-        # 默认儿童等效权重为 0.4
-        return adults + kids * 0.4
+        # 默认儿童等效权重为 0.6，对齐 unknown_child 的等效权重
+        return adults + kids * 0.6
 
     match_cn = re.search(r"([一二两三四五六七八九])\s*[大小]\s*([一二两三四五六七八九])\s*[大小]", name)
     if match_cn:
         a = _cn_num_to_int(match_cn.group(1))
         b = _cn_num_to_int(match_cn.group(2))
         if a is not None and b is not None:
-            return a + b * 0.4
+            return a + b * 0.6
         
     # 3. 匹配通用家庭/亲子套餐（通常指三口之家或四口之家）
     if "三口之家" in name or "2大1小" in name:

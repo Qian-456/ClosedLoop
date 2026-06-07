@@ -49,9 +49,9 @@ class TestRerankNode(unittest.TestCase):
 
     def test_get_capacity_from_name(self):
         # 测试明确的 X大Y小
-        self.assertEqual(_get_capacity_from_name("2大1小温馨家庭餐(含儿童玩具)"), 2.4) # 正则先匹配了 2大1小，2 + 1*0.4 = 2.4
-        self.assertEqual(_get_capacity_from_name("1大1小亲子套票"), 1.4)
-        self.assertEqual(_get_capacity_from_name("3大2小家庭豪华餐"), 3.8)
+        self.assertEqual(_get_capacity_from_name("2大1小温馨家庭餐(含儿童玩具)"), 2.6) # 正则先匹配了 2大1小，2 + 1*0.6 = 2.6
+        self.assertEqual(_get_capacity_from_name("1大1小亲子套票"), 1.6)
+        self.assertEqual(_get_capacity_from_name("3大2小家庭豪华餐"), 4.2)
         
         # 测试具体数字
         self.assertEqual(_get_capacity_from_name("单人解馋小火锅"), 1.0)
@@ -61,15 +61,15 @@ class TestRerankNode(unittest.TestCase):
         self.assertEqual(_get_capacity_from_name("八人豪华包厢宴"), 8.0)
         self.assertEqual(_get_capacity_from_name("4人畅吃派对"), 4.0)
         self.assertEqual(_get_capacity_from_name("俩人套餐"), 2.0)
-        self.assertEqual(_get_capacity_from_name("两大一小亲子套餐"), 2.4)
+        self.assertEqual(_get_capacity_from_name("两大一小亲子套餐"), 2.6)
         self.assertEqual(_get_capacity_from_name("单人/双人韩式大头贴"), 1.5)
         self.assertEqual(_get_capacity_from_name("1-2人套票"), 1.5)
         self.assertEqual(_get_capacity_from_name("2-3人套票"), 2.5)
         self.assertEqual(_get_capacity_from_name("3-4人套票"), 3.5)
         self.assertEqual(_get_capacity_from_name("2~3人套票"), 2.5)
         self.assertEqual(_get_capacity_from_name("2到3人套票"), 2.5)
-        self.assertEqual(_get_capacity_from_name("2大1小轻松体验"), 2.4)
-        self.assertEqual(_get_capacity_from_name("2大2小周末畅玩"), 2.8)
+        self.assertEqual(_get_capacity_from_name("2大1小轻松体验"), 2.6)
+        self.assertEqual(_get_capacity_from_name("2大2小周末畅玩"), 3.2)
         self.assertEqual(_get_capacity_from_name("双人搭子体验"), 2.0)
         self.assertEqual(_get_capacity_from_name("三人小聚体验"), 3.0)
         self.assertEqual(_get_capacity_from_name("四人畅玩体验"), 4.0)

@@ -32,7 +32,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
 提取要求：
 - group_type 必须归一化为 family 或 friends；如果无法判断，默认选择 friends。
 - budget 是总预算；如果用户说人均预算，请结合人数换算为总预算。
-- preferred_distance 归一化为 <2km / 2km-5km / >5km：强调“就附近/走路/两公里内/不想太远”选 <2km；强调“别太远/几公里内/打车一会儿”选 2km-5km；强调“远一点/开车也行/不介意远”选 >5km；未提及用默认 2km-5km。
+- preferred_distance 归一化为 <2km / 2km-5km / >5km：强调“就附近/走路/两公里内/不想太远”选 <2km；强调“别太远/几公里内/打车一会儿”选 2km-5km；强调“远一点/开车也行/不介意远”选 >5km；未提及或无特殊要求时，默认使用 2km-5km。
 - time_period 使用目标开始时间，如 14:00、18:00；如果用户给时间段，也可保留 HH:MM-HH:MM。
 - duration_hours 提取为小时范围；未明确时可按 4 到 6 小时。
 - adult_count、child_count、adult_genders、child_profiles 尽量从用户文本推断。child_profiles 的格式必须为二维数组/二元组列表：[[gender, age], ...]（或等价的 (gender, age) 列表），gender 只能是 M/F/U，age 必须是整数；例如：[['F', 5], ['F', -1]]；孕妇用 [['U', 0]]；无小孩用 []。注意字段名必须是 child_profiles，不要写 children_profile/children_profiles。小孩的性别默认女(F)，如果不知道岁数默认-1，年龄为0代表孕妇，性别可以填U。
@@ -79,7 +79,7 @@ PLAN_AGENT_SYSTEM_PROMPT = """
       - **[地点名称]**：[1句话特色/推荐理由]。价格：[价格]元。
       - **[地点名称]**：[1句话特色/推荐理由]。价格：[价格]元。
     - 如果没有找到完全匹配的，请诚实说明并列出最相近的选项。
-    - 确定替换后调用 `adjust_plan_item`，返回结果后输出：“**我已经帮您把行程中的该项目替换好了**，快看看新方案吧。”
+    - 确定替换后调用 `adjust_plan_item`，返回结果后输出：“**我已经帮您把行程中的该项目替换好了**，快看看新方案吧。” **注意：必须仔细阅读工具返回的 `tradeoff_report` 字段，并在回复中用自然语言向用户如实转达时间轴和预算的“权衡（降级）影响”**（例如：“为您替换了该活动。注意：由于行程较紧，系统为您删除了原本预留的下午茶环节，并挤占了部分缓冲时间”）。
 4. **用户明确确认/同意执行：** 当用户明确说“确认”、“执行吧”、“满意，执行”时，**不要再问任何多余的问题，不要让用户二次确认！**，直接调用 transfer_to_execute 移交控制权！
 5. **单次工具调用限制：** 尽可能不要同时/重复调用多个工具。每次只调用一个工具，等待返回结果后再决定下一步动作，除非工具调用失效或需要重试。
 
@@ -150,6 +150,7 @@ FIXUP_AGENT_SYSTEM_PROMPT = """
    - 调用 search_candidates(query=...)，把结果列出来让用户明确选一个 new_item_id
    - 用户选定后再调用 adjust_and_execute_plan_item。
 5. 【百分百诚实】：如果 adjust_and_execute_plan_item 返回 status=success 且 result.payment_status=pending，或 confirmation.status=pending_payment，代表补齐后已生成待支付执行命令。此时禁止说“预约成功/执行完成”，只能提示：“补齐已完成，一致性校验已通过，请在下方支付面板输入支付密码完成最后一步。”只有返回明确 executed 才能说“预约成功/执行完成”；timeout/failed 必须如实说明，并告知下一步（例如自动重试或继续搜索）。
+   - 如果工具返回了 `tradeoff_report`（多层降级权衡报告），你**必须**在回复中用自然语言将这个报告传达给用户，解释为了完成替换系统做了哪些让步（如吃掉缓冲、极限压缩时长或删项）。
    - 如果工具返回 execution_summary.failures[].reason_text，必须原样展示该失败原因；delivery_time 只是计划配送时间，不代表配送超时。
    - 成功汇报的总价优先使用 result.pricing_summary.display_total，并统一用 ¥xx.xx 格式。
 6. 【备选用尽/都不满意】：必须向用户说明“当前备选无法满足”，请用户选择：
