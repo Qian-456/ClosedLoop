@@ -26,22 +26,42 @@
 
 - **内部 HTTP 调用规划子服务（8001）**：多地址候选 + 总超时 budget 控制。
 - **状态落盘**：`constraints / candidates / itinerary / latest_plan_result` 写回 state，后续 search/replace 都基于该 state。
+- **可追溯日志（ELK）**：已预留 ELK 接入与结构化 JSON 日志输出能力；结合 `phase / session_id / tool / error` 等字段，可以在 Kibana 或离线日志中按链路追溯规划过程，便于快速排查超时、候选不足、剪枝过多等问题。
 
-### 1.3 失败模式
+### 1.3 方案生成处理顺序（非黑盒）
+
+- **主图入口职责（plan_trip）**：先做结构化约束归一化与工具 budget 控制，再调用 8001 规划子服务；成功后把 `constraints / candidates / itinerary / latest_plan_result` 回写到主状态。
+- **子图固定顺序**：规划子服务不是单次 prompt 出方案，而是按固定节点顺序执行：`retrieve_candidates_node -> filter_node -> rerank_node -> planner_node`。
+- **粗召回（retrieve）**：从 Mock DB 拉取餐厅、活动、礼品三类候选，并补齐/校正距离字段，先得到可消费的候选池。
+- **硬过滤（filter）**：按距离、人群适配、饮食禁忌、人数与年龄、礼品配送半径等硬约束剔除不满足要求的候选，避免无效组合进入后续阶段。
+- **重排（rerank）**：按场景契合、热度质量、排队偏好、活动时长倾向等信号重新打分排序，把更像“当前用户会选”的候选放到前面。
+- **Pattern 排列组合**：`planner_node` 会先匹配预定义 pattern；如果用户给了 `preferred_pattern_steps`，会优先做子序列匹配，必要时构造自定义 pattern（含 gift 插入）。
+- **DFS 枚举 + 剪枝**：在每个 pattern 对应的候选池上做深度组合，同时对预算、总时长、步行距离、返程距离、饭点合法性、礼品配送范围、超过 4 小时必须有餐饮等条件做剪枝。
+- **最终排序出 plan**：只对通过全部约束的合法组合计算综合分，再做去重与差异化筛选，最后返回 Top-K 中最优的 plan 结果。
+- **备选与确认边界**：plan 产出后，系统还会为步骤预埋 backup candidates，并继续计算“在尽量不破坏当前整体方案的情况下是否安全可替换”。如果替换可能触碰硬约束（预算/时长）或损伤软偏好（适配标签），则会标记 `requires_confirmation=true`，后续执行/fixup 阶段必须让用户确认，而不是静默替换。
+
+### 1.4 失败模式
 
 - **规划子服务超时/不可用**：返回 `TOOL_TIMEOUT`（可恢复），不阻塞后续对话。
 - **上游异常**：返回 `UPSTREAM_ERROR`（可恢复），并回传当前约束用于用户修改。
 
-### 1.4 验收动作（How to Verify）
+### 1.5 验收动作（How to Verify）
 
 - 关闭规划子服务或设置极短超时，触发 `TOOL_TIMEOUT`，确认工具返回可恢复错误且不崩溃。
 - 恢复子服务后再次调用，能正常产出方案并写回 `itinerary/latest_plan_result`。
+- 观察子图日志或代码实现，确认真实链路存在 `粗召回 -> 硬过滤 -> 重排 -> pattern/DFS -> 排序出 plan` 的固定顺序，而不是单次 prompt 直接吐 itinerary。
+- 在执行阶段人为制造一个“更贵/更远/适配性更差”的备选，确认其会被标记为需要用户确认，而不是直接静默替换。
 
-### 1.5 实现索引与代码片段（节选）
+### 1.6 实现索引与代码片段（节选）
 
 - 实现索引：
   - `backend/src/closedloop/graph/tools/plan_tool.py::plan_trip`
   - `backend/src/closedloop/graph/tools/plan_sub_api.py::request_plan_sub_json`
+  - `backend/src/closedloop/graph/plan_subgraph/builder.py::build_subgraph_plan`
+  - `backend/src/closedloop/graph/plan_subgraph/retrieve.py::retrieve_candidates_node / filter_node`
+  - `backend/src/closedloop/graph/plan_subgraph/rerank.py::rerank_node`
+  - `backend/src/closedloop/graph/plan_subgraph/planner.py::planner_node`
+  - `backend/src/closedloop/graph/plan_subgraph/planner_utils.py::generate_and_score_combinations`
 
 片段 1：工具预算 + 内部调用 + 可恢复失败码（节选）
 
@@ -85,6 +105,42 @@ for attempt_index, candidate_url in enumerate(candidate_urls, start=1):
     )
 ```
 
+片段 3：规划子图固定顺序（节选）
+
+```python
+# backend/src/closedloop/graph/plan_subgraph/builder.py::build_subgraph_plan (节选)
+workflow.add_node("retrieve_candidates_node", retrieve_candidates_node)
+workflow.add_node("filter_node", filter_node)
+workflow.add_node("rerank_node", rerank_node)
+workflow.add_node("planner_node", planner_node)
+
+workflow.add_edge(START, "retrieve_candidates_node")
+workflow.add_edge("retrieve_candidates_node", "filter_node")
+workflow.add_edge("filter_node", "rerank_node")
+workflow.add_edge("rerank_node", "planner_node")
+workflow.add_edge("planner_node", END)
+```
+
+片段 4：备选若可能破坏约束/偏好则要求确认（节选）
+
+```python
+# backend/src/closedloop/graph/plan_subgraph/planner.py::planner_node (节选)
+hard_cost_exceeded = (budget < float('inf')) and (new_total_cost > budget)
+hard_time_exceeded = new_total_duration > max_duration
+soft_violated = not old_suitable.issubset(new_suitable)
+
+requires_confirmation = False
+if hard_cost_exceeded or hard_time_exceeded or soft_violated:
+    requires_confirmation = True
+
+backup_candidates.append({
+    "id": cand_id,
+    "name": cand_name,
+    "requires_confirmation": requires_confirmation,
+    "violation_reason": "超出预算或时间" if (hard_cost_exceeded or hard_time_exceeded) else "偏好可能受损",
+})
+```
+
 ## 2) 候选搜索：search_candidates（模拟推荐/搜索）
 
 ### 2.1 功能边界
@@ -100,8 +156,9 @@ for attempt_index, candidate_url in enumerate(candidate_urls, start=1):
 
 ### 2.3 验收动作（How to Verify）
 
-- 输入一个明显不相关的关键词，稳定触发“无结果”分支，并确认不会破坏当前方案。
-- 停止搜索服务（若启用）或制造超时，触发 `TOOL_TIMEOUT`，确认错误可恢复且能回到再规划流程。
+- 输入一个明显不相关的关键词，确认前端 Agent 会明确回复“没有搜到”或等价提示，并且当前方案不被破坏。
+- 停止搜索服务（若启用）或制造超时，确认前端 Agent 会明确回复“搜索超时/稍后再试/建议重新规划”等可恢复提示，而不是卡死。
+- 输入一个正常关键词，确认前端 Agent 会展示搜到的候选结果，并给出后续可替换入口。
 
 ### 2.4 实现索引与代码片段（节选）
 
@@ -141,7 +198,8 @@ except httpx.TimeoutException:
 
 ### 3.3 验收动作（How to Verify）
 
- - 对某个条目替换为明显更贵/更远的选项，触发“不能静默执行”的失败提示，确认工具返回失败并由 Plan Agent 引导用户“换备选/放弃替换”（而不是强行删项）。
+- 对某个条目替换为明显更贵/更远的选项，触发“不能静默执行”的失败提示，确认 Agent 会引导用户“换备选/放弃替换/重新规划”，而不是强行删项。
+- 对某个条目替换为一个正常推荐且可行的候选，确认当前 plan 会被直接替换，价格、时间与条目明细也会同步更新。
 
 ### 3.4 实现索引与代码片段（节选）
 
@@ -192,10 +250,10 @@ def repair_plan(plan: dict, target_item_id: str, new_item: dict, budget: float, 
 
 ### 4.4 验收动作（How to Verify）
 
-- 执行一次方案后，先观察运行时数据中的库存/容量字段不变，并看到 `pending_payment` 与执行命令。
-- 输入错误密码，确认返回支付失败且库存/容量仍不变。
-- 输入 `111111`，确认 commit 后库存/容量字段发生变化（commit 返回 items/failures 中包含 stock/capacity 的 before/after）。
-- 人为制造无座（capacity=0 或删除时段记录），确认进入备选替换或 `needs_fixup`。
+- 执行一次方案后，在前端看到 `pending_payment` 与执行命令；同时查看 backend 日志，确认此时还没有实际扣减库存/容量。
+- 输入错误密码，确认前端返回支付失败；同时查看 backend 日志，确认没有进入真正的 commit 写入。
+- 输入 `111111`，确认 commit 后 backend 日志中能看到库存/容量写入或 before/after 变化信息。
+- 人为制造无座（`capacity=0` 或删除时段记录），查看 backend 日志并结合前端表现，确认系统进入备选替换或 `needs_fixup`。
 
 ### 4.5 实现索引与代码片段（节选）
 
@@ -261,10 +319,16 @@ elif requires_booking:
 ### 5.1 功能边界
 
 - 触发条件：`execute_itinerary` 返回 `confirmation.status == needs_fixup`。
-- fixup_agent 的职责：向用户展示候选1/2（或引导搜索），用户选择后调用 `adjust_and_execute_plan_item` 完成“替换 + 重试执行”。
+- fixup_agent 的职责：向用户展示候选1/2，或直接引导用户继续搜索；若用户输入关键词，则调用 `search_candidates`；若用户选中候选，则调用 `adjust_and_execute_plan_item` 完成“替换 + 重试执行”。
 - 取舍说明（口径A）：采用“轻量协同”保证闭环成功率与响应稳定；只在关键失败点请求用户明确选择，其余尽量自动兜底。
 
-### 5.2 实现索引与代码片段（节选）
+### 5.2 验收动作（How to Verify）
+
+- 人为制造一次 `needs_fixup` 场景，确认 Agent 会先展示候选1/2，或者提示用户可以继续搜索别的备选。
+- 在 fixup 对话里直接输入搜索关键词，确认 Agent 会调用 `search_candidates`，并返回“没搜到 / 超时 / 搜到若干候选”中的一种可见结果。
+- 在 fixup 对话里直接选择候选1/2，或从搜索结果中指定一个候选，确认 Agent 会调用 `adjust_and_execute_plan_item` 完成“替换 + 重试执行”。
+
+### 5.3 实现索引与代码片段（节选）
 
 - 实现索引：`backend/src/closedloop/graph/agent.py::resolve_active_agent / apply_step_config`
 

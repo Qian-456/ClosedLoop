@@ -59,6 +59,48 @@ docker compose up -d --build
 > cd backend/src && python cli_main.py
 > ```
 
+### 3. 可选：通过 Docker 查看 ELK 结构化日志
+
+如果你想排查“为什么候选太少 / 为什么剪枝过多 / 为什么某次规划超时”，可以额外启动 ELK 来查看结构化日志。
+
+> **说明**：这不是本项目的重点能力，也不是最终形态。当前引入 ELK，主要是为了在开发与演示阶段快速追溯链路，检查统计数据和规划过程是否异常；真实业务里更核心的还是推荐系统与业务指标体系。
+
+1. 先确认 `backend/.env` 中已经打开结构化日志输出：
+
+```bash
+LOG_ELK_ENABLED=true
+LOG_PLANNER_STATS=true
+```
+
+2. 先按上面的方式启动主业务服务：
+
+```bash
+docker compose up -d --build
+```
+
+3. 再单独启动 ELK：
+
+```bash
+docker compose -f docker/elk/docker-compose.elk.yml --project-directory . up -d
+```
+
+4. 打开 Kibana：
+
+- `http://localhost:5601`
+
+5. 在 Kibana 中创建 Data View：
+
+- Index pattern 填 `closedloop-*`
+- 进入 `Discover` 后即可按时间线查看结构化日志
+
+6. 常见观察方式：
+
+- **硬过滤阶段（推荐先看）**：在 Kibana 里筛选 `event=filter_drop`；先看 `category.keyword` 和 `reason_code.keyword`，可以知道是哪个大类（如餐厅/活动/礼品）被过滤，以及各类过滤原因的分布。
+- **看过滤细节**：继续展开 `reason_detail.*` 字段，可以看到每种硬过滤原因的具体细节；例如价格过滤时可看 `reason_detail.actual` 与 `reason_detail.threshold`，年龄过滤可看 `reason_detail.age_range.keyword`、`reason_detail.child_age` 等。
+- **Plan 阶段减枝**：DFS 减枝的可能性太多，不适合在 ELK 中逐条细粒度分析；这一部分更适合直接看后端日志中的 `phase=planner_candidate_pool_stats`、`phase=planner_pattern_skipped` 等统计信息，判断是 pattern 缺失、候选池不足还是组合阶段被大量剪枝。
+- **链路追溯**：结合 `session_id / tool / error / phase` 等字段，可以追溯某次请求从主服务到子服务的处理链路。
+- **离线查看**：如果只想快速看原始文件，也可以直接查看 `backend/src/logs/elk/` 下生成的 `jsonl` 日志。
+
 ## 📚 目录结构导览
 
 - `competition_submission/`：比赛核心文档与提交物。
