@@ -325,7 +325,11 @@ export function JourneyView({
             const isCurrent = isActive && index === currentIndex && !isDone
             const isPast = isActive && index < currentIndex
             const status = statusByIndex[index]
-            const isPaidCommute = effectivePaidCommuteStepKeys?.has(getStepKey(step, index)) ?? false
+            const isPaidCommute =
+              (effectivePaidCommuteStepKeys?.has(getStepKey(step, index)) ?? false) ||
+              (isCommute &&
+                typeof status === 'string' &&
+                (status.includes('订单已支付') || status.includes('已支付') || status.includes('宸叉敮')))
             const paidCommuteStatus = '该通勤订单已支付，可在支付订单中查看当前订单状态。'
             const displayStatus = status || (isPaidCommute ? paidCommuteStatus : '')
 

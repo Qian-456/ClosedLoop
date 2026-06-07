@@ -86,6 +86,25 @@ function getPaidCommuteStepKeys(plan: ItineraryPlanVariant | null, confirmation:
     .map((step, index) => ({ step, index }))
     .filter(({ step }) => getDeferredCommuteCharge(step) > 0)
 
+  const summaryItems =
+    (confirmation.execution_summary?.items as Array<Record<string, unknown>> | undefined) ??
+    ((confirmation as any)?.execution_report?.execution_summary?.items as Array<Record<string, unknown>> | undefined) ??
+    []
+  const paidCommuteItemIds = new Set(
+    summaryItems
+      .filter((item) => item?.item_type === 'commute' && item?.reserved === true)
+      .map((item) => String(item.item_id ?? item.new_item_id ?? ''))
+      .filter(Boolean),
+  )
+  if (paidCommuteItemIds.size > 0) {
+    payableCommuteSteps.forEach(({ step, index }) => {
+      if (paidCommuteItemIds.has(String(step.item.id))) {
+        keys.add(getStepKey(step, index))
+      }
+    })
+    return keys
+  }
+
   const scope = getExecutionScope(confirmation)
   const title = String(plan.title ?? '').toLowerCase()
   const isAllExecution =

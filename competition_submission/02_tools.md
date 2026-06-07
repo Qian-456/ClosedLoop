@@ -10,7 +10,7 @@
 | 一句话生成方案（首次/再规划） | `plan_trip` | 将结构化约束发送至规划子服务并落盘到 state（方案 + 候选池） | 子服务不可用/超时（≤3s） |
 | 想多看备选 | `generate_alternative_plans` | 在不改约束前提下扩展备选列表 | 子服务不可用/超时 |
 | 先搜再换（模拟推荐/搜索） | `search_candidates` | 在当前候选池内按用户关键词做二次检索 | 搜索服务超时/无结果 |
-| 指定替换某一条目 | `adjust_plan_item` | 替换条目并触发确定性冲突修复（2 层最小改动：吃 buffer → 压缩；不允许删项） | 替换导致超窗/超预算、无可修复 |
+| 指定替换某一条目 | `adjust_plan_item` | 替换条目并触发多层冲突修复（吃 buffer → 极限压缩 → 删项降级），生成权衡报告 | 替换导致超窗/超预算、无可修复 |
 | 执行失败后补齐并继续 | `adjust_and_execute_plan_item` + `fixup_agent` 路由 | fixup 阶段一次性完成“替换 + 重试执行” | 备选不安全/仍失败 |
 | 确认后执行（Mock） | `execute_itinerary` + `mock_executor` + `/execution/{id}/commit` | 先生成待支付执行命令，输入 `111111` 后 Mock commit | 无座/无票/库存不足、支付失败、执行超时、一致性校验失败 |
 
@@ -179,17 +179,18 @@ except httpx.TimeoutException:
     return Command(update={"messages": [fail_msg]})
 ```
 
-## 3) 替换与冲突修复：adjust_plan_item（确定性修复：2 层最小改动）
+## 3) 替换与冲突修复：adjust_plan_item（多层降级与权衡报告）
 
 ### 3.1 功能边界
 
 - 输入：plan_id、target_item_id、new_item_id（通常来自 search_candidates 的结果）。
-- 输出：替换后的新方案（尽量保持整体不变），并更新 `itinerary/latest_plan_result`。
-- 冲突修复：确定性 2 层最小改动（只改时长与通勤重算，不改“项目集合”，更不会删项）。
-  - L1 吃 buffer：对非锁定条目，最多吃掉该条目的 `duration_std_dev`（将超出的分钟数优先从浮动里拿回来）。
-  - L2 压缩可压缩条目：仅对 `activity/gift_shop` 的非锁定条目做压缩，最低压到原始 `duration_mins` 的 60%（正餐不压缩）。
+- 输出：替换后的新方案（尽量保持整体不变），生成权衡报告 `tradeoff_report` 附加到 `ToolMessage` 中返回，并更新 `itinerary/latest_plan_result`。
+- 冲突修复：多层降级与冲突修复（动态消化超标时间）。
+  - L1 吃 buffer：对非锁定条目，最多吃掉该条目的 `duration_std_dev`（将超出的分钟数优先从弹性浮动里拿回来）。
+  - L2 极限压缩：仅对 `activity/gift_shop` 的非锁定条目做压缩，最低压到原始 `duration_mins` 的 60%（正餐不参与压缩）。
+  - L3 删项降级：如果 L1 和 L2 耗尽后仍然超标，则按 `gift_shop -> afternoon_tea -> activity` 的优先级逐个删除次要组件，直到满足约束。
 - 通过条件（与实现一致）：`total_cost <= budget * 1.2` 且 `total_duration_minutes <= duration_max + 45min 宽容度`。
-- 说明：更“近/更短/更便宜”的邻近项替换（L3）为预留策略，当前实现未启用；一旦需要删项或仍无法修复，工具直接失败交由 Agent 协商（避免静默破坏体验）。
+- 说明：Agent 会解析返回的 `tradeoff_report`，用自然语言向用户如实转达时间轴和预算的“权衡（降级）影响”，让调整后果完全透明。如果自动修复过程中触发了 L3 删项，系统会判定为“破坏性修复”，直接返回失败并交由 Agent 引导用户重新决策，避免静默删项破坏体验。
 
 ### 3.2 失败模式
 
