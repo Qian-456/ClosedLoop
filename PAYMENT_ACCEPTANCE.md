@@ -44,3 +44,26 @@ python -X utf8 -m unittest tests.test_payment_idempotency tests.test_forced_out_
 部分成功后的同命令重试只返回原失败结果，不能自动重做整单；后续应核对成功项并为未完成项创建独立补齐命令。本 PR 不实现完整 UI 补齐流程。出现 unknown 应核查隔离库存，不能擅自新建整单重试。
 
 `payment-review/DECISIONS.md` 和 `FEEDBACK_AND_FIXES.md` 保留本次取舍与真实失败记录；与 PR #1 的状态回归报告独立，未合并或部署。
+
+
+## 前端响应与会话验收（2026-09-16 补充）
+
+从 frontend 执行：
+
+```powershell
+npm ci
+npm test -- --run src/features/itinerary/store/__tests__/useItineraryStore.payment.test.ts src/features/itinerary/ui/__tests__/PlanPanel.payment.test.tsx src/features/itinerary/ui/__tests__/PlanPanel.test.tsx
+npm run build
+```
+
+14 项检查通过，其中新增 9 项；构建通过，保留原有大于 500kB 的 bundle 提示。UI 检查使用真实组件/会话 store 和模拟 API 响应，不能冒充浏览器到后端的完整链路。
+
+人工观察标准：
+
+- 后端成功时显示“执行已完成”。
+- paid + failed 显示“执行未完成”，保留失败项，不提供整单再次支付按钮。
+- unknown 显示“执行结果待核对”，提示核对已成功项；没有明细不能显示为完成。
+- 密码错误且 not_started 时仍可删除并重新输入密码。
+- 提交后切换会话，返回结果只更新对应 execution_id 的原会话；原会话已换新订单时，旧响应不得覆盖新订单。
+
+测试从界面点击六位密码和确认按钮，核对响应后的实际 DOM；未完成真实 HTTP/浏览器验收。
