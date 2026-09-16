@@ -31,6 +31,9 @@ share/python-wheels/
 *.egg
 
 # Logs
+log.txt
+log-history-*.txt
+acceptance-runs/
 logs/
 *.log
 
