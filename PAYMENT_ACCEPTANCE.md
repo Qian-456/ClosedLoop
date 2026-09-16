@@ -67,3 +67,21 @@ npm run build
 - 提交后切换会话，返回结果只更新对应 execution_id 的原会话；原会话已换新订单时，旧响应不得覆盖新订单。
 
 测试从界面点击六位密码和确认按钮，核对响应后的实际 DOM；未完成真实 HTTP/浏览器验收。
+
+
+## 真实浏览器 → HTTP → Mock 库存联调
+
+新增本地隔离入口（只监听 127.0.0.1，不发布到生产）：
+
+```powershell
+# 先在 frontend 中 npm run build，再回到仓库根目录
+python -X utf8 scripts/payment_browser_demo.py --scenario success --port 18766
+# 另一个终端运行缺货场景
+python -X utf8 scripts/payment_browser_demo.py --scenario partial --port 18765
+```
+
+打开各终端打印的 /review 地址，点击准备订单进入现有 /app 页面。展开支付面板。success 场景可先输入 222222，确认显示密码错误且 /review/inventory 库存仍为3；删除六位密码并输入111111，页面应显示执行已完成，库存为2。partial 场景在预览后把第二项库存设为0；输入111111后应显示执行未完成、失败1项及 review_sold_out，成功项库存2、失败项0，不再显示整单确认支付按钮。刷新后仍保留结果。
+
+2026-09-16 已在 Codex 内置浏览器实际操作上述两场景；使用现有 main.py 的支付路由，无模拟 HTTP 响应。再次请求同一命令，成功仍 success、部分失败仍 failed，库存不再扣减。原始 fixture、preview-events、http-replay、browser-observation 保存在各自 payment-runs/browser-* 下。最初两次运行先于 metadata 功能，后补观察记录明确标记来源与 harness 未提交，不伪造当时自动生成的版本记录。后续运行自动生成 metadata.json（源码与构建哈希）。
+
+此入口只复用支付路由，未暴露模型聊天接口；计划由固定夹具提供，不代表自然语言规划或模型驱动补齐的全链路。Ctrl+C 停止；每次重启新建独立库存，旧结果保留。开发隔离端口上的会话存储会被测试夹具替换，不要用于正式会话。
