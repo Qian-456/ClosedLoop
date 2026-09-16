@@ -8,6 +8,7 @@ import shutil
 import tempfile
 import time
 import uuid
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, AsyncIterator, Literal
 
@@ -35,6 +36,7 @@ class _ExecutionContext:
 _executions: dict[str, _ExecutionContext] = {}
 _execution_keys: dict[str, str] = {}
 _payment_commands: dict[str, ExecuteRequest] = {}
+_payment_tasks: dict[str, asyncio.Task] = {}
 _executions_guard = asyncio.Lock()
 
 
@@ -251,10 +253,12 @@ def _reserve_capacity(
     return False, None
 
 
-async def start_execution(request: ExecuteRequest) -> str:
+async def start_execution(request: ExecuteRequest, *, payment_scope: str | None = None) -> str:
     """创建执行会话并启动后台任务，返回 execution_id。"""
 
     execution_key = _execution_key_from_request(request)
+    if payment_scope is not None:
+        execution_key = payment_scope + ':' + execution_key
     current_loop_id = id(asyncio.get_running_loop())
     async with _executions_guard:
         existing_id = _execution_keys.get(execution_key)
@@ -325,31 +329,56 @@ async def commit_execution_payment(execution_id: str, payment_password: str) -> 
             "message": "Mock 支付密码错误",
         }
 
+    # 同一命令只创建一个消费者；成功、部分失败及不确定结果均保留，禁止自动重扣。
     async with _executions_guard:
-        preview_request = _payment_commands.get(execution_id)
+        task = _payment_tasks.get(execution_id)
+        if task is None:
+            preview_request = _payment_commands.pop(execution_id, None)
+            if preview_request is None:
+                return {
+                    "execution_id": execution_id,
+                    "payment_status": "failed",
+                    "commit_status": "not_found",
+                    "message": "未找到待支付执行命令",
+                }
+            task = asyncio.create_task(_commit_payment_once(execution_id, preview_request))
+            _payment_tasks[execution_id] = task
+    if task.cancelled():
+        return _uncertain_payment(execution_id)
+    # 请求断开不能中止正在落盘的提交；调用方也不能修改缓存结果。
+    return deepcopy(await asyncio.shield(task))
 
-    if preview_request is None:
-        logger.warning(
-            f"phase=execute_mock | action=mock_payment_command_missing | execution_id={execution_id}"
-        )
-        return {
-            "execution_id": execution_id,
-            "payment_status": "paid",
-            "commit_status": "not_found",
-            "message": "未找到待支付执行命令",
-        }
+
+def _uncertain_payment(execution_id: str) -> dict[str, Any]:
+    return {"execution_id": execution_id, "payment_status": "unknown",
+            "commit_status": "unknown", "message": "提交结果不确定，请核对库存；禁止自动重试扣减"}
+
+
+async def _commit_payment_once(execution_id: str, preview_request: ExecuteRequest) -> dict[str, Any]:
+    try:
+        return await _collect_payment_commit(execution_id, preview_request)
+    except Exception:
+        logger.exception(f"Mock payment commit failed: {execution_id}")
+        return _uncertain_payment(execution_id)
+
+
+async def _collect_payment_commit(execution_id: str, preview_request: ExecuteRequest) -> dict[str, Any]:
 
     commit_request = ExecuteRequest(
         plan_id=preview_request.plan_id,
         steps=preview_request.steps,
         mode="commit",
     )
-    commit_execution_id = await start_execution(commit_request)
+    commit_execution_id = await start_execution(commit_request, payment_scope=execution_id)
     items: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
+    terminal_status = None
 
     async for event in iter_events(commit_execution_id):
         if not isinstance(event, dict):
+            continue
+        if event.get("type") == "done":
+            terminal_status = (event.get("data") or {}).get("status")
             continue
         if event.get("type") != "item_update":
             continue
@@ -362,10 +391,10 @@ async def commit_execution_payment(execution_id: str, payment_password: str) -> 
         if data.get("reserved") is False:
             failures.append(data)
 
-    commit_status = "failed" if failures else "success"
-    if commit_status == "success":
-        async with _executions_guard:
-            _payment_commands.pop(execution_id, None)
+    expected = sum(step.item_type != "commute" or step.commute_mode == "taxi"
+                   for step in preview_request.steps)
+    complete = terminal_status == "ok" and len(items) == expected
+    commit_status = "success" if complete and not failures else "failed"
 
     logger.info(
         f"phase=execute_mock | action=payment_commit_done | execution_id={execution_id} | commit_execution_id={commit_execution_id} | commit_status={commit_status} | failures={len(failures)}"
