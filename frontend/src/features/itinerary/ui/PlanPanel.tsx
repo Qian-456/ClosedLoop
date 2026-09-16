@@ -342,12 +342,14 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
 
   const planLabel = command?.plan_id ? `行程方案 ${command.plan_id.replace(/^plan_?/i, '').toUpperCase()}` : (actionPlan?.title || '已确认行程方案')
 
-  const isPaid = confirmation.payment_status === 'paid' || confirmation.commit_status === 'success' || confirmation.status === 'executed'
-  const isFailed = confirmation.payment_status === 'failed' || confirmation.commit_status === 'failed' || confirmation.status === 'failed'
+  const isUnknown = confirmation.commit_status === 'unknown' || confirmation.payment_status === 'unknown'
+  const isPaid = confirmation.commit_status === 'success' || (!confirmation.commit_status && confirmation.status === 'executed')
+  const isFailed = !isPaid && (isUnknown || confirmation.commit_status === 'failed' || confirmation.status === 'failed')
 
   let paymentStatusLabel = '待支付'
-  if (isPaid) paymentStatusLabel = '已支付'
-  else if (isFailed) paymentStatusLabel = '支付失败'
+  if (isUnknown) paymentStatusLabel = '执行结果待核对'
+  else if (isPaid) paymentStatusLabel = '执行已完成'
+  else if (isFailed) paymentStatusLabel = '执行未完成'
 
   const pushDigit = (digit: string) => {
     if (isSubmitting) return
@@ -373,6 +375,7 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
     setStatusTone('neutral')
     try {
       const result = await commitMockPayment(executionId, password)
+      applyPaymentCommit(result)
       if (result.payment_status !== 'paid' || result.commit_status !== 'success') {
         setStatusText(result.message || 'Mock 支付失败')
         setStatusTone('error')
@@ -380,7 +383,6 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
       }
       setStatusText(result.message || '已付款，Mock 执行完成')
       setStatusTone('success')
-      applyPaymentCommit(result)
     } catch (error) {
       setStatusText(error instanceof Error ? error.message : 'Mock 支付失败')
       setStatusTone('error')
@@ -456,6 +458,13 @@ function MockPaymentPanel({ confirmation, actionPlan }: { confirmation: Confirma
           查看订单详细
         </button>
       </div>
+
+      {isFailed && (
+        <div role="alert" className="mb-3 rounded-lg bg-amber-50 p-3 text-amber-900">
+          {confirmation.reason || '执行尚未完成，请核对执行结果。'}
+          <p>请先核对已成功项，仅补齐未完成项，勿重新提交整单。</p>
+        </div>
+      )}
 
       {!isPaid && !isFailed && (
         <>
@@ -876,7 +885,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
         ) : null}
 
         {isExecutionStage && (confirmation?.status === 'pending_payment' || confirmation?.status === 'executed' || confirmation?.status === 'failed') ? (
-          <MockPaymentPanel confirmation={confirmation} actionPlan={actionPlan} />
+          <MockPaymentPanel key={confirmation.execution_command?.execution_id ?? confirmation.execution_id} confirmation={confirmation} actionPlan={actionPlan} />
         ) : null}
 
         {confirmation?.status === 'executed' && actionPlan ? (
@@ -978,7 +987,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
           </div>
         ) : null}
 
-        {confirmation?.status === 'executed' && executionSummary ? (
+        {(confirmation?.status === 'executed' || confirmation?.status === 'failed') && executionSummary ? (
           <div className="mt-4 rounded-[8px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
             <div className="font-semibold text-slate-900">执行结果</div>
             <div className="mt-2 space-y-2">
@@ -1006,7 +1015,7 @@ export function PlanPanel({ itinerary, confirmation, errorMessage }: Props) {
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-slate-500">无失败项</div>
+                <div className="text-sm text-slate-500">{confirmation.commit_status === 'unknown' ? '明细不足，请核对执行状态' : '无已报告的失败项'}</div>
               )}
             </div>
           </div>

@@ -75,3 +75,7 @@ AGENTS.md
 
 # Competition submission
 competition_submission/
+
+log.txt
+payment-runs/
+payment-*.txt

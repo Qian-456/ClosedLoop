@@ -304,33 +304,39 @@ export const useItineraryStore = create<ItineraryStore>()(
         }
       }),
 
-      applyPaymentCommit: (result) => set((state) => {
-        return {
-          sessions: updateCurrentSession(state.sessions, state.currentSessionId, (session) => ({
+      applyPaymentCommit: (result) => set((state) => ({
+        sessions: state.sessions.map((session) => {
+          const current = session.confirmation
+          const commandId = current?.execution_command?.execution_id ?? current?.execution_id
+          // Responses belong to their command, not whichever session is open now.
+          if (!commandId || commandId !== result.execution_id) return session
+          const notStarted = result.commit_status === 'not_started'
+          if (notStarted && current?.commit_status && current.commit_status !== 'not_started') return session
+          return {
             ...session,
             confirmation: {
-              ...(session.confirmation ?? { status: 'executed' }),
-              status: result.commit_status === 'success' ? 'executed' : 'failed',
+              ...current,
+              status: result.commit_status === 'success' ? 'executed' : notStarted ? 'pending_payment' : 'failed',
               execution_id: result.execution_id,
               payment_status: result.payment_status,
               commit_status: result.commit_status,
               reason: result.message,
-              execution_summary: {
-                ...(session.confirmation?.execution_summary ?? {}),
+              execution_summary: notStarted ? current?.execution_summary : {
+                ...(current?.execution_summary ?? {}),
                 execution_id: result.commit_execution_id ?? result.execution_id,
-                items: result.items ?? [],
-                failures: (result.failures ?? []).filter(
+                items: result.items ?? current?.execution_summary?.items ?? [],
+                failures: (result.failures ?? current?.execution_summary?.failures ?? []).filter(
                   (item): item is { item_id?: string; item_name?: string; item_type?: string } =>
                     typeof item === 'object' && item !== null,
                 ),
-                replacements: session.confirmation?.execution_summary?.replacements ?? [],
+                replacements: current?.execution_summary?.replacements ?? [],
               },
             },
             updatedAt: Date.now(),
-          })),
-        }
-      }),
-      
+          }
+        }),
+      })),
+
       setInvokeError: (message) => set(() => {
         return {
           invokeStatus: 'error',
